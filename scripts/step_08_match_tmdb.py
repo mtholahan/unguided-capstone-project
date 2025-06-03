@@ -1,7 +1,6 @@
 # step_08_match_tmdb.py
 
 from base_step import BaseStep
-import os
 import pandas as pd
 import requests
 from rapidfuzz import fuzz, process

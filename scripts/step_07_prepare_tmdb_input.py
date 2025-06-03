@@ -1,60 +1,106 @@
-# step_07_prepare_tmdb_input.py
-
-from base_step import BaseStep
 import pandas as pd
-from config import DATA_DIR, MB_RAW_DIR, TMDB_DIR
+import re
+from base_step import BaseStep
+from config import DATA_DIR
 from utils import normalize_title_for_matching, is_mostly_digits
 
 class Step07PrepareTMDbInput(BaseStep):
-    def __init__(self, name="Step 06: Prepare TMDb Input"):
+    def __init__(self, name="Step 07: Prepare TMDb Input"):
         super().__init__(name)
-        self.input_path = DATA_DIR / "soundtracks.tsv"
-        self.junk_titles_path = MB_RAW_DIR / "junk_mb_titles.txt"
-        self.output_path = TMDB_DIR / "tmdb_input_candidates.csv"
-
-        self.columns = [
-            "release_group_id", "mbid", "title", "release_year", "artist_id", "artist_credit_id",
-            "artist_name", "type", "primary_type", "barcode", "dummy_1",
-            "dummy_2", "dummy_3", "dummy_4", "dummy_5", "artist_sort_name",
-            "dummy_6", "dummy_7", "created", "dummy_8", "artist_gid"
-        ]
+        self.input_tsv   = DATA_DIR / "soundtracks.tsv"
+        self.junk_list   = DATA_DIR / "junk_mb_titles.txt"
+        self.output_csv  = DATA_DIR / "tmdb" / "tmdb_input_candidates_clean.csv"
 
     def run(self):
-        if not self.input_path.exists():
-            self.logger.error(f"Missing input file: {self.input_path}")
-            return
-
         self.logger.info("🔍 Loading soundtracks...")
-        df = pd.read_csv(self.input_path, sep='\t', names=self.columns, header=None, dtype=str)
-        self.logger.info(f"Initial row count: {len(df):,}")
+        df = pd.read_csv(self.input_tsv, sep="\t", dtype=str, header=0, engine='python')
 
+        # If 'title' missing, use heuristic: pick column with alphabetic strings
+        title_col = None
+        if "title" in df.columns:
+            title_col = "title"
+        else:
+            for col in df.columns:
+                sample = str(df[col].iat[0])
+                if re.search(r"[A-Za-z]", sample) and not re.fullmatch(r"\d+", sample):
+                    title_col = col
+                    break
+        if not title_col:
+            self.logger.error(f"No heuristic 'title' column found. Columns: {df.columns.tolist()}")
+            raise KeyError("Cannot find a title column in soundtracks.tsv")
+        self.logger.info(f"ℹ️ Using '{title_col}' as the title column")
+
+        # Find 'release_group_id' or UUID-like column
+        rg_col = None
+        uuid_re = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+        for col in df.columns:
+            if col.lower().startswith("release_group") or df[col].astype(str).str.match(uuid_re).any():
+                rg_col = col
+                break
+        if not rg_col:
+            self.logger.error(f"No 'release_group_id' column found. Columns: {df.columns.tolist()}")
+            raise KeyError("Cannot find a release_group_id column in soundtracks.tsv")
+        self.logger.info(f"ℹ️ Using '{rg_col}' as the release_group_id column")
+
+        # Find 'release_year' column: look for four-digit year
+        year_col = None
+        for col in df.columns:
+            if df[col].astype(str).str.match(r"^\d{4}$").any():
+                year_col = col
+                break
+        if not year_col:
+            self.logger.error(f"No 'release_year' column found. Columns: {df.columns.tolist()}")
+            raise KeyError("Cannot find a release_year column in soundtracks.tsv")
+        self.logger.info(f"ℹ️ Using '{year_col}' as the release_year column")
+
+        # Normalize titles
         self.logger.info("🔧 Normalizing titles...")
-        df["normalized_title"] = df["title"].apply(normalize_title_for_matching)
-        df = df[df["normalized_title"].str.len() >= 3]
+        df["normalized_title"] = df[title_col].apply(normalize_title_for_matching)
 
-        if self.junk_titles_path.exists():
-            junk = set(self.junk_titles_path.read_text(encoding="utf-8").splitlines())
-            before_junk = len(df)
-            df = df[~df["normalized_title"].isin(junk)]
-            after_junk = len(df)
-            self.logger.info(f"🧼 Removed junk titles ({before_junk - after_junk:,}) — remaining: {after_junk:,}")
+        # Filter: drop titles <3 chars, junk, mostly numeric, out–of–range year
+        initial_count = len(df)
+        self.logger.info(f"ℹ️ Initial row count: {initial_count}")
 
-        before_numeric_filter = len(df)
-        df = df[~df["normalized_title"].apply(is_mostly_digits)]
-        after_numeric_filter = len(df)
-        self.logger.info(f"🧹 Removed {before_numeric_filter - after_numeric_filter:,} mostly-numeric titles")
+        junk = set()
+        if self.junk_list.exists():
+            with open(self.junk_list) as f:
+                junk = {line.strip().lower() for line in f if line.strip()}
+            self.logger.info(f"ℹ️ Loaded {len(junk)} junk titles to filter")
+        else:
+            self.logger.info("ℹ️ No junk_mb_titles.txt found; skipping junk‐title filtering")
 
-        self.logger.info("📆 Filtering by release_year...")
-        df["release_year"] = pd.to_numeric(df["release_year"], errors="coerce")
-        df = df[df["release_year"].between(1900, 2025)]
-        df = df.dropna(subset=["release_year"])
+        def is_valid(row):
+            nt = row["normalized_title"]
+            if len(nt) < 3:
+                return False
+            if nt in junk:
+                return False
+            if is_mostly_digits(nt):
+                return False
+            yr_val = str(row[year_col])
+            try:
+                yr = int(yr_val)
+            except:
+                return False
+            return (1900 <= yr <= 2025)
 
+        df = df[df.apply(is_valid, axis=1)]
+        removed = initial_count - len(df)
+        self.logger.info(f"🧹 Removed {removed} invalid or out-of-range titles")
+
+        # Deduplicate on (normalized_title, release_year)
         self.logger.info("🧼 Dropping duplicates...")
-        df = df.drop_duplicates(subset=["normalized_title"])
+        df = df.drop_duplicates(subset=["normalized_title", year_col])
 
-        df_out = df[["normalized_title", "release_group_id"]].copy()
-        self.output_path.parent.mkdir(parents=True, exist_ok=True)
-        df_out.to_csv(self.output_path, index=False)
+        # Assemble output DataFrame with the four required columns
+        out_df = pd.DataFrame({
+            "normalized_title": df["normalized_title"],
+            "title":            df[title_col],
+            "release_group_id": df[rg_col],
+            "year":             df[year_col].astype(int)
+        })
 
-        self.logger.info(f"✅ Final output row count: {len(df_out):,}")
-        self.logger.info(f"✅ Saved to {self.output_path}")
+        final_count = len(out_df)
+        out_df.to_csv(self.output_csv, index=False)
+        self.logger.info(f"✅ Final output row count: {final_count}")
+        self.logger.info(f"✅ Saved to {self.output_csv}")
