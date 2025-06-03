@@ -1,24 +1,19 @@
 # step_00_acquire_musicbrainz.py
 
+from base_step import BaseStep
 import re
 import requests
 import subprocess
 from pathlib import Path
 from bs4 import BeautifulSoup
-from datetime import datetime
-from base_step import BaseStep
-from config import MB_RAW_DIR, SEVEN_ZIP_PATH
+from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST
 from tqdm import tqdm
 
 class Step00AcquireMusicbrainz(BaseStep):
     BASE_URL = "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/"
     FILENAME = "mbdump.tar.bz2"
-    TSV_WHITELIST = {
-        "artist", "artist_credit", "artist_credit_name", "release",
-        "release_group", "release_group_secondary_type", "release_group_secondary_type_join"
-    }
 
-    def __init__(self, name):
+    def __init__(self, name="Step 00 Acquire Musicbrainz"):
         super().__init__(name)
 
     def download_with_progress(self, url: str, dest_path: Path):
@@ -76,7 +71,7 @@ class Step00AcquireMusicbrainz(BaseStep):
         lines = result.stdout.splitlines()
         whitelist_paths = [
             line.split()[-1] for line in lines
-            if (len(line.split()) >= 6 and Path(line.split()[-1]).name in self.TSV_WHITELIST)
+            if (len(line.split()) >= 6 and Path(line.split()[-1]).name in TSV_WHITELIST)
         ]
 
         # Step 3: Extract only whitelisted files

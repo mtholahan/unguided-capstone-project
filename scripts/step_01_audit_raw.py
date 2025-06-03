@@ -1,8 +1,7 @@
 # step_01_audit_raw.py
 
-from pathlib import Path
-import csv
 from base_step import BaseStep
+import csv
 from config import MB_RAW_DIR, TSV_WHITELIST
 
 class Step01AuditRaw(BaseStep):
@@ -13,7 +12,7 @@ class Step01AuditRaw(BaseStep):
     def run(self):
         raw_files = sorted([
             f for f in MB_RAW_DIR.iterdir()
-            if f.name in self.TSV_WHITELIST
+            if f.name in TSV_WHITELIST
         ])
 
         if not raw_files:

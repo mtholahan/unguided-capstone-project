@@ -1,9 +1,8 @@
 # step_03_check_structure.py
 
+from base_step import BaseStep
 import csv
 from collections import Counter
-from pathlib import Path
-from base_step import BaseStep
 from config import MB_CLEANSED_DIR, TSV_WHITELIST
 
 class Step03CheckStructure(BaseStep):

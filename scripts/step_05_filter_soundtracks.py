@@ -1,7 +1,7 @@
 # step_05_filter_soundtracks.py
 
-import csv
 from base_step import BaseStep
+import csv
 from config import DATA_DIR, MB_RAW_DIR
 
 class Step05FilterSoundtracks(BaseStep):

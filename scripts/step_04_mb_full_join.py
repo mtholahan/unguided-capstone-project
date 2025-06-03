@@ -1,8 +1,7 @@
 # step_04_mb_full_join.py
 
-import csv
-from pathlib import Path
 from base_step import BaseStep
+import csv
 from config import MB_CLEANSED_DIR, DATA_DIR, TSV_WHITELIST
 
 class Step04MBFullJoin(BaseStep):
@@ -19,7 +18,6 @@ class Step04MBFullJoin(BaseStep):
             header = next(reader)
             rows = [row for row in reader]
         return header, rows
-
 
     def run(self):
         required_files = ["release", "release_group", "artist_credit"]

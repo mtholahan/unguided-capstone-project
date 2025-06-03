@@ -1,8 +1,7 @@
 # step_02_cleanse_tsv.py
 
-from pathlib import Path
-import csv
 from base_step import BaseStep
+import csv
 from config import MB_RAW_DIR, MB_CLEANSED_DIR, TSV_WHITELIST
 
 class Step02CleanseTSV(BaseStep):

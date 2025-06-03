@@ -19,6 +19,7 @@ BASE_DIR = Path("D:/Capstone_Staging")
 DATA_DIR = BASE_DIR / "data"
 RESULTS_DIR = DATA_DIR / "results"
 TMDB_DIR = DATA_DIR / "tmdb"
+ENRICHED_TOP1000 = TMDB_DIR / "enriched_top_1000.csv"
 MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")

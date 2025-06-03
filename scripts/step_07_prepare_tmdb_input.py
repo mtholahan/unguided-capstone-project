@@ -1,16 +1,16 @@
-# step_06_prepare_tmdb_input.py
+# step_07_prepare_tmdb_input.py
 
-import pandas as pd
 from base_step import BaseStep
-from config import DATA_DIR, MB_RAW_DIR
-from utils import normalize_title_for_matching
+import pandas as pd
+from config import DATA_DIR, MB_RAW_DIR, TMDB_DIR
+from utils import normalize_title_for_matching, is_mostly_digits
 
-class Step06PrepareTMDbInput(BaseStep):
+class Step07PrepareTMDbInput(BaseStep):
     def __init__(self, name="Step 06: Prepare TMDb Input"):
         super().__init__(name)
         self.input_path = DATA_DIR / "soundtracks.tsv"
         self.junk_titles_path = MB_RAW_DIR / "junk_mb_titles.txt"
-        self.output_path = DATA_DIR / "tmdb" / "tmdb_input_candidates.csv"
+        self.output_path = TMDB_DIR / "tmdb_input_candidates.csv"
 
         self.columns = [
             "release_group_id", "mbid", "title", "release_year", "artist_id", "artist_credit_id",
@@ -18,10 +18,6 @@ class Step06PrepareTMDbInput(BaseStep):
             "dummy_2", "dummy_3", "dummy_4", "dummy_5", "artist_sort_name",
             "dummy_6", "dummy_7", "created", "dummy_8", "artist_gid"
         ]
-
-    def is_mostly_digits(self, s, threshold=0.7):
-        digits = sum(c.isdigit() for c in s)
-        return digits / max(len(s), 1) > threshold
 
     def run(self):
         if not self.input_path.exists():
@@ -44,7 +40,7 @@ class Step06PrepareTMDbInput(BaseStep):
             self.logger.info(f"🧼 Removed junk titles ({before_junk - after_junk:,}) — remaining: {after_junk:,}")
 
         before_numeric_filter = len(df)
-        df = df[~df["normalized_title"].apply(self.is_mostly_digits)]
+        df = df[~df["normalized_title"].apply(is_mostly_digits)]
         after_numeric_filter = len(df)
         self.logger.info(f"🧹 Removed {before_numeric_filter - after_numeric_filter:,} mostly-numeric titles")
 
