@@ -5,3 +5,5 @@
 2025-05-08 23:11:33,897 [INFO] Initialized step: 05_filter_soundtracks
 2025-05-08 23:15:45,028 [INFO] Initialized step: 05_filter_soundtracks
 2025-05-08 23:16:13,875 [INFO] [DONE] Wrote 535,637 soundtracks to D:\Capstone_Staging\data\soundtracks.tsv (4,197,612 skipped)
+2025-06-03 14:20:13,384 [INFO] Initialized step: 05_filter_soundtracks
+2025-06-03 14:20:14,223 [ERROR] Could not find 'release_group' or 'date' column in release.tsv header

@@ -1,5 +1,4 @@
 import pandas as pd
-import re
 from base_step import BaseStep
 from config import DATA_DIR
 from utils import normalize_title_for_matching, is_mostly_digits
@@ -7,97 +6,58 @@ from utils import normalize_title_for_matching, is_mostly_digits
 class Step07PrepareTMDbInput(BaseStep):
     def __init__(self, name="Step 07: Prepare TMDb Input"):
         super().__init__(name)
-        self.input_tsv   = DATA_DIR / "soundtracks.tsv"
-        self.junk_list   = DATA_DIR / "junk_mb_titles.txt"
-        self.output_csv  = DATA_DIR / "tmdb" / "tmdb_input_candidates_clean.csv"
+        self.input_tsv  = DATA_DIR / "soundtracks.tsv"
+        self.output_csv = DATA_DIR / "tmdb" / "tmdb_input_candidates_clean.csv"
 
     def run(self):
-        self.logger.info("🔍 Loading soundtracks...")
-        df = pd.read_csv(self.input_tsv, sep="\t", dtype=str, header=0, engine='python')
+        self.logger.info("🔍 Loading soundtracks (no header)...")
+        # Read the raw TSV (no column names)
+        df = pd.read_csv(self.input_tsv, sep="\t", header=None, dtype=str, engine="python")
 
-        # If 'title' missing, use heuristic: pick column with alphabetic strings
-        title_col = None
-        if "title" in df.columns:
-            title_col = "title"
-        else:
-            for col in df.columns:
-                sample = str(df[col].iat[0])
-                if re.search(r"[A-Za-z]", sample) and not re.fullmatch(r"\d+", sample):
-                    title_col = col
-                    break
-        if not title_col:
-            self.logger.error(f"No heuristic 'title' column found. Columns: {df.columns.tolist()}")
-            raise KeyError("Cannot find a title column in soundtracks.tsv")
-        self.logger.info(f"ℹ️ Using '{title_col}' as the title column")
+        # 1) Extract the three needed columns by index:
+        #    [2] → title
+        #    [4] → release_group_id
+        #   [18] → release_date (YYYY-MM-DD…)
+        working = pd.DataFrame({
+            "title":            df.iloc[:, 2],
+            "release_group_id": df.iloc[:, 4],
+            "release_year":     df.iloc[:, 18].str.slice(0, 4)
+        })
 
-        # Find 'release_group_id' or UUID-like column
-        rg_col = None
-        uuid_re = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
-        for col in df.columns:
-            if col.lower().startswith("release_group") or df[col].astype(str).str.match(uuid_re).any():
-                rg_col = col
-                break
-        if not rg_col:
-            self.logger.error(f"No 'release_group_id' column found. Columns: {df.columns.tolist()}")
-            raise KeyError("Cannot find a release_group_id column in soundtracks.tsv")
-        self.logger.info(f"ℹ️ Using '{rg_col}' as the release_group_id column")
-
-        # Find 'release_year' column: look for four-digit year
-        year_col = None
-        for col in df.columns:
-            if df[col].astype(str).str.match(r"^\d{4}$").any():
-                year_col = col
-                break
-        if not year_col:
-            self.logger.error(f"No 'release_year' column found. Columns: {df.columns.tolist()}")
-            raise KeyError("Cannot find a release_year column in soundtracks.tsv")
-        self.logger.info(f"ℹ️ Using '{year_col}' as the release_year column")
-
-        # Normalize titles
+        # 2) Normalize titles
         self.logger.info("🔧 Normalizing titles...")
-        df["normalized_title"] = df[title_col].apply(normalize_title_for_matching)
+        working["normalized_title"] = working["title"].apply(normalize_title_for_matching)
 
-        # Filter: drop titles <3 chars, junk, mostly numeric, out–of–range year
-        initial_count = len(df)
+        # 3) Filter out invalid rows (short titles, numeric titles, bad year)
+        initial_count = len(working)
         self.logger.info(f"ℹ️ Initial row count: {initial_count}")
-
-        junk = set()
-        if self.junk_list.exists():
-            with open(self.junk_list) as f:
-                junk = {line.strip().lower() for line in f if line.strip()}
-            self.logger.info(f"ℹ️ Loaded {len(junk)} junk titles to filter")
-        else:
-            self.logger.info("ℹ️ No junk_mb_titles.txt found; skipping junk‐title filtering")
 
         def is_valid(row):
             nt = row["normalized_title"]
             if len(nt) < 3:
                 return False
-            if nt in junk:
-                return False
             if is_mostly_digits(nt):
                 return False
-            yr_val = str(row[year_col])
             try:
-                yr = int(yr_val)
+                yr = int(row["release_year"])
             except:
                 return False
             return (1900 <= yr <= 2025)
 
-        df = df[df.apply(is_valid, axis=1)]
-        removed = initial_count - len(df)
+        filtered = working[working.apply(is_valid, axis=1)]
+        removed = initial_count - len(filtered)
         self.logger.info(f"🧹 Removed {removed} invalid or out-of-range titles")
 
-        # Deduplicate on (normalized_title, release_year)
+        # 4) Drop duplicates on (normalized_title, release_year)
         self.logger.info("🧼 Dropping duplicates...")
-        df = df.drop_duplicates(subset=["normalized_title", year_col])
+        filtered = filtered.drop_duplicates(subset=["normalized_title", "release_year"])
 
-        # Assemble output DataFrame with the four required columns
+        # 5) Build final output with exactly four columns
         out_df = pd.DataFrame({
-            "normalized_title": df["normalized_title"],
-            "title":            df[title_col],
-            "release_group_id": df[rg_col],
-            "year":             df[year_col].astype(int)
+            "normalized_title":  filtered["normalized_title"],
+            "title":             filtered["title"],
+            "release_group_id":  filtered["release_group_id"],
+            "year":              filtered["release_year"].astype(int)
         })
 
         final_count = len(out_df)

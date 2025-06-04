@@ -1,10 +1,10 @@
-# step_08_match_tmdb.py
-
-from base_step import BaseStep
+import os
 import pandas as pd
 import requests
 from rapidfuzz import fuzz, process
-from config import TMDB_DIR, TMDB_API_KEY
+from base_step import BaseStep
+from config import TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE
+from utils import normalize_title_for_matching
 
 # Helper to fetch alternative titles via TMDb API
 def fetch_alt_titles(tmdb_id: str) -> list[str]:
@@ -25,7 +25,7 @@ class Step08MatchTMDb(BaseStep):
         self,
         name: str = "Step 08: Match TMDb Titles",
         threshold: float = 65.0,
-        enable_vector_matching: bool = False,
+        enable_vector_matching: bool = False
     ):
         super().__init__(name)
         self.threshold = threshold
@@ -58,7 +58,7 @@ class Step08MatchTMDb(BaseStep):
         movies_df = pd.read_csv(self.input_movies, dtype={"tmdb_id": str})
         if "tmdb_id" not in movies_df.columns:
             raise KeyError(f"Missing 'tmdb_id' in {self.input_movies}: {movies_df.columns.tolist()}")
-        movies_df["normalized_title"] = movies_df["title"].apply(self.normalize_title)
+        movies_df["normalized_title"] = movies_df["title"].apply(normalize_title_for_matching)
         total = len(movies_df)
 
         # 2) Load & validate candidate soundtracks
@@ -76,7 +76,7 @@ class Step08MatchTMDb(BaseStep):
 
         # 3) Matching loop
         self.logger.info(
-            f"🔍 Matching {total} movies (threshold={self.threshold}, year ±5) with composite fuzzy…"
+            f"🔍 Matching {total} movies (threshold={self.threshold}, year ±{YEAR_VARIANCE}) with composite fuzzy…"
         )
         matches, misses = [], []
 
@@ -88,15 +88,15 @@ class Step08MatchTMDb(BaseStep):
             base_norm  = mv.normalized_title
             tmdb_year  = getattr(mv, "release_year", None)
 
-            # 3a) Year filter ±5
+            # 3a) Year filter ±YEAR_VARIANCE
             if tmdb_year is not None and "year" in cands_df.columns:
-                mask = cands_df["year"].between(tmdb_year - 5, tmdb_year + 5)
+                mask = cands_df["year"].between(tmdb_year - YEAR_VARIANCE, tmdb_year + YEAR_VARIANCE)
                 pool_norms = cands_df.loc[mask, "normalized_title"].tolist()
             else:
                 pool_norms = all_norms
 
-            # Composite fuzzy scorer
-            def composite_scorer(query: str, candidate: str):
+            # Composite fuzzy scorer (accept **kwargs for RapidFuzz)
+            def composite_scorer(query: str, candidate: str, **kwargs):
                 s1 = fuzz.token_set_ratio(query, candidate)
                 s2 = fuzz.token_sort_ratio(query, candidate)
                 s3 = fuzz.partial_ratio(query, candidate)
@@ -115,7 +115,7 @@ class Step08MatchTMDb(BaseStep):
             # 3b) Fallback to TMDb alt titles if below threshold
             if score < self.threshold:
                 alt_titles = fetch_alt_titles(tmdb_id)
-                for alt in [self.normalize_title(a) for a in alt_titles]:
+                for alt in [normalize_title_for_matching(a) for a in alt_titles]:
                     alt_best = process.extractOne(alt, pool_norms, scorer=composite_scorer)
                     if alt_best:
                         cand_norm, alt_score, _ = alt_best
@@ -165,7 +165,7 @@ class Step08MatchTMDb(BaseStep):
 
         # 5) Manual rescue merge
         try:
-            mr = pd.read_csv(self.manual_rescue_path)
+            mr = pd.read_csv(self.manual_rescue_path, sep="\t", dtype=str)
             merged = pd.concat([matches_df, mr], ignore_index=True)
             merged.to_csv(self.output_matches, index=False)
             self.logger.info(f"🛠️ Merged manual rescues → {len(merged)} total")
