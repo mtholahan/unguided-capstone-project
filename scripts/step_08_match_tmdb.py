@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import requests
 from rapidfuzz import fuzz, process
@@ -38,32 +37,20 @@ class Step08MatchTMDb(BaseStep):
         self.output_unmatched   = TMDB_DIR / "tmdb_match_unmatched.csv"
         self.manual_rescue_path = TMDB_DIR / "manual_rescue.csv"
 
-        # Uncomment to enable SBERT fallback
-        # try:
-        #     from sentence_transformers import SentenceTransformer, util
-        #     self.model = SentenceTransformer("all-MiniLM-L6-v2")
-        #     self.util  = util
-        #     self.enable_vector = True
-        # except ImportError:
-        #     self.logger.info("ℹ️ SBERT not installed → skipping vector fallback")
-        #     self.enable_vector = False
-
-    def normalize_title(self, title: str) -> str:
-        txt = str(title) if not pd.isna(title) else ""
-        return " ".join(txt.lower().split())
-
     def run(self):
         # 1) Load & validate TMDb movies
         self.logger.info("🎬 Loading TMDb movie titles…")
         movies_df = pd.read_csv(self.input_movies, dtype={"tmdb_id": str})
         if "tmdb_id" not in movies_df.columns:
             raise KeyError(f"Missing 'tmdb_id' in {self.input_movies}: {movies_df.columns.tolist()}")
+        # Normalize using robust utils function
         movies_df["normalized_title"] = movies_df["title"].apply(normalize_title_for_matching)
         total = len(movies_df)
 
         # 2) Load & validate candidate soundtracks
         self.logger.info("🎧 Loading soundtrack candidates…")
         cands_df = pd.read_csv(self.input_candidates, dtype={"release_group_id": str})
+        cands_df["normalized_title"] = cands_df["title"].apply(normalize_title_for_matching)
         required_cols = {"release_group_id", "title", "year", "normalized_title"}
         if not required_cols.issubset(set(cands_df.columns)):
             raise KeyError(f"Candidates missing cols {required_cols}, found: {cands_df.columns.tolist()}")
@@ -84,24 +71,27 @@ class Step08MatchTMDb(BaseStep):
             if idx % 50 == 0 or idx == total:
                 print(f"➤ Processed {idx}/{total}", flush=True)
 
-            tmdb_id    = mv.tmdb_id
-            base_norm  = mv.normalized_title
-            tmdb_year  = getattr(mv, "release_year", None)
+            tmdb_id = mv.tmdb_id
+            base_norm = mv.normalized_title
+            tmdb_year = getattr(mv, "release_year", None)
 
             # 3a) Year filter ±YEAR_VARIANCE
             if tmdb_year is not None and "year" in cands_df.columns:
-                mask = cands_df["year"].between(tmdb_year - YEAR_VARIANCE, tmdb_year + YEAR_VARIANCE)
+                mask = cands_df["year"].between(
+                    tmdb_year - YEAR_VARIANCE, tmdb_year + YEAR_VARIANCE
+                )
                 pool_norms = cands_df.loc[mask, "normalized_title"].tolist()
             else:
                 pool_norms = all_norms
 
-            # Composite fuzzy scorer (accept **kwargs for RapidFuzz)
+            # 3b) Composite fuzzy scorer
             def composite_scorer(query: str, candidate: str, **kwargs):
                 s1 = fuzz.token_set_ratio(query, candidate)
                 s2 = fuzz.token_sort_ratio(query, candidate)
                 s3 = fuzz.partial_ratio(query, candidate)
                 return max(s1, s2, s3)
 
+            # 3c) First-pass fuzzy match
             best = process.extractOne(
                 base_norm,
                 pool_norms,
@@ -112,7 +102,7 @@ class Step08MatchTMDb(BaseStep):
             else:
                 best_norm, score, _ = best
 
-            # 3b) Fallback to TMDb alt titles if below threshold
+            # 3d) Fallback to TMDb alt titles if below threshold
             if score < self.threshold:
                 alt_titles = fetch_alt_titles(tmdb_id)
                 for alt in [normalize_title_for_matching(a) for a in alt_titles]:
@@ -124,21 +114,13 @@ class Step08MatchTMDb(BaseStep):
                             if score >= self.threshold:
                                 break
 
-            # 3c) (Optional) SBERT fallback
-            # if score < self.threshold and self.enable_vector:
-            #     emb1 = self.model.encode(mv.title, convert_to_tensor=True)
-            #     emb2 = self.model.encode(best_norm or "", convert_to_tensor=True)
-            #     vec_score = float(self.util.pytorch_cos_sim(emb1, emb2)[0][0] * 100)
-            #     if vec_score > score:
-            #         score = vec_score
-
-            # 3d) Map back to raw title & release_group_id
+            # 3e) Map back to raw title & release_group_id
             if best_norm:
                 raw_title, rgid = norm_to_raw.get(best_norm, (None, None))
             else:
                 raw_title, rgid = None, None
 
-            # 3e) Record match or miss
+            # 3f) Record match or miss
             if score >= self.threshold:
                 matches.append({
                     "tmdb_id": tmdb_id,
@@ -148,7 +130,11 @@ class Step08MatchTMDb(BaseStep):
                     "release_group_id": rgid
                 })
             else:
-                misses.append({"tmdb_title": mv.title, "best_match": raw_title, "score": score})
+                misses.append({
+                    "tmdb_title": mv.title,
+                    "best_match": raw_title,
+                    "score": score
+                })
 
         # 4) Save outputs
         matches_df = pd.DataFrame(matches)
