@@ -23,7 +23,7 @@ class Step04MBFullJoin(BaseStep):
         required_files = ["release", "release_group", "artist_credit"]
         for fname in required_files:
             if fname not in TSV_WHITELIST:
-                self.logger.error(f"Required file {fname} missing from whitelist")
+                self.fail(f"Required file {fname} missing from whitelist.")
                 return
 
         # Load key files

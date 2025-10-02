@@ -30,7 +30,7 @@ def main():
     logger = logging.getLogger("Pipeline")
 
     steps = [
-        Step00AcquireMusicbrainz(),
+        Step00AcquireMusicbrainz(cleanup_archives=False),
         Step01AuditRaw(),
         Step02CleanseTSV(),
         Step03CheckStructure(),

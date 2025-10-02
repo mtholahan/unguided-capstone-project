@@ -58,8 +58,7 @@ class Step05FilterSoundtracks(BaseStep):
         output_path = DATA_DIR / "soundtracks.tsv"
 
         if not joined_path.exists():
-            self.logger.error(f"Missing input file: {joined_path}")
-            return
+            self.fail(f"Missing input file: {joined_path}")
 
         # 1) Load the set of release_group_ids that are soundtracks
         soundtrack_ids = self.load_secondary_type_map()

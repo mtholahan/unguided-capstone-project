@@ -49,8 +49,13 @@ SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 #=== Whitelist of MusicBrainz TSV File Names TESTING ===
 TSV_WHITELIST = {
     "artist",
+    "artist_credit",
     "release",
+    "release_group",
+    "release_group_secondary_type",
+    "release_group_secondary_type_join",
 }
+
 
 # === MusicBrainz File Mappings ===
 MB_RAW_FILES = {name: MB_RAW_DIR / name for name in TSV_WHITELIST}

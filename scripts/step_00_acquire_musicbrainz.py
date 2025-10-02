@@ -42,6 +42,12 @@ class Step00AcquireMusicbrainz(BaseStep):
 
         target_dir.mkdir(parents=True, exist_ok=True)
 
+        # Log cleanup policy at the start
+        self.logger.info(
+        f"Archive cleanup policy: cleanup_archives={self.cleanup_archives}. "
+        + ("Tarballs will be removed after extraction." if self.cleanup_archives else "Tarballs will be preserved.")
+        )
+
         tar_bz2 = target_dir / self.FILENAME
         tar_path = target_dir / self.FILENAME.replace(".bz2", "")
 

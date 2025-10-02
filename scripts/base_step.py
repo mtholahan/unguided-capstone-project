@@ -13,6 +13,10 @@ class BaseStep:
         self.timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.setup_logger()
 
+    def fail(self, msg: str):
+        self.logger.error(msg)
+        raise RuntimeError(msg)
+
     def setup_logger(self):
         log_dir = Path(self.config.get("log_dir", "./logs"))
         log_dir.mkdir(parents=True, exist_ok=True)
