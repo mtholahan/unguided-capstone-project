@@ -33,17 +33,23 @@ MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 
 # === Whitelist of MusicBrainz TSV File Names (no extensions) ===
+# TSV_WHITELIST = {
+#     "artist",
+#     "artist_credit",
+#     "artist_credit_name",
+#     "genre",
+#     "release",
+#     "release_group",
+#     "release_group_secondary_type",
+#     "release_group_secondary_type_join",
+#     "release_group_tag",
+#     "tag",
+# }
+
+#=== Whitelist of MusicBrainz TSV File Names TESTING ===
 TSV_WHITELIST = {
     "artist",
-    "artist_credit",
-    "artist_credit_name",
-    "genre",
     "release",
-    "release_group",
-    "release_group_secondary_type",
-    "release_group_secondary_type_join",
-    "release_group_tag",
-    "tag",
 }
 
 # === MusicBrainz File Mappings ===

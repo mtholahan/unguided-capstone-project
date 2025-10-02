@@ -1,7 +1,7 @@
+from base_step import BaseStep
 import pandas as pd
 import requests
 from rapidfuzz import fuzz, process
-from base_step import BaseStep
 from config import TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE
 from utils import normalize_title_for_matching
 
