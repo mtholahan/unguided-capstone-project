@@ -39,3 +39,8 @@ slides/*.tmp
 credentials.json
 # Ignore personal environment setup script
 setup_env.ps1
+
+# Ignore log files
+*.log
+logs/
+
