@@ -44,3 +44,8 @@ setup_env.ps1
 *.log
 logs/
 
+# Ignore Python virtual environments
+venv/
+.venv/
+ENV/
+*env/
