@@ -10,7 +10,7 @@ from config import (
     DEBUG_MODE, TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE,
     ROW_LIMIT, GOLDEN_TITLES, GOLDEN_TEST_MODE, STEP_METRICS
 )
-from utils import normalize_title_for_matching
+from utils import normalize_for_matching_extended
 from tqdm import tqdm
 
 # Debug toggles
@@ -25,6 +25,23 @@ def fetch_alt_titles(tmdb_id: str) -> list[str]:
         return [t["title"] for t in r.json().get("titles", []) if t.get("title")]
     except Exception:
         return []
+
+
+def composite_scorer(q, c, g_year=None, c_year=None):
+    """Composite fuzzy scorer with year penalty."""
+    s1 = fuzz.token_set_ratio(q, c)
+    s2 = fuzz.partial_ratio(q, c)
+    score = int(0.7 * s1 + 0.3 * s2)
+
+    # year penalty
+    if g_year and c_year:
+        try:
+            dy = abs(int(g_year) - int(c_year))
+            score -= min(dy, 3) * 2
+        except Exception:
+            pass
+
+    return score
 
 
 class Step08MatchTMDb(BaseStep):
@@ -46,7 +63,7 @@ class Step08MatchTMDb(BaseStep):
     def run(self):
         # 1) Load TMDb movies
         movies_df = pd.read_csv(self.input_movies, dtype={"tmdb_id": str})
-        movies_df["normalized_title"] = movies_df["title"].apply(normalize_title_for_matching)
+        movies_df["normalized_title"] = movies_df["title"].apply(normalize_for_matching_extended)
 
         # Golden Test filter or ROW_LIMIT
         if GOLDEN_TEST_MODE:
@@ -60,7 +77,7 @@ class Step08MatchTMDb(BaseStep):
 
         # 2) Load soundtrack candidates
         cands_df = pd.read_csv(self.input_candidates, dtype={"release_group_id": str})
-        cands_df["normalized_title"] = cands_df["title"].apply(normalize_title_for_matching)
+        cands_df["normalized_title"] = cands_df["title"].apply(normalize_for_matching_extended)
 
         required = {"release_group_id", "title", "year", "normalized_title"}
         if not required.issubset(set(cands_df.columns)):
@@ -72,18 +89,12 @@ class Step08MatchTMDb(BaseStep):
             for row in cands_df.itertuples(index=False)
         }
 
-        def composite_scorer(q, c, **kwargs):
-            return max(
-                fuzz.token_set_ratio(q, c),
-                fuzz.token_sort_ratio(q, c),
-                fuzz.partial_ratio(q, c),
-            )
-
         matches, misses, golden_rows = [], [], []
 
         # Golden test tracking
         golden_total = len([t for t in GOLDEN_TITLES if t in movies_df["title"].values])
         golden_matched = 0
+        golden_with_candidates = 0
 
         # 3) Matching loop with tqdm
         with tqdm(total=len(movies_df), desc="Matching TMDb") as bar:
@@ -92,7 +103,7 @@ class Step08MatchTMDb(BaseStep):
                 tmdb_year = getattr(mv, "release_year", None)
                 base_norm = mv.normalized_title
 
-                # Candidate pool filtered by year
+                # Candidate pool filtered by year, with simple fallback
                 if tmdb_year:
                     mask = cands_df["year"].between(
                         int(tmdb_year) - YEAR_VARIANCE,
@@ -101,11 +112,15 @@ class Step08MatchTMDb(BaseStep):
                     )
                     pool_norms = cands_df.loc[mask, "normalized_title"].tolist()
                 else:
-                    pool_norms = all_norms
+                    # fallback: same first letter and length window
+                    pool_norms = [n for n in all_norms if n and n[0] == base_norm[0] and abs(len(n.split()) - len(base_norm.split())) <= 3]
+
+                if pool_norms:
+                    golden_with_candidates += 1
 
                 # Top-N fuzzy candidates
                 best_n = process.extract(
-                    base_norm, pool_norms, scorer=composite_scorer, limit=TOP_N
+                    base_norm, pool_norms, scorer=lambda q, c: composite_scorer(q, c, tmdb_year, norm_to_raw.get(c, (None, None, None))[2]), limit=TOP_N
                 )
 
                 if best_n:
@@ -115,8 +130,13 @@ class Step08MatchTMDb(BaseStep):
 
                 # Alt titles fallback
                 if score < self.threshold:
-                    for alt in [normalize_title_for_matching(t) for t in fetch_alt_titles(tmdb_id)]:
-                        alt_best_n = process.extract(alt, pool_norms, scorer=composite_scorer, limit=TOP_N)
+                    for alt in [normalize_for_matching_extended(t) for t in fetch_alt_titles(tmdb_id)]:
+                        alt_best_n = process.extract(
+                            alt,
+                            pool_norms,
+                            scorer=lambda q, c: composite_scorer(q, c, tmdb_year, norm_to_raw.get(c, (None, None, None))[2]),
+                            limit=TOP_N,
+                        )
                         if alt_best_n and alt_best_n[0][1] > score:
                             best_norm, score, _ = alt_best_n[0]
 
@@ -170,7 +190,7 @@ class Step08MatchTMDb(BaseStep):
                     self.logger.info(f"[DEBUG] {tmdb_title} ({tmdb_year}) → top {TOP_N}:")
                     for cand, cand_score, _ in best_n:
                         raw, rgid, cand_year = norm_to_raw.get(cand, ("?", "?", "?"))
-                        self.logger.info(f"    cand={raw[:40]!r}, score={cand_score}, year={cand_year}")
+                        self.logger.info(f"    norm={cand!r}, raw={raw[:40]!r}, score={cand_score}, year={cand_year}")
 
                 bar.update(1)
 
@@ -184,8 +204,9 @@ class Step08MatchTMDb(BaseStep):
 
         if GOLDEN_TEST_MODE:
             fidelity = (golden_matched / golden_total * 100) if golden_total else 0
+            coverage = (golden_with_candidates / golden_total * 100) if golden_total else 0
             self.logger.info(
-                f"⭐ Golden Test: {golden_matched}/{golden_total} matched ({fidelity:.1f}%)"
+                f"⭐ Golden Test: {golden_matched}/{golden_total} matched ({fidelity:.1f}%) | Coverage: {coverage:.1f}%"
             )
             self.logger.info(f"⭐ Golden test results saved to {self.output_golden}")
 
@@ -193,6 +214,17 @@ class Step08MatchTMDb(BaseStep):
             STEP_METRICS["golden_matched"] = golden_matched
             STEP_METRICS["golden_total"] = golden_total
             STEP_METRICS["golden_fidelity"] = fidelity
+            STEP_METRICS["golden_coverage"] = coverage
+
+            # Threshold sweep (debug only)
+            if DEBUG_MODE:
+                sweep_thresholds = range(65, 86, 2)
+                self.logger.info("🔎 Golden Set Threshold Sweep:")
+                for t in sweep_thresholds:
+                    matched = sum(1 for row in golden_rows if row.get("score", -1) >= t and row.get("release_group_id"))
+                    total = STEP_METRICS.get("golden_total", 0)
+                    fidelity = (matched / total * 100) if total else 0
+                    self.logger.info(f"  threshold={t} → {matched}/{golden_total} ({fidelity:.1f}%)")
 
         # 5) Write fresh documentation
         doc_text = f"""
