@@ -35,21 +35,7 @@ SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 # Global toggle for extra debug logging across steps
 DEBUG_MODE = True
 
-# === Whitelist of MusicBrainz TSV File Names FULL ===
-# TSV_WHITELIST = {
-#     "artist",
-#     "artist_credit",
-#     "artist_credit_name",
-#     "genre",
-#     "release",
-#     "release_group",
-#     "release_group_secondary_type",
-#     "release_group_secondary_type_join",
-#     "release_group_tag",
-#     "tag",
-# }
-
-#=== Whitelist of MusicBrainz TSV File Names STEP 5 ===
+#=== Whitelist of MusicBrainz TSV Files ===
 TSV_WHITELIST = {
     "artist",
     "artist_credit",

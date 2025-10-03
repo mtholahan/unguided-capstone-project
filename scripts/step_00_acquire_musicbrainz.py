@@ -11,7 +11,7 @@ import subprocess
 import tarfile
 from pathlib import Path
 from bs4 import BeautifulSoup
-from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST, UNATTENDED
+from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST
 from tqdm import tqdm
 
 
@@ -113,6 +113,10 @@ class Step00AcquireMusicbrainz(BaseStep):
             self.logger.warning(
                 f"The following whitelisted TSVs were not found in the archive: {missing}"
             )
+
+        # 🔎 Sanity log: which TSVs are actually being extracted
+        self.logger.info(f"Whitelisted TSVs to extract: {sorted(list(whitelist))}")
+        self.logger.info(f"TSVs found in archive and will be extracted: {sorted(list(internal_paths.keys()))}")
 
         # Step 4: Extract the whitelisted TSVs
         extracted_count = 0

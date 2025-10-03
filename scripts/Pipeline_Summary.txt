@@ -1,8 +1,12 @@
 📊 Pipeline Summary
-   Step 04 output            4,998,708 rows
-   Step 05 output            553,388 rows   ⏱ 59.1s
-   Step 06 output            20 rows   ⏱ 1.9s
-   Step 07 output            403,864 rows   ⏱ 25.7s
-   Step 08 output            7 rows   ⏱ 18.9s
-   Step 09 output            - rows   ⏱ 0.9s
-   Step 10 output            - rows
+   Step 00 Acquire MusicBrainz         - rows   ⏱ 50.2s
+   Step 01 Audit Raw                   - rows   ⏱ 32.7s
+   Step 02 Cleanse TSV                 - rows   ⏱ 99.1s
+   Step 03 Check Structure             - rows   ⏱ 36.2s
+   Step 04 MB Full Join                - rows   ⏱ 73.7s
+   Step 05: Filter Soundtracks         553,388 rows   ⏱ 64.7s
+   Step 06: Fetch TMDb Top 1000        20 rows   ⏱ 2.3s
+   Step 07: Prepare TMDb Input         403,864 rows   ⏱ 26.2s
+   Step 08: Match TMDb Titles          - rows   ⏱ 14.0s
+   Step 09: Apply Manual Rescues       - rows
+   Step 10: Enrich TMDb Matches        - rows

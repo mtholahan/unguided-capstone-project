@@ -16,7 +16,7 @@ from tqdm import tqdm
 # Debug toggles
 TOP_N = 5  # Number of candidates to log in debug mode
 
-def fetch_alt_titles(tmdb_id: str) -> list[str]:
+def fetch_alt_titles(tmdb_id: str):
     """Fetch alternative titles from TMDb for fallback matching."""
     try:
         url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/alternative_titles"
@@ -105,10 +105,10 @@ class Step08MatchTMDb(BaseStep):
 
                 # Candidate pool filtered by year, with simple fallback
                 if tmdb_year:
-                    mask = cands_df["year"].between(
+                    cand_years = pd.to_numeric(cands_df["year"], errors="coerce")
+                    mask = cand_years.between(
                         int(tmdb_year) - YEAR_VARIANCE,
-                        int(tmdb_year) + YEAR_VARIANCE,
-                        errors="ignore",
+                        int(tmdb_year) + YEAR_VARIANCE
                     )
                     pool_norms = cands_df.loc[mask, "normalized_title"].tolist()
                 else:
@@ -120,7 +120,10 @@ class Step08MatchTMDb(BaseStep):
 
                 # Top-N fuzzy candidates
                 best_n = process.extract(
-                    base_norm, pool_norms, scorer=lambda q, c: composite_scorer(q, c, tmdb_year, norm_to_raw.get(c, (None, None, None))[2]), limit=TOP_N
+                    base_norm,
+                    pool_norms,
+                    scorer=lambda q, c: composite_scorer(q, c, tmdb_year, norm_to_raw.get(c, (None, None, None))[2]),
+                    limit=TOP_N
                 )
 
                 if best_n:
