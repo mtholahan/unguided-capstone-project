@@ -1,4 +1,7 @@
-# step_03_check_structure.py
+"""Step 03: Check Structure
+Verifies that cleansed TSVs have the expected column structure.
+Reports mismatches to logs.
+"""
 
 from base_step import BaseStep
 import csv

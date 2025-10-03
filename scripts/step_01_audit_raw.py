@@ -1,8 +1,12 @@
-# step_01_audit_raw.py
+"""Step 01: Audit Raw
+Scans whitelisted TSVs for row counts, column counts, and basic integrity.
+Respects ROW_LIMIT if set in config.py.
+"""
 
 from base_step import BaseStep
 import csv
-from config import MB_RAW_DIR, TSV_WHITELIST
+from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT
+
 
 class Step01AuditRaw(BaseStep):
 
@@ -27,9 +31,22 @@ class Step01AuditRaw(BaseStep):
                 with open(tsv_path, encoding="utf-8") as f:
                     reader = csv.reader(f, delimiter='\t')
                     headers = next(reader)
-                    row_count = sum(1 for _ in reader)
 
-                self.logger.info(f"{tsv_path.name}: {row_count:,} rows, {len(headers)} columns")
+                    row_count = 0
+                    for row in reader:
+                        row_count += 1
+                        if ROW_LIMIT and row_count >= ROW_LIMIT:
+                            self.logger.info(
+                                f"[ROW_LIMIT] Stopping early after {ROW_LIMIT:,} rows"
+                            )
+                            break
+
+                self.logger.info(
+                    f"{tsv_path.name}: {row_count:,} rows (limited by ROW_LIMIT={ROW_LIMIT})"
+                    if ROW_LIMIT else
+                    f"{tsv_path.name}: {row_count:,} rows, {len(headers)} columns"
+                )
+
             except Exception as e:
                 self.logger.error(f"Error reading {tsv_path.name}: {e}")
 

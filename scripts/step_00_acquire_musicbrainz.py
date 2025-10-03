@@ -1,4 +1,7 @@
-# step_00_acquire_musicbrainz.py
+"""Step 00: Acquire MusicBrainz
+Downloads and extracts the MusicBrainz full export.
+Respects TSV_WHITELIST in config.py and saves raw TSVs to MB_RAW_DIR.
+"""
 
 from base_step import BaseStep
 import os
@@ -8,7 +11,7 @@ import subprocess
 import tarfile
 from pathlib import Path
 from bs4 import BeautifulSoup
-from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST
+from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST, UNATTENDED
 from tqdm import tqdm
 
 
@@ -44,8 +47,8 @@ class Step00AcquireMusicbrainz(BaseStep):
 
         # Log cleanup policy at the start
         self.logger.info(
-        f"Archive cleanup policy: cleanup_archives={self.cleanup_archives}. "
-        + ("Tarballs will be removed after extraction." if self.cleanup_archives else "Tarballs will be preserved.")
+            f"Archive cleanup policy: cleanup_archives={self.cleanup_archives}. "
+            + ("Tarballs will be removed after extraction." if self.cleanup_archives else "Tarballs will be preserved.")
         )
 
         tar_bz2 = target_dir / self.FILENAME
@@ -56,7 +59,7 @@ class Step00AcquireMusicbrainz(BaseStep):
             self.logger.info(f"Found existing {tar_path}, reusing it.")
         elif tar_bz2.exists():
             self.logger.info(f"{tar_path} not found, extracting from {tar_bz2}...")
-            subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}"], check=True)
+            subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}", "-y"], check=True)
             if not tar_path.exists():
                 raise FileNotFoundError(f"Extraction failed: {tar_path} not created.")
         else:
@@ -85,7 +88,7 @@ class Step00AcquireMusicbrainz(BaseStep):
                 return
 
             # Extract .tar from .tar.bz2
-            subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}"], check=True)
+            subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}", "-y"], check=True)
 
         # Step 3: List tar contents and match against whitelist
         whitelist = {Path(n).name for n in TSV_WHITELIST}
@@ -117,7 +120,7 @@ class Step00AcquireMusicbrainz(BaseStep):
             for pth in paths:
                 self.logger.info(f"Extracting {name} from internal path: {pth}")
                 subprocess.run(
-                    [str(seven_zip), "e", str(tar_path), f"-o{target_dir}", f"-ir!{pth}"],
+                    [str(seven_zip), "e", str(tar_path), f"-o{target_dir}", f"-ir!{pth}", "-y"],
                     check=True
                 )
                 extracted_count += 1

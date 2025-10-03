@@ -1,3 +1,8 @@
+"""Step 07: Prepare TMDb Input
+Prepares TMDb dataset for matching by normalizing fields (title, year).
+Writes tmdb_input.csv to TMDB_DIR.
+"""
+
 import pandas as pd
 from base_step import BaseStep
 from config import DATA_DIR

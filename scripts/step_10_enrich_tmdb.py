@@ -1,4 +1,7 @@
-# step_09_enrich_tmdb.py
+"""Step 10: Enrich TMDb
+Enriches matched titles with additional metadata (genres, IDs, release years).
+Writes tmdb_enriched_matches.csv to TMDB_DIR.
+"""
 
 from base_step import BaseStep
 import pandas as pd

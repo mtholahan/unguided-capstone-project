@@ -1,4 +1,7 @@
-# step_02_cleanse_tsv.py
+"""Step 02: Cleanse TSV
+Cleanses raw TSV files by removing nulls, malformed rows, or oversized fields.
+Outputs cleansed copies back to MB_RAW_DIR.
+"""
 
 from base_step import BaseStep
 import csv

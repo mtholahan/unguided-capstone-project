@@ -1,4 +1,8 @@
-# scripts/step_06_fetch_tmdb.py
+"""Step 06: Fetch TMDb
+Fetches top-rated movies from TMDb API.
+Defaults to top 1,000 but configurable (self.max_movies).
+Writes enriched_top_1000.csv (or larger) to TMDB_DIR.
+"""
 
 from base_step import BaseStep
 import os
@@ -6,48 +10,57 @@ import requests
 import pandas as pd
 from pathlib import Path
 from config import TMDB_DIR, TMDB_API_KEY
+from tqdm import tqdm
 
 class Step06FetchTMDb(BaseStep):
     def __init__(self, name="Step 06: Fetch TMDb Top 1000"):
         super().__init__(name)
         self.api_key = TMDB_API_KEY
         self.output_path = TMDB_DIR / "enriched_top_1000.csv"
-        self.max_movies = 1000
+        self.max_movies = 10000
 
     def run(self):
         if not self.api_key:
             raise RuntimeError("TMDB_API_KEY not set")
-        self.logger.info("▶ Fetching top 1,000 TMDb movies…")
+
+        self.logger.info(f"▶ Fetching up to {self.max_movies:,} TMDb movies…")
         genre_map = self._fetch_genre_map()
         movies = []
         page = 1
-        while len(movies) < self.max_movies:
-            data = self._fetch_page(page)
-            results = data.get("results", [])
-            if not results:
-                break
-            for m in results:
-                tmdb_id = m.get("id")
-                title   = m.get("title", "")
-                rd      = m.get("release_date") or ""
-                try:
-                    year = int(rd.split("-")[0])
-                except:
-                    year = None
-                genre_ids = m.get("genre_ids", [])
-                genres = "|".join(genre_map.get(gid, "") for gid in genre_ids)
-                movies.append({
-                    "tmdb_id": tmdb_id,
-                    "title": title,
-                    "release_year": year,
-                    "genres": genres
-                })
-                if len(movies) >= self.max_movies:
+
+        with tqdm(total=self.max_movies, desc="Fetching TMDb") as bar:
+            while len(movies) < self.max_movies:
+                data = self._fetch_page(page)
+                results = data.get("results", [])
+                if not results:
                     break
-            self.logger.info(f"   • Page {page}, collected {len(movies)} total")
-            page += 1
-            if page > data.get("total_pages", 1):
-                break
+
+                for m in results:
+                    tmdb_id = m.get("id")
+                    title   = m.get("title", "")
+                    rd      = m.get("release_date") or ""
+                    try:
+                        year = int(rd.split("-")[0])
+                    except:
+                        year = None
+                    genre_ids = m.get("genre_ids", [])
+                    genres = "|".join(genre_map.get(gid, "") for gid in genre_ids)
+
+                    movies.append({
+                        "tmdb_id": tmdb_id,
+                        "title": title,
+                        "release_year": year,
+                        "genres": genres
+                    })
+
+                    bar.update(1)
+                    if len(movies) >= self.max_movies:
+                        break
+
+                self.logger.info(f"   • Page {page}, collected {len(movies)} total")
+                page += 1
+                if page > data.get("total_pages", 1):
+                    break
 
         df = pd.DataFrame(movies)
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -66,4 +79,3 @@ class Step06FetchTMDb(BaseStep):
         r.raise_for_status()
         data = r.json().get("genres", [])
         return {g["id"]: g["name"] for g in data}
-

@@ -1,4 +1,7 @@
-# step_04_mb_full_join.py
+"""Step 04: MusicBrainz Full Join
+Joins release, release_group, and artist_credit into a consolidated dataset.
+Writes joined_release_data.tsv to DATA_DIR.
+"""
 
 from base_step import BaseStep
 import csv

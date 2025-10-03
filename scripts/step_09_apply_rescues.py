@@ -1,4 +1,7 @@
-# step_09_apply_rescues.py
+"""Step 09: Apply Rescues
+Applies manual overrides (“rescues”) to fix known false negatives.
+Merges rescue data into tmdb_matches.csv.
+"""
 
 from base_step import BaseStep
 import pandas as pd

@@ -32,7 +32,11 @@ MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 
-# === Whitelist of MusicBrainz TSV File Names (no extensions) ===
+# === Global Toggles ===
+UNATTENDED = True
+ROW_LIMIT = 100000 # None
+
+# === Whitelist of MusicBrainz TSV File Names FULL ===
 # TSV_WHITELIST = {
 #     "artist",
 #     "artist_credit",
@@ -46,7 +50,7 @@ SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 #     "tag",
 # }
 
-#=== Whitelist of MusicBrainz TSV File Names TESTING ===
+#=== Whitelist of MusicBrainz TSV File Names STEP 5 ===
 TSV_WHITELIST = {
     "artist",
     "artist_credit",

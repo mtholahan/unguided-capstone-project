@@ -1,73 +1,40 @@
 # utils.py
 
 import re
+import unicodedata
 import pandas as pd
 
-def clean_title(text):
-    """
-    Normalize soundtrack or movie titles:
-    - Lowercase
-    - Remove brackets, OST tags, subtitles
-    - Strip noise words like "original soundtrack"
-    """
-    if not isinstance(text, str):
-        return ""
-
-    text = text.lower()
-
-    noise_patterns = [
-        r'\(.*?\)',
-        r'\[.*?\]',
-        r'original motion picture soundtrack',
-        r'original soundtrack',
-        r'motion picture soundtrack',
-        r'complete motion picture score',
-        r'deluxe edition',
-        r'expanded edition',
-        r'\bost\b',
-        r'\bsoundtrack\b',
-        r'\bscore\b'
-    ]
-
-    for pattern in noise_patterns:
-        text = re.sub(pattern, '', text, flags=re.IGNORECASE)
-
-    text = re.sub(r'[^a-z0-9\s]', '', text)  # remove punctuation
-    return re.sub(r'\s+', ' ', text).strip()
-
-def is_mostly_digits(s, threshold=0.7):
-    digits = sum(c.isdigit() for c in s)
-    return digits / max(len(s), 1) > threshold
-
-import re
-import unicodedata
 
 def normalize_title_for_matching(text: str) -> str:
     """
-    Normalize soundtrack or movie titles by:
-      - Lowercasing
-      - Stripping diacritics (accents)
-      - Removing bracketed text (e.g. "(Deluxe)", "[2005 Remaster]")
-      - Removing common noise phrases (OST tags, "Original Soundtrack", etc.)
-      - Removing punctuation
-      - Collapsing multiple spaces
-      - Dropping single-letter tokens
+    Normalize soundtrack or movie titles for robust fuzzy matching.
+
+    Steps:
+      1. Lowercase
+      2. Strip diacritics (accents)
+      3. Remove bracketed text: "(Deluxe)", "[Remix]", "{Special Edition}"
+      4. Remove common noise phrases (OST, "Original Soundtrack", etc.)
+      5. Remove punctuation/symbols
+      6. Collapse multiple spaces
+      7. Drop single-character tokens
+      8. Return cleaned string
     """
     if not isinstance(text, str):
         return ""
 
-    # 1) Lowercase and strip leading/trailing whitespace
+    # 1) Lowercase + trim
     text = text.lower().strip()
 
-    # 2) Normalize Unicode to NFKD and drop diacritics (accents)
+    # 2) Normalize Unicode + strip accents
     text = unicodedata.normalize("NFKD", text)
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
 
-    # 3) Remove bracketed content like "(Deluxe)" or "[Remix]"
-    text = re.sub(r"\(.*?\)", "", text)
-    text = re.sub(r"\[.*?\]", "", text)
+    # 3) Remove bracketed content
+    text = re.sub(r"\(.*?\)", " ", text)
+    text = re.sub(r"\[.*?\]", " ", text)
+    text = re.sub(r"\{.*?\}", " ", text)
 
-    # 4) Remove common “noise” phrases related to soundtracks
+    # 4) Noise phrases (soundtrack clutter)
     noise_patterns = [
         r"original motion picture soundtrack",
         r"original soundtrack",
@@ -80,14 +47,37 @@ def normalize_title_for_matching(text: str) -> str:
         r"\bscore\b",
     ]
     for pat in noise_patterns:
-        text = re.sub(pat, "", text, flags=re.IGNORECASE)
+        text = re.sub(pat, " ", text, flags=re.IGNORECASE)
 
-    # 5) Remove any remaining non-alphanumeric characters (punctuation, symbols)
+    # 5) Remove non-alphanumeric chars
     text = re.sub(r"[^a-z0-9\s]", " ", text)
 
-    # 6) Collapse multiple spaces into one
+    # 6) Collapse spaces
     text = re.sub(r"\s+", " ", text).strip()
 
-    # 7) Drop single-letter tokens (e.g. “a”, “x”)
+    # 7) Drop single-character tokens
     tokens = [t for t in text.split() if len(t) > 1]
     return " ".join(tokens)
+
+
+def clean_title(text: str) -> str:
+    """
+    Lightweight cleaner for display/logging.
+    Keeps alphanumeric + spaces, strips obvious OST noise.
+    """
+    if not isinstance(text, str):
+        return ""
+    text = text.lower()
+    text = re.sub(r"\(.*?\)|\[.*?\]", "", text)
+    text = re.sub(r"[^a-z0-9\s]", "", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def is_mostly_digits(s: str, threshold: float = 0.7) -> bool:
+    """
+    Return True if a string is mostly digits (like catalog IDs).
+    """
+    if not s:
+        return False
+    digits = sum(c.isdigit() for c in s)
+    return digits / max(len(s), 1) > threshold
