@@ -9,7 +9,6 @@ from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT
 
 
 class Step01AuditRaw(BaseStep):
-
     def __init__(self, name="Step 01 Audit Raw"):
         super().__init__(name)
 

@@ -1,6 +1,9 @@
 # main.py
 import logging
 import argparse
+import pandas as pd
+from pathlib import Path
+import time
 
 from step_00_acquire_musicbrainz import Step00AcquireMusicbrainz
 from step_01_audit_raw import Step01AuditRaw
@@ -13,13 +16,15 @@ from step_07_prepare_tmdb_input import Step07PrepareTMDbInput
 from step_08_match_tmdb import Step08MatchTMDb
 from step_09_apply_rescues import Step09ApplyRescues
 from step_10_enrich_tmdb import Step10EnrichMatches
+from config import DATA_DIR, TMDB_DIR, STEP_METRICS
 
-# Use the root logger configured in base_step.py
 logger = logging.getLogger(__name__)
+
+# Track runtimes
+STEP_TIMES = {}
 
 
 def build_steps():
-    """Return the ordered list of pipeline steps."""
     return [
         Step00AcquireMusicbrainz(cleanup_archives=False),
         Step01AuditRaw(),
@@ -35,6 +40,72 @@ def build_steps():
     ]
 
 
+def safe_count(path: Path) -> str:
+    """Return row count of CSV/TSV file, or '-' if not available."""
+    if not path.exists() or path.stat().st_size == 0:
+        return "-"
+    try:
+        if path.suffix == ".tsv":
+            pd.read_csv(path, sep="\t", nrows=5)
+        else:
+            pd.read_csv(path, nrows=5)
+        with path.open(encoding="utf-8", errors="ignore") as f:
+            total = sum(1 for _ in f) - 1
+        return f"{total:,}"
+    except Exception as e:
+        return f"ERR ({e})"
+
+
+def print_summary(steps):
+    """Log + write pipeline summary to file."""
+    summary_files = {
+        "Step 04 output": DATA_DIR / "joined_release_data.tsv",
+        "Step 05 output": DATA_DIR / "soundtracks.tsv",
+        "Step 06 output": TMDB_DIR / "enriched_top_1000.csv",
+        "Step 07 output": TMDB_DIR / "tmdb_input_candidates_clean.csv",
+        "Step 08 output": TMDB_DIR / "tmdb_match_results.csv",
+        "Step 09 output": TMDB_DIR / "tmdb_match_results_enhanced.csv",
+        "Step 10 output": TMDB_DIR / "tmdb_enriched_matches.csv",
+    }
+
+    lines = ["📊 Pipeline Summary"]
+    for step in steps:
+        step_num = step.name.split(":")[0].split()[-1].zfill(2)
+        label = f"{step.name}"
+        runtime = STEP_TIMES.get(step_num, None)
+
+        # If step produces a file we track, get row count
+        count = "-"
+        for lbl, path in summary_files.items():
+            if lbl.startswith(f"Step {step_num}"):
+                count = safe_count(path)
+                break
+
+        if runtime is not None:
+            lines.append(f"   {label:<35} {count} rows   ⏱ {runtime:.1f}s")
+        else:
+            lines.append(f"   {label:<35} {count} rows")
+
+    # Add Golden Test fidelity if available
+    if "golden_fidelity" in STEP_METRICS:
+        g = STEP_METRICS
+        lines.append("")
+        lines.append(
+            f"⭐ Golden Test Fidelity: {g['golden_matched']}/{g['golden_total']} "
+            f"({g['golden_fidelity']:.1f}%)"
+        )
+
+    # Log + write to file
+    for line in lines:
+        logger.info(line)
+
+    summary_file = Path("Pipeline_Summary.txt")
+    with summary_file.open("w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+    logger.info(f"📝 Pipeline summary written to {summary_file.resolve()}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Run the Movie Soundtrack Pipeline")
     parser.add_argument(
@@ -47,11 +118,11 @@ def main():
 
     steps = build_steps()
 
-    # Map step number strings ("00", "01", "05", etc.) to index
+    # Resume logic
     start_index = 0
     if args.resume:
         for i, step in enumerate(steps):
-            step_num = step.name.split(":")[0].split()[-1]  # e.g. "Step 05"
+            step_num = step.name.split(":")[0].split()[-1]
             step_num = step_num.zfill(2)
             if step_num == args.resume.zfill(2):
                 start_index = i
@@ -61,15 +132,25 @@ def main():
             logger.error(f"❌ Invalid resume step: {args.resume}")
             return
 
-    # Run pipeline from chosen step
+    # Run pipeline with timing
     for step in steps[start_index:]:
         logger.info(f"▶ Running {step.name}...")
+        start_time = time.time()
         try:
             step.run()
-            logger.info(f"✅ {step.name} complete.")
+            elapsed = time.time() - start_time
+            step_num = step.name.split(":")[0].split()[-1]
+            STEP_TIMES[step_num] = elapsed
+            logger.info(f"✅ {step.name} complete. ⏱ {elapsed:.1f}s")
         except Exception as e:
-            logger.error(f"❌ {step.name} failed: {e}", exc_info=True)
+            elapsed = time.time() - start_time
+            step_num = step.name.split(":")[0].split()[-1]
+            STEP_TIMES[step_num] = elapsed
+            logger.error(f"❌ {step.name} failed after {elapsed:.1f}s: {e}", exc_info=True)
             break
+
+    # Always print/write summary
+    print_summary(steps)
 
 
 if __name__ == "__main__":

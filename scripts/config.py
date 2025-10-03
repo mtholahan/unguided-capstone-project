@@ -1,7 +1,7 @@
 """
 Capstone Project Configuration File
 Author: Mark
-Last Updated: Thu, 08-May-2025
+Last Updated: Thu, 03-Oct-2025
 
 Defines constants for file paths, filenames, and database settings used throughout the ETL pipeline.
 Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files, and Postgres.
@@ -31,6 +31,9 @@ ENRICHED_TOP1000 = TMDB_DIR / "enriched_top_1000.csv"
 MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
+
+# Global toggle for extra debug logging across steps
+DEBUG_MODE = True
 
 # === Whitelist of MusicBrainz TSV File Names FULL ===
 # TSV_WHITELIST = {
@@ -112,7 +115,8 @@ UNATTENDED = True
 
 # === Testing Toggles ===
 # =======================
-ROW_LIMIT = 50 # None
+ROW_LIMIT = None
+
 # === Golden Test Mode ===
 GOLDEN_TEST_MODE = True  # Global toggle for golden benchmark runs
 
@@ -163,3 +167,6 @@ GOLDEN_EXPECTED_YEARS = {
     "Back to the Future": 1985,
     "Frozen": 2013,
 }
+
+# Global metrics (populated by steps like Step 08)
+STEP_METRICS = {}

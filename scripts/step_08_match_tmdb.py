@@ -6,13 +6,15 @@ Writes tmdb_match_results.csv, tmdb_match_unmatched.csv, and (in Golden Test Mod
 from base_step import BaseStep
 import pandas as pd, requests
 from rapidfuzz import fuzz, process
-from config import TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE, ROW_LIMIT, GOLDEN_TITLES, GOLDEN_TEST_MODE
+from config import (
+    DEBUG_MODE, TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE,
+    ROW_LIMIT, GOLDEN_TITLES, GOLDEN_TEST_MODE, STEP_METRICS
+)
 from utils import normalize_title_for_matching
 from tqdm import tqdm
 
 # Debug toggles
-DEBUG_MODE = True    # Enable to log top-N candidates for each TMDb movie
-TOP_N = 5            # Number of candidates to log in debug mode
+TOP_N = 5  # Number of candidates to log in debug mode
 
 def fetch_alt_titles(tmdb_id: str) -> list[str]:
     """Fetch alternative titles from TMDb for fallback matching."""
@@ -36,13 +38,9 @@ class Step08MatchTMDb(BaseStep):
         # Input: cleaned MusicBrainz soundtrack candidates (Step 05 output)
         self.input_candidates = TMDB_DIR / "tmdb_input_candidates_clean.csv"
 
-        # Output: successful matches
+        # Outputs
         self.output_matches = TMDB_DIR / "tmdb_match_results.csv"
-
-        # Output: failed matches
         self.output_unmatched = TMDB_DIR / "tmdb_match_unmatched.csv"
-
-        # Output: golden test set results (if enabled)
         self.output_golden = TMDB_DIR / "tmdb_match_golden.csv"
 
     def run(self):
@@ -50,7 +48,7 @@ class Step08MatchTMDb(BaseStep):
         movies_df = pd.read_csv(self.input_movies, dtype={"tmdb_id": str})
         movies_df["normalized_title"] = movies_df["title"].apply(normalize_title_for_matching)
 
-        # Golden test mode takes precedence
+        # Golden Test filter or ROW_LIMIT
         if GOLDEN_TEST_MODE:
             before = len(movies_df)
             movies_df = movies_df[movies_df["title"].isin(GOLDEN_TITLES)].copy()
@@ -78,31 +76,36 @@ class Step08MatchTMDb(BaseStep):
             return max(
                 fuzz.token_set_ratio(q, c),
                 fuzz.token_sort_ratio(q, c),
-                fuzz.partial_ratio(q, c)
+                fuzz.partial_ratio(q, c),
             )
 
         matches, misses, golden_rows = [], [], []
 
+        # Golden test tracking
+        golden_total = len([t for t in GOLDEN_TITLES if t in movies_df["title"].values])
+        golden_matched = 0
+
         # 3) Matching loop with tqdm
-        total = len(movies_df)
-        with tqdm(total=total, desc="Matching TMDb") as bar:
-            for idx, mv in enumerate(movies_df.itertuples(index=False), start=1):
-                tmdb_id, tmdb_title, tmdb_year = mv.tmdb_id, mv.title, getattr(mv, "release_year", None)
+        with tqdm(total=len(movies_df), desc="Matching TMDb") as bar:
+            for mv in movies_df.itertuples(index=False):
+                tmdb_id, tmdb_title = mv.tmdb_id, mv.title
+                tmdb_year = getattr(mv, "release_year", None)
                 base_norm = mv.normalized_title
 
-                # Year filter
+                # Candidate pool filtered by year
                 if tmdb_year:
-                    mask = cands_df["year"].between(tmdb_year - YEAR_VARIANCE, tmdb_year + YEAR_VARIANCE)
+                    mask = cands_df["year"].between(
+                        int(tmdb_year) - YEAR_VARIANCE,
+                        int(tmdb_year) + YEAR_VARIANCE,
+                        errors="ignore",
+                    )
                     pool_norms = cands_df.loc[mask, "normalized_title"].tolist()
                 else:
                     pool_norms = all_norms
 
-                # Top-N candidates instead of single best
+                # Top-N fuzzy candidates
                 best_n = process.extract(
-                    base_norm,
-                    pool_norms,
-                    scorer=composite_scorer,
-                    limit=TOP_N
+                    base_norm, pool_norms, scorer=composite_scorer, limit=TOP_N
                 )
 
                 if best_n:
@@ -122,8 +125,22 @@ class Step08MatchTMDb(BaseStep):
                 else:
                     raw_title, rgid, cand_year = None, None, None
 
+                # Year tolerance for Golden Set
+                pass_year_check = True
+                if tmdb_year and cand_year:
+                    try:
+                        tmdb_y, cand_y = int(tmdb_year), int(cand_year)
+                        if tmdb_title in GOLDEN_TITLES:
+                            if abs(tmdb_y - cand_y) > 2:
+                                pass_year_check = False
+                        else:
+                            if tmdb_y != cand_y:
+                                pass_year_check = False
+                    except Exception:
+                        pass_year_check = True
+
                 # Save match vs miss
-                if score >= self.threshold and rgid:
+                if score >= self.threshold and rgid and pass_year_check:
                     row = {
                         "tmdb_id": tmdb_id,
                         "tmdb_title": tmdb_title,
@@ -131,22 +148,24 @@ class Step08MatchTMDb(BaseStep):
                         "matched_title": raw_title,
                         "score": score,
                         "mb_year": cand_year,
-                        "tmdb_year": tmdb_year
+                        "tmdb_year": tmdb_year,
                     }
                     matches.append(row)
                     golden_rows.append(row)
+                    if tmdb_title in GOLDEN_TITLES:
+                        golden_matched += 1
                 else:
                     row = {
                         "tmdb_id": tmdb_id,
                         "tmdb_title": tmdb_title,
                         "best_match": raw_title,
                         "score": score,
-                        "tmdb_year": tmdb_year
+                        "tmdb_year": tmdb_year,
                     }
                     misses.append(row)
                     golden_rows.append(row)
 
-                # Debug log for this movie
+                # Debug log
                 if DEBUG_MODE and best_n:
                     self.logger.info(f"[DEBUG] {tmdb_title} ({tmdb_year}) → top {TOP_N}:")
                     for cand, cand_score, _ in best_n:
@@ -162,10 +181,20 @@ class Step08MatchTMDb(BaseStep):
             pd.DataFrame(golden_rows).to_csv(self.output_golden, index=False)
 
         self.logger.info(f"✅ Saved {len(matches)} matches, {len(misses)} unmatched")
+
         if GOLDEN_TEST_MODE:
+            fidelity = (golden_matched / golden_total * 100) if golden_total else 0
+            self.logger.info(
+                f"⭐ Golden Test: {golden_matched}/{golden_total} matched ({fidelity:.1f}%)"
+            )
             self.logger.info(f"⭐ Golden test results saved to {self.output_golden}")
 
-        # 5) Write fresh documentation file
+            # Save to global metrics
+            STEP_METRICS["golden_matched"] = golden_matched
+            STEP_METRICS["golden_total"] = golden_total
+            STEP_METRICS["golden_fidelity"] = fidelity
+
+        # 5) Write fresh documentation
         doc_text = f"""
 Step 08 Output Documentation
 ============================
@@ -174,24 +203,14 @@ Generated by Step 08: Match TMDb Titles
 
 Files Produced:
 ---------------
+1. tmdb_match_results.csv → Successful matches (TMDb ↔ MB OST).
+2. tmdb_match_unmatched.csv → Failed matches below threshold.
+3. tmdb_match_golden.csv → Golden Test results (if GOLDEN_TEST_MODE=True).
 
-1. tmdb_match_results.csv
-   - Contains successful matches (TMDb ↔ MB OST).
-   - Schema:
-       tmdb_id, tmdb_title, release_group_id, matched_title, score, mb_year, tmdb_year
-
-2. tmdb_match_unmatched.csv
-   - Contains TMDb movies that failed to meet threshold.
-   - Schema:
-       tmdb_title, best_match, score
-
-3. tmdb_match_golden.csv (only if GOLDEN_TEST_MODE=True)
-   - Contains both matches and misses for the ~20 iconic Golden Test films.
-
-Inputs (for reference):
------------------------
-- enriched_top_1000.csv → TMDb movie list (Step 06 output).
-- tmdb_input_candidates_clean.csv → MusicBrainz OST pool (Step 05 output).
+Inputs:
+-------
+- enriched_top_1000.csv → TMDb movie list (Step 06).
+- tmdb_input_candidates_clean.csv → MB OST pool (Step 05).
 
 Run Context:
 ------------
@@ -199,6 +218,7 @@ Run Context:
 - Golden Test Mode: {GOLDEN_TEST_MODE}
 - Debug Mode: {DEBUG_MODE}, Top-N={TOP_N}
 - ROW_LIMIT: {ROW_LIMIT or "∞"}
+- Year Variance: ±{YEAR_VARIANCE}
 """
         doc_path = TMDB_DIR / "Step08_CSV_Documentation.txt"
         with open(doc_path, "w", encoding="utf-8") as f:

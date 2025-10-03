@@ -1,45 +1,60 @@
 """Step 07: Prepare TMDb Input
 Prepares TMDb dataset for matching by normalizing fields (title, year).
-Writes tmdb_input.csv to TMDB_DIR.
+Writes tmdb_input_candidates_clean.csv to TMDB_DIR.
 """
 
-import pandas as pd
 from base_step import BaseStep
-from config import DATA_DIR
+import pandas as pd
+from config import DATA_DIR, TMDB_DIR, DEBUG_MODE
 from utils import normalize_title_for_matching, is_mostly_digits
+from tqdm import tqdm
 
 class Step07PrepareTMDbInput(BaseStep):
     def __init__(self, name="Step 07: Prepare TMDb Input"):
         super().__init__(name)
         self.input_tsv  = DATA_DIR / "soundtracks.tsv"
-        self.output_csv = DATA_DIR / "tmdb" / "tmdb_input_candidates_clean.csv"
+        self.output_csv = TMDB_DIR / "tmdb_input_candidates_clean.csv"
 
     def run(self):
-        self.logger.info("🔍 Loading soundtracks (no header)...")
-        # Read the raw TSV (no column names)
-        df = pd.read_csv(self.input_tsv, sep="\t", header=None, dtype=str, engine="python")
+        self.logger.info("🔍 Loading soundtracks with headers...")
+        df = pd.read_csv(self.input_tsv, sep="\t", header=0, dtype=str, engine="python")
 
-        # 1) Extract the three needed columns by index:
-        #    [2] → title
-        #    [4] → release_group_id
-        #   [18] → release_date (YYYY-MM-DD…)
-        working = pd.DataFrame({
-            "title":            df.iloc[:, 2],
-            "release_group_id": df.iloc[:, 4],
-            "release_year":     df.iloc[:, 18].str.slice(0, 4)
-        })
+        # Confirm required columns exist
+        required_cols = {"release_group_id", "release_year", "raw_row"}
+        if not required_cols.issubset(df.columns):
+            self.fail(f"Missing required columns in {self.input_tsv}: {required_cols - set(df.columns)}")
 
-        # 2) Normalize titles
+        # Hardened title extraction
+        def extract_title(raw):
+            try:
+                parts = raw.split("|")
+                # Try column 2 (usual title)
+                if len(parts) > 2 and parts[2].strip():
+                    return parts[2].strip()
+                # Fallback col 1
+                if len(parts) > 1 and parts[1].strip():
+                    return parts[1].strip()
+                # Fallback col 0
+                if parts and parts[0].strip():
+                    return parts[0].strip()
+                return None
+            except Exception:
+                return None
+
+        self.logger.info("🔧 Extracting titles...")
+        df["title"] = [extract_title(raw) for raw in tqdm(df["raw_row"], desc="Extracting titles")]
+
+        # Normalize titles
         self.logger.info("🔧 Normalizing titles...")
-        working["normalized_title"] = working["title"].apply(normalize_title_for_matching)
+        df["normalized_title"] = [normalize_title_for_matching(t) for t in tqdm(df["title"], desc="Normalizing")]
 
-        # 3) Filter out invalid rows (short titles, numeric titles, bad year)
-        initial_count = len(working)
+        # Filter out invalid rows
+        initial_count = len(df)
         self.logger.info(f"ℹ️ Initial row count: {initial_count}")
 
         def is_valid(row):
             nt = row["normalized_title"]
-            if len(nt) < 3:
+            if not nt or len(nt) < 3:
                 return False
             if is_mostly_digits(nt):
                 return False
@@ -49,21 +64,33 @@ class Step07PrepareTMDbInput(BaseStep):
                 return False
             return (1900 <= yr <= 2025)
 
-        filtered = working[working.apply(is_valid, axis=1)]
+        filtered = df[df.apply(is_valid, axis=1)]
         removed = initial_count - len(filtered)
         self.logger.info(f"🧹 Removed {removed} invalid or out-of-range titles")
 
-        # 4) Drop duplicates on (normalized_title, release_year)
+        # Drop duplicates on (normalized_title, release_year)
         self.logger.info("🧼 Dropping duplicates...")
         filtered = filtered.drop_duplicates(subset=["normalized_title", "release_year"])
 
-        # 5) Build final output with exactly four columns
+        # Final output with clean schema
         out_df = pd.DataFrame({
             "normalized_title":  filtered["normalized_title"],
             "title":             filtered["title"],
             "release_group_id":  filtered["release_group_id"],
             "year":              filtered["release_year"].astype(int)
         })
+
+        # Debug preview
+        if DEBUG_MODE:
+            self.logger.info("🔎 Debug Preview (first 10 rows):")
+            preview = out_df.head(10).to_dict(orient="records")
+            for row in preview:
+                self.logger.info(
+                    f"   rgid={row['release_group_id']}, "
+                    f"title={row['title']}, "
+                    f"norm={row['normalized_title']}, "
+                    f"year={row['year']}"
+                )
 
         final_count = len(out_df)
         out_df.to_csv(self.output_csv, index=False)

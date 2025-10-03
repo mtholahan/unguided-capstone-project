@@ -7,13 +7,15 @@ from base_step import BaseStep
 import pandas as pd
 import requests
 import time
+import os
 from tqdm import tqdm
 from config import TMDB_DIR, TMDB_API_KEY
+
 
 class Step10EnrichMatches(BaseStep):
     def __init__(self, name: str = "Step 10: Enrich TMDb Matches"):
         super().__init__(name)
-        # Read “enhanced” matches (after rescues); if not found, fallback to raw matches
+        # Prefer the “enhanced” file, fallback to raw matches
         self.input_matches = TMDB_DIR / "tmdb_match_results_enhanced.csv"
         self.fallback_matches = TMDB_DIR / "tmdb_match_results.csv"
         self.output_file = TMDB_DIR / "tmdb_enriched_matches.csv"
@@ -32,10 +34,23 @@ class Step10EnrichMatches(BaseStep):
         )
 
     def run(self):
-        # 1) Load matches (prefer the enhanced file if it exists)
+        # 1) Load matches (prefer enhanced file if it exists)
         matches_path = self.input_matches if self.input_matches.exists() else self.fallback_matches
         self.logger.info(f"📥 Loading matches from {matches_path.name} …")
-        matches = pd.read_csv(matches_path, dtype=str)
+
+        if not matches_path.exists() or os.path.getsize(matches_path) == 0:
+            self.logger.warning(f"🪫 No matches available in {matches_path}; skipping Step 10.")
+            return  # Exit gracefully
+
+        try:
+            matches = pd.read_csv(matches_path, dtype=str)
+        except pd.errors.EmptyDataError:
+            self.logger.warning(f"🪫 {matches_path} is empty; skipping Step 10.")
+            return
+
+        if matches.empty:
+            self.logger.warning(f"🪫 {matches_path} contains 0 rows; skipping Step 10.")
+            return
 
         enriched_rows = []
         total = len(matches)
@@ -49,18 +64,18 @@ class Step10EnrichMatches(BaseStep):
             tmdb_id = row.tmdb_id
             result = {
                 "tmdb_id":         tmdb_id,
-                "tmdb_title":      self.clean_text(row.tmdb_title),
-                "matched_title":   self.clean_text(row.matched_title),
-                "release_year":    row.release_year if "release_year" in row._fields else None,
-                "match_score":     row.match_score if "match_score" in row._fields else None,
-                "release_group_id": row.release_group_id,
+                "tmdb_title":      self.clean_text(getattr(row, "tmdb_title", "")),
+                "matched_title":   self.clean_text(getattr(row, "matched_title", "")),
+                "release_year":    getattr(row, "release_year", None),
+                "match_score":     getattr(row, "match_score", None),
+                "release_group_id": getattr(row, "release_group_id", None),
                 "runtime":         None,
                 "genres":          "",
                 "overview":        "",
                 "alt_titles":      "",
             }
 
-            # 2a) Fetch movie details (runtime, genres, overview)
+            # 2a) Fetch movie details
             try:
                 resp = requests.get(
                     f"{self.api_base}/{tmdb_id}",
@@ -71,7 +86,6 @@ class Step10EnrichMatches(BaseStep):
                 data = resp.json()
 
                 result["runtime"] = data.get("runtime")
-                # Join genre names with commas
                 result["genres"] = ", ".join([g["name"] for g in data.get("genres", [])])
                 result["overview"] = self.clean_text(data.get("overview", ""))
                 time.sleep(self.sleep_time)

@@ -1,0 +1,8 @@
+📊 Pipeline Summary
+   Step 04 output            4,998,708 rows
+   Step 05 output            553,388 rows   ⏱ 59.1s
+   Step 06 output            20 rows   ⏱ 1.9s
+   Step 07 output            403,864 rows   ⏱ 25.7s
+   Step 08 output            7 rows   ⏱ 18.9s
+   Step 09 output            - rows   ⏱ 0.9s
+   Step 10 output            - rows
