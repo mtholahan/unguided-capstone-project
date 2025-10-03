@@ -1,0 +1,57 @@
+2025-10-03 13:50:28,061 - Step 00 Acquire MusicBrainz - INFO - Initialized step: Step 00 Acquire MusicBrainz
+2025-10-03 13:50:28,061 - Step 01 Audit Raw - INFO - Initialized step: Step 01 Audit Raw
+2025-10-03 13:50:28,061 - Step 02 Cleanse TSV - INFO - Initialized step: Step 02 Cleanse TSV
+2025-10-03 13:50:28,061 - Step 03 Check Structure - INFO - Initialized step: Step 03 Check Structure
+2025-10-03 13:50:28,061 - Step 04 MB Full Join - INFO - Initialized step: Step 04 MB Full Join
+2025-10-03 13:50:28,061 - Step 05: Filter Soundtracks - INFO - Initialized step: Step 05: Filter Soundtracks
+2025-10-03 13:50:28,061 - Step 06: Fetch TMDb Top 1000 - INFO - Initialized step: Step 06: Fetch TMDb Top 1000
+2025-10-03 13:50:28,061 - Step 07: Prepare TMDb Input - INFO - Initialized step: Step 07: Prepare TMDb Input
+2025-10-03 13:50:28,061 - Step 08: Match TMDb Titles - INFO - Initialized step: Step 08: Match TMDb Titles
+2025-10-03 13:50:28,061 - Step 09: Apply Manual Rescues - INFO - Initialized step: Step 09: Apply Manual Rescues
+2025-10-03 13:50:28,061 - Step 10: Enrich TMDb Matches - INFO - Initialized step: Step 10: Enrich TMDb Matches
+2025-10-03 13:50:28,093 - Step 00 Acquire MusicBrainz - INFO - Archive cleanup policy: cleanup_archives=False. Tarballs will be preserved.
+2025-10-03 13:50:28,093 - Step 00 Acquire MusicBrainz - INFO - Found existing D:\Capstone_Staging\data\musicbrainz_raw\mbdump.tar, reusing it.
+2025-10-03 13:50:29,687 - Step 00 Acquire MusicBrainz - INFO - Extracting artist from internal path: mbdump\artist
+2025-10-03 13:50:35,952 - Step 00 Acquire MusicBrainz - INFO - Extracting artist_credit from internal path: mbdump\artist_credit
+2025-10-03 13:50:42,232 - Step 00 Acquire MusicBrainz - INFO - Extracting release from internal path: mbdump\release
+2025-10-03 13:50:59,546 - Step 00 Acquire MusicBrainz - INFO - Extracting release_group from internal path: mbdump\release_group
+2025-10-03 13:51:11,045 - Step 00 Acquire MusicBrainz - INFO - Extracting release_group_secondary_type from internal path: mbdump\release_group_secondary_type
+2025-10-03 13:51:11,657 - Step 00 Acquire MusicBrainz - INFO - Extracting release_group_secondary_type_join from internal path: mbdump\release_group_secondary_type_join
+2025-10-03 13:51:12,123 - Step 00 Acquire MusicBrainz - INFO - Finished extracting 6 TSV(s) to D:\Capstone_Staging\data\musicbrainz_raw
+2025-10-03 13:51:12,123 - Step 00 Acquire MusicBrainz - INFO - Scanning for 'release_first_release_date'...
+2025-10-03 13:51:12,123 - Step 00 Acquire MusicBrainz - WARNING - 'release_first_release_date' not found in extracted files.
+2025-10-03 13:51:14,560 - Step 00 Acquire MusicBrainz - WARNING - 'release_first_release_date' not found in tar archive.
+2025-10-03 13:51:14,560 - Step 00 Acquire MusicBrainz - INFO - Skipping cleanup of archives per configuration.
+2025-10-03 13:51:14,560 - Step 00 Acquire MusicBrainz - INFO - [DONE] Step 00 complete.
+2025-10-03 13:51:14,577 - Step 01 Audit Raw - INFO - Auditing 6 files in: D:\Capstone_Staging\data\musicbrainz_raw
+2025-10-03 13:51:14,670 - Step 01 Audit Raw - INFO - [ROW_LIMIT] Stopping early after 50 rows
+2025-10-03 13:51:14,670 - Step 01 Audit Raw - INFO - artist: 50 rows (limited by ROW_LIMIT=50)
+2025-10-03 13:51:14,670 - Step 01 Audit Raw - INFO - [ROW_LIMIT] Stopping early after 50 rows
+2025-10-03 13:51:14,670 - Step 01 Audit Raw - INFO - artist_credit: 50 rows (limited by ROW_LIMIT=50)
+2025-10-03 13:51:14,685 - Step 01 Audit Raw - INFO - [ROW_LIMIT] Stopping early after 50 rows
+2025-10-03 13:51:14,685 - Step 01 Audit Raw - INFO - release: 50 rows (limited by ROW_LIMIT=50)
+2025-10-03 13:51:14,701 - Step 01 Audit Raw - INFO - [ROW_LIMIT] Stopping early after 50 rows
+2025-10-03 13:51:14,701 - Step 01 Audit Raw - INFO - release_group: 50 rows (limited by ROW_LIMIT=50)
+2025-10-03 13:51:14,701 - Step 01 Audit Raw - INFO - release_group_secondary_type: 11 rows (limited by ROW_LIMIT=50)
+2025-10-03 13:51:14,716 - Step 01 Audit Raw - INFO - [ROW_LIMIT] Stopping early after 50 rows
+2025-10-03 13:51:14,716 - Step 01 Audit Raw - INFO - release_group_secondary_type_join: 50 rows (limited by ROW_LIMIT=50)
+2025-10-03 13:51:14,716 - Step 01 Audit Raw - INFO - [DONE] Audited 6 TSV files.
+2025-10-03 13:51:33,763 - Step 02 Cleanse TSV - INFO - Cleaned: artist -> artist (2,700,030 rows, 5 skipped)
+2025-10-03 13:51:49,045 - Step 02 Cleanse TSV - INFO - Cleaned: artist_credit -> artist_credit (3,404,813 rows, 0 skipped)
+2025-10-03 13:52:20,280 - Step 02 Cleanse TSV - INFO - Cleaned: release -> release (4,994,853 rows, 1 skipped)
+2025-10-03 13:52:40,326 - Step 02 Cleanse TSV - INFO - Cleaned: release_group -> release_group (3,894,865 rows, 0 skipped)
+2025-10-03 13:52:40,388 - Step 02 Cleanse TSV - INFO - Cleaned: release_group_secondary_type -> release_group_secondary_type (11 rows, 0 skipped)
+2025-10-03 13:52:42,125 - Step 02 Cleanse TSV - INFO - Cleaned: release_group_secondary_type_join -> release_group_secondary_type_join (879,859 rows, 0 skipped)
+2025-10-03 13:52:42,125 - Step 02 Cleanse TSV - INFO - [DONE] Cleansed 6 TSV files.
+2025-10-03 13:52:50,638 - Step 03 Check Structure - INFO - artist: Structure OK (19 columns)
+2025-10-03 13:52:57,139 - Step 03 Check Structure - INFO - artist_credit: Structure OK (7 columns)
+2025-10-03 13:53:10,404 - Step 03 Check Structure - INFO - release: Structure OK (14 columns)
+2025-10-03 13:53:17,800 - Step 03 Check Structure - INFO - release_group: Structure OK (8 columns)
+2025-10-03 13:53:17,804 - Step 03 Check Structure - INFO - release_group_secondary_type: Structure OK (6 columns)
+2025-10-03 13:53:18,466 - Step 03 Check Structure - INFO - release_group_secondary_type_join: Structure OK (3 columns)
+2025-10-03 13:53:29,279 - Step 04 MB Full Join - INFO - Loaded release_group: 3,894,866 rows
+2025-10-03 13:53:38,817 - Step 04 MB Full Join - INFO - Loaded artist_credit: 3,404,814 rows
+2025-10-03 13:53:46,925 - Step 04 MB Full Join - INFO - [DONE] Wrote joined dataset to D:\Capstone_Staging\data\joined_release_data.tsv
+2025-10-03 13:53:47,732 - Step 05: Filter Soundtracks - INFO - Loaded 459,162 soundtrack IDs
+2025-10-03 13:54:08,763 - Step 05: Filter Soundtracks - INFO - Built release_year_map with 3,812,007 entries
+2025-10-03 13:54:09,937 - Step 05: Filter Soundtracks - ERROR - Output schema missing required columns: {'release_group_id'}

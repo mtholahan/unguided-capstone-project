@@ -1,13 +1,13 @@
 """Step 05: Filter Soundtracks
 Filters the joined dataset to include only soundtrack releases.
 Cross-references release_group_secondary_type and extracts release years.
-Writes soundtracks.tsv to DATA_DIR.
+Writes soundtracks.tsv to DATA_DIR, with guaranteed release_group_id column.
 """
 
 from base_step import BaseStep
 import csv, re
-from pathlib import Path
-from config import DATA_DIR, MB_RAW_DIR
+from config import DATA_DIR, MB_RAW_DIR, ROW_LIMIT
+from tqdm import tqdm
 
 
 class Step05FilterSoundtracks(BaseStep):
@@ -32,13 +32,6 @@ class Step05FilterSoundtracks(BaseStep):
         """
         Build map release_group_id → earliest release year
         using fixed column positions from MusicBrainz release.tsv.
-        Schema: 
-        0=id, 1=gid, 2=name, 3=artist_credit, 
-        4=release_group, 5=status, 6=packaging,
-        7=language, 8=script, 9=barcode, 
-        10=comment, 11=edit, 12=last_updated, 
-        13=date_added
-        But in dumps, 'date' may actually be at index 12 or 13.
         """
         path = MB_RAW_DIR / "release"
         if not path.exists():
@@ -51,7 +44,6 @@ class Step05FilterSoundtracks(BaseStep):
                 if len(row) < 13:
                     continue
                 rgid = row[4].strip()
-                # Pick date from last column that looks like YYYY-MM-DD
                 date_str = row[-1].strip()
                 if not rgid or not date_str or date_str == "\\N":
                     continue
@@ -76,25 +68,49 @@ class Step05FilterSoundtracks(BaseStep):
         soundtrack_ids = self.load_secondary_type_map()
         release_year_map = self.load_release_year_map()
 
-        matched, skipped = [], 0
+        matched, skipped = 0, 0
 
-        with open(joined_path, encoding="utf-8") as fin:
+        # Count rows for progress bar
+        row_count = sum(1 for _ in open(joined_path, encoding="utf-8"))
+        self.logger.info(f"🔄 Scanning {row_count:,} joined releases for soundtracks (ROW_LIMIT={ROW_LIMIT or '∞'})")
+
+        with open(joined_path, encoding="utf-8") as fin, \
+             open(output_path, "w", encoding="utf-8", newline="") as fout:
+
             reader = csv.reader(fin, delimiter='\t')
-            header = next(reader)
-            # Append new "year" column
-            out_header = header + ["release_year"]
-
-            for row in self.progress_iter(reader, desc="Filtering Soundtracks"):
-                release_group_id = row[4]  # column 4 is release_group_id
-                if release_group_id not in soundtrack_ids:
-                    skipped += 1
-                    continue
-                year = release_year_map.get(release_group_id, -1)
-                matched.append(row + [str(year)])
-
-        with open(output_path, "w", encoding="utf-8", newline="") as fout:
             writer = csv.writer(fout, delimiter='\t')
-            writer.writerow(out_header)
-            writer.writerows(matched)
 
-        self.logger.info(f"[DONE] Wrote {len(matched):,} soundtracks to {output_path} ({skipped:,} skipped)")
+            # Force schema: always include release_group_id and release_year
+            out_header = ["release_group_id", "release_year", "raw_row"]
+            writer.writerow(out_header)
+
+            with tqdm(total=min(row_count, ROW_LIMIT or row_count), desc="Filtering Soundtracks") as bar:
+                for i, row in enumerate(reader, start=1):
+                    if ROW_LIMIT and i > ROW_LIMIT:
+                        break
+
+                    if len(row) < 5:
+                        skipped += 1
+                        bar.update(1)
+                        continue
+
+                    release_group_id = row[4]  # col 4 = release_group_id
+                    if release_group_id not in soundtrack_ids:
+                        skipped += 1
+                    else:
+                        year = release_year_map.get(release_group_id, -1)
+                        # Store forced schema
+                        writer.writerow([release_group_id, year, "|".join(row)])
+                        matched += 1
+                    bar.update(1)
+
+        self.logger.info(f"[DONE] Wrote {matched:,} soundtrack rows → {output_path} ({skipped:,} skipped)")
+
+        # ✅ Post-validation
+        with open(output_path, encoding="utf-8") as f:
+            reader = csv.reader(f, delimiter='\t')
+            header = next(reader)
+            if "release_group_id" not in header or "release_year" not in header:
+                self.fail("Output schema missing release_group_id or release_year")
+            else:
+                self.logger.info("✅ Output schema validated: contains release_group_id and release_year")

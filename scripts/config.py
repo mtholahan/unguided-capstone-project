@@ -32,10 +32,6 @@ MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 
-# === Global Toggles ===
-UNATTENDED = True
-ROW_LIMIT = 100000 # None
-
 # === Whitelist of MusicBrainz TSV File Names FULL ===
 # TSV_WHITELIST = {
 #     "artist",
@@ -109,3 +105,61 @@ MB_STATIC_REFRESH = {
 
 # TMDb Match
 YEAR_VARIANCE = 10
+
+
+# === Global Toggles ===
+UNATTENDED = True
+
+# === Testing Toggles ===
+# =======================
+ROW_LIMIT = 50 # None
+# === Golden Test Mode ===
+GOLDEN_TEST_MODE = True  # Global toggle for golden benchmark runs
+
+# Blockbuster sanity list (Step 06 + Step 08 will both use this)
+GOLDEN_TITLES = {
+    "Star Wars",
+    "The Empire Strikes Back",
+    "Return of the Jedi",
+    "Jurassic Park",
+    "E.T. the Extra-Terrestrial",
+    "Indiana Jones and the Raiders of the Lost Ark",
+    "Jaws",
+    "The Lord of the Rings: The Fellowship of the Ring",
+    "The Lord of the Rings: The Two Towers",
+    "The Lord of the Rings: The Return of the King",
+    "Harry Potter and the Sorcerer's Stone",
+    "Titanic",
+    "Pulp Fiction",
+    "The Godfather",
+    "The Godfather Part II",
+    "The Dark Knight",
+    "Gladiator",
+    "Inception",
+    "Back to the Future",
+    "Frozen",
+}
+
+# Canonical release years for disambiguation in Step 06
+GOLDEN_EXPECTED_YEARS = {
+    "Star Wars": 1977,
+    "The Empire Strikes Back": 1980,
+    "Return of the Jedi": 1983,
+    "Jurassic Park": 1993,
+    "E.T. the Extra-Terrestrial": 1982,
+    "Indiana Jones and the Raiders of the Lost Ark": 1981,
+    "Jaws": 1975,
+    "The Lord of the Rings: The Fellowship of the Ring": 2001,
+    "The Lord of the Rings: The Two Towers": 2002,
+    "The Lord of the Rings: The Return of the King": 2003,
+    "Harry Potter and the Sorcerer's Stone": 2001,
+    "Titanic": 1997,
+    "Pulp Fiction": 1994,
+    "The Godfather": 1972,
+    "The Godfather Part II": 1974,
+    "The Dark Knight": 2008,
+    "Gladiator": 2000,
+    "Inception": 2010,
+    "Back to the Future": 1985,
+    "Frozen": 2013,
+}
