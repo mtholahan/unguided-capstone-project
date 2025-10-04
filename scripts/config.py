@@ -101,7 +101,7 @@ UNATTENDED = True
 
 # === Testing Toggles ===
 # =======================
-ROW_LIMIT = None
+ROW_LIMIT = 250_000
 
 # === Golden Test Mode ===
 GOLDEN_TEST_MODE = True  # Global toggle for golden benchmark runs

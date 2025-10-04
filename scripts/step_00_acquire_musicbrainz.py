@@ -19,7 +19,7 @@ class Step00AcquireMusicbrainz(BaseStep):
     BASE_URL = "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/"
     FILENAME = "mbdump.tar.bz2"
 
-    def __init__(self, name="Step 00 Acquire MusicBrainz", cleanup_archives: bool = True):
+    def __init__(self, name="Step 00: Acquire MusicBrainz", cleanup_archives: bool = True):
         super().__init__(name)
         self.cleanup_archives = cleanup_archives
 

@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 
 class Step04MBFullJoin(BaseStep):
-    def __init__(self, name="Step 04 MB Full Join"):
+    def __init__(self, name="Step 04: MB Full Join"):
         super().__init__(name)
         self.data = {}
 
@@ -19,7 +19,7 @@ class Step04MBFullJoin(BaseStep):
         csv.field_size_limit(1_000_000)
         path = MB_CLEANSED_DIR / name
         with open(path, encoding="utf-8") as f:
-            reader = csv.reader(f, delimiter='\t')
+            reader = csv.reader(f, delimiter="\t")
             rows = [row for row in reader]
         return rows
 
@@ -31,39 +31,55 @@ class Step04MBFullJoin(BaseStep):
                 self.fail(f"Required file {fname} missing from whitelist.")
                 return
 
-        # Load smaller lookup tables fully into memory
+        # --- Load smaller lookup tables ---
         self.data["release_group"] = self.load_file("release_group")
         self.logger.info(f"Loaded release_group: {len(self.data['release_group']):,} rows")
 
         self.data["artist_credit"] = self.load_file("artist_credit")
         self.logger.info(f"Loaded artist_credit: {len(self.data['artist_credit']):,} rows")
 
-        # Build ID maps
+        # --- Optional pre-filter for Soundtrack release groups ---
+        header = self.data["release_group"][0]
+        header_lower = [h.lower() for h in header]
+        if "secondary_type" in header_lower:
+            idx = header_lower.index("secondary_type")
+            pre_count = len(self.data["release_group"])
+            self.data["release_group"] = [
+                row for row in self.data["release_group"]
+                if len(row) > idx and "soundtrack" in row[idx].lower()
+            ]
+            post_count = len(self.data["release_group"])
+            self.logger.info(
+                f"🎚️  Filtered release_group by 'Soundtrack' type: {pre_count:,} → {post_count:,}"
+            )
+        else:
+            self.logger.warning("⚠️  No 'secondary_type' column found; skipping soundtrack filter.")
+
+        # --- Build lookup dictionaries ---
         release_group_map = {row[0]: row for row in self.data["release_group"]}
         artist_credit_map = {row[0]: row for row in self.data["artist_credit"]}
 
-        # Output path
+        # --- Prepare output ---
         output_path = DATA_DIR / "joined_release_data.tsv"
-
-        # Stream process the huge release file
         release_path = MB_CLEANSED_DIR / "release"
         row_count = sum(1 for _ in open(release_path, encoding="utf-8"))
+        effective_limit = ROW_LIMIT or row_count
 
-        self.logger.info(f"🔄 Streaming {row_count:,} releases for join (ROW_LIMIT={ROW_LIMIT or '∞'})")
+        self.logger.info(f"🔄 Streaming {row_count:,} releases for join (ROW_LIMIT={effective_limit:,})")
 
+        joined_rows = 0
         with open(release_path, encoding="utf-8") as fin, \
              open(output_path, "w", encoding="utf-8", newline="") as fout:
 
-            reader = csv.reader(fin, delimiter='\t')
-            writer = csv.writer(fout, delimiter='\t')
+            reader = csv.reader(fin, delimiter="\t")
+            writer = csv.writer(fout, delimiter="\t")
 
-            with tqdm(total=min(row_count, ROW_LIMIT or row_count), desc="Joining Releases") as bar:
+            with tqdm(total=min(row_count, effective_limit), desc="Joining Releases") as bar:
                 for i, row in enumerate(reader, start=1):
                     if ROW_LIMIT and i > ROW_LIMIT:
                         break
-
                     if len(row) < 4:
-                        continue  # skip malformed rows
+                        continue
 
                     release_group_id = row[1]  # FK → release_group
                     artist_credit_id = row[3]  # FK → artist_credit
@@ -71,6 +87,13 @@ class Step04MBFullJoin(BaseStep):
                     ac = artist_credit_map.get(artist_credit_id, [])
                     writer.writerow(row + rg + ac)
 
+                    joined_rows += 1
+                    if joined_rows % 100_000 == 0:
+                        self.logger.info(f"Processed {joined_rows:,} joined rows...")
+
                     bar.update(1)
 
-        self.logger.info(f"[DONE] Wrote joined dataset to {output_path}")
+        self.logger.info(
+            f"✅ [DONE] Joined {joined_rows:,} rows → {output_path.name} "
+            f"(limit={ROW_LIMIT or '∞'})"
+        )
