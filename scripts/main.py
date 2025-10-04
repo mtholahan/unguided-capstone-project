@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 # Track runtimes
 STEP_TIMES = {}
 
-
 def build_steps():
     return [
         Step00AcquireMusicbrainz(cleanup_archives=False),
