@@ -80,8 +80,8 @@ class Step05FilterSoundtracks(BaseStep):
             reader = csv.reader(fin, delimiter='\t')
             writer = csv.writer(fout, delimiter='\t')
 
-            # Force schema: always include release_group_id and release_year
-            out_header = ["release_group_id", "release_year", "raw_row"]
+            # Force schema: always include release_group_id, release_year, raw_row, and release_group_secondary_type
+            out_header = ["release_group_id", "release_year", "raw_row", "release_group_secondary_type"]
             writer.writerow(out_header)
 
             with tqdm(total=min(row_count, ROW_LIMIT or row_count), desc="Filtering Soundtracks") as bar:
@@ -99,8 +99,8 @@ class Step05FilterSoundtracks(BaseStep):
                         skipped += 1
                     else:
                         year = release_year_map.get(release_group_id, -1)
-                        # Store forced schema
-                        writer.writerow([release_group_id, year, "|".join(row)])
+                        # Mark as Soundtrack explicitly
+                        writer.writerow([release_group_id, year, "|".join(row), "Soundtrack"])
                         matched += 1
                     bar.update(1)
 
@@ -110,7 +110,8 @@ class Step05FilterSoundtracks(BaseStep):
         with open(output_path, encoding="utf-8") as f:
             reader = csv.reader(f, delimiter='\t')
             header = next(reader)
-            if "release_group_id" not in header or "release_year" not in header:
-                self.fail("Output schema missing release_group_id or release_year")
+            required = {"release_group_id", "release_year", "raw_row", "release_group_secondary_type"}
+            if not required.issubset(header):
+                self.fail("Output schema missing required columns")
             else:
-                self.logger.info("✅ Output schema validated: contains release_group_id and release_year")
+                self.logger.info("✅ Output schema validated: contains release_group_id, release_year, release_group_secondary_type")

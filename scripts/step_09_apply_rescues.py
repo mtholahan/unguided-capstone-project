@@ -1,6 +1,6 @@
 """Step 09: Apply Rescues
 Applies manual overrides (“rescues”) to fix known false negatives.
-Merges rescue data into tmdb_matches.csv.
+Merges rescue data into tmdb_matches.csv and writes enhanced results.
 """
 
 from base_step import BaseStep
@@ -14,21 +14,13 @@ class Step09ApplyRescues(BaseStep):
         self,
         name: str = "Step 09: Apply Manual Rescues",
         threshold: float = 90.0,
-        boost_per_genre: float = 5.0,
-        vector_threshold: float = 0.6,
-        enable_vector_matching: bool = False,
     ):
         super().__init__(name)
         self.threshold = threshold
-        self.boost_per_genre = boost_per_genre
-        self.vector_threshold = vector_threshold
-        self.enable_vector_matching = enable_vector_matching
 
         # Input/Output files
         self.match_file        = TMDB_DIR / "tmdb_match_results.csv"
-        self.manual_rescue     = TMDB_DIR / "manual_rescue.csv"
-        self.enriched_movies   = TMDB_DIR / "enriched_top_1000.csv"
-        self.candidates_file   = TMDB_DIR / "tmdb_input_candidates_clean.csv"
+        self.rescue_file       = TMDB_DIR / "rescues.csv"
         self.output_enhanced   = TMDB_DIR / "tmdb_match_results_enhanced.csv"
 
     def run(self):
@@ -48,13 +40,64 @@ class Step09ApplyRescues(BaseStep):
             self.logger.warning(f"🪫 {self.match_file} has 0 rows; skipping Step 09.")
             return
 
-        # Rename 'score' → 'match_score' if present
+        # Normalize: rename 'score' → 'match_score'
         if "score" in df.columns:
             df.rename(columns={"score": "match_score"}, inplace=True)
 
-        # (genre boost / rescues could be re-added here later if needed)
+        # Threshold filter first
+        df["match_score"] = df["match_score"].astype(float)
+        final_df = df[df["match_score"] >= self.threshold].copy()
 
-        # Final threshold filter and write
-        final_df = df[df["match_score"].astype(float) >= self.threshold]
+        # === NEW: Apply rescues ===
+        rescued_count, skipped_count, overridden_count = 0, 0, 0
+
+        if self.rescue_file.exists():
+            self.logger.info(f"🛟 Loading rescues from {self.rescue_file.name}")
+            rescues = pd.read_csv(self.rescue_file, dtype=str)
+            rescues = rescues.rename(columns={c: c.lower().strip() for c in rescues.columns})
+
+            for _, row in rescues.iterrows():
+                title = row.get("golden_title", "").strip()
+                year = row.get("expected_year", "").strip()
+                artist = row.get("expected_artist", "").strip()
+                override = str(row.get("override", "False")).lower() in ("true", "1", "yes")
+
+                exists = (
+                    (final_df["title"].str.lower() == title.lower())
+                    & (final_df["year"].astype(str) == year)
+                )
+
+                if exists.any():
+                    if override:
+                        overridden_count += 1
+                        self.logger.info(f"🔄 Overriding existing match for {title} ({year})")
+                        final_df = final_df[~exists]
+                    else:
+                        skipped_count += 1
+                        self.logger.info(f"✅ Skipping rescue for {title} ({year}) — already matched")
+                        continue
+
+                rescue_entry = {
+                    "title": title,
+                    "year": year,
+                    "artist": artist,
+                    "match_source": "rescue",
+                    "match_score": 100.0,
+                }
+                final_df = pd.concat([final_df, pd.DataFrame([rescue_entry])], ignore_index=True)
+                rescued_count += 1
+                self.logger.info(f"🛟 Injected rescue match for {title} ({year})")
+
+        else:
+            self.logger.info("📭 No rescues.csv file found; skipping manual rescues")
+
+        # === Summary block ===
+        self.logger.info("📊 Rescue Summary")
+        self.logger.info(f"   Injected:   {rescued_count}")
+        self.logger.info(f"   Skipped:    {skipped_count}")
+        self.logger.info(f"   Overridden: {overridden_count}")
+        self.logger.info(f"   Final rows: {len(final_df)}")
+
+        # Write out enhanced matches
         final_df.to_csv(self.output_enhanced, index=False)
         self.logger.info(f"💾 Enhanced matches saved to {self.output_enhanced.name} ({len(final_df)} rows)")

@@ -4,7 +4,7 @@ Writes tmdb_match_results.csv, tmdb_match_unmatched.csv, and (in Golden Test Mod
 """
 
 from base_step import BaseStep
-import pandas as pd, requests
+import pandas as pd, requests, re
 from rapidfuzz import fuzz, process
 from config import (
     DEBUG_MODE, TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE,
@@ -15,6 +15,20 @@ from tqdm import tqdm
 
 # Debug toggles
 TOP_N = 5  # Number of candidates to log in debug mode
+
+# Centralized weights/bonuses/penalties
+FUZZ_TOKEN_SET_WEIGHT = 0.7
+FUZZ_PARTIAL_WEIGHT = 0.3
+YEAR_PENALTY_PER_YEAR = 2
+YEAR_PENALTY_MAX_YEARS = 3
+OST_BONUS = 40
+SUBSTRING_BONUS = 10
+JUNK_PENALTY = -20
+JUNK_TERMS = {"tribute", "karaoke", "cover", "best of", "inspired by", "volume", "vol."}
+
+# Common stopwords to ignore when checking token overlap
+STOPWORDS = {"the", "a", "an", "of", "in", "on", "and"}
+
 
 def fetch_alt_titles(tmdb_id: str):
     """Fetch alternative titles from TMDb for fallback matching."""
@@ -27,19 +41,40 @@ def fetch_alt_titles(tmdb_id: str):
         return []
 
 
-def composite_scorer(q, c, g_year=None, c_year=None):
-    """Composite fuzzy scorer with year penalty."""
+def has_token_overlap(q: str, c: str) -> bool:
+    """Require at least one meaningful token overlap between query and candidate."""
+    q_tokens = {tok for tok in re.split(r"[^a-z0-9]+", q.lower()) if tok and tok not in STOPWORDS}
+    c_tokens = {tok for tok in re.split(r"[^a-z0-9]+", c.lower()) if tok and tok not in STOPWORDS}
+    return bool(q_tokens & c_tokens)
+
+
+def composite_scorer(q, c, g_year=None, c_year=None, c_type=None):
+    """Composite fuzzy scorer with year penalty, OST bonus, substring bonus, junk filter, and token overlap."""
+    # Drop junk or non-overlapping candidates early
+    if not has_token_overlap(q, c):
+        return 0
+    if any(term in c for term in JUNK_TERMS):
+        return max(0, JUNK_PENALTY)
+
     s1 = fuzz.token_set_ratio(q, c)
     s2 = fuzz.partial_ratio(q, c)
-    score = int(0.7 * s1 + 0.3 * s2)
+    score = int(FUZZ_TOKEN_SET_WEIGHT * s1 + FUZZ_PARTIAL_WEIGHT * s2)
 
-    # year penalty
+    # Year penalty
     if g_year and c_year:
         try:
             dy = abs(int(g_year) - int(c_year))
-            score -= min(dy, 3) * 2
+            score -= min(dy, YEAR_PENALTY_MAX_YEARS) * YEAR_PENALTY_PER_YEAR
         except Exception:
             pass
+
+    # OST type bonus
+    if isinstance(c_type, str) and c_type.lower() == "soundtrack":
+        score += OST_BONUS
+
+    # Substring bonus
+    if q in c or c in q:
+        score += SUBSTRING_BONUS
 
     return score
 
@@ -52,7 +87,7 @@ class Step08MatchTMDb(BaseStep):
         # Input: curated TMDb movie list (Step 06 output)
         self.input_movies = TMDB_DIR / "enriched_top_1000.csv"
 
-        # Input: cleaned MusicBrainz soundtrack candidates (Step 05 output)
+        # Input: cleaned MusicBrainz soundtrack candidates (Step 07 output)
         self.input_candidates = TMDB_DIR / "tmdb_input_candidates_clean.csv"
 
         # Outputs
@@ -79,13 +114,13 @@ class Step08MatchTMDb(BaseStep):
         cands_df = pd.read_csv(self.input_candidates, dtype={"release_group_id": str})
         cands_df["normalized_title"] = cands_df["title"].apply(normalize_for_matching_extended)
 
-        required = {"release_group_id", "title", "year", "normalized_title"}
+        required = {"release_group_id", "title", "year", "normalized_title", "release_group_secondary_type"}
         if not required.issubset(set(cands_df.columns)):
             self.fail(f"Candidates missing required columns: {cands_df.columns.tolist()}")
 
         all_norms = cands_df["normalized_title"].tolist()
         norm_to_raw = {
-            row.normalized_title: (row.title, row.release_group_id, row.year)
+            row.normalized_title: (row.title, row.release_group_id, row.year, getattr(row, "release_group_secondary_type", None))
             for row in cands_df.itertuples(index=False)
         }
 
@@ -122,7 +157,9 @@ class Step08MatchTMDb(BaseStep):
                 best_n = process.extract(
                     base_norm,
                     pool_norms,
-                    scorer=lambda q, c: composite_scorer(q, c, tmdb_year, norm_to_raw.get(c, (None, None, None))[2]),
+                    scorer=lambda q, c, **kwargs: composite_scorer(
+                        q, c, tmdb_year, norm_to_raw.get(c, (None, None, None, None))[2], norm_to_raw.get(c, (None, None, None, None))[3]
+                    ),
                     limit=TOP_N
                 )
 
@@ -137,16 +174,18 @@ class Step08MatchTMDb(BaseStep):
                         alt_best_n = process.extract(
                             alt,
                             pool_norms,
-                            scorer=lambda q, c: composite_scorer(q, c, tmdb_year, norm_to_raw.get(c, (None, None, None))[2]),
+                            scorer=lambda q, c, **kwargs: composite_scorer(
+                                q, c, tmdb_year, norm_to_raw.get(c, (None, None, None, None))[2], norm_to_raw.get(c, (None, None, None, None))[3]
+                            ),
                             limit=TOP_N,
                         )
                         if alt_best_n and alt_best_n[0][1] > score:
                             best_norm, score, _ = alt_best_n[0]
 
                 if best_norm:
-                    raw_title, rgid, cand_year = norm_to_raw.get(best_norm, (None, None, None))
+                    raw_title, rgid, cand_year, cand_type = norm_to_raw.get(best_norm, (None, None, None, None))
                 else:
-                    raw_title, rgid, cand_year = None, None, None
+                    raw_title, rgid, cand_year, cand_type = None, None, None, None
 
                 # Year tolerance for Golden Set
                 pass_year_check = True
@@ -172,6 +211,7 @@ class Step08MatchTMDb(BaseStep):
                         "score": score,
                         "mb_year": cand_year,
                         "tmdb_year": tmdb_year,
+                        "mb_type": cand_type,
                     }
                     matches.append(row)
                     golden_rows.append(row)
@@ -184,6 +224,7 @@ class Step08MatchTMDb(BaseStep):
                         "best_match": raw_title,
                         "score": score,
                         "tmdb_year": tmdb_year,
+                        "mb_type": cand_type,
                     }
                     misses.append(row)
                     golden_rows.append(row)
@@ -192,8 +233,8 @@ class Step08MatchTMDb(BaseStep):
                 if DEBUG_MODE and best_n:
                     self.logger.info(f"[DEBUG] {tmdb_title} ({tmdb_year}) → top {TOP_N}:")
                     for cand, cand_score, _ in best_n:
-                        raw, rgid, cand_year = norm_to_raw.get(cand, ("?", "?", "?"))
-                        self.logger.info(f"    norm={cand!r}, raw={raw[:40]!r}, score={cand_score}, year={cand_year}")
+                        raw, rgid, cand_year, cand_type = norm_to_raw.get(cand, ("?", "?", "?", "?"))
+                        self.logger.info(f"    norm={cand!r}, raw={raw[:40]!r}, score={cand_score}, year={cand_year}, type={cand_type}")
 
                 bar.update(1)
 

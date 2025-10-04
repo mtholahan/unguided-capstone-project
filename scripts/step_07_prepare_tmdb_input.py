@@ -19,8 +19,12 @@ class Step07PrepareTMDbInput(BaseStep):
         self.logger.info("🔍 Loading soundtracks with headers...")
         df = pd.read_csv(self.input_tsv, sep="\t", header=0, dtype=str, engine="python")
 
-        # Confirm required columns exist
-        required_cols = {"release_group_id", "release_year", "raw_row"}
+        # Ensure release_group_secondary_type exists (optional fallback)
+        if "release_group_secondary_type" not in df.columns:
+            df["release_group_secondary_type"] = None
+
+        # Confirm required columns exist (after adding fallback)
+        required_cols = {"release_group_id", "release_year", "raw_row", "release_group_secondary_type"}
         if not required_cols.issubset(df.columns):
             self.fail(f"Missing required columns in {self.input_tsv}: {required_cols - set(df.columns)}")
 
@@ -28,13 +32,10 @@ class Step07PrepareTMDbInput(BaseStep):
         def extract_title(raw):
             try:
                 parts = raw.split("|")
-                # Try column 2 (usual title)
                 if len(parts) > 2 and parts[2].strip():
                     return parts[2].strip()
-                # Fallback col 1
                 if len(parts) > 1 and parts[1].strip():
                     return parts[1].strip()
-                # Fallback col 0
                 if parts and parts[0].strip():
                     return parts[0].strip()
                 return None
@@ -68,16 +69,39 @@ class Step07PrepareTMDbInput(BaseStep):
         removed = initial_count - len(filtered)
         self.logger.info(f"🧹 Removed {removed} invalid or out-of-range titles")
 
+        # Hybrid OST keyword + type filter
+        OST_TERMS = {"soundtrack", "ost", "score", "motion picture"}
+        DENY_TERMS = {"tribute", "karaoke", "remix", "mix", "volume", "vol.", "greatest hits", "best of"}
+
+        def passes_hybrid_filter(row) -> bool:
+            title = row["title"] or ""
+            t = title.lower()
+
+            if any(term in t for term in DENY_TERMS):
+                return False
+
+            # Keep if explicitly tagged as soundtrack AND has OST-like terms
+            if str(row.get("release_group_secondary_type", "")).lower() == "soundtrack":
+                if any(term in t for term in OST_TERMS):
+                    return True
+                # Special case: allow bare movie titles if type is Soundtrack
+                return True if len(t.split()) <= 5 else False
+
+            return False
+
+        filtered = filtered[filtered.apply(passes_hybrid_filter, axis=1)]
+
         # Drop duplicates on (normalized_title, release_year)
         self.logger.info("🧼 Dropping duplicates...")
         filtered = filtered.drop_duplicates(subset=["normalized_title", "release_year"])
 
-        # Final output with clean schema
+        # Final output with clean schema (always includes release_group_secondary_type)
         out_df = pd.DataFrame({
             "normalized_title":  filtered["normalized_title"],
             "title":             filtered["title"],
             "release_group_id":  filtered["release_group_id"],
-            "year":              filtered["release_year"].astype(int)
+            "year":              filtered["release_year"].astype(int),
+            "release_group_secondary_type": filtered["release_group_secondary_type"]
         })
 
         # Debug preview
@@ -89,7 +113,8 @@ class Step07PrepareTMDbInput(BaseStep):
                     f"   rgid={row['release_group_id']}, "
                     f"title={row['title']}, "
                     f"norm={row['normalized_title']}, "
-                    f"year={row['year']}"
+                    f"year={row['year']}, "
+                    f"type={row['release_group_secondary_type']}"
                 )
 
         final_count = len(out_df)
