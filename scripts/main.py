@@ -16,6 +16,7 @@ from step_07_prepare_tmdb_input import Step07PrepareTMDbInput
 from step_08_match_tmdb import Step08MatchTMDb
 from step_09_apply_rescues import Step09ApplyRescues
 from step_10_enrich_tmdb import Step10EnrichMatches
+from step_10b_coverage_audit import Step10BCoverageAudit
 from config import DATA_DIR, TMDB_DIR, STEP_METRICS
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ def build_steps():
         Step08MatchTMDb(),
         Step09ApplyRescues(),
         Step10EnrichMatches(),
+        Step10BCoverageAudit()
     ]
 
 
@@ -66,6 +68,9 @@ def print_summary(steps):
         "Step 08 output": TMDB_DIR / "tmdb_match_results.csv",
         "Step 09 output": TMDB_DIR / "tmdb_match_results_enhanced.csv",
         "Step 10 output": TMDB_DIR / "tmdb_enriched_matches.csv",
+        "Step 10B output (audit)": TMDB_DIR / "coverage_audit.csv",
+        "Step 10B output (summary)": TMDB_DIR / "coverage_summary.txt",
+
     }
 
     lines = ["📊 Pipeline Summary"]
@@ -118,18 +123,25 @@ def main():
 
     steps = build_steps()
 
-    # Resume logic
+    # Resume logic (enhanced for flexibility, supports lettered steps like 10B)
     start_index = 0
     if args.resume:
+        target = args.resume.strip().upper().replace("STEP", "").replace(":", "")
+        matched = False
+
         for i, step in enumerate(steps):
-            step_num = step.name.split(":")[0].split()[-1]
-            step_num = step_num.zfill(2)
-            if step_num == args.resume.zfill(2):
+            # Extract the last token from the step name, e.g. "10B" or "03"
+            step_id = step.name.split(":")[0].split()[-1].upper().replace("STEP", "").replace(":", "")
+            if step_id == target or step_id.zfill(2) == target.zfill(2):
                 start_index = i
+                matched = True
                 logger.info(f"▶ Resuming pipeline at {step.name}")
                 break
-        else:
+
+        if not matched:
+            valid_steps = [s.name.split(':')[0].split()[-1].upper() for s in steps]
             logger.error(f"❌ Invalid resume step: {args.resume}")
+            logger.error(f"   Valid step IDs: {', '.join(valid_steps)}")
             return
 
     # Run pipeline with timing

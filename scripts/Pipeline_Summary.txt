@@ -1,14 +1,14 @@
 📊 Pipeline Summary
-   Step 00 Acquire MusicBrainz         - rows
-   Step 01 Audit Raw                   - rows
-   Step 02 Cleanse TSV                 - rows
-   Step 03 Check Structure             - rows
-   Step 04 MB Full Join                - rows
-   Step 05: Filter Soundtracks         553,388 rows
-   Step 06: Fetch TMDb Top 1000        20 rows
-   Step 07: Prepare TMDb Input         237,235 rows   ⏱ 30.1s
-   Step 08: Match TMDb Titles          1 rows   ⏱ 11.2s
-   Step 09: Apply Manual Rescues       1 rows   ⏱ 0.0s
-   Step 10: Enrich TMDb Matches        1 rows   ⏱ 0.6s
+   Step 00 Acquire MusicBrainz         - rows   ⏱ 56.1s
+   Step 01 Audit Raw                   - rows   ⏱ 31.8s
+   Step 02 Cleanse TSV                 - rows   ⏱ 420.7s
+   Step 03 Check Structure             - rows   ⏱ 36.3s
+   Step 04 MB Full Join                - rows   ⏱ 82.3s
+   Step 05: Filter Soundtracks         553,388 rows   ⏱ 62.3s
+   Step 06: Fetch TMDb Top 1000        20 rows   ⏱ 2.1s
+   Step 07: Prepare TMDb Input         237,235 rows   ⏱ 33.9s
+   Step 08: Match TMDb Titles          1 rows   ⏱ 12.7s
+   Step 09: Apply Manual Rescues       1 rows   ⏱ 0.3s
+   Step 10: Enrich TMDb Matches        1 rows
 
 ⭐ Golden Test Fidelity: 1/18 (5.6%)
