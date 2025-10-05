@@ -14,7 +14,7 @@ from config import TMDB_DIR, TMDB_API_KEY
 
 class Step10EnrichMatches(BaseStep):
     def __init__(self, name: str = "Step 10: Enrich TMDb Matches (Enhanced)"):
-        super().__init__(name)
+        super().__init__(name="Step 10: Enrich TMDb Matches (Enhanced)")
         self.input_matches = TMDB_DIR / "tmdb_match_results_enhanced.csv"
         self.fallback_matches = TMDB_DIR / "tmdb_match_results.csv"
         self.output_file = TMDB_DIR / "tmdb_enriched_matches.csv"

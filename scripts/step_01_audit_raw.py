@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 class Step01AuditRaw(BaseStep):
     def __init__(self, name="Step 01: Audit Raw"):
-        super().__init__(name)
+        super().__init__(name="Step 01: Audit Raw")
 
     def run(self):
         raw_files = sorted([

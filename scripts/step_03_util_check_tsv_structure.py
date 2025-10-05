@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 class Step03CheckStructure(BaseStep):
     def __init__(self, name="Step 03: Check Structure"):
-        super().__init__(name)
+        super().__init__(name="SStep 03: Check Structure")
 
     def run(self):
         input_files = sorted([

@@ -26,7 +26,7 @@ import csv
 
 class Step03BRehydrateGuids(BaseStep):
     def __init__(self, name="Step 03B: Rehydrate GUIDs"):
-        super().__init__(name)
+        super().__init__(name="Step 03B: Rehydrate GUIDs")
 
     def run(self):
         # --- Paths ---

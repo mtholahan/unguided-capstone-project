@@ -1,266 +1,174 @@
-"""Step 08: Match TMDb (Enhanced)
-Improved fuzzy matching between MusicBrainz soundtracks and TMDb titles.
-Adds normalization, year tolerance, artist anchoring, and refined scoring logic.
+"""
+Step 08: Match TMDb (Hardened + DRY)
+------------------------------------
+Uses utils.normalize_for_matching_extended() when needed, skips fuzzy for exact
+matches (title+year), and optionally uses TMDB alternative titles as a fallback.
+
+Inputs:
+    TMDB_DIR/tmdb_movies_normalized.parquet      (from Step 07)
+    TMDB_DIR/tmdb_input_candidates_clean.csv     (from Step 07)
+Outputs:
+    TMDB_DIR/tmdb_match_results_enhanced.csv
+    TMDB_DIR/tmdb_match_unmatched.csv
+    TMDB_DIR/tmdb_match_results_enhanced.parquet
+Metrics:
+    fuzzy_match_pct, avg_fuzzy_score → pipeline_metrics.csv
 """
 
 from base_step import BaseStep
-import pandas as pd, requests, re
+import pandas as pd, requests
 from rapidfuzz import fuzz, process
-from config import (
-    DEBUG_MODE, TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE,
-    ROW_LIMIT, GOLDEN_TITLES, GOLDEN_TEST_MODE, STEP_METRICS
-)
+from config import TMDB_DIR, DEBUG_MODE, YEAR_VARIANCE, TMDB_API_KEY
+from utils import normalize_for_matching_extended as normalize
 from tqdm import tqdm
 
-# Debug toggles
-TOP_N = 5  # Number of candidates to log in debug mode
+# ---- Tunables ----
+FUZZ_THRESHOLD = 70
+TOP_N = 5
+FORCE_RENORM = False        # Recompute normalized_title from 'title' even if present
+USE_ALT_TITLES = True       # Query TMDB alt titles to rescue borderline cases (slower)
 
-# Scoring weights
-FUZZ_TOKEN_SET_WEIGHT = 0.7
-FUZZ_PARTIAL_WEIGHT = 0.3
+# 🧠 GPT Suggestion:
+#Leave FORCE_RENORM=False for speed. Flip to True if you tweak utils.py and want Step 08 to re-derive normalized_title fresh.
+#Leave USE_ALT_TITLES=True only if you’re okay with API calls (slower but helpful for foreign/AKA titles).
 
-# Year and scoring modifiers
-YEAR_PENALTY_PER_YEAR = 2
-YEAR_PENALTY_MAX_YEARS = 3
-YEAR_TOLERANCE_BONUS = 10
-COMPOSER_BONUS = 8
-OST_BONUS = 40
-SUBSTRING_BONUS = 10
-JUNK_PENALTY = -25
-JUNK_TERMS = {"tribute", "karaoke", "cover", "best of", "inspired by", "volume", "vol."}
-STOPWORDS = {"the", "a", "an", "of", "in", "on", "and"}
-
-COMPOSER_HINTS = {"zimmer", "williams", "horner", "elfman", "shore", "silvestri", "newman", "doyle", "young"}
-
-
-# -----------------------------------------------------
-def normalize_title(title: str) -> str:
-    """Aggressively normalize soundtrack titles."""
-    t = str(title).lower()
-    # remove OST, O.S.T., and common phrases
-    t = re.sub(r"\b(o\.?s\.?t\.?|original motion picture soundtrack|music from the motion picture)\b", "", t)
-    # remove bracketed text like (deluxe edition)
-    t = re.sub(r"\(.*?\)|\[.*?\]", "", t)
-    # collapse non-alphanumerics
-    t = re.sub(r"[^a-z0-9\s]", " ", t)
-    t = re.sub(r"\s+", " ", t)
-    return t.strip()
-
-
-def has_token_overlap(q: str, c: str) -> bool:
-    """Require at least one meaningful token overlap between query and candidate."""
-    q_tokens = {tok for tok in re.split(r"[^a-z0-9]+", q.lower()) if tok and tok not in STOPWORDS}
-    c_tokens = {tok for tok in re.split(r"[^a-z0-9]+", c.lower()) if tok and tok not in STOPWORDS}
-    return bool(q_tokens & c_tokens)
-
-
-def composite_scorer(q, c, g_year=None, c_year=None, c_type=None, c_artist=None):
-    """Composite fuzzy scorer with bonuses and penalties."""
-    if not has_token_overlap(q, c):
-        return 0
-    if any(term in c for term in JUNK_TERMS):
-        return max(0, JUNK_PENALTY)
-
-    s1 = fuzz.token_set_ratio(q, c)
-    s2 = fuzz.partial_ratio(q, c)
-    score = int(FUZZ_TOKEN_SET_WEIGHT * s1 + FUZZ_PARTIAL_WEIGHT * s2)
-
-    # Year differential
-    if g_year and c_year:
-        try:
-            dy = abs(int(g_year) - int(c_year))
-            if dy <= 1:
-                score += YEAR_TOLERANCE_BONUS
-            else:
-                score -= min(dy, YEAR_PENALTY_MAX_YEARS) * YEAR_PENALTY_PER_YEAR
-        except Exception:
-            pass
-
-    # OST bonus
-    if isinstance(c_type, str) and "soundtrack" in c_type.lower():
-        score += OST_BONUS
-
-    # Composer anchor bonus
-    if isinstance(c_artist, str):
-        artist_lower = c_artist.lower()
-        if any(a in artist_lower for a in COMPOSER_HINTS):
-            score += COMPOSER_BONUS
-
-    # Substring match bonus
-    if q in c or c in q:
-        score += SUBSTRING_BONUS
-
-    return score
-
-
-def fetch_alt_titles(tmdb_id: str):
-    """Fetch alternative titles from TMDb for fallback matching."""
+def fetch_alt_titles(tmdb_id: str) -> list[str]:
+    if not USE_ALT_TITLES or not TMDB_API_KEY:
+        return []
     try:
         url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/alternative_titles"
         r = requests.get(url, params={"api_key": TMDB_API_KEY})
         r.raise_for_status()
-        return [t["title"] for t in r.json().get("titles", []) if t.get("title")]
+        titles = [t.get("title", "") for t in r.json().get("titles", []) if t.get("title")]
+        return [normalize(t) for t in titles]
     except Exception:
         return []
 
 
-def safe_best_tuple(best_list):
-    """Safely extract (candidate_string, score) from RapidFuzz result tuples."""
-    try:
-        if best_list and isinstance(best_list[0], (list, tuple)) and len(best_list[0]) >= 2:
-            return best_list[0][0], best_list[0][1]
-    except Exception:
-        pass
-    return None, -1
-
-
-def match_pool(query_norm, pool, tmdb_year, norm_to_row):
-    """Reusable wrapper for RapidFuzz matching against candidate pool."""
-    return process.extract(
-        query_norm,
-        pool["normalized_title"].tolist(),
-        scorer=lambda q, c, **_: composite_scorer(
-            q, c,
-            tmdb_year,
-            norm_to_row.get(c, (None, None, None, None, None))[2],
-            norm_to_row.get(c, (None, None, None, None, None))[3],
-            norm_to_row.get(c, (None, None, None, None, None))[4],
-        ),
-        limit=TOP_N,
-    )
-
-
-# -----------------------------------------------------
 class Step08MatchTMDb(BaseStep):
-    def __init__(self, name="Step 08: Match TMDb Titles (Enhanced)", threshold=70.0):
-        super().__init__(name)
-        self.threshold = threshold
-        self.input_movies = TMDB_DIR / "enriched_top_1000.csv"
-        self.input_candidates = TMDB_DIR / "tmdb_input_candidates_clean.csv"
-        self.output_matches = TMDB_DIR / "tmdb_match_results.csv"
+    def __init__(self, name="Step 08: Match TMDb (Hardened)"):
+        super().__init__(name=name)
+        self.tmdb_norm = TMDB_DIR / "tmdb_movies_normalized.parquet"
+        self.mb_candidates = TMDB_DIR / "tmdb_input_candidates_clean.csv"
+        self.output_matches = TMDB_DIR / "tmdb_match_results_enhanced.csv"
         self.output_unmatched = TMDB_DIR / "tmdb_match_unmatched.csv"
-        self.output_golden = TMDB_DIR / "tmdb_match_golden.csv"
+        self.output_parquet = TMDB_DIR / "tmdb_match_results_enhanced.parquet"
+
+    def _ensure_normalized(self, df: pd.DataFrame, title_col: str) -> pd.DataFrame:
+        needs = FORCE_RENORM or ("normalized_title" not in df.columns) or df["normalized_title"].isna().any()
+        if needs:
+            self.logger.info("🧼 (Re)normalizing titles via utils.normalize_for_matching_extended()")
+            df["normalized_title"] = df[title_col].fillna("").map(normalize)
+        return df
 
     def run(self):
-        # Load TMDb movies
-        movies_df = pd.read_csv(self.input_movies, dtype={"tmdb_id": str})
-        movies_df["normalized_title"] = movies_df["title"].apply(normalize_title)
+        # -- Load inputs
+        self.logger.info("📥 Loading normalized TMDB + MB datasets...")
+        tmdb_df = pd.read_parquet(self.tmdb_norm)
+        mb_df = pd.read_csv(self.mb_candidates, dtype=str)
 
-        # Limit or Golden Mode
-        if GOLDEN_TEST_MODE:
-            before = len(movies_df)
-            movies_df = movies_df[movies_df["title"].isin(GOLDEN_TITLES)].copy()
-            self.logger.info(f"🔎 Golden test mode: {before} → {len(movies_df)} titles")
-        elif ROW_LIMIT:
-            before = len(movies_df)
-            movies_df = movies_df.head(ROW_LIMIT).copy()
-            self.logger.info(f"🔎 ROW_LIMIT active: {before} → {len(movies_df)} titles")
+        # -- Safety: normalized_title availability
+        tmdb_df = self._ensure_normalized(tmdb_df, "title")
+        mb_df = self._ensure_normalized(mb_df, "title")
 
-        # Load MB candidates
-        cands_df = pd.read_csv(self.input_candidates, dtype={"release_group_id": str})
-        cands_df["normalized_title"] = cands_df["title"].apply(normalize_title)
+        # -- Types
+        tmdb_df["year"] = pd.to_numeric(tmdb_df["year"], errors="coerce")
+        mb_df["year"]   = pd.to_numeric(mb_df["year"], errors="coerce")
 
-        required = {"release_group_id", "title", "year", "normalized_title", "release_group_secondary_type"}
-        if not required.issubset(cands_df.columns):
-            self.fail(f"Candidates missing columns: {set(required) - set(cands_df.columns)}")
+        # -- Exact (deterministic) matches by normalized_title + year
+        exact = tmdb_df.merge(
+            mb_df[["normalized_title", "year", "title", "release_group_id"]],
+            on=["normalized_title", "year"], how="inner", suffixes=("_tmdb", "_mb")
+        )
+        exact_matches = [{
+            "tmdb_id": r.tmdb_id,
+            "tmdb_title": r.title_tmdb,
+            "tmdb_year": r.year,
+            "matched_title": r.title_mb,
+            "release_group_id": r.release_group_id,
+            "mb_year": r.year,
+            "score": 100,  # exact deterministic
+        } for r in exact.itertuples(index=False)]
 
-        norm_to_row = {
-            row.normalized_title: (row.title, row.release_group_id, row.year,
-                                   getattr(row, "release_group_secondary_type", None),
-                                   getattr(row, "artist", None))
-            for row in cands_df.itertuples(index=False)
-        }
+        self.logger.info(f"✅ Exact matches (pre-fuzzy): {len(exact_matches)}")
 
-        matches, misses, golden_rows = [], [], []
-        golden_total = len([t for t in GOLDEN_TITLES if t in movies_df["title"].values])
-        golden_matched = 0
-        golden_with_candidates = 0
+        # -- Fuzzy only for remaining TMDB rows
+        remaining = tmdb_df[~tmdb_df["tmdb_id"].isin(exact["tmdb_id"])]
+        self.logger.info(f"🎯 Remaining for fuzzy: {len(remaining)} (of {len(tmdb_df)})")
 
-        with tqdm(total=len(movies_df), desc="Enhanced TMDb Matching") as bar:
-            for mv in movies_df.itertuples(index=False):
-                tmdb_id, tmdb_title = mv.tmdb_id, mv.title
-                tmdb_year = getattr(mv, "release_year", None)
-                base_norm = mv.normalized_title
+        # Pre-compute MB lookup and per-year pools
+        norm_to_mb = {}
+        for r in mb_df.itertuples(index=False):
+            # In case of collisions, first one wins (Step 07 already deduped per title+year)
+            norm_to_mb.setdefault(r.normalized_title, (r.title, r.release_group_id, r.year))
 
-                # Candidate filter by year ± YEAR_VARIANCE
-                if tmdb_year:
-                    mask = pd.to_numeric(cands_df["year"], errors="coerce").between(
-                        int(tmdb_year) - YEAR_VARIANCE, int(tmdb_year) + YEAR_VARIANCE
-                    )
-                    pool = cands_df.loc[mask]
-                else:
-                    pool = cands_df
+        matches, misses = list(exact_matches), []
 
-                if len(pool):
-                    golden_with_candidates += 1
+        with tqdm(total=len(remaining), desc="Fuzzy Matching") as bar:
+            for mv in remaining.itertuples(index=False):
+                q_norm, q_year = mv.normalized_title, mv.year
 
-                # Main match
-                best_n = match_pool(base_norm, pool, tmdb_year, norm_to_row)
-                best_norm, score = safe_best_tuple(best_n)
+                # Candidate pool: MB within year ± tolerance
+                pool_df = mb_df[mb_df["year"].between(q_year - YEAR_VARIANCE, q_year + YEAR_VARIANCE)]
+                pool = pool_df["normalized_title"].tolist()
 
-                # Fallback to alt titles
-                if score < self.threshold:
-                    for alt in [normalize_title(t) for t in fetch_alt_titles(tmdb_id)]:
-                        alt_best = match_pool(alt, pool, tmdb_year, norm_to_row)
-                        alt_norm, alt_score = safe_best_tuple(alt_best)
-                        if alt_score > score:
-                            best_norm, score = alt_norm, alt_score
+                if not pool:
+                    misses.append({"tmdb_id": mv.tmdb_id, "tmdb_title": mv.title, "tmdb_year": q_year, "reason": "no_candidates"})
+                    bar.update(1); continue
 
-                raw_title, rgid, cand_year, cand_type, cand_artist = norm_to_row.get(
-                    best_norm, (None, None, None, None, None)
-                )
+                # Primary fuzzy
+                best_n = process.extract(q_norm, pool, scorer=lambda a,b: int(0.7*fuzz.token_set_ratio(a,b) + 0.3*fuzz.partial_ratio(a,b)), limit=TOP_N)
+                best_cand, best_score = (best_n[0][0], best_n[0][1]) if best_n else ("", 0)
 
-                pass_year_check = True
-                if tmdb_year and cand_year:
-                    try:
-                        if abs(int(tmdb_year) - int(cand_year)) > 2:
-                            pass_year_check = False
-                    except Exception:
-                        pass
+                # Optional alt-title rescue
+                if best_score < FUZZ_THRESHOLD and USE_ALT_TITLES:
+                    for alt in fetch_alt_titles(mv.tmdb_id):
+                        alt_n = process.extract(alt, pool, scorer=lambda a,b: int(0.7*fuzz.token_set_ratio(a,b) + 0.3*fuzz.partial_ratio(a,b)), limit=TOP_N)
+                        if alt_n and alt_n[0][1] > best_score:
+                            best_cand, best_score = alt_n[0][0], alt_n[0][1]
 
-                if score >= self.threshold and rgid and pass_year_check:
+                if best_score >= FUZZ_THRESHOLD:
+                    mb_title, rgid, mb_year = norm_to_mb.get(best_cand, ("", "", None))
                     matches.append({
-                        "tmdb_id": tmdb_id, "tmdb_title": tmdb_title,
-                        "release_group_id": rgid, "matched_title": raw_title,
-                        "score": score, "mb_year": cand_year,
-                        "tmdb_year": tmdb_year, "mb_type": cand_type,
-                        "mb_artist": cand_artist,
+                        "tmdb_id": mv.tmdb_id, "tmdb_title": mv.title,
+                        "tmdb_year": q_year, "matched_title": mb_title,
+                        "release_group_id": rgid, "mb_year": mb_year,
+                        "score": int(best_score),
                     })
-                    if tmdb_title in GOLDEN_TITLES:
-                        golden_matched += 1
                 else:
                     misses.append({
-                        "tmdb_id": tmdb_id, "tmdb_title": tmdb_title,
-                        "best_match": raw_title, "score": score,
-                        "tmdb_year": tmdb_year, "mb_type": cand_type,
+                        "tmdb_id": mv.tmdb_id, "tmdb_title": mv.title,
+                        "tmdb_year": q_year, "best_candidate": best_cand,
+                        "score": int(best_score),
                     })
 
-                if DEBUG_MODE and best_n:
-                    self.logger.info(f"[DEBUG] {tmdb_title} ({tmdb_year}) best {TOP_N}:")
-                    for cand, cand_score, _ in best_n:
-                        self.logger.info(f"    {cand[:40]!r} → {cand_score}")
-
+                if DEBUG_MODE:
+                    self.logger.info(f"[DEBUG] {mv.title} ({q_year}) → {best_cand} [{best_score}]")
                 bar.update(1)
 
-        # Save results
+        # -- Save outputs
         pd.DataFrame(matches).to_csv(self.output_matches, index=False)
         pd.DataFrame(misses).to_csv(self.output_unmatched, index=False)
+        pd.DataFrame(matches).to_parquet(self.output_parquet, index=False)
+        self.logger.info(f"📦 Saved {len(matches)} matches, {len(misses)} unmatched")
 
-        if GOLDEN_TEST_MODE:
-            pd.DataFrame(golden_rows).to_csv(self.output_golden, index=False)
-            fidelity = (golden_matched / golden_total * 100) if golden_total else 0
-            coverage = (golden_with_candidates / golden_total * 100) if golden_total else 0
-            self.logger.info(f"⭐ Golden Test: {golden_matched}/{golden_total} ({fidelity:.1f}%) | Coverage {coverage:.1f}%")
+        # -- Metrics
+        fuzzy_only = len(matches) - len(exact_matches)
+        total_tmdb = len(tmdb_df)
+        fuzzy_pct = (len(matches) / total_tmdb * 100) if total_tmdb else 0
+        avg_score = pd.DataFrame(matches)["score"].mean() if matches else 0
+        metrics = {
+            "rows_tmdb": total_tmdb,
+            "rows_matched_total": len(matches),
+            "rows_matched_exact": len(exact_matches),
+            "rows_matched_fuzzy_only": fuzzy_only,
+            "overall_match_pct": round(fuzzy_pct, 2),
+            "avg_match_score": round(avg_score, 2),
+        }
+        self.write_metrics("step08_match_tmdb", metrics)
+        self.logger.info(f"📈 Metrics logged → Power BI ({metrics})")
+        self.logger.info("🎬 Step 08 completed successfully.")
 
-            STEP_METRICS.update({
-                "golden_matched": golden_matched,
-                "golden_total": golden_total,
-                "golden_fidelity": fidelity,
-                "golden_coverage": coverage,
-            })
-
-        self.logger.info(f"✅ Saved {len(matches)} matches, {len(misses)} unmatched → {self.output_matches.name}")
 
 if __name__ == "__main__":
-    step = Step08MatchTMDb()
-    step.run()
+    Step08MatchTMDb().run()

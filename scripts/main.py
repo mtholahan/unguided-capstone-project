@@ -1,10 +1,14 @@
-# main.py
-import logging
+# ============================================================
+# main.py  — Pipeline Orchestrator
+# ============================================================
 import argparse
-import pandas as pd
-from pathlib import Path
+import logging
 import time
+from pathlib import Path
+from datetime import datetime
+import pandas as pd
 
+# ---- Step Imports ----
 from step_00_acquire_musicbrainz import Step00AcquireMusicbrainz
 from step_01_audit_raw import Step01AuditRaw
 from step_02_cleanse_tsv import Step02CleanseTSV
@@ -18,13 +22,36 @@ from step_08_match_tmdb import Step08MatchTMDb
 from step_09_apply_rescues import Step09ApplyRescues
 from step_10_enrich_tmdb import Step10EnrichMatches
 from step_10b_coverage_audit import Step10BCoverageAudit
+
 from config import DATA_DIR, TMDB_DIR, STEP_METRICS
 
-logger = logging.getLogger(__name__)
+# ============================================================
+# 🪵 Global Logging Configuration
+# ============================================================
+LOG_DIR = Path(__file__).resolve().parents[1] / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+log_file = LOG_DIR / f"pipeline_run_{timestamp}.log"
+
+LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+logging.basicConfig(
+    level=logging.INFO,
+    format=LOG_FORMAT,
+    handlers=[
+        logging.FileHandler(log_file, encoding="utf-8"),
+        logging.StreamHandler()
+    ],
+)
+
+logger = logging.getLogger("Pipeline")
+logger.info(f"📜 Logging initialized → {log_file}")
 
 # Track runtimes
 STEP_TIMES = {}
 
+# ============================================================
+# Step Orchestration
+# ============================================================
 def build_steps():
     return [
         Step00AcquireMusicbrainz(cleanup_archives=False),
@@ -39,7 +66,7 @@ def build_steps():
         Step08MatchTMDb(),
         Step09ApplyRescues(),
         Step10EnrichMatches(),
-        Step10BCoverageAudit()
+        Step10BCoverageAudit(),
     ]
 
 
@@ -71,7 +98,6 @@ def print_summary(steps):
         "Step 10 output": TMDB_DIR / "tmdb_enriched_matches.csv",
         "Step 10B output (audit)": TMDB_DIR / "coverage_audit.csv",
         "Step 10B output (summary)": TMDB_DIR / "coverage_summary.txt",
-
     }
 
     lines = ["📊 Pipeline Summary"]
@@ -80,7 +106,6 @@ def print_summary(steps):
         label = f"{step.name}"
         runtime = STEP_TIMES.get(step_num, None)
 
-        # If step produces a file we track, get row count
         count = "-"
         for lbl, path in summary_files.items():
             if lbl.startswith(f"Step {step_num}"):
@@ -92,7 +117,6 @@ def print_summary(steps):
         else:
             lines.append(f"   {label:<35} {count} rows")
 
-    # Add Golden Test fidelity if available
     if "golden_fidelity" in STEP_METRICS:
         g = STEP_METRICS
         lines.append("")
@@ -101,7 +125,6 @@ def print_summary(steps):
             f"({g['golden_fidelity']:.1f}%)"
         )
 
-    # Log + write to file
     for line in lines:
         logger.info(line)
 
@@ -112,40 +135,34 @@ def print_summary(steps):
     logger.info(f"📝 Pipeline summary written to {summary_file.resolve()}")
 
 
+# ============================================================
+# Main Execution Logic
+# ============================================================
 def main():
     parser = argparse.ArgumentParser(description="Run the Movie Soundtrack Pipeline")
-    parser.add_argument(
-        "--resume",
-        type=str,
-        default=None,
-        help="Step number to resume from (e.g. '05' to start at Step05FilterSoundtracks)",
-    )
+    parser.add_argument("--resume", type=str, default=None,
+                        help="Step number to resume from (e.g., '05' to start at Step05FilterSoundtracks)")
     args = parser.parse_args()
 
     steps = build_steps()
-
-    # Resume logic (enhanced for flexibility, supports lettered steps like 10B)
     start_index = 0
+
     if args.resume:
         target = args.resume.strip().upper().replace("STEP", "").replace(":", "")
         matched = False
-
         for i, step in enumerate(steps):
-            # Extract the last token from the step name, e.g. "10B" or "03"
             step_id = step.name.split(":")[0].split()[-1].upper().replace("STEP", "").replace(":", "")
             if step_id == target or step_id.zfill(2) == target.zfill(2):
                 start_index = i
                 matched = True
                 logger.info(f"▶ Resuming pipeline at {step.name}")
                 break
-
         if not matched:
             valid_steps = [s.name.split(':')[0].split()[-1].upper() for s in steps]
             logger.error(f"❌ Invalid resume step: {args.resume}")
             logger.error(f"   Valid step IDs: {', '.join(valid_steps)}")
             return
 
-    # Run pipeline with timing
     for step in steps[start_index:]:
         logger.info(f"▶ Running {step.name}...")
         start_time = time.time()
@@ -162,8 +179,8 @@ def main():
             logger.error(f"❌ {step.name} failed after {elapsed:.1f}s: {e}", exc_info=True)
             break
 
-    # Always print/write summary
     print_summary(steps)
+    print(f"\n✅ Pipeline run complete. Full log saved to: {log_file}")
 
 
 if __name__ == "__main__":

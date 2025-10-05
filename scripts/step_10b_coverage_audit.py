@@ -12,7 +12,7 @@ from difflib import SequenceMatcher
 
 class Step10BCoverageAudit(BaseStep):
     def __init__(self, name="Step 10B: OST Coverage Audit", similarity_threshold=0.85):
-        super().__init__(name)
+        super().__init__(name="Step 10B: OST Coverage Audit")
         self.similarity_threshold = similarity_threshold
 
         # Input / Output

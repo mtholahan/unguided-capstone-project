@@ -164,3 +164,41 @@ STEP_METRICS = {}
 FUZZY_THRESHOLD = 120        # default match cutoff
 YEAR_TOLERANCE = 1           # allow ±1 year drift
 MAX_CANDIDATES_PER_TITLE = 25
+
+# ============================================================
+# Optional Config class for object-style access
+# ============================================================
+class Config:
+    """
+    Object-based wrapper for key pipeline paths and settings.
+    Provides safe access for BaseStep instances expecting `self.config`.
+    """
+
+    def __init__(self):
+        from pathlib import Path
+
+        # Use existing constants defined above
+        self.BASE_DIR = BASE_DIR
+        self.DATA_DIR = DATA_DIR
+        self.RESULTS_DIR = RESULTS_DIR
+        self.MB_RAW_DIR = MB_RAW_DIR
+        self.MB_CLEANSED_DIR = MB_CLEANSED_DIR
+        self.TMDB_DIR = TMDB_DIR
+
+        # Operational parameters
+        self.ROW_LIMIT = ROW_LIMIT
+        self.DEBUG_MODE = DEBUG_MODE
+        self.UNATTENDED = UNATTENDED
+
+        # External service settings
+        self.TMDB_API_KEY = TMDB_API_KEY
+        self.PG_HOST = PG_HOST
+        self.PG_PORT = PG_PORT
+        self.PG_DBNAME = PG_DBNAME
+        self.PG_USER = PG_USER
+        self.PG_PASSWORD = PG_PASSWORD
+        self.PG_SCHEMA = PG_SCHEMA
+
+    def __repr__(self):
+        return f"<Config DATA_DIR={self.DATA_DIR} ROW_LIMIT={self.ROW_LIMIT}>"
+

@@ -14,7 +14,7 @@ from pathlib import Path
 
 class Step02CleanseTSV(BaseStep):
     def __init__(self, name="Step 02: Cleanse TSV"):
-        super().__init__(name)
+        super().__init__(name="Step 02: Cleanse TSV")
 
         # --- Robust logging setup ---
         log_file = Path(__file__).resolve().parent / "pipeline.log"

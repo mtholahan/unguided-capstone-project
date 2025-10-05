@@ -20,7 +20,7 @@ class Step00AcquireMusicbrainz(BaseStep):
     FILENAME = "mbdump.tar.bz2"
 
     def __init__(self, name="Step 00: Acquire MusicBrainz", cleanup_archives: bool = True):
-        super().__init__(name)
+        super().__init__(name="Step 00: Acquire MusicBrainz")
         self.cleanup_archives = cleanup_archives
 
     def download_with_progress(self, url: str, dest_path: Path):

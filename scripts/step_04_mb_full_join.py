@@ -13,7 +13,7 @@ import random
 
 class Step04MBFullJoin(BaseStep):
     def __init__(self, name="Step 04: MB Full Join"):
-        super().__init__(name)
+        super().__init__(name="Step 04: MB Full Join")
         self.data = {}
 
     def load_tsv(self, path):

@@ -1,127 +1,105 @@
-"""Step 07: Prepare TMDb Input
-Prepares TMDb dataset for matching by normalizing fields (title, year).
-Writes tmdb_input_candidates_clean.csv to TMDB_DIR.
+"""
+Step 07: Prepare TMDb Input (DRY + utils-integrated)
+----------------------------------------------------
+Normalizes both MusicBrainz (MB) and TMDb titles using utils.normalize_for_matching_extended().
+Computes deterministic (exact) title/year overlaps as a pre-fuzzy baseline.
+
+Inputs:
+    DATA_DIR/soundtracks.parquet          ← from Step 05
+    TMDB_DIR/enriched_top_1000.csv        ← from Step 06
+Outputs:
+    TMDB_DIR/tmdb_input_candidates_clean.csv
+    TMDB_DIR/tmdb_movies_normalized.parquet
+    TMDB_DIR/tmdb_deterministic_matches_sample.csv
+Metrics:
+    deterministic_match_pct logged to pipeline_metrics.csv
 """
 
 from base_step import BaseStep
-import pandas as pd
 from config import DATA_DIR, TMDB_DIR, DEBUG_MODE
-from utils import normalize_title_for_matching, is_mostly_digits
+from utils import normalize_for_matching_extended as normalize, is_mostly_digits
+import pandas as pd
 from tqdm import tqdm
 
+
 class Step07PrepareTMDbInput(BaseStep):
-    def __init__(self, name="Step 07: Prepare TMDb Input"):
-        super().__init__(name)
-        self.input_tsv  = DATA_DIR / "soundtracks.tsv"
+    def __init__(self, name="Step 07: Prepare TMDb Input (DRY)"):
+        super().__init__(name=name)
+        self.input_parquet = DATA_DIR / "soundtracks.parquet"
+        self.tmdb_input_csv = TMDB_DIR / "enriched_top_1000.csv"
         self.output_csv = TMDB_DIR / "tmdb_input_candidates_clean.csv"
 
     def run(self):
-        self.logger.info("🔍 Loading soundtracks with headers...")
-        df = pd.read_csv(self.input_tsv, sep="\t", header=0, dtype=str, engine="python")
+        self.logger.info("🔍 Loading MB soundtracks (Parquet)...")
+        df = pd.read_parquet(self.input_parquet)
 
-        # Ensure release_group_secondary_type exists (optional fallback)
-        if "release_group_secondary_type" not in df.columns:
-            df["release_group_secondary_type"] = None
-
-        # Confirm required columns exist (after adding fallback)
-        required_cols = {"release_group_id", "release_year", "raw_row", "release_group_secondary_type"}
-        if not required_cols.issubset(df.columns):
-            self.fail(f"Missing required columns in {self.input_tsv}: {required_cols - set(df.columns)}")
-
-        # Hardened title extraction
+        # Extract title from raw_row
         def extract_title(raw):
             try:
-                parts = raw.split("|")
-                if len(parts) > 2 and parts[2].strip():
-                    return parts[2].strip()
-                if len(parts) > 1 and parts[1].strip():
-                    return parts[1].strip()
-                if parts and parts[0].strip():
-                    return parts[0].strip()
-                return None
+                for part in str(raw).split("|"):
+                    if part.strip():
+                        return part.strip()
             except Exception:
-                return None
+                pass
+            return None
 
-        self.logger.info("🔧 Extracting titles...")
-        df["title"] = [extract_title(raw) for raw in tqdm(df["raw_row"], desc="Extracting titles")]
+        df["title"] = [extract_title(r) for r in tqdm(df["raw_row"], desc="Extracting titles")]
+        df["normalized_title"] = [normalize(t) for t in tqdm(df["title"], desc="Normalizing MB titles")]
 
-        # Normalize titles
-        self.logger.info("🔧 Normalizing titles...")
-        df["normalized_title"] = [normalize_title_for_matching(t) for t in tqdm(df["title"], desc="Normalizing")]
-
-        # Filter out invalid rows
-        initial_count = len(df)
-        self.logger.info(f"ℹ️ Initial row count: {initial_count}")
-
+        # Filter invalid
         def is_valid(row):
             nt = row["normalized_title"]
-            if not nt or len(nt) < 3:
-                return False
-            if is_mostly_digits(nt):
+            if not nt or len(nt) < 3 or is_mostly_digits(nt):
                 return False
             try:
                 yr = int(row["release_year"])
-            except:
+            except Exception:
                 return False
-            return (1900 <= yr <= 2025)
+            return 1900 <= yr <= 2025
 
-        filtered = df[df.apply(is_valid, axis=1)]
-        removed = initial_count - len(filtered)
-        self.logger.info(f"🧹 Removed {removed} invalid or out-of-range titles")
-
-        # Hybrid OST keyword + type filter
-        OST_TERMS = {"soundtrack", "ost", "score", "motion picture"}
-        DENY_TERMS = {"tribute", "karaoke", "remix", "mix", "volume", "vol.", "greatest hits", "best of"}
-
-        def passes_hybrid_filter(row) -> bool:
-            title = row["title"] or ""
-            t = title.lower()
-
-            if any(term in t for term in DENY_TERMS):
-                return False
-
-            # Keep if explicitly tagged as soundtrack AND has OST-like terms
-            if str(row.get("release_group_secondary_type", "")).lower() == "soundtrack":
-                if any(term in t for term in OST_TERMS):
-                    return True
-                # Special case: allow bare movie titles if type is Soundtrack
-                return True if len(t.split()) <= 5 else False
-
-            return False
-
-        filtered = filtered[filtered.apply(passes_hybrid_filter, axis=1)]
-
-        # Drop duplicates on (normalized_title, release_year)
-        self.logger.info("🧼 Dropping duplicates...")
-        filtered = filtered.drop_duplicates(subset=["normalized_title", "release_year"])
-
-        # Final output with clean schema (always includes release_group_secondary_type)
-        out_df = pd.DataFrame({
-            "normalized_title":  filtered["normalized_title"],
-            "title":             filtered["title"],
-            "release_group_id":  filtered["release_group_id"],
-            "year":              filtered["release_year"].astype(int),
-            "release_group_secondary_type": filtered["release_group_secondary_type"]
-        })
-
-        # Debug preview
-        if DEBUG_MODE:
-            self.logger.info("🔎 Debug Preview (first 10 rows):")
-            preview = out_df.head(10).to_dict(orient="records")
-            for row in preview:
-                self.logger.info(
-                    f"   rgid={row['release_group_id']}, "
-                    f"title={row['title']}, "
-                    f"norm={row['normalized_title']}, "
-                    f"year={row['year']}, "
-                    f"type={row['release_group_secondary_type']}"
-                )
-
-        final_count = len(out_df)
+        df = df[df.apply(is_valid, axis=1)].drop_duplicates(subset=["normalized_title", "release_year"])
+        out_df = df.rename(columns={"release_year": "year"})
+        out_df = out_df[["normalized_title", "title", "release_group_id", "year", "release_group_secondary_type"]]
         out_df.to_csv(self.output_csv, index=False)
-        self.logger.info(f"✅ Final output row count: {final_count}")
-        self.logger.info(f"✅ Saved to {self.output_csv}")
+        self.logger.info(f"✅ Saved MB candidates → {self.output_csv} ({len(out_df):,} rows)")
+
+        # ---- TMDb side ----
+        try:
+            df_tmdb = pd.read_csv(self.tmdb_input_csv, dtype=str)
+            df_tmdb["normalized_title"] = [normalize(t) for t in df_tmdb["title"].fillna("")]
+            df_tmdb["year"] = pd.to_numeric(df_tmdb["release_year"], errors="coerce")
+            df_tmdb = df_tmdb[(df_tmdb["year"].between(1900, 2025)) & (df_tmdb["normalized_title"].str.len() > 2)]
+            df_tmdb = df_tmdb.drop_duplicates(subset=["normalized_title", "year"])
+            tmdb_norm_path = TMDB_DIR / "tmdb_movies_normalized.parquet"
+            df_tmdb.to_parquet(tmdb_norm_path, index=False)
+            self.logger.info(f"💾 Saved normalized TMDb dataset → {tmdb_norm_path}")
+
+            merged = out_df.merge(df_tmdb[["normalized_title", "year", "tmdb_id"]],
+                                  on=["normalized_title", "year"], how="inner")
+            coverage = (len(merged) / len(out_df)) * 100 if len(out_df) else 0
+            self.logger.info(f"📊 Deterministic overlap: {coverage:.2f}% ({len(merged)}/{len(out_df)})")
+
+            diag = TMDB_DIR / "tmdb_deterministic_matches_sample.csv"
+            merged.head(100).to_csv(diag, index=False)
+            self.logger.info(f"🔎 Sample deterministic matches → {diag}")
+
+            metrics = {
+                "rows_mb_candidates": len(out_df),
+                "rows_tmdb": len(df_tmdb),
+                "rows_deterministic_match": len(merged),
+                "deterministic_match_pct": round(coverage, 2),
+            }
+            self.write_metrics("step07_prepare_tmdb_input", metrics)
+
+        except FileNotFoundError:
+            self.logger.warning("⚠️ TMDB file not found — skipping overlap metric")
+
+        if DEBUG_MODE:
+            self.logger.info("🔎 Debug preview (first 5 MB rows):")
+            self.logger.info(out_df.head().to_string())
+
+        self.logger.info("✅ Step 07 completed successfully.")
+
 
 if __name__ == "__main__":
-    step = Step07PrepareTMDbInput()
-    step.run()
+    Step07PrepareTMDbInput().run()

@@ -15,7 +15,7 @@ class Step09ApplyRescues(BaseStep):
         name: str = "Step 09: Apply Manual Rescues (Enhanced)",
         threshold: float = 90.0,
     ):
-        super().__init__(name)
+        super().__init__(name="Step 09: Apply Manual Rescues (Enhanced)")
         self.threshold = threshold
 
         self.match_file = TMDB_DIR / "tmdb_match_results.csv"

@@ -19,7 +19,7 @@ import pandas as pd
 
 class Step05FilterSoundtracksEnhanced(BaseStep):
     def __init__(self, name="Step 05 Enhanced: Filter Soundtracks"):
-        super().__init__(name)
+        super().__init__(name="Step 05 Enhanced: Filter Soundtracks")
 
     # -------------------------------------------------------------
     def load_secondary_type_map(self):

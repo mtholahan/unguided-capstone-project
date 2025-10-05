@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 class Step06FetchTMDb(BaseStep):
     def __init__(self, name="Step 06: Fetch TMDb Top 1000"):
-        super().__init__(name)
+        super().__init__(name="Step 06: Fetch TMDb Top 1000")
         self.api_key = TMDB_API_KEY
         self.output_path = TMDB_DIR / "enriched_top_1000.csv"
         self.max_movies = 1000  # default upper bound (overridden by ROW_LIMIT or Golden Mode)
