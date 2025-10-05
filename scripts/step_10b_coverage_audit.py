@@ -105,3 +105,7 @@ class Step10BCoverageAudit(BaseStep):
 
         self.logger.info(f"✅ Audit complete: {found}/{total} found ({found/total:.1%} coverage)")
         self.logger.info(f"💾 Saved details to {self.output_csv.name} and summary to {self.summary_file.name}")
+
+if __name__ == "__main__":
+    step = Step10BCoverageAudit()
+    step.run()

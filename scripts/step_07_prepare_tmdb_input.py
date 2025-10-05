@@ -121,3 +121,7 @@ class Step07PrepareTMDbInput(BaseStep):
         out_df.to_csv(self.output_csv, index=False)
         self.logger.info(f"✅ Final output row count: {final_count}")
         self.logger.info(f"✅ Saved to {self.output_csv}")
+
+if __name__ == "__main__":
+    step = Step07PrepareTMDbInput()
+    step.run()

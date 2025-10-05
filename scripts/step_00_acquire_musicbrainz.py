@@ -165,3 +165,8 @@ class Step00AcquireMusicbrainz(BaseStep):
             self.logger.info("Skipping cleanup of archives per configuration.")
 
         self.logger.info(f"[DONE] Step 00 complete.")
+
+
+if __name__ == "__main__":
+    step = Step00AcquireMusicbrainz()
+    step.run()

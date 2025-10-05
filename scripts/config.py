@@ -10,6 +10,7 @@ Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files,
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Load environment variables (used for DB password)
 load_dotenv()
@@ -101,9 +102,11 @@ UNATTENDED = True
 
 # === Testing Toggles ===
 # =======================
-ROW_LIMIT = 250_000
+ROW_LIMIT = 1_000_000
 
 # === Golden Test Mode ===
+GOLDEN_TEST_SIZE = 200
+
 GOLDEN_TEST_MODE = True  # Global toggle for golden benchmark runs
 
 # Blockbuster sanity list (Step 06 + Step 08 will both use this)
@@ -156,3 +159,8 @@ GOLDEN_EXPECTED_YEARS = {
 
 # Global metrics (populated by steps like Step 08)
 STEP_METRICS = {}
+
+# Fuzzy-matching parameters (used in Steps 07–08)
+FUZZY_THRESHOLD = 120        # default match cutoff
+YEAR_TOLERANCE = 1           # allow ±1 year drift
+MAX_CANDIDATES_PER_TITLE = 25

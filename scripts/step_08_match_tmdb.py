@@ -10,7 +10,6 @@ from config import (
     DEBUG_MODE, TMDB_DIR, TMDB_API_KEY, YEAR_VARIANCE,
     ROW_LIMIT, GOLDEN_TITLES, GOLDEN_TEST_MODE, STEP_METRICS
 )
-from utils import normalize_for_matching_extended
 from tqdm import tqdm
 
 # Debug toggles
@@ -94,7 +93,6 @@ def composite_scorer(q, c, g_year=None, c_year=None, c_type=None, c_artist=None)
     return score
 
 
-# -----------------------------------------------------
 def fetch_alt_titles(tmdb_id: str):
     """Fetch alternative titles from TMDb for fallback matching."""
     try:
@@ -104,6 +102,32 @@ def fetch_alt_titles(tmdb_id: str):
         return [t["title"] for t in r.json().get("titles", []) if t.get("title")]
     except Exception:
         return []
+
+
+def safe_best_tuple(best_list):
+    """Safely extract (candidate_string, score) from RapidFuzz result tuples."""
+    try:
+        if best_list and isinstance(best_list[0], (list, tuple)) and len(best_list[0]) >= 2:
+            return best_list[0][0], best_list[0][1]
+    except Exception:
+        pass
+    return None, -1
+
+
+def match_pool(query_norm, pool, tmdb_year, norm_to_row):
+    """Reusable wrapper for RapidFuzz matching against candidate pool."""
+    return process.extract(
+        query_norm,
+        pool["normalized_title"].tolist(),
+        scorer=lambda q, c, **_: composite_scorer(
+            q, c,
+            tmdb_year,
+            norm_to_row.get(c, (None, None, None, None, None))[2],
+            norm_to_row.get(c, (None, None, None, None, None))[3],
+            norm_to_row.get(c, (None, None, None, None, None))[4],
+        ),
+        limit=TOP_N,
+    )
 
 
 # -----------------------------------------------------
@@ -170,37 +194,17 @@ class Step08MatchTMDb(BaseStep):
                 if len(pool):
                     golden_with_candidates += 1
 
-                # Scoring
-                best_n = process.extract(
-                    base_norm,
-                    pool["normalized_title"].tolist(),
-                    scorer=lambda q, c, **_: composite_scorer(
-                        q, c,
-                        tmdb_year,
-                        norm_to_row.get(c, (None, None, None, None, None))[2],
-                        norm_to_row.get(c, (None, None, None, None, None))[3],
-                        norm_to_row.get(c, (None, None, None, None, None))[4],
-                    ),
-                    limit=TOP_N,
-                )
+                # Main match
+                best_n = match_pool(base_norm, pool, tmdb_year, norm_to_row)
+                best_norm, score = safe_best_tuple(best_n)
 
-                best_norm, score = (best_n[0][0], best_n[0][1]) if best_n else (None, -1)
-
-                # Alternative titles fallback
+                # Fallback to alt titles
                 if score < self.threshold:
                     for alt in [normalize_title(t) for t in fetch_alt_titles(tmdb_id)]:
-                        alt_best = process.extract(
-                            alt, pool["normalized_title"].tolist(),
-                            scorer=lambda q, c, **_: composite_scorer(
-                                q, c,
-                                tmdb_year,
-                                norm_to_row.get(c, (None, None, None, None, None))[2],
-                                norm_to_row.get(c, (None, None, None, None, None))[3],
-                                norm_to_row.get(c, (None, None, None, None, None))[4],
-                            ), limit=TOP_N,
-                        )
-                        if alt_best and alt_best[0][1] > score:
-                            best_norm, score = alt_best[0]
+                        alt_best = match_pool(alt, pool, tmdb_year, norm_to_row)
+                        alt_norm, alt_score = safe_best_tuple(alt_best)
+                        if alt_score > score:
+                            best_norm, score = alt_norm, alt_score
 
                 raw_title, rgid, cand_year, cand_type, cand_artist = norm_to_row.get(
                     best_norm, (None, None, None, None, None)
@@ -256,3 +260,7 @@ class Step08MatchTMDb(BaseStep):
             })
 
         self.logger.info(f"✅ Saved {len(matches)} matches, {len(misses)} unmatched → {self.output_matches.name}")
+
+if __name__ == "__main__":
+    step = Step08MatchTMDb()
+    step.run()

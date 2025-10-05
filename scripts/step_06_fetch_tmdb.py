@@ -162,3 +162,7 @@ Notes:
         r.raise_for_status()
         data = r.json().get("genres", [])
         return {g["id"]: g["name"] for g in data}
+
+if __name__ == "__main__":
+    step = Step06FetchTMDb()
+    step.run()

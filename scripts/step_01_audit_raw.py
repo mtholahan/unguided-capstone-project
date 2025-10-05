@@ -60,3 +60,8 @@ class Step01AuditRaw(BaseStep):
                 self.logger.error(f"❌ Error reading {tsv_path.name}: {e}")
 
         self.logger.info(f"[DONE] Audited {len(raw_files)} TSV files → {MB_RAW_DIR}")
+
+
+if __name__ == "__main__":
+    step = Step01AuditRaw()
+    step.run()

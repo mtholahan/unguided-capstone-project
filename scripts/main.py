@@ -9,6 +9,7 @@ from step_00_acquire_musicbrainz import Step00AcquireMusicbrainz
 from step_01_audit_raw import Step01AuditRaw
 from step_02_cleanse_tsv import Step02CleanseTSV
 from step_03_util_check_tsv_structure import Step03CheckStructure
+from step_03b_rehydrate_guids import Step03BRehydrateGuids
 from step_04_mb_full_join import Step04MBFullJoin
 from step_05_filter_soundtracks import Step05FilterSoundtracks
 from step_06_fetch_tmdb import Step06FetchTMDb
@@ -30,6 +31,7 @@ def build_steps():
         Step01AuditRaw(),
         Step02CleanseTSV(),
         Step03CheckStructure(),
+        Step03BRehydrateGuids(),
         Step04MBFullJoin(),
         Step05FilterSoundtracks(),
         Step06FetchTMDb(),

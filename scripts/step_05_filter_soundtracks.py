@@ -125,3 +125,7 @@ class Step05FilterSoundtracks(BaseStep):
                 self.fail("Output schema missing required columns")
             else:
                 self.logger.info("✅ Output schema validated correctly.")
+
+if __name__ == "__main__":
+    step = Step05FilterSoundtracks()
+    step.run()

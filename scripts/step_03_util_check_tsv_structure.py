@@ -67,3 +67,8 @@ class Step03CheckStructure(BaseStep):
                 self.logger.error(f"❌ Error processing {fpath.name}: {e}")
 
         self.logger.info(f"[DONE] Structure check complete for {len(input_files)} files.")
+
+
+if __name__ == "__main__":
+    step = Step03CheckStructure()
+    step.run()
