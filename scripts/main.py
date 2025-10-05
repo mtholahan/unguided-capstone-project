@@ -11,7 +11,7 @@ from step_02_cleanse_tsv import Step02CleanseTSV
 from step_03_util_check_tsv_structure import Step03CheckStructure
 from step_03b_rehydrate_guids import Step03BRehydrateGuids
 from step_04_mb_full_join import Step04MBFullJoin
-from step_05_filter_soundtracks import Step05FilterSoundtracks
+from step_05_filter_soundtracks_enhanced import Step05FilterSoundtracksEnhanced
 from step_06_fetch_tmdb import Step06FetchTMDb
 from step_07_prepare_tmdb_input import Step07PrepareTMDbInput
 from step_08_match_tmdb import Step08MatchTMDb
@@ -33,7 +33,7 @@ def build_steps():
         Step03CheckStructure(),
         Step03BRehydrateGuids(),
         Step04MBFullJoin(),
-        Step05FilterSoundtracks(),
+        Step05FilterSoundtracksEnhanced(),
         Step06FetchTMDb(),
         Step07PrepareTMDbInput(),
         Step08MatchTMDb(),

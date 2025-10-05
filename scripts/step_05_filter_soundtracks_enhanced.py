@@ -1,17 +1,24 @@
-"""Step 05: Filter Soundtracks
+"""Step 05 Enhanced: Filter Soundtracks (+ Analytics and Parquet Output)
+-----------------------------------------------------------------------
 Filters the joined dataset to include only soundtrack releases.
-Cross-references release_group_secondary_type and extracts release years.
-Writes soundtracks.tsv to DATA_DIR, with guaranteed release_group_id column.
+Adds release-year extraction, writes both TSV and Parquet versions,
+and logs Power BI–compatible metrics.
+
+Input :  DATA_DIR/joined_release_data.tsv
+Outputs: DATA_DIR/soundtracks.tsv
+         DATA_DIR/soundtracks.parquet
+         DATA_DIR/soundtracks_subset.parquet (optional)
 """
 
 from base_step import BaseStep
-import csv, re
 from config import DATA_DIR, MB_RAW_DIR, ROW_LIMIT
+import csv, re
 from tqdm import tqdm
+import pandas as pd
 
 
-class Step05FilterSoundtracks(BaseStep):
-    def __init__(self, name="Step 05: Filter Soundtracks"):
+class Step05FilterSoundtracksEnhanced(BaseStep):
+    def __init__(self, name="Step 05 Enhanced: Filter Soundtracks"):
         super().__init__(name)
 
     # -------------------------------------------------------------
@@ -20,12 +27,14 @@ class Step05FilterSoundtracks(BaseStep):
         path = MB_RAW_DIR / "release_group_secondary_type_join"
         if not path.exists():
             self.fail(f"Missing file: {path}")
+
         with open(path, encoding="utf-8") as f:
             reader = csv.reader(f, delimiter="\t")
             header = next(reader, [])
             if len(header) < 2:
                 self.fail(f"Unexpected header in {path}: {header}")
             soundtrack_ids = {row[0] for row in reader if len(row) >= 2 and row[1] == "1"}
+
         self.logger.info(f"🎵 Loaded {len(soundtrack_ids):,} soundtrack IDs from secondary_type_join")
         return soundtrack_ids
 
@@ -60,7 +69,8 @@ class Step05FilterSoundtracks(BaseStep):
     # -------------------------------------------------------------
     def run(self):
         joined_path = DATA_DIR / "joined_release_data.tsv"
-        output_path = DATA_DIR / "soundtracks.tsv"
+        output_tsv = DATA_DIR / "soundtracks.tsv"
+        output_parquet = DATA_DIR / "soundtracks.parquet"
 
         if not joined_path.exists():
             self.fail(f"Missing input file: {joined_path}")
@@ -74,11 +84,11 @@ class Step05FilterSoundtracks(BaseStep):
 
         self.logger.info(
             f"🔍 Scanning {row_count:,} joined releases for soundtracks "
-            f"(ROW_LIMIT={effective_limit:,})"
+            f"(ROW_LIMIT = {effective_limit:,})"
         )
 
         with open(joined_path, encoding="utf-8") as fin, \
-             open(output_path, "w", encoding="utf-8", newline="") as fout:
+             open(output_tsv, "w", encoding="utf-8", newline="") as fout:
 
             reader = csv.reader(fin, delimiter="\t")
             writer = csv.writer(fout, delimiter="\t")
@@ -111,13 +121,13 @@ class Step05FilterSoundtracks(BaseStep):
                         matched += 1
 
                     if i % 100_000 == 0:
-                        self.logger.info(f"Processed {i:,} rows...  (matched={matched:,})")
+                        self.logger.info(f"Processed {i:,} rows... (matched = {matched:,})")
                     bar.update(1)
 
-        self.logger.info(f"✅ [DONE] Wrote {matched:,} soundtrack rows → {output_path.name} ({skipped:,} skipped)")
+        self.logger.info(f"✅ Wrote {matched:,} soundtrack rows → {output_tsv.name} ({skipped:,} skipped)")
 
         # ✅ Post-validation
-        with open(output_path, encoding="utf-8") as f:
+        with open(output_tsv, encoding="utf-8") as f:
             reader = csv.reader(f, delimiter="\t")
             header = next(reader)
             required = {"release_group_id", "release_year", "raw_row", "release_group_secondary_type"}
@@ -126,6 +136,32 @@ class Step05FilterSoundtracks(BaseStep):
             else:
                 self.logger.info("✅ Output schema validated correctly.")
 
+        # 📦 Write Parquet copy for downstream steps
+        df = pd.read_csv(output_tsv, sep="\t")
+        df.to_parquet(output_parquet, index=False)
+        self.logger.info(f"📦 Saved Parquet version → {output_parquet.name} ({len(df):,} rows)")
+
+        # 🎯 Optional subset for validation
+        subset_fraction = getattr(self.config, "SAMPLE_FRACTION", 0.02)
+        if 0 < subset_fraction < 1.0:
+            sample = df.sample(frac=subset_fraction, random_state=42)
+            sample_path = DATA_DIR / "soundtracks_subset.parquet"
+            sample.to_parquet(sample_path, index=False)
+            self.logger.info(
+                f"🎯 Saved subset ({subset_fraction*100:.1f}% = {len(sample):,} rows) → {sample_path.name}"
+            )
+
+        # 📊 Metrics for Power BI tracking
+        metrics = {
+            "rows_total": row_count,
+            "rows_matched": matched,
+            "rows_skipped": skipped,
+            "match_pct": round(100 * matched / max(row_count, 1), 2),
+        }
+        self.write_metrics("step05_filter_soundtracks", metrics)
+        self.logger.info(f"📈 Metrics logged → Power BI ({metrics})")
+
+
 if __name__ == "__main__":
-    step = Step05FilterSoundtracks()
+    step = Step05FilterSoundtracksEnhanced()
     step.run()
