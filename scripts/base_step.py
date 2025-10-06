@@ -4,8 +4,9 @@ import logging
 from pathlib import Path
 import sys
 from tqdm import tqdm
-from config import DEBUG_MODE, Config # Global debug toggle
+from config import DEBUG_MODE, Config, DATA_DIR # Global debug toggle
 import subprocess
+import os
 
 class BaseStep:
 # ============================================================
@@ -24,6 +25,9 @@ class BaseStep:
 
         # --- Auto-config fallback ---
         self.config = config if config is not None else Config()
+
+        self.metrics_dir = os.path.join(DATA_DIR, "metrics")
+        os.makedirs(self.metrics_dir, exist_ok=True)
 
         # --- Try to capture Git metadata (optional) ---
         branch, commit = "unknown", "unknown"
@@ -92,89 +96,48 @@ class BaseStep:
             kwargs["desc"] = self.name
         return tqdm(iterable, **kwargs)
     
-    # ============================================================
-    # 📊 Metrics Logging Utility (with duration + Git provenance)
-    # ============================================================
-    def write_metrics(self, step_name: str, metrics: dict, start_time=None):
+    def write_metrics(self, step_name, metrics: dict):
         """
-        Write standardized pipeline metrics to CSV for cross-step tracking.
-        Includes Git branch + commit for reproducibility.
-
-        Args:
-            step_name (str): Identifier of the current pipeline step.
-            metrics (dict): Dictionary with at least:
-                - rows_total
-                - rows_matched
-                - rows_skipped
-                - match_pct
-            start_time (float, optional): time.time() at step start for duration tracking.
+        Dynamically appends metrics to pipeline_metrics.csv.
+        Adds new columns automatically if unseen before.
         """
-        import datetime as dt
-        import csv
-        import time
-        import subprocess
-        from pathlib import Path
+        import csv, os
+        from datetime import datetime
 
-        try:
-            # --- Git metadata ---
-            branch, commit = "unknown", "unknown"
-            try:
-                branch = (
-                    subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL)
-                    .decode("utf-8")
-                    .strip()
-                )
-                commit = (
-                    subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL)
-                    .decode("utf-8")
-                    .strip()
-                )
-            except Exception:
-                pass  # fine if not a Git repo
+        metrics_file = os.path.join(self.metrics_dir, "pipeline_metrics.csv")
+        metrics = metrics.copy()
+        metrics["step_name"] = step_name
+        metrics["timestamp"] = datetime.now().isoformat(timespec="seconds")
 
-            # --- File path & metadata ---
-            data_dir = getattr(self.config, "DATA_DIR", Path("data"))
-            metrics_file = Path(data_dir) / "metrics" / "pipeline_metrics.csv"
-            metrics_file.parent.mkdir(exist_ok=True)
+        # Merge existing and new headers
+        if os.path.exists(metrics_file):
+            with open(metrics_file, newline="", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                existing_headers = reader.fieldnames or []
+        else:
+            existing_headers = []
 
-            # --- Compose final metrics row ---
-            metrics.update({
-                "step_name": step_name,
-                "run_timestamp": dt.datetime.utcnow().isoformat(timespec="seconds"),
-                "git_branch": branch,
-                "git_commit": commit,
-            })
+        new_headers = [k for k in metrics.keys() if k not in existing_headers]
+        fieldnames = existing_headers + new_headers
 
-            if start_time is not None:
-                metrics["duration_sec"] = round(time.time() - start_time, 2)
-            else:
-                metrics["duration_sec"] = None
+        # If file doesn't exist, write header
+        write_header = not os.path.exists(metrics_file)
+        # If new headers appeared, rewrite file with updated header
+        if new_headers and not write_header:
+            with open(metrics_file, newline="", encoding="utf-8") as f:
+                rows = list(csv.DictReader(f))
+            with open(metrics_file, "w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                for row in rows:
+                    writer.writerow(row)
 
-            header = [
-                "step_name",
-                "rows_total",
-                "rows_matched",
-                "rows_skipped",
-                "match_pct",
-                "duration_sec",
-                "git_branch",
-                "git_commit",
-                "run_timestamp",
-            ]
-
-            write_header = not metrics_file.exists()
-
-            with open(metrics_file, "a", newline="", encoding="utf-8") as f:
-                writer = csv.DictWriter(f, fieldnames=header)
-                if write_header:
-                    writer.writeheader()
-                writer.writerow(metrics)
-
-            self.logger.info(f"📊 Metrics logged to {metrics_file} → {metrics}")
-
-        except Exception as e:
-            self.logger.warning(f"⚠️ Failed to write metrics for {step_name}: {e}")
-
+        # Append new record
+        with open(metrics_file, "a", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            if write_header:
+                writer.writeheader()
+            writer.writerow(metrics)
 
     def run(self):
         raise NotImplementedError("Subclasses must implement a run() method.")

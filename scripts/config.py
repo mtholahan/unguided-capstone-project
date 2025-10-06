@@ -94,8 +94,7 @@ MB_STATIC_REFRESH = {
 }
 
 # TMDb Match
-YEAR_VARIANCE = 10
-
+YEAR_VARIANCE = 5
 
 # === Global Toggles ===
 UNATTENDED = True

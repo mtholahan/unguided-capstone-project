@@ -21,9 +21,10 @@ from rapidfuzz import fuzz, process
 from config import TMDB_DIR, DEBUG_MODE, YEAR_VARIANCE, TMDB_API_KEY
 from utils import normalize_for_matching_extended as normalize
 from tqdm import tqdm
+import os
 
 # ---- Tunables ----
-FUZZ_THRESHOLD = 70
+FUZZ_THRESHOLD = 50
 TOP_N = 5
 FORCE_RENORM = False        # Recompute normalized_title from 'title' even if present
 USE_ALT_TITLES = True       # Query TMDB alt titles to rescue borderline cases (slower)
@@ -66,6 +67,19 @@ class Step08MatchTMDb(BaseStep):
         self.logger.info("📥 Loading normalized TMDB + MB datasets...")
         tmdb_df = pd.read_parquet(self.tmdb_norm)
         mb_df = pd.read_csv(self.mb_candidates, dtype=str)
+
+        # --- Load MB candidates safely ---
+        mb_path = TMDB_DIR / "tmdb_input_candidates_clean.csv"
+        if not mb_path.exists() or os.path.getsize(mb_path) == 0:
+            self.logger.warning(f"🪫 MB candidate file missing or empty → {mb_path}")
+            return
+
+        mb_df = pd.read_csv(mb_path, dtype=str)
+        # Defensive conversions
+        mb_df["year"] = pd.to_numeric(mb_df.get("year", None), errors="coerce")
+        mb_df["normalized_title"] = mb_df["normalized_title"].fillna("").astype(str)
+        mb_df = mb_df.dropna(subset=["normalized_title"])
+        self.logger.info(f"📥 Loaded MB candidates: {len(mb_df):,} rows")
 
         # -- Safety: normalized_title availability
         tmdb_df = self._ensure_normalized(tmdb_df, "title")
@@ -145,6 +159,9 @@ class Step08MatchTMDb(BaseStep):
                 if DEBUG_MODE:
                     self.logger.info(f"[DEBUG] {mv.title} ({q_year}) → {best_cand} [{best_score}]")
                 bar.update(1)
+
+            if not matches:
+                self.logger.warning("🪫 No fuzzy matches met the threshold. Try lowering FUZZ_THRESHOLD or verify normalization.")
 
         # -- Save outputs
         pd.DataFrame(matches).to_csv(self.output_matches, index=False)

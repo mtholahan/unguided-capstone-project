@@ -35,30 +35,72 @@ class Step07PrepareTMDbInput(BaseStep):
 
         # Extract title from raw_row
         def extract_title(raw):
+            """
+            Extract the soundtrack title from the MusicBrainz pipe-delimited raw_row.
+            The 2nd field (index 1) holds the release title.
+            Fallback to first field if something goes wrong.
+            """
             try:
-                for part in str(raw).split("|"):
-                    if part.strip():
+                parts = str(raw).split("|")
+                if len(parts) > 1:
+                    title = parts[1].strip()
+                    # sanity check: avoid UUID-looking strings
+                    if len(title) > 5 and not all(c in "0123456789abcdef-" for c in title.lower()):
+                        return title
+                # fallback: attempt next plausible slot
+                for part in parts[2:4]:
+                    if len(part.strip()) > 3 and not all(c in "0123456789abcdef-" for c in part.lower()):
                         return part.strip()
+                # fallback to None if everything looks like an ID
+                return None
             except Exception:
-                pass
-            return None
+                return None
 
         df["title"] = [extract_title(r) for r in tqdm(df["raw_row"], desc="Extracting titles")]
         df["normalized_title"] = [normalize(t) for t in tqdm(df["title"], desc="Normalizing MB titles")]
 
-        # Filter invalid
-        def is_valid(row):
-            nt = row["normalized_title"]
-            if not nt or len(nt) < 3 or is_mostly_digits(nt):
-                return False
-            try:
-                yr = int(row["release_year"])
-            except Exception:
-                return False
-            return 1900 <= yr <= 2025
+        print("\n=== Normalized Title Diagnostic Sample ===")
+        sample = df.sample(10, random_state=42)
+        print(sample[["title", "normalized_title"]])
+        print("Unique normalized examples:", df["normalized_title"].dropna().unique()[:10])
+        print("==========================================\n")
 
-        df = df[df.apply(is_valid, axis=1)].drop_duplicates(subset=["normalized_title", "release_year"])
-        out_df = df.rename(columns={"release_year": "year"})
+        # --- 🧮 Row Rejection Diagnostics ---
+        reasons = {"short_title": 0, "digits_only": 0, "bad_year": 0, "bad_type": 0, "passed": 0}
+
+        def is_valid(row):
+            nt = str(row.get("normalized_title") or "").strip()
+            if not nt or len(nt) < 3:
+                reasons["short_title"] += 1
+                return False
+ 
+            # Allow titles with any alphabetic character; reject pure numbers
+            if nt.isdigit():
+                reasons["digits_only"] += 1
+                return False
+
+            try:
+                yr = int(float(row.get("release_year") or 0))
+            except Exception:
+                reasons["bad_year"] += 1
+                return False
+            if not (1900 <= yr <= 2025):
+                reasons["bad_year"] += 1
+                return False
+
+            rgt = str(row.get("release_group_secondary_type") or "").strip().lower()
+            # comment out this next block to disable soundtrack filtering
+            if rgt and "soundtrack" not in rgt:
+                reasons["bad_type"] += 1
+                return False
+
+            reasons["passed"] += 1
+            return True
+
+        df_filtered = df[df.apply(is_valid, axis=1)].drop_duplicates(subset=["normalized_title", "release_year"])
+
+        # --- Prepare output ---
+        out_df = df_filtered.rename(columns={"release_year": "year"})
         out_df = out_df[["normalized_title", "title", "release_group_id", "year", "release_group_secondary_type"]]
         out_df.to_csv(self.output_csv, index=False)
         self.logger.info(f"✅ Saved MB candidates → {self.output_csv} ({len(out_df):,} rows)")
@@ -99,7 +141,6 @@ class Step07PrepareTMDbInput(BaseStep):
             self.logger.info(out_df.head().to_string())
 
         self.logger.info("✅ Step 07 completed successfully.")
-
 
 if __name__ == "__main__":
     Step07PrepareTMDbInput().run()
