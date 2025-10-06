@@ -1,7 +1,7 @@
 """
 Capstone Project Configuration File
 Author: Mark
-Last Updated: Thu, 03-Oct-2025
+Last Updated: Sun, 05-Oct-2025
 
 Defines constants for file paths, filenames, and database settings used throughout the ETL pipeline.
 Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files, and Postgres.
@@ -10,7 +10,6 @@ Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files,
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from pathlib import Path
 
 # Load environment variables (used for DB password)
 load_dotenv()
@@ -29,9 +28,11 @@ DATA_DIR = BASE_DIR / "data"
 RESULTS_DIR = DATA_DIR / "results"
 TMDB_DIR = DATA_DIR / "tmdb"
 ENRICHED_TOP1000 = TMDB_DIR / "enriched_top_1000.csv"
+METRICS_DIR = Path("D:/Capstone_Staging/data/metrics")
 MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
+SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
 
 # Global toggle for extra debug logging across steps
 DEBUG_MODE = True
@@ -93,20 +94,16 @@ MB_STATIC_REFRESH = {
     name: str(MB_TSV_FILES[name]) for name in TSV_WHITELIST
 }
 
-# TMDb Match
-YEAR_VARIANCE = 5
-
 # === Global Toggles ===
 UNATTENDED = True
 
 # === Testing Toggles ===
 # =======================
-ROW_LIMIT = 1_000_000
+ROW_LIMIT = 10_000
 
 # === Golden Test Mode ===
 GOLDEN_TEST_SIZE = 200
-
-GOLDEN_TEST_MODE = True  # Global toggle for golden benchmark runs
+GOLDEN_TEST_MODE = False  # Global toggle for golden benchmark runs
 
 # Blockbuster sanity list (Step 06 + Step 08 will both use this)
 GOLDEN_TITLES = {

@@ -1,5 +1,5 @@
 """Step 06: Fetch TMDb
-Fetches top-rated movies from TMDb API.
+Fetches popular movies from TMDb API using Discover endpoint (more pages than Top Rated).
 Defaults to top 1,000 but configurable (self.max_movies).
 Supports ROW_LIMIT for debugging and Golden Test Mode for iconic films.
 Writes enriched_top_1000.csv (or larger) to TMDB_DIR.
@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 
 class Step06FetchTMDb(BaseStep):
-    def __init__(self, name="Step 06: Fetch TMDb Top 1000"):
-        super().__init__(name="Step 06: Fetch TMDb Top 1000")
+    def __init__(self, name="Step 06: Fetch TMDb Discover"):
+        super().__init__(name=name)
         self.api_key = TMDB_API_KEY
         self.output_path = TMDB_DIR / "enriched_top_1000.csv"
         self.max_movies = 1000  # default upper bound (overridden by ROW_LIMIT or Golden Mode)
@@ -27,11 +27,11 @@ class Step06FetchTMDb(BaseStep):
             self.logger.info(f"🔎 Golden Test Mode active: fetching {len(GOLDEN_TITLES)} iconic movies by search")
             movies = self._fetch_golden(GOLDEN_TITLES)
         else:
-            # Apply ROW_LIMIT if set (overrides max_movies)
-            effective_limit = ROW_LIMIT if ROW_LIMIT else self.max_movies
+            # Apply ROW_LIMIT if set, capped to TMDb API max (~10,000)
+            effective_limit = min(ROW_LIMIT, 10000)
             self.logger.info(f"▶ Fetching up to {effective_limit:,} TMDb movies…")
             genre_map = self._fetch_genre_map()
-            movies = self._fetch_top_rated(effective_limit, genre_map)
+            movies = self._fetch_discover_movies(effective_limit, genre_map)
 
         df = pd.DataFrame(movies)
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -61,7 +61,7 @@ Modes:
 Notes:
 ------
 - Golden Test Mode overrides ROW_LIMIT.
-- If neither is active, fetches top {self.max_movies} movies from TMDb.
+- TMDb discover endpoint limited to 500 pages (≈10,000 movies).
 """
         doc_path = TMDB_DIR / "Step06_Documentation.txt"
         with open(doc_path, "w", encoding="utf-8") as f:
@@ -69,15 +69,23 @@ Notes:
 
         self.logger.info(f"📝 Wrote fresh documentation to {doc_path}")
 
-    def _fetch_top_rated(self, limit: int, genre_map: dict) -> list[dict]:
-        """Fetch top-rated movies, up to limit."""
-        url = "https://api.themoviedb.org/3/movie/top_rated"
+    def _fetch_discover_movies(self, limit: int, genre_map: dict) -> list[dict]:
+        """Fetch popular movies using Discover API (max 500 pages)."""
+        url = "https://api.themoviedb.org/3/discover/movie"
         movies = []
         page = 1
+        per_page = 20
+        max_pages = 500  # TMDb API hard limit
 
         with tqdm(total=limit, desc="Fetching TMDb") as bar:
-            while len(movies) < limit:
-                r = requests.get(url, params={"api_key": self.api_key, "page": page, "language": "en-US"})
+            while len(movies) < limit and page <= max_pages:
+                r = requests.get(url, params={
+                    "api_key": self.api_key,
+                    "page": page,
+                    "sort_by": "popularity.desc",
+                    "language": "en-US",
+                    "include_adult": "false"
+                })
                 r.raise_for_status()
                 data = r.json()
                 results = data.get("results", [])
@@ -86,30 +94,29 @@ Notes:
 
                 for m in results:
                     tmdb_id = m.get("id")
-                    title   = m.get("title", "")
-                    rd      = m.get("release_date") or ""
+                    title = m.get("title", "")
+                    rd = m.get("release_date") or ""
                     try:
                         year = int(rd.split("-")[0])
                     except:
                         year = None
                     genre_ids = m.get("genre_ids", [])
                     genres = "|".join(genre_map.get(gid, "") for gid in genre_ids)
-
                     movies.append({
                         "tmdb_id": tmdb_id,
                         "title": title,
                         "release_year": year,
                         "genres": genres
                     })
-
                     bar.update(1)
                     if len(movies) >= limit:
                         break
 
-                self.logger.info(f"   • Page {page}, collected {len(movies)} total")
-                page += 1
-                if page > data.get("total_pages", 1):
+                if page >= max_pages or page >= data.get("total_pages", page):
+                    self.logger.info(f"🛑 Reached TMDb page cap ({max_pages}); stopping at {len(movies):,} movies.")
                     break
+
+                page += 1
 
         return movies
 
@@ -162,6 +169,7 @@ Notes:
         r.raise_for_status()
         data = r.json().get("genres", [])
         return {g["id"]: g["name"] for g in data}
+
 
 if __name__ == "__main__":
     step = Step06FetchTMDb()

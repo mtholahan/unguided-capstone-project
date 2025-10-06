@@ -1,3 +1,7 @@
 import pandas as pd
-df = pd.read_csv(r"D:\Capstone_Staging\data\tmdb\tmdb_input_candidates_clean.csv")
-print(df.sample(5)[["title","normalized_title","year"]])
+from pathlib import Path
+
+TMDB_DIR = Path(r"D:\Capstone_Staging\data\tmdb")
+
+print("Step 06 output:", len(pd.read_csv(TMDB_DIR / "enriched_top_1000.csv")))
+print("Step 07 output:", len(pd.read_parquet(TMDB_DIR / "tmdb_movies_normalized.parquet")))

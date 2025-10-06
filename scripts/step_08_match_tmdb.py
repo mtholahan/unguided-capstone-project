@@ -18,12 +18,13 @@ Metrics:
 from base_step import BaseStep
 import pandas as pd, requests
 from rapidfuzz import fuzz, process
-from config import TMDB_DIR, DEBUG_MODE, YEAR_VARIANCE, TMDB_API_KEY
+from config import TMDB_DIR, DEBUG_MODE, TMDB_API_KEY
 from utils import normalize_for_matching_extended as normalize
 from tqdm import tqdm
 import os
 
 # ---- Tunables ----
+YEAR_VARIANCE = 5
 FUZZ_THRESHOLD = 50
 TOP_N = 5
 FORCE_RENORM = False        # Recompute normalized_title from 'title' even if present
@@ -131,13 +132,13 @@ class Step08MatchTMDb(BaseStep):
                     bar.update(1); continue
 
                 # Primary fuzzy
-                best_n = process.extract(q_norm, pool, scorer=lambda a,b: int(0.7*fuzz.token_set_ratio(a,b) + 0.3*fuzz.partial_ratio(a,b)), limit=TOP_N)
+                best_n = process.extract(q_norm, pool, scorer=lambda a,b,**_: int(0.7*fuzz.token_set_ratio(a,b) + 0.3*fuzz.partial_ratio(a,b)), limit=TOP_N, processor=None)
                 best_cand, best_score = (best_n[0][0], best_n[0][1]) if best_n else ("", 0)
 
                 # Optional alt-title rescue
                 if best_score < FUZZ_THRESHOLD and USE_ALT_TITLES:
                     for alt in fetch_alt_titles(mv.tmdb_id):
-                        alt_n = process.extract(alt, pool, scorer=lambda a,b: int(0.7*fuzz.token_set_ratio(a,b) + 0.3*fuzz.partial_ratio(a,b)), limit=TOP_N)
+                        alt_n = process.extract(alt, pool, scorer=lambda a,b,**_: int(0.7*fuzz.token_set_ratio(a,b) + 0.3*fuzz.partial_ratio(a,b)), limit=TOP_N, processor=None)
                         if alt_n and alt_n[0][1] > best_score:
                             best_cand, best_score = alt_n[0][0], alt_n[0][1]
 
