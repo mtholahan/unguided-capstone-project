@@ -1,15 +1,50 @@
 from base_step import BaseStep
 import pandas as pd, requests, numpy as np, os, argparse
 from rapidfuzz import fuzz, process
-from config import TMDB_DIR, DEBUG_MODE, TMDB_API_KEY
+from config import TMDB_DIR, DEBUG_MODE, TMDB_API_KEY, AZURE_CONN_STR, BLOB_CONTAINER
 from utils import normalize_for_matching_extended as normalize
 from tqdm import tqdm
+from azure.storage.blob import BlobServiceClient
+from pathlib import Path
 
 FUZZ_THRESHOLD = 55
 TOP_N = 5
 FORCE_RENORM = False
 USE_ALT_TITLES = True
 YEAR_VARIANCE = 2  # moved from config
+
+
+# ============================================================
+# Helper: Azure-safe overwrite + optional upload
+# ============================================================
+class SafeWriterMixin:
+    def safe_overwrite(self, df: pd.DataFrame, path: Path, upload_to_blob=False):
+        """Write CSV atomically, then optionally push to Azure Blob."""
+        tmp = Path(f"{path}.tmp")
+        df.to_csv(tmp, index=False)
+        os.replace(tmp, path)
+        self.logger.info(f"💾 Wrote {len(df):,} rows → {path.name}")
+
+        if upload_to_blob:
+            self.upload_to_blob(path)
+
+    def upload_to_blob(self, local_path: Path):
+        """Upload a local file to Azure Blob Storage."""
+        if not AZURE_CONN_STR:
+            self.logger.info("Skipping Azure upload (no connection string set).")
+            return
+        try:
+            blob_service = BlobServiceClient.from_connection_string(AZURE_CONN_STR)
+            blob_client = blob_service.get_blob_client(
+                container=BLOB_CONTAINER,
+                blob=f"outputs/{local_path.name}"
+            )
+            with open(local_path, "rb") as data:
+                blob_client.upload_blob(data, overwrite=True)
+            self.logger.info(f"☁️ Uploaded {local_path.name} → blob:{BLOB_CONTAINER}/outputs/")
+        except Exception as e:
+            self.logger.warning(f"⚠️ Azure upload skipped or failed: {e}")
+
 
 def fetch_alt_titles(tmdb_id: str) -> list[str]:
     if not USE_ALT_TITLES or not TMDB_API_KEY:
@@ -23,7 +58,11 @@ def fetch_alt_titles(tmdb_id: str) -> list[str]:
     except Exception:
         return []
 
-class Step08MatchTMDb(BaseStep):
+
+# ============================================================
+# Step 08: Match TMDb (Instrumented)
+# ============================================================
+class Step08MatchTMDb(BaseStep, SafeWriterMixin):
     def __init__(self, name="Step 08: Match TMDb (Instrumented)", sample=None):
         super().__init__(name=name)
         self.tmdb_norm = TMDB_DIR / "tmdb_movies_normalized.parquet"
@@ -151,15 +190,15 @@ class Step08MatchTMDb(BaseStep):
                     self.logger.info(f"[DEBUG] {mv.title} ({q_year}) → {best_cand} [{best_score}] mode={match_mode}")
                 bar.update(1)
 
-        # Save outputs
-        pd.DataFrame(matches).to_csv(self.output_matches, index=False)
-        pd.DataFrame(misses).to_csv(self.output_unmatched, index=False)
+        # Save outputs (using safe_overwrite)
+        self.safe_overwrite(pd.DataFrame(matches), self.output_matches)
+        self.safe_overwrite(pd.DataFrame(misses), self.output_unmatched)
         pd.DataFrame(matches).to_parquet(self.output_parquet, index=False)
 
         # Histogram export
         score_hist = pd.DataFrame(pd.cut(pd.Series([m['score'] for m in matches]), bins=np.arange(0,105,5)).value_counts().sort_index()).reset_index()
         score_hist.columns = ['score_bin','count']
-        score_hist.to_csv(TMDB_DIR / "tmdb_fuzzy_score_histogram.csv", index=False)
+        self.safe_overwrite(score_hist, TMDB_DIR / "tmdb_fuzzy_score_histogram.csv")
 
         # Metrics
         fuzzy_only = len(matches) - len(exact_matches)
@@ -182,6 +221,7 @@ class Step08MatchTMDb(BaseStep):
         self.write_metrics('step08_match_tmdb', metrics)
         self.logger.info(f"📈 Metrics logged: {metrics}")
         self.logger.info("🎬 Step 08 (Instrumented) completed successfully.")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Step 08: Match TMDb with optional sampling")

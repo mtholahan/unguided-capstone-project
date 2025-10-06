@@ -1,7 +1,7 @@
 """
 Capstone Project Configuration File
 Author: Mark
-Last Updated: Sun, 05-Oct-2025
+Last Updated: Mon, 06-Oct-2025
 
 Defines constants for file paths, filenames, and database settings used throughout the ETL pipeline.
 Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files, and Postgres.
@@ -34,8 +34,29 @@ MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
 
-# Global toggle for extra debug logging across steps
+# Global metrics (populated by steps like Step 08)
+STEP_METRICS = {}
+
+# === Global Toggles ===
 DEBUG_MODE = True
+UNATTENDED = True
+
+# === Testing Toggles ===
+# =======================
+ROW_LIMIT = 10_000
+
+# Fuzzy-matching parameters (used in Steps 07–08)
+FUZZY_THRESHOLD = 120        # default match cutoff
+YEAR_TOLERANCE = 1           # allow ±1 year drift
+MAX_CANDIDATES_PER_TITLE = 25
+
+# Azure connection placeholders (fill in when ready)
+AZURE_CONN_STR = os.getenv("AZURE_STORAGE_CONNECTION_STRING", "")
+BLOB_CONTAINER = os.getenv("AZURE_BLOB_CONTAINER", "capstone-outputs")
+
+# === Golden Test Mode ===
+GOLDEN_TEST_SIZE = 200
+GOLDEN_TEST_MODE = False  # Global toggle for golden benchmark runs
 
 #=== Whitelist of MusicBrainz TSV Files ===
 TSV_WHITELIST = {
@@ -94,17 +115,6 @@ MB_STATIC_REFRESH = {
     name: str(MB_TSV_FILES[name]) for name in TSV_WHITELIST
 }
 
-# === Global Toggles ===
-UNATTENDED = True
-
-# === Testing Toggles ===
-# =======================
-ROW_LIMIT = 10_000
-
-# === Golden Test Mode ===
-GOLDEN_TEST_SIZE = 200
-GOLDEN_TEST_MODE = False  # Global toggle for golden benchmark runs
-
 # Blockbuster sanity list (Step 06 + Step 08 will both use this)
 GOLDEN_TITLES = {
     "Star Wars",
@@ -152,14 +162,6 @@ GOLDEN_EXPECTED_YEARS = {
     "Back to the Future": 1985,
     "Frozen": 2013,
 }
-
-# Global metrics (populated by steps like Step 08)
-STEP_METRICS = {}
-
-# Fuzzy-matching parameters (used in Steps 07–08)
-FUZZY_THRESHOLD = 120        # default match cutoff
-YEAR_TOLERANCE = 1           # allow ±1 year drift
-MAX_CANDIDATES_PER_TITLE = 25
 
 # ============================================================
 # Optional Config class for object-style access

@@ -1,14 +1,14 @@
 📊 Pipeline Summary
-   Step 00: Acquire MusicBrainz        - rows   ⏱ 17.5s
-   Step 01: Audit Raw                  - rows   ⏱ 21.6s
-   Step 02: Cleanse TSV                - rows   ⏱ 48.7s
+   Step 00: Acquire MusicBrainz        - rows   ⏱ 55.7s
+   Step 01: Audit Raw                  - rows   ⏱ 9.8s
+   Step 02: Cleanse TSV                - rows   ⏱ 10.8s
    SStep 03: Check Structure           - rows   ⏱ 0.0s
-   Step 03B: Rehydrate GUIDs           - rows   ⏱ 19.3s
-   Step 04: MB Full Join               1,001,133 rows   ⏱ 24.1s
-   Step 05 Enhanced: Filter Soundtracks - rows   ⏱ 30.3s
-   Step 06: Fetch TMDb Top 1000        20 rows   ⏱ 1.5s
-   Step 07: Prepare TMDb Input (DRY)   0 rows   ⏱ 5.1s
-   Step 08: Match TMDb (Hardened)      - rows   ⏱ 0.3s
-   Step 09: Apply Manual Rescues (Enhanced) ERR (No columns to parse from file) rows   ⏱ 0.0s
-   Step 10: Enrich TMDb Matches (Enhanced) - rows   ⏱ 0.0s
-   Step 10B: OST Coverage Audit        20 rows   ⏱ 0.0s
+   Step 03B: Rehydrate GUIDs           - rows   ⏱ 0.3s
+   Step 04: MB Full Join               10,000 rows   ⏱ 0.2s
+   Step 05 Enhanced: Filter Soundtracks - rows   ⏱ 23.1s
+   Step 06: Fetch TMDb Discover        9,998 rows   ⏱ 102.7s
+   Step 07: Prepare TMDb Input (DRY)   983 rows   ⏱ 1.7s
+   Step 08: Match TMDb (Hardened)      - rows   ⏱ 74.2s
+   Step 09: Apply Manual Rescues (Enhanced) 4,586 rows   ⏱ 0.0s
+   Step 10: Enrich TMDb Matches (Enhanced) 4,588 rows   ⏱ 3130.8s
+   Step 10B: OST Coverage Audit        9,998 rows   ⏱ 377.9s

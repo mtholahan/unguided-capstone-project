@@ -7,6 +7,13 @@ from tqdm import tqdm
 from config import DEBUG_MODE, Config, DATA_DIR # Global debug toggle
 import subprocess
 import os
+import pandas as pd
+try:
+    from azure.storage.blob import BlobServiceClient
+except ImportError:
+    BlobServiceClient = None
+from config import AZURE_CONN_STR, BLOB_CONTAINER  # set these later
+
 
 class BaseStep:
 # ============================================================
@@ -96,6 +103,36 @@ class BaseStep:
             kwargs["desc"] = self.name
         return tqdm(iterable, **kwargs)
     
+
+    def upload_to_blob(self, local_path: Path):
+            """Upload a local file to Azure Blob Storage."""
+            if not AZURE_CONN_STR or BlobServiceClient is None:
+                self.logger.info("Skipping Azure upload (Azure SDK not installed or no connection string).")
+                return
+            try:
+                blob_service = BlobServiceClient.from_connection_string(AZURE_CONN_STR)
+                blob_client = blob_service.get_blob_client(
+                    container=BLOB_CONTAINER,
+                    blob=f"outputs/{local_path.name}"
+                )
+                with open(local_path, "rb") as data:
+                    blob_client.upload_blob(data, overwrite=True)
+                self.logger.info(f"☁️ Uploaded {local_path.name} → blob:{BLOB_CONTAINER}/outputs/")
+            except Exception as e:
+                self.logger.warning(f"⚠️ Azure upload skipped or failed: {e}")
+
+
+    def safe_overwrite(self, df: pd.DataFrame, path: Path, upload_to_blob=False):
+            """Write CSV atomically, then optionally push to Azure Blob."""
+            tmp = Path(f"{path}.tmp")
+            df.to_csv(tmp, index=False)
+            os.replace(tmp, path)  # atomic replace
+            self.logger.info(f"💾 Wrote {len(df):,} rows → {path.name}")
+
+            if upload_to_blob:
+                self.upload_to_blob(path)
+
+
     def write_metrics(self, step_name, metrics: dict):
         """
         Dynamically appends metrics to pipeline_metrics.csv.

@@ -18,7 +18,7 @@ from step_04_mb_full_join import Step04MBFullJoin
 from step_05_filter_soundtracks_enhanced import Step05FilterSoundtracksEnhanced
 from step_06_fetch_tmdb import Step06FetchTMDb
 from step_07_prepare_tmdb_input import Step07PrepareTMDbInput
-from step_08_match_tmdb import Step08MatchTMDb
+from step_08_match_instrumented import Step08MatchTMDb
 from step_09_apply_rescues import Step09ApplyRescues
 from step_10_enrich_tmdb import Step10EnrichMatches
 from step_10b_coverage_audit import Step10BCoverageAudit
