@@ -8,8 +8,12 @@ Writes enriched_top_1000.csv (or larger) to TMDB_DIR.
 from base_step import BaseStep
 import requests
 import pandas as pd
-from config import TMDB_DIR, TMDB_API_KEY, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT, GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
-from tqdm import tqdm
+from config import (
+    TMDB_DIR, TMDB_API_KEY, ROW_LIMIT, DEBUG_MODE,
+    TMDB_DISCOVER_URL, TMDB_SEARCH_URL, TMDB_GENRE_URL,
+    GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
+)
+from utils import make_progress_bar   # ✅ unified progress helper
 
 
 class Step06FetchTMDb(BaseStep):
@@ -19,6 +23,7 @@ class Step06FetchTMDb(BaseStep):
         self.output_path = TMDB_DIR / "enriched_top_1000.csv"
         self.max_movies = 1000  # default upper bound (overridden by ROW_LIMIT or Golden Mode)
 
+    # -------------------------------------------------------------
     def run(self):
         if not self.api_key:
             raise RuntimeError("TMDB_API_KEY not set")
@@ -27,7 +32,6 @@ class Step06FetchTMDb(BaseStep):
             self.logger.info(f"🔎 Golden Test Mode active: fetching {len(GOLDEN_TITLES)} iconic movies by search")
             movies = self._fetch_golden(GOLDEN_TITLES)
         else:
-            # Apply ROW_LIMIT if set, capped to TMDb API max (~10,000)
             effective_limit = min(ROW_LIMIT, 10000)
             self.logger.info(f"▶ Fetching up to {effective_limit:,} TMDb movies…")
             genre_map = self._fetch_genre_map()
@@ -38,7 +42,7 @@ class Step06FetchTMDb(BaseStep):
         df.to_csv(self.output_path, index=False)
         self.logger.info(f"✅ Wrote {len(df)} rows to {self.output_path}")
 
-        # 📝 Write fresh documentation file
+        # --- Write documentation summary ---
         doc_text = f"""
 Step 06 Output Documentation
 ============================
@@ -69,15 +73,14 @@ Notes:
 
         self.logger.info(f"📝 Wrote fresh documentation to {doc_path}")
 
+    # -------------------------------------------------------------
     def _fetch_discover_movies(self, limit: int, genre_map: dict) -> list[dict]:
         """Fetch popular movies using Discover API (max 500 pages)."""
-        url = "https://api.themoviedb.org/3/discover/movie"
+        url = TMDB_DISCOVER_URL
         movies = []
-        page = 1
-        per_page = 20
-        max_pages = 500  # TMDb API hard limit
+        page, per_page, max_pages = 1, 20, 500
 
-        with tqdm(total=limit, desc="Fetching TMDb") as bar:
+        with make_progress_bar(total=limit, desc="Fetching TMDb", unit="movie") as bar:
             while len(movies) < limit and page <= max_pages:
                 r = requests.get(url, params={
                     "api_key": self.api_key,
@@ -98,7 +101,7 @@ Notes:
                     rd = m.get("release_date") or ""
                     try:
                         year = int(rd.split("-")[0])
-                    except:
+                    except Exception:
                         year = None
                     genre_ids = m.get("genre_ids", [])
                     genres = "|".join(genre_map.get(gid, "") for gid in genre_ids)
@@ -115,56 +118,61 @@ Notes:
                 if page >= max_pages or page >= data.get("total_pages", page):
                     self.logger.info(f"🛑 Reached TMDb page cap ({max_pages}); stopping at {len(movies):,} movies.")
                     break
-
                 page += 1
 
         return movies
 
+    # -------------------------------------------------------------
     def _fetch_golden(self, titles: set[str]) -> list[dict]:
-        """Fetch golden movies by searching TMDb titles from config.GOLDEN_TITLES with year disambiguation."""
-        url = "https://api.themoviedb.org/3/search/movie"
+        """Fetch golden movies by searching TMDb titles from config.GOLDEN_TITLES."""
+        url = TMDB_SEARCH_URL
         movies = []
-        for title in tqdm(titles, desc="Fetching Golden Set"):
-            r = requests.get(url, params={"api_key": self.api_key, "query": title, "language": "en-US"})
-            r.raise_for_status()
-            results = r.json().get("results", [])
-            if not results:
-                self.logger.warning(f"⚠️ No TMDb result for golden title: {title}")
-                continue
 
-            expected_year = GOLDEN_EXPECTED_YEARS.get(title)
+        with make_progress_bar(titles, desc="Fetching Golden Set", unit="title") as bar:
+            for title in titles:
+                r = requests.get(url, params={"api_key": self.api_key, "query": title, "language": "en-US"})
+                r.raise_for_status()
+                results = r.json().get("results", [])
+                if not results:
+                    self.logger.warning(f"⚠️ No TMDb result for golden title: {title}")
+                    bar.update(1)
+                    continue
 
-            # Pick best candidate: prefer correct year if available
-            chosen = results[0]
-            if expected_year:
-                for cand in results:
-                    rd = cand.get("release_date") or ""
-                    try:
-                        year = int(rd.split("-")[0])
-                    except:
-                        year = None
-                    if year == expected_year:
-                        chosen = cand
-                        break
+                expected_year = GOLDEN_EXPECTED_YEARS.get(title)
+                chosen = results[0]
 
-            rd = chosen.get("release_date") or ""
-            try:
-                year = int(rd.split("-")[0])
-            except:
-                year = None
-            genres = "|".join(str(gid) for gid in chosen.get("genre_ids", []))
+                if expected_year:
+                    for cand in results:
+                        rd = cand.get("release_date") or ""
+                        try:
+                            year = int(rd.split("-")[0])
+                        except Exception:
+                            year = None
+                        if year == expected_year:
+                            chosen = cand
+                            break
 
-            movies.append({
-                "tmdb_id": chosen.get("id"),
-                "title": chosen.get("title", ""),
-                "release_year": year,
-                "genres": genres
-            })
+                rd = chosen.get("release_date") or ""
+                try:
+                    year = int(rd.split("-")[0])
+                except Exception:
+                    year = None
+                genres = "|".join(str(gid) for gid in chosen.get("genre_ids", []))
+
+                movies.append({
+                    "tmdb_id": chosen.get("id"),
+                    "title": chosen.get("title", ""),
+                    "release_year": year,
+                    "genres": genres
+                })
+                bar.update(1)
 
         return movies
 
+    # -------------------------------------------------------------
     def _fetch_genre_map(self) -> dict[int, str]:
-        url = "https://api.themoviedb.org/3/genre/movie/list"
+        """Fetch genre ID → name map."""
+        url = TMDB_GENRE_URL
         r = requests.get(url, params={"api_key": self.api_key, "language": "en-US"})
         r.raise_for_status()
         data = r.json().get("genres", [])

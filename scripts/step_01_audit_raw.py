@@ -5,9 +5,8 @@ Respects ROW_LIMIT if set in config.py and provides progress feedback.
 
 from base_step import BaseStep
 import csv
-from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
-from tqdm import tqdm
-
+from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE
+from utils import make_progress_bar
 
 class Step01AuditRaw(BaseStep):
     def __init__(self, name="Step 01: Audit Raw"):
@@ -29,6 +28,7 @@ class Step01AuditRaw(BaseStep):
 
         for tsv_path in self.progress_iter(raw_files, desc="Auditing TSVs"):
             try:
+                # Read header and compute total rows first
                 with open(tsv_path, encoding="utf-8", errors="replace") as f:
                     reader = csv.reader(f, delimiter="\t")
                     try:
@@ -37,15 +37,30 @@ class Step01AuditRaw(BaseStep):
                         self.logger.warning(f"{tsv_path.name}: empty file — skipping.")
                         continue
 
-                    total_rows = sum(1 for _ in open(tsv_path, encoding="utf-8", errors="replace")) - 1
+                    # Compute total rows safely (without leaving file open twice)
+                    total_rows = sum(1 for _ in f)
                     effective_limit = ROW_LIMIT or total_rows
                     row_count = 0
 
-                    with tqdm(total=min(total_rows, effective_limit), desc=tsv_path.name[:30], leave=False) as bar:
+                # Reopen file for main iteration (fresh handle)
+                with open(tsv_path, encoding="utf-8", errors="replace") as f:
+                    reader = csv.reader(f, delimiter="\t")
+                    next(reader)  # skip header again
+
+                    bar_desc = tsv_path.name[:30]
+                    with make_progress_bar(
+                        total=min(total_rows, effective_limit),
+                        desc=bar_desc,
+                        leave=False,
+                        unit="rows"
+                    ) as bar:
                         for i, row in enumerate(reader, start=1):
                             if ROW_LIMIT and i > ROW_LIMIT:
-                                self.logger.info(f"[ROW_LIMIT] Stopping early after {ROW_LIMIT:,} rows ({tsv_path.name})")
+                                self.logger.info(
+                                    f"[ROW_LIMIT] Stopping early after {ROW_LIMIT:,} rows ({tsv_path.name})"
+                                )
                                 break
+
                             row_count += 1
                             bar.update(1)
 

@@ -1,6 +1,8 @@
 import re
 import unicodedata
 import pandas as pd
+import shutil
+from tqdm import tqdm
 
 # Existing functions ------------------------------------------------------
 
@@ -130,3 +132,49 @@ def normalize_for_matching_extended(text: str) -> str:
     s = re.sub(r"\s+", " ", s).strip()
 
     return s
+
+
+# ---------------------------------------------------------------------------
+# Progress Bar Factory
+# ---------------------------------------------------------------------------
+def make_progress_bar(iterable=None, desc=None, total=None, leave=True, **kwargs):
+    """
+    Unified progress bar helper for all pipeline steps.
+
+    Supports both iterable-based and numeric total-based modes.
+
+    Examples:
+    ----------
+    # Iterable-based usage (common case)
+    for item in make_progress_bar(data, desc="Processing items"):
+        ...
+
+    # Numeric total usage
+    bar = make_progress_bar(total=100, desc="Processing")
+    for i in range(100):
+        ...
+        bar.update(1)
+    bar.close()
+
+    Parameters
+    ----------
+    iterable : iterable, optional
+        If provided, tqdm wraps this iterable directly.
+    desc : str, optional
+        Description text for the progress bar (defaults to "Working").
+    total : int, optional
+        Used only for numeric/manual mode.
+    leave : bool, optional
+        Whether to leave the bar on screen after completion.
+    **kwargs : dict
+        Additional tqdm options (e.g., unit, smoothing, position).
+    """
+    # Default description (fallback to something short)
+    truncated_desc = (desc or "Working")[:40]
+
+    # Ensure no conflict between iterable and total
+    if iterable is not None:
+        return tqdm(iterable, desc=truncated_desc, leave=leave, **kwargs)
+    else:
+        return tqdm(total=total, desc=truncated_desc, leave=leave, **kwargs)
+

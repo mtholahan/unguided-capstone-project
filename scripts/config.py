@@ -57,6 +57,55 @@ PG_SCHEMA = "public"
 DEBUG_MODE = True
 UNATTENDED = True
 
+# ---------------------------------------------------------------------
+# 🧮 PHASE 1 – PIPELINE RUNTIME CONSTANTS
+# ---------------------------------------------------------------------
+# These constants replace inline "magic numbers" in Steps 00–06.
+# Each group aligns with a specific part of the ETL pipeline.
+
+# ---------------------------
+#  Core Retry / General Loop
+# ---------------------------
+DEFAULT_RETRY_COUNT: int = 2          # Generic retry limit for small loops
+RETRY_DELAY_SECONDS: int = 5          # Delay (seconds) between lightweight retries
+
+# ---------------------------
+#  MusicBrainz Acquisition
+# ---------------------------
+DOWNLOAD_BUFFER_SIZE: int = 1024      # Stream buffer size (bytes) for MusicBrainz dump downloads
+MAX_RETRY_ATTEMPTS: int = 10          # Max retries for failed MB downloads
+
+# ---------------------------
+#  Audit / Cleansing Phases
+# ---------------------------
+AUDIT_SAMPLE_LIMIT: int = 30          # Sample size for audit reports
+CLEANSE_SAMPLE_LIMIT: int = 20        # Sample size for cleansing previews
+
+# ---------------------------
+#  GUID Rehydration / Joins
+# ---------------------------
+GUID_SAMPLE_LIMIT: int = 6            # Sample size for rehydration preview
+GUID_RETRY_LIMIT: int = 40            # Max missing GUIDs tolerated before halt
+JOIN_SAMPLE_LIMIT: int = 100          # Row limit for join audits
+JOIN_ITERATION_LIMIT: int = 5         # Max join retry attempts
+JOIN_TOLERANCE: float = 0.001         # Float precision tolerance for join scoring
+
+# ---------------------------
+#  Filtering / Soundtrack Refinement
+# ---------------------------
+FILTER_THRESHOLD: float = 0.02        # Minimum match score for soundtrack inclusion
+FILTER_SAMPLE_SIZE: int = 42          # Debug sample size for diagnostic subsets
+SOUNDTRACK_SUBSET_LIMIT: int = 100    # Max rows for subset parquet exports
+
+# ---------------------------
+#  TMDb API / Metadata Fetch
+# ---------------------------
+TMDB_RESULT_LIMIT: int = 1000         # Total titles to query (cap)
+TMDB_PAGE_SIZE: int = 500             # Max results per page
+TMDB_RETRY_DELAY: int = 20            # Delay (seconds) between TMDb API calls
+TMDB_TOTAL_LIMIT: int = 10000         # Hard stop for cumulative fetches
+
+
 # Performance limits
 CHUNK_SIZE = 5_000              # Default CSV / ETL batch size
 ROW_LIMIT = 1_000_000           # Max rows to process per batch

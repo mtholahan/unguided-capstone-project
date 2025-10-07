@@ -6,8 +6,8 @@ via release_group fallback if direct artist_credit.id join fails.
 
 from base_step import BaseStep
 import csv
-from config import MB_CLEANSED_DIR, DATA_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
-from tqdm import tqdm
+from config import MB_CLEANSED_DIR, DATA_DIR, ROW_LIMIT, DEBUG_MODE
+from utils import make_progress_bar  # ✅ unified progress helper
 import random
 
 
@@ -48,10 +48,10 @@ class Step04MBFullJoin(BaseStep):
             self.logger.warning("⚠️ GUID-enriched file not found; falling back to release_enriched.tsv")
 
         # Other references
-        rg_path    = MB_CLEANSED_DIR / "release_group.tsv"
-        rgst_path  = MB_CLEANSED_DIR / "release_group_secondary_type.tsv"
+        rg_path = MB_CLEANSED_DIR / "release_group.tsv"
+        rgst_path = MB_CLEANSED_DIR / "release_group_secondary_type.tsv"
         rgstj_path = MB_CLEANSED_DIR / "release_group_secondary_type_join.tsv"
-        ac_path    = MB_CLEANSED_DIR / "artist_credit.tsv"
+        ac_path = MB_CLEANSED_DIR / "artist_credit.tsv"
 
         # --- Sanity checks ---
         for p in [release_path, rg_path, rgst_path, rgstj_path, ac_path]:
@@ -113,7 +113,11 @@ class Step04MBFullJoin(BaseStep):
             next(reader, None)
             writer.writerow(header)
 
-            with tqdm(total=min(total_rows, effective_limit), desc="Joining Releases") as bar:
+            # ✅ Unified progress bar
+            with make_progress_bar(total=min(total_rows, effective_limit),
+                                   desc="Joining Releases",
+                                   leave=True,
+                                   unit="rows") as bar:
                 for i, row in enumerate(reader, start=1):
                     if ROW_LIMIT and i > ROW_LIMIT:
                         break

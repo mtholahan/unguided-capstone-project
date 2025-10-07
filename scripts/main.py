@@ -152,6 +152,7 @@ def main():
         matched = False
         for i, step in enumerate(steps):
             step_id = step.name.split(":")[0].split()[-1].upper().replace("STEP", "").replace(":", "")
+            # normalize "Step 5" vs "Step 05" by left-padding to 2 digits
             if step_id == target or step_id.zfill(2) == target.zfill(2):
                 start_index = i
                 matched = True

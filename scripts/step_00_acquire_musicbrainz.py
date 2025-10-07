@@ -11,8 +11,16 @@ import subprocess
 import tarfile
 from pathlib import Path
 from bs4 import BeautifulSoup
-from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
-from tqdm import tqdm
+from config import (
+    CHUNK_SIZE,
+    MAX_RETRY_ATTEMPTS,
+    MB_RAW_DIR,
+    SEVEN_ZIP_PATH,
+    TSV_WHITELIST,
+    ROW_LIMIT,
+    DEBUG_MODE,
+)
+from utils import make_progress_bar  # ✅ unified progress helper
 
 
 class Step00AcquireMusicbrainz(BaseStep):
@@ -20,32 +28,44 @@ class Step00AcquireMusicbrainz(BaseStep):
     FILENAME = "mbdump.tar.bz2"
 
     def __init__(self, name="Step 00: Acquire MusicBrainz", cleanup_archives: bool = True):
-        super().__init__(name="Step 00: Acquire MusicBrainz")
+        super().__init__(name=name)
         self.cleanup_archives = cleanup_archives
 
     def download_with_progress(self, url: str, dest_path: Path):
+        """Download file with progress bar using make_progress_bar."""
         response = requests.get(url, stream=True)
         response.raise_for_status()
+
         total = int(response.headers.get("content-length", 0))
-        with open(dest_path, "wb") as file, tqdm(
-            desc="Downloading dump",
-            total=total,
+        chunk_size = max(1024, CHUNK_SIZE)
+
+        if total == 0:
+            self.logger.warning(f"⚠️  No content-length header detected for {url}. Progress bar may be inaccurate.")
+
+        desc = f"Downloading {self.FILENAME}"
+
+        with open(dest_path, "wb") as file, make_progress_bar(
+            total=total if total > 0 else None,
+            desc=desc,
             unit="B",
             unit_scale=True,
             unit_divisor=1024,
+            leave=True,
         ) as bar:
-            for chunk in response.iter_content(chunk_size=1024):
+            for chunk in response.iter_content(chunk_size=chunk_size):
+                if not chunk:
+                    continue
                 size = file.write(chunk)
-                bar.update(size)
+                if bar:
+                    bar.update(size)
 
     def run(self):
         target_dir = MB_RAW_DIR
         seven_zip = SEVEN_ZIP_PATH
-        max_attempts = 10
+        max_attempts = MAX_RETRY_ATTEMPTS
 
         target_dir.mkdir(parents=True, exist_ok=True)
 
-        # Log cleanup policy at the start
         self.logger.info(
             f"Archive cleanup policy: cleanup_archives={self.cleanup_archives}. "
             + ("Tarballs will be removed after extraction." if self.cleanup_archives else "Tarballs will be preserved.")
@@ -87,7 +107,6 @@ class Step00AcquireMusicbrainz(BaseStep):
                 self.logger.error("No usable dump found in the last 10 attempts.")
                 return
 
-            # Extract .tar from .tar.bz2
             subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}", "-y"], check=True)
 
         # Step 3: List tar contents and match against whitelist
@@ -110,11 +129,8 @@ class Step00AcquireMusicbrainz(BaseStep):
 
         missing = [name for name in sorted(whitelist) if name not in internal_paths]
         if missing:
-            self.logger.warning(
-                f"The following whitelisted TSVs were not found in the archive: {missing}"
-            )
+            self.logger.warning(f"⚠️  Missing whitelisted TSVs: {missing}")
 
-        # 🔎 Sanity log: which TSVs are actually being extracted
         self.logger.info(f"Whitelisted TSVs to extract: {sorted(list(whitelist))}")
         self.logger.info(f"TSVs found in archive and will be extracted: {sorted(list(internal_paths.keys()))}")
 
@@ -133,7 +149,7 @@ class Step00AcquireMusicbrainz(BaseStep):
         # Step 5: Sanity-check for release_first_release_date
         self.logger.info("Scanning for 'release_first_release_date'...")
         found_inflated = False
-        for root, dirs, files in os.walk(target_dir):
+        for root, _, files in os.walk(target_dir):
             for fname in files:
                 if "release_first_release_date" in fname:
                     self.logger.info(f"FOUND in extracted dir: {Path(root) / fname}")
@@ -143,12 +159,10 @@ class Step00AcquireMusicbrainz(BaseStep):
 
         try:
             with tarfile.open(tar_path, "r") as tf:
-                found_in_archive = False
-                for member in tf.getmembers():
-                    if "release_first_release_date" in member.name:
-                        self.logger.info(f"Found inside archive: {member.name}")
-                        found_in_archive = True
-                if not found_in_archive:
+                found_in_archive = any("release_first_release_date" in m.name for m in tf.getmembers())
+                if found_in_archive:
+                    self.logger.info("Found inside tar archive.")
+                else:
                     self.logger.warning("'release_first_release_date' not found in tar archive.")
         except Exception as e:
             self.logger.warning(f"Could not open tar for inspection: {e}")

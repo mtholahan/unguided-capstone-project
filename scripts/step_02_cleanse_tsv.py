@@ -6,8 +6,8 @@ Outputs cleansed copies back to MB_CLEANSED_DIR and adds release_year enrichment
 
 from base_step import BaseStep
 import csv
-from config import MB_RAW_DIR, MB_CLEANSED_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
-from tqdm import tqdm
+from config import MB_RAW_DIR, MB_CLEANSED_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE
+from utils import make_progress_bar
 import logging
 from pathlib import Path
 
@@ -52,10 +52,7 @@ class Step02CleanseTSV(BaseStep):
 
         # ---- Main loop ----
         for infile in self.progress_iter(raw_files, desc="Cleansing TSVs"):
-            # Ensure cleansed file has .tsv extension
-            name = infile.name
-            if "." not in name:
-                name = f"{name}.tsv"
+            name = infile.name if "." in infile.name else f"{infile.name}.tsv"
             outfile = MB_CLEANSED_DIR / name
 
             try:
@@ -73,8 +70,11 @@ class Step02CleanseTSV(BaseStep):
                     total_rows = sum(1 for _ in open(infile, encoding="utf-8", errors="replace"))
                     effective_limit = ROW_LIMIT or total_rows
 
-                    with tqdm(total=min(total_rows, effective_limit),
-                              desc=infile.name[:30], leave=False) as bar:
+                    bar_desc = infile.name[:30]
+                    with make_progress_bar(total=min(total_rows, effective_limit),
+                                           desc=bar_desc,
+                                           leave=False,
+                                           unit="rows") as bar:
                         for i, row in enumerate(reader, start=1):
                             if ROW_LIMIT and i > ROW_LIMIT:
                                 self.logger.info(
@@ -117,13 +117,9 @@ class Step02CleanseTSV(BaseStep):
 
             self.logger.info(f"Found release file: {release_path}")
 
-             # --- Read release.tsv safely whether headers exist or not ---
-            import pandas as pd
-
-            # Force no headers
+            # --- Read release.tsv safely whether headers exist or not ---
             df = pd.read_csv(release_path, sep="\t", header=None, low_memory=False)
 
-            # Try to assign official MusicBrainz release columns
             known_cols = [
                 "id", "gid", "name", "artist_credit", "release_group",
                 "status", "packaging", "language", "script",
@@ -137,16 +133,13 @@ class Step02CleanseTSV(BaseStep):
                 self.logger.warning(
                     f"Unexpected column count ({len(df.columns)}). Cannot apply official headers."
                 )
-                # fallback: create generic names
                 df.columns = [f"col_{i}" for i in range(len(df.columns))]
 
             self.logger.info(f"Columns in release file: {list(df.columns)}")
 
             # --- Find date or year column automatically ---
-            import re
             date_cols = [c for c in df.columns if re.search("date|year", c, re.I)]
             if not date_cols:
-                # Try heuristic: any column containing a 4-digit year in first few rows
                 sample = df.head(20)
                 for c in df.columns:
                     if sample[c].astype(str).str.contains(r"\d{4}", regex=True).any():
@@ -157,10 +150,8 @@ class Step02CleanseTSV(BaseStep):
                 self.logger.warning("No date-like columns found; cannot derive release_year.")
                 return
 
-            # Pick first date-like column
             cand = df[date_cols[0]].astype(str)
 
-            # --- Derive release_year ---
             def _coalesce_year(val):
                 m = re.search(r"(\d{4})", str(val))
                 return int(m.group(1)) if m else pd.NA
@@ -173,7 +164,6 @@ class Step02CleanseTSV(BaseStep):
             coverage = df["release_year"].notna().mean()
             self.logger.info(f"✅ Added release_year → {out_path.name} (coverage={coverage:.1%})")
 
-            # ---- Validation Preview ----
             self.logger.info("🔎 Validation: First 3 enriched rows:")
             cols = ["id", "release_year"] if "id" in df.columns else ["release_year"]
             for _, row in df[cols].head(3).iterrows():

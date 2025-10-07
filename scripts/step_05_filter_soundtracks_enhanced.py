@@ -11,10 +11,10 @@ Outputs: DATA_DIR/soundtracks.tsv
 """
 
 from base_step import BaseStep
-from config import DATA_DIR, MB_RAW_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
+from config import DATA_DIR, MB_RAW_DIR, ROW_LIMIT, DEBUG_MODE
 import csv, re
-from tqdm import tqdm
 import pandas as pd
+from utils import make_progress_bar  # ✅ unified progress helper
 
 
 class Step05FilterSoundtracksEnhanced(BaseStep):
@@ -96,7 +96,11 @@ class Step05FilterSoundtracksEnhanced(BaseStep):
             out_header = ["release_group_id", "release_year", "raw_row", "release_group_secondary_type"]
             writer.writerow(out_header)
 
-            with tqdm(total=min(row_count, effective_limit), desc="Filtering Soundtracks") as bar:
+            # ✅ Unified progress bar
+            with make_progress_bar(total=min(row_count, effective_limit),
+                                   desc="Filtering Soundtracks",
+                                   leave=False,
+                                   unit="rows") as bar:
                 for i, row in enumerate(reader, start=1):
                     if ROW_LIMIT and i > ROW_LIMIT:
                         break

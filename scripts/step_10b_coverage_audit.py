@@ -5,7 +5,7 @@ Evaluates completeness of MusicBrainz soundtrack data against TMDb or Golden Set
 
 from base_step import BaseStep
 import pandas as pd
-from config import TMDB_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
+from config import TMDB_DIR, ROW_LIMIT, DEBUG_MODE
 import os
 from difflib import SequenceMatcher
 

@@ -1,7 +1,11 @@
-import pandas as pd
-from pathlib import Path
+from utils import make_progress_bar
 
-TMDB_DIR = Path(r"D:\Capstone_Staging\data\tmdb")
+# Iterable test
+for i in make_progress_bar(range(5), desc="Test iterable"):
+    pass
 
-print("Step 06 output:", len(pd.read_csv(TMDB_DIR / "enriched_top_1000.csv")))
-print("Step 07 output:", len(pd.read_parquet(TMDB_DIR / "tmdb_movies_normalized.parquet")))
+# Numeric total test
+bar = make_progress_bar(total=5, desc="Test numeric")
+for i in range(5):
+    bar.update(1)
+bar.close()

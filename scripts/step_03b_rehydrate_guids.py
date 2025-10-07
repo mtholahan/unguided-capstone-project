@@ -18,15 +18,15 @@ Outputs:
 """
 
 from base_step import BaseStep
-from config import MB_CLEANSED_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
-from tqdm import tqdm
+from config import MB_CLEANSED_DIR, ROW_LIMIT, DEBUG_MODE
+from utils import make_progress_bar  # ✅ unified progress helper
 import pandas as pd
 import csv
 
 
 class Step03BRehydrateGuids(BaseStep):
     def __init__(self, name="Step 03B: Rehydrate GUIDs"):
-        super().__init__(name="Step 03B: Rehydrate GUIDs")
+        super().__init__(name=name)
 
     def run(self):
         # --- Paths ---
@@ -59,15 +59,21 @@ class Step03BRehydrateGuids(BaseStep):
         ac_map = dict(zip(ac[0].astype(str), ac[6]))
         self.logger.info(f"Built lookup maps: release_group ({len(rg_map):,}), artist_credit ({len(ac_map):,}).")
 
-        # --- Apply mappings with progress ---
-        tqdm.pandas(desc="Mapping GUIDs")
-        release["release_group_gid"] = release["release_group"].astype(str).map(rg_map)
-        release["artist_credit_gid"] = release["artist_credit"].astype(str).map(ac_map)
+        # --- Apply mappings with progress (no tqdm.pandas) ---
+        total_rows = len(release)
+        desc = "Mapping GUIDs"
+        with make_progress_bar(total=total_rows, desc=desc, unit="rows", leave=False) as bar:
+            release["release_group_gid"] = release["release_group"].astype(str).map(rg_map)
+            bar.update(total_rows * 0.5)  # halfway mark (release_group)
+            release["artist_credit_gid"] = release["artist_credit"].astype(str).map(ac_map)
+            bar.update(total_rows * 0.5)  # finish
 
         # --- Coverage diagnostics ---
         coverage_rg = release["release_group_gid"].notna().mean() * 100
         coverage_ac = release["artist_credit_gid"].notna().mean() * 100
-        self.logger.info(f"📊 Mapping coverage: release_group_gid={coverage_rg:.1f}%, artist_credit_gid={coverage_ac:.1f}%")
+        self.logger.info(
+            f"📊 Mapping coverage: release_group_gid={coverage_rg:.1f}%, artist_credit_gid={coverage_ac:.1f}%"
+        )
 
         # --- Write output ---
         release.to_csv(output_path, sep="\t", index=False)
@@ -78,6 +84,7 @@ class Step03BRehydrateGuids(BaseStep):
             release["release_group_gid"].notna() | release["artist_credit_gid"].notna(),
             ["id", "name", "artist_credit", "artist_credit_gid", "release_group", "release_group_gid"]
         ].head(10)
+
         self.logger.info("🔎 Sample of enriched rows:")
         for _, row in sample.iterrows():
             self.logger.info(
