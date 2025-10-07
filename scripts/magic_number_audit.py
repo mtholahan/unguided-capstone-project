@@ -132,6 +132,7 @@ def main():
         if re.search(r"step_0[7-9]|step_10", path.name):
             continue  # skip post-Step 5 work
         try:
+            print(f"Scanning: {path.name}")
             issues.extend(scan_file(path, config_values))
         except Exception:
             pass

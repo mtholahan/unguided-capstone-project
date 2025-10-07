@@ -3,23 +3,46 @@ Capstone Project Configuration File
 Author: Mark
 Last Updated: Mon, 06-Oct-2025
 
-Defines constants for file paths, filenames, and database settings used throughout the ETL pipeline.
-Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files, and Postgres.
+Centralized configuration for the Unguided Capstone ETL pipeline.
+Organized into logical sections for readability and maintainability.
 """
+
+# ============================================================
+# 1. Imports & Environment Setup
+# ============================================================
 
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 import pprint
 
-# Load environment variables (used for DB password)
+# Load environment variables
 load_dotenv()
 
 def print_config_summary():
+    """Pretty-print all uppercase constants for quick debugging."""
     pprint.pp({k: v for k, v in globals().items() if k.isupper()})
 
+# ============================================================
+# 2. Core Paths
+# ============================================================
 
-# === PostgreSQL Database Settings ===
+BASE_DIR = Path("D:/Capstone_Staging")
+DATA_DIR = BASE_DIR / "data"
+RESULTS_DIR = DATA_DIR / "results"
+METRICS_DIR = DATA_DIR / "metrics"
+
+MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
+MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
+TMDB_DIR = DATA_DIR / "tmdb"
+
+SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
+SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
+
+# ============================================================
+# 3. Database Settings
+# ============================================================
+
 PG_HOST = "localhost"
 PG_PORT = "5432"
 PG_DBNAME = "musicbrainz"
@@ -27,54 +50,52 @@ PG_USER = "postgres"
 PG_PASSWORD = os.getenv("PG_PASSWORD")
 PG_SCHEMA = "public"
 
-# === Base Paths ===
-BASE_DIR = Path("D:/Capstone_Staging")
-DATA_DIR = BASE_DIR / "data"
-RESULTS_DIR = DATA_DIR / "results"
-TMDB_DIR = DATA_DIR / "tmdb"
-ENRICHED_TOP1000 = TMDB_DIR / "enriched_top_1000.csv"
-METRICS_DIR = Path("D:/Capstone_Staging/data/metrics")
-MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
-MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
-SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
-SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
+# ============================================================
+# 4. Performance, Toggles & Thresholds
+# ============================================================
 
-# === Performance & Limits ===
-CHUNK_SIZE = 5_000
-MAX_WORKERS = 8
-REQUEST_TIMEOUT_SECS = 30
-RETRY_LIMIT = 3
-TMDB_PAGE_LIMIT = 40
-TOP_N = 10
-ROUND_DIGITS = 3
-SLEEP_SECONDS = 1
-
-
-# Global metrics (populated by steps like Step 08)
-STEP_METRICS = {}
-
-# === Global Toggles ===
 DEBUG_MODE = True
 UNATTENDED = True
 
-# === Testing Toggles ===
-# =======================
-ROW_LIMIT = 10_000
+# Performance limits
+CHUNK_SIZE = 5_000              # Default CSV / ETL batch size
+ROW_LIMIT = 1_000_000           # Max rows to process per batch
+AUDIT_SAMPLE_LIMIT = 100_000    # Sampling limit for audits
+SLEEP_SECONDS = 1               # Default throttle for API calls
 
-# Fuzzy-matching parameters (used in Steps 07–08)
-FUZZY_THRESHOLD = 120        # default match cutoff
-YEAR_TOLERANCE = 1           # allow ±1 year drift
-MAX_CANDIDATES_PER_TITLE = 25
+# Matching & Fuzzy Logic
+FUZZY_THRESHOLD = 120           # Default match cutoff
+YEAR_TOLERANCE = 1              # Allow ±1 year drift
+MAX_CANDIDATES_PER_TITLE = 25   # Candidate cap per title
 
-# Azure connection placeholders (fill in when ready)
+# Golden test settings
+GOLDEN_TEST_MODE = False
+GOLDEN_TEST_SIZE = 200
+
+# Metrics dictionary populated dynamically
+STEP_METRICS = {}
+
+# ============================================================
+# 5. External Services (URLs, Keys, Azure)
+# ============================================================
+
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+
+# URLs
+MB_DUMP_URL = "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/"
+TMDB_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie"
+TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
+TMDB_GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list"
+
+# Azure storage placeholders
 AZURE_CONN_STR = os.getenv("AZURE_STORAGE_CONNECTION_STRING", "")
 BLOB_CONTAINER = os.getenv("AZURE_BLOB_CONTAINER", "capstone-outputs")
 
-# === Golden Test Mode ===
-GOLDEN_TEST_SIZE = 200
-GOLDEN_TEST_MODE = False  # Global toggle for golden benchmark runs
+# ============================================================
+# 6. Data File Mappings (MusicBrainz & TMDb)
+# ============================================================
 
-#=== Whitelist of MusicBrainz TSV Files ===
+# --- MusicBrainz Inputs ---
 TSV_WHITELIST = {
     "artist",
     "artist_credit",
@@ -84,31 +105,37 @@ TSV_WHITELIST = {
     "release_group_secondary_type_join",
 }
 
-
-# === MusicBrainz File Mappings ===
 MB_RAW_FILES = {name: MB_RAW_DIR / name for name in TSV_WHITELIST}
 MB_TSV_FILES = {name: MB_CLEANSED_DIR / name for name in TSV_WHITELIST}
 
-# === MusicBrainz Archive Inputs ===
 MB_DUMP_ARCHIVE = BASE_DIR / "mbdump.tar.bz2"
 MB_DUMP_DIR = BASE_DIR / "mbdump"
 MB_PARQUET_SOUNDTRACKS = MB_RAW_DIR / "soundtracks.parquet"
 MB_SECONDARY_TYPE_JOIN_FILE = MB_RAW_DIR / "release_group_secondary_type_join_clean.tsv"
 
-# === TMDB API Key ===
-TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+# --- MusicBrainz Derived Files ---
+MB_RELEASE_ENRICHED_GUIDED_FILE = MB_CLEANSED_DIR / "release_enriched_guided.tsv"
+MB_RELEASE_ENRICHED_FILE = MB_CLEANSED_DIR / "release_enriched.tsv"
+MB_JOINED_RELEASE_FILE = MB_CLEANSED_DIR / "joined_release_data.tsv"
+MB_SOUNDTRACKS_FILE = MB_CLEANSED_DIR / "soundtracks.tsv"
+MB_SOUNDTRACKS_PARQUET = MB_CLEANSED_DIR / "soundtracks.parquet"
 
-# === TMDb Data Inputs ===
+# --- TMDb Data Inputs ---
 TOP_MOVIES_FILE = DATA_DIR / "top_movies_raw.csv"
 ENRICHED_FILE = TMDB_DIR / "enriched_top_1000.csv"
 TMDB_GENRE_FILE = TMDB_DIR / "tmdb_genre_top_1000.csv"
 TMDB_MOVIE_GENRE_FILE = TMDB_DIR / "tmdb_movie_genre_top_1000.csv"
 JUNK_TITLES_FILE = DATA_DIR / "junk_title_list.txt"
 
-# === Match Output Files ===
+# --- Output Files ---
 MATCHED_TSV = RESULTS_DIR / "matched_top_1000.tsv"
 UNMATCHED_TSV = RESULTS_DIR / "unmatched_top_1000.tsv"
-diagnostic_files = sorted(RESULTS_DIR.glob("matched_diagnostics_1000_*.tsv"), key=os.path.getmtime, reverse=True)
+
+diagnostic_files = sorted(
+    RESULTS_DIR.glob("matched_diagnostics_1000_*.tsv"),
+    key=os.path.getmtime,
+    reverse=True,
+)
 MATCHED_DIAGNOSTICS_TSV = diagnostic_files[0] if diagnostic_files else None
 
 MATCH_OUTPUTS = {
@@ -127,11 +154,12 @@ REFRESH_INPUTS = {
     "matched_diagnostics": str(MATCHED_DIAGNOSTICS_TSV),
 }
 
-MB_STATIC_REFRESH = {
-    name: str(MB_TSV_FILES[name]) for name in TSV_WHITELIST
-}
+MB_STATIC_REFRESH = {name: str(MB_TSV_FILES[name]) for name in TSV_WHITELIST}
 
-# Blockbuster sanity list (Step 06 + Step 08 will both use this)
+# ============================================================
+# 7. Reference Data (Golden Titles)
+# ============================================================
+
 GOLDEN_TITLES = {
     "Star Wars",
     "The Empire Strikes Back",
@@ -155,7 +183,6 @@ GOLDEN_TITLES = {
     "Frozen",
 }
 
-# Canonical release years for disambiguation in Step 06
 GOLDEN_EXPECTED_YEARS = {
     "Star Wars": 1977,
     "The Empire Strikes Back": 1980,
@@ -180,18 +207,13 @@ GOLDEN_EXPECTED_YEARS = {
 }
 
 # ============================================================
-# Optional Config class for object-style access
+# 8. Config Class
 # ============================================================
+
 class Config:
-    """
-    Object-based wrapper for key pipeline paths and settings.
-    Provides safe access for BaseStep instances expecting `self.config`.
-    """
+    """Object-based wrapper for key pipeline paths and settings."""
 
     def __init__(self):
-        from pathlib import Path
-
-        # Use existing constants defined above
         self.BASE_DIR = BASE_DIR
         self.DATA_DIR = DATA_DIR
         self.RESULTS_DIR = RESULTS_DIR
@@ -199,12 +221,10 @@ class Config:
         self.MB_CLEANSED_DIR = MB_CLEANSED_DIR
         self.TMDB_DIR = TMDB_DIR
 
-        # Operational parameters
         self.ROW_LIMIT = ROW_LIMIT
         self.DEBUG_MODE = DEBUG_MODE
         self.UNATTENDED = UNATTENDED
 
-        # External service settings
         self.TMDB_API_KEY = TMDB_API_KEY
         self.PG_HOST = PG_HOST
         self.PG_PORT = PG_PORT
@@ -215,4 +235,3 @@ class Config:
 
     def __repr__(self):
         return f"<Config DATA_DIR={self.DATA_DIR} ROW_LIMIT={self.ROW_LIMIT}>"
-
