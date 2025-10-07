@@ -8,7 +8,7 @@ Writes enriched_top_1000.csv (or larger) to TMDB_DIR.
 from base_step import BaseStep
 import requests
 import pandas as pd
-from config import TMDB_DIR, TMDB_API_KEY, ROW_LIMIT, GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
+from config import TMDB_DIR, TMDB_API_KEY, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT, GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
 from tqdm import tqdm
 
 

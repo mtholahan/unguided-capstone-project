@@ -5,7 +5,7 @@ Now supports tmdb_id injection and smarter override behavior.
 
 from base_step import BaseStep
 import pandas as pd
-from config import TMDB_DIR
+from config import TMDB_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 import os
 
 

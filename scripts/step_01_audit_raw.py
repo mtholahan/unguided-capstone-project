@@ -5,7 +5,7 @@ Respects ROW_LIMIT if set in config.py and provides progress feedback.
 
 from base_step import BaseStep
 import csv
-from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT
+from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 from tqdm import tqdm
 
 

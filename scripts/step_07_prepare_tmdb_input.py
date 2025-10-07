@@ -16,7 +16,7 @@ Metrics:
 """
 
 from base_step import BaseStep
-from config import DATA_DIR, TMDB_DIR, DEBUG_MODE
+from config import DATA_DIR, TMDB_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 from utils import normalize_for_matching_extended as normalize, is_mostly_digits
 import pandas as pd
 from tqdm import tqdm

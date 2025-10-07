@@ -18,7 +18,7 @@ Outputs:
 """
 
 from base_step import BaseStep
-from config import MB_CLEANSED_DIR
+from config import MB_CLEANSED_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 from tqdm import tqdm
 import pandas as pd
 import csv

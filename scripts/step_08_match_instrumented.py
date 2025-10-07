@@ -1,7 +1,7 @@
 from base_step import BaseStep
 import pandas as pd, requests, numpy as np, os, argparse
 from rapidfuzz import fuzz, process
-from config import TMDB_DIR, DEBUG_MODE, TMDB_API_KEY, AZURE_CONN_STR, BLOB_CONTAINER
+from config import TMDB_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT, TMDB_API_KEY, AZURE_CONN_STR, BLOB_CONTAINER
 from utils import normalize_for_matching_extended as normalize
 from tqdm import tqdm
 from azure.storage.blob import BlobServiceClient

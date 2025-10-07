@@ -11,7 +11,7 @@ Outputs: DATA_DIR/soundtracks.tsv
 """
 
 from base_step import BaseStep
-from config import DATA_DIR, MB_RAW_DIR, ROW_LIMIT
+from config import DATA_DIR, MB_RAW_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 import csv, re
 from tqdm import tqdm
 import pandas as pd

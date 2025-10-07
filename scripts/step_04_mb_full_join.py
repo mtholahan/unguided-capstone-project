@@ -6,7 +6,7 @@ via release_group fallback if direct artist_credit.id join fails.
 
 from base_step import BaseStep
 import csv
-from config import MB_CLEANSED_DIR, DATA_DIR, ROW_LIMIT
+from config import MB_CLEANSED_DIR, DATA_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 from tqdm import tqdm
 import random
 

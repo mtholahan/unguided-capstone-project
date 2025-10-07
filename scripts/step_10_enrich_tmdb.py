@@ -9,7 +9,7 @@ import requests
 import time
 import os
 from tqdm import tqdm
-from config import TMDB_DIR, TMDB_API_KEY
+from config import TMDB_DIR, TMDB_API_KEY, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 
 
 class Step10EnrichMatches(BaseStep):

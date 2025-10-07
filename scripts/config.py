@@ -10,9 +10,14 @@ Organized by logical grouping: paths, MusicBrainz data, TMDb data, output files,
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import pprint
 
 # Load environment variables (used for DB password)
 load_dotenv()
+
+def print_config_summary():
+    pprint.pp({k: v for k, v in globals().items() if k.isupper()})
+
 
 # === PostgreSQL Database Settings ===
 PG_HOST = "localhost"
@@ -33,6 +38,13 @@ MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
+
+# === Performance and Limits ===
+CHUNK_SIZE = 5000
+MAX_DEBUG_ROWS = 100
+TMDB_PAGE_LIMIT = 40
+RETRY_LIMIT = 3
+
 
 # Global metrics (populated by steps like Step 08)
 STEP_METRICS = {}

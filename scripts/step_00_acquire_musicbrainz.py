@@ -11,7 +11,7 @@ import subprocess
 import tarfile
 from pathlib import Path
 from bs4 import BeautifulSoup
-from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST
+from config import MB_RAW_DIR, SEVEN_ZIP_PATH, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 from tqdm import tqdm
 
 

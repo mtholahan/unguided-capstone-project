@@ -6,7 +6,7 @@ Outputs cleansed copies back to MB_CLEANSED_DIR and adds release_year enrichment
 
 from base_step import BaseStep
 import csv
-from config import MB_RAW_DIR, MB_CLEANSED_DIR, TSV_WHITELIST, ROW_LIMIT
+from config import MB_RAW_DIR, MB_CLEANSED_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
 from tqdm import tqdm
 import logging
 from pathlib import Path
