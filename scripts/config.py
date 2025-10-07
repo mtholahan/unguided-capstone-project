@@ -39,11 +39,15 @@ MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
 SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
 
-# === Performance and Limits ===
-CHUNK_SIZE = 5000
-MAX_DEBUG_ROWS = 100
-TMDB_PAGE_LIMIT = 40
+# === Performance & Limits ===
+CHUNK_SIZE = 5_000
+MAX_WORKERS = 8
+REQUEST_TIMEOUT_SECS = 30
 RETRY_LIMIT = 3
+TMDB_PAGE_LIMIT = 40
+TOP_N = 10
+ROUND_DIGITS = 3
+SLEEP_SECONDS = 1
 
 
 # Global metrics (populated by steps like Step 08)
