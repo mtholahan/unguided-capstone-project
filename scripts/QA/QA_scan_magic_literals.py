@@ -23,7 +23,7 @@ import pandas as pd
 # 🔧 Configuration
 # ============================================================
 SCRIPTS_DIR = Path(r"C:\Projects\unguided-capstone-project\scripts")
-OUTPUT_DIR = SCRIPTS_DIR / "audit_reports"
+OUTPUT_DIR = SCRIPTS_DIR / "QA" / "audit_reports"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 CONFIG_FILE = SCRIPTS_DIR / "config.py"

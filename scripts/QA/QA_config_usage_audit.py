@@ -32,8 +32,15 @@ except Exception:
 
 def default_paths():
     here = Path(__file__).resolve().parent
-    scripts_dir = here
-    out_dir = scripts_dir / "audit_reports"
+    if (here / "config.py").exists():
+        # If config is in same dir
+        scripts_dir = here
+    elif (here.parent / "config.py").exists():
+        # If config is one level up (like now)
+        scripts_dir = here.parent
+    else:
+        raise FileNotFoundError("Could not locate config.py")
+    out_dir = here / "audit_reports"
     return scripts_dir, out_dir
 
 
@@ -57,7 +64,7 @@ def scan_scripts_for_constants(constants: dict, scripts_dir: Path, exclude: set)
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
         for const in constants.keys():
-            pattern = rf"\b(config\.)?{re.escape(const)}\b"
+            pattern = rf"\b(?:config\.)?{re.escape(const)}\b"  # <-- fixed
             hits = re.findall(pattern, text)
             if hits:
                 results.append({"constant": const, "file": path.name, "count": len(hits)})
@@ -119,12 +126,16 @@ def main():
     constants = extract_config_constants(config_file)
     print(f"📦 Found {len(constants)} constants in {config_file.name}")
 
+    # Dynamically exclude known QA scripts + the config file itself
     exclude = {
         "QA_scan_magic_literals.py",
         "QA_config_reconciler_numbers.py",
         "QA_config_usage_audit.py",
         "QA_analyze_suggestions_clusters.py",
     }
+
+    # Always exclude the active config file from scanning
+    exclude.add(Path(config_file).name)
 
     df_hits = scan_scripts_for_constants(constants, scripts_dir, exclude)
     summary = summarize_usage(df_hits, constants)

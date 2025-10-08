@@ -1,0 +1,746 @@
+[
+  {
+    "file": "step_00_acquire_musicbrainz.py",
+    "line": 37,
+    "value": 1024,
+    "context": "chunk_size = max(1024, CHUNK_SIZE)",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_00_acquire_musicbrainz.py",
+    "line": 121,
+    "value": 6,
+    "context": "if len(parts) < 6:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_01_audit_raw.py",
+    "line": 46,
+    "value": 1000000,
+    "context": "csv.field_size_limit(1_000_000)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_01_audit_raw.py",
+    "line": 61,
+    "value": 30,
+    "context": "for row in self.progress_iter(reader, desc=tsv_path.name[:30], unit=\"row\", leave=False):",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_02_cleanse_tsv.py",
+    "line": 43,
+    "value": 1000000,
+    "context": "csv.field_size_limit(1_000_000)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_02_cleanse_tsv.py",
+    "line": 123,
+    "value": 20,
+    "context": "sample = df.head(20)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_02_cleanse_tsv.py",
+    "line": 143,
+    "value": 3,
+    "context": "metrics[\"release_year_coverage\"] = round(coverage, 3)",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_02_cleanse_tsv.py",
+    "line": 147,
+    "value": 3,
+    "context": "self.logger.info(df.head(3).to_string())",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03_util_check_tsv_structure.py",
+    "line": 36,
+    "value": 1000000,
+    "context": "csv.field_size_limit(1_000_000)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 45,
+    "value": 1000000,
+    "context": "csv.field_size_limit(1_000_000)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 73,
+    "value": 6,
+    "context": "ac = pd.read_csv(ac_path, sep=\"\\t\", header=None, low_memory=False, usecols=[0, 6])",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 78,
+    "value": 6,
+    "context": "ac_map = dict(zip(ac[0].astype(str), ac[6]))",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 102,
+    "value": 100,
+    "context": "coverage_rg = release[\"release_group_gid\"].notna().mean() * 100",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 103,
+    "value": 100,
+    "context": "coverage_ac = release[\"artist_credit_gid\"].notna().mean() * 100",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 116,
+    "value": 10,
+    "context": "].head(10)",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 122,
+    "value": 40,
+    "context": "f\"   id={row.get('id', '?')} | name={str(row.get('name', ''))[:40]} | \"",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 130,
+    "value": 2,
+    "context": "\"coverage_release_group\": round(coverage_rg, 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_03b_rehydrate_guids.py",
+    "line": 131,
+    "value": 2,
+    "context": "\"coverage_artist_credit\": round(coverage_ac, 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 22,
+    "value": 1000000,
+    "context": "csv.field_size_limit(1_000_000)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 35,
+    "value": 2,
+    "context": "for idx in [1, 2, 3]:",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 35,
+    "value": 3,
+    "context": "for idx in [1, 2, 3]:",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 76,
+    "value": 2,
+    "context": "st_map = {r[0]: r[1] for r in rgst_rows if len(r) >= 2}",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 79,
+    "value": 2,
+    "context": "if len(j) >= 2:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 122,
+    "value": 5,
+    "context": "if len(row) < 5:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 126,
+    "value": 3,
+    "context": "artist_credit_id = row[3] if len(row) > 3 else None",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 126,
+    "value": 3,
+    "context": "artist_credit_id = row[3] if len(row) > 3 else None",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 127,
+    "value": 4,
+    "context": "release_group_id = row[4] if len(row) > 4 else None",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 127,
+    "value": 4,
+    "context": "release_group_id = row[4] if len(row) > 4 else None",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 132,
+    "value": 3,
+    "context": "if not ac and len(rg) > 3:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 133,
+    "value": 3,
+    "context": "rg_artist_credit_id = rg[3]",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 139,
+    "value": 2,
+    "context": "rg_name = rg[2] if len(rg) > 2 else \"\"",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 139,
+    "value": 2,
+    "context": "rg_name = rg[2] if len(rg) > 2 else \"\"",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 146,
+    "value": 10,
+    "context": "if len(soundtrack_samples) < 10 or random.random() < 0.001:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 146,
+    "value": 0.001,
+    "context": "if len(soundtrack_samples) < 10 or random.random() < 0.001:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 165,
+    "value": 100,
+    "context": "soundtrack_pct = (soundtrack_count / joined_rows * 100) if joined_rows else 0",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 169,
+    "value": 2,
+    "context": "\"soundtrack_pct\": round(soundtrack_pct, 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_04_mb_full_join.py",
+    "line": 180,
+    "value": 5,
+    "context": "for row in soundtrack_samples[:5]:",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 47,
+    "value": 2,
+    "context": "if len(header) < 2:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 49,
+    "value": 2,
+    "context": "soundtrack_ids = {row[0] for row in reader if len(row) >= 2 and row[1] == \"1\"}",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 64,
+    "value": 13,
+    "context": "if len(row) < 13:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 66,
+    "value": 4,
+    "context": "rgid = row[4].strip()",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 119,
+    "value": 5,
+    "context": "if not row or len(row) < 5:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 126,
+    "value": 5,
+    "context": "if cell.isdigit() and len(cell) >= 5:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 129,
+    "value": 4,
+    "context": "release_group_id = release_group_id or row[4]",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 159,
+    "value": 0.02,
+    "context": "subset_fraction = getattr(self.config, \"SAMPLE_FRACTION\", 0.02)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 161,
+    "value": 42,
+    "context": "sample = df.sample(frac=subset_fraction, random_state=42)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 165,
+    "value": 100,
+    "context": "f\"🎯 Saved subset ({subset_fraction*100:.1f}% = {len(sample):,} rows) → {sample_path.name}\"",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 173,
+    "value": 100,
+    "context": "\"match_pct\": round(100 * matched / max(row_count, 1), 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_05_filter_soundtracks_enhanced.py",
+    "line": 173,
+    "value": 2,
+    "context": "\"match_pct\": round(100 * matched / max(row_count, 1), 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_06_fetch_tmdb.py",
+    "line": 31,
+    "value": 1000,
+    "context": "self.max_movies = 1000  # overridden by ROW_LIMIT or Golden Mode",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_06_fetch_tmdb.py",
+    "line": 32,
+    "value": 500,
+    "context": "self.max_pages = 500",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_06_fetch_tmdb.py",
+    "line": 96,
+    "value": 20,
+    "context": "movies, page, per_page = [], 1, 20",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_06_fetch_tmdb.py",
+    "line": 209,
+    "value": 3,
+    "context": "def _safe_get(self, url: str, params: dict, retries: int = 3, backoff: float = 2.0):",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_06_fetch_tmdb.py",
+    "line": 209,
+    "value": 2.0,
+    "context": "def _safe_get(self, url: str, params: dict, retries: int = 3, backoff: float = 2.0):",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_06_fetch_tmdb.py",
+    "line": 213,
+    "value": 10,
+    "context": "r = self.session.get(url, params=params, timeout=10)",
+    "kind": "timeout",
+    "suggestion": "TIMEOUT_SECONDS"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 28,
+    "value": 5,
+    "context": "if len(title) > 5 and not all(c in \"0123456789abcdef-\" for c in title.lower()):",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 30,
+    "value": 2,
+    "context": "for part in parts[2:4]:",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 30,
+    "value": 4,
+    "context": "for part in parts[2:4]:",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 31,
+    "value": 3,
+    "context": "if len(part.strip()) > 3 and not all(c in \"0123456789abcdef-\" for c in part.lower()):",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 66,
+    "value": 3,
+    "context": "if not nt or len(nt) < 3:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 77,
+    "value": 1900,
+    "context": "if not (1900 <= yr <= 2025):",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 77,
+    "value": 2025,
+    "context": "if not (1900 <= yr <= 2025):",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 113,
+    "value": 1900,
+    "context": "(df_tmdb[\"year\"].between(1900, 2025))",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 113,
+    "value": 2025,
+    "context": "(df_tmdb[\"year\"].between(1900, 2025))",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 114,
+    "value": 2,
+    "context": "& (df_tmdb[\"normalized_title\"].str.len() > 2)",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 127,
+    "value": 100,
+    "context": "coverage = (len(merged) / len(out_df) * 100) if len(out_df) else 0",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 131,
+    "value": 100,
+    "context": "merged.head(100).to_csv(diag, index=False)",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 143,
+    "value": 100,
+    "context": "(len(merged) / max(len(out_df), 1)) * 100, 2",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_07_prepare_tmdb_input.py",
+    "line": 143,
+    "value": 2,
+    "context": "(len(merged) / max(len(out_df), 1)) * 100, 2",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 66,
+    "value": 10,
+    "context": "r = requests.get(url, params={\"api_key\": TMDB_API_KEY}, timeout=10)",
+    "kind": "timeout",
+    "suggestion": "TIMEOUT_SECONDS"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 71,
+    "value": 2,
+    "context": "if attempt < 2:",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 72,
+    "value": 1.5,
+    "context": "time.sleep(1.5 * (attempt + 1))",
+    "kind": "timing",
+    "suggestion": "API_THROTTLE_SECONDS"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 113,
+    "value": 42,
+    "context": "tmdb_df = tmdb_df.sample(self.sample, random_state=42)",
+    "kind": "row limit",
+    "suggestion": "ROW_LIMIT"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 148,
+    "value": 100,
+    "context": "\"score\": 100,",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 185,
+    "value": 0.7,
+    "context": "scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 185,
+    "value": 0.3,
+    "context": "scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 197,
+    "value": 0.7,
+    "context": "scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 197,
+    "value": 0.3,
+    "context": "scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 243,
+    "value": 105,
+    "context": "pd.cut(pd.Series([m[\"score\"] for m in matches]), bins=np.arange(0, 105, 5))",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 243,
+    "value": 5,
+    "context": "pd.cut(pd.Series([m[\"score\"] for m in matches]), bins=np.arange(0, 105, 5))",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 254,
+    "value": 100,
+    "context": "fuzzy_pct = (len(matches) / total_tmdb * 100) if total_tmdb else 0",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 263,
+    "value": 2,
+    "context": "\"overall_match_pct\": round(fuzzy_pct, 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 264,
+    "value": 2,
+    "context": "\"avg_match_score\": round(avg_score, 2),",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_08_match_instrumented.py",
+    "line": 265,
+    "value": 2,
+    "context": "\"median_match_score\": round(median_score, 2),",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_09_apply_rescues.py",
+    "line": 14,
+    "value": 90.0,
+    "context": "def __init__(self, name=\"Step 09: Apply Manual Rescues (Enhanced & Polished)\", threshold: float = 90.0):",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_09_apply_rescues.py",
+    "line": 105,
+    "value": 100.0,
+    "context": "\"match_score\": 100.0,",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_10_enrich_tmdb.py",
+    "line": 27,
+    "value": 0.25,
+    "context": "self.sleep_time = 0.25  # polite throttle between API calls",
+    "kind": "timing",
+    "suggestion": "API_THROTTLE_SECONDS"
+  },
+  {
+    "file": "step_10_enrich_tmdb.py",
+    "line": 42,
+    "value": 3,
+    "context": "def _safe_get(self, url: str, params: dict, retries: int = 3, backoff: float = 1.5):",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_10_enrich_tmdb.py",
+    "line": 42,
+    "value": 1.5,
+    "context": "def _safe_get(self, url: str, params: dict, retries: int = 3, backoff: float = 1.5):",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_10_enrich_tmdb.py",
+    "line": 46,
+    "value": 10,
+    "context": "r = requests.get(url, params=params, timeout=10)",
+    "kind": "timeout",
+    "suggestion": "TIMEOUT_SECONDS"
+  },
+  {
+    "file": "step_10b_coverage_audit.py",
+    "line": 17,
+    "value": 0.85,
+    "context": "def __init__(self, name=\"Step 10B: OST Coverage Audit\", similarity_threshold=0.85):",
+    "kind": "threshold",
+    "suggestion": "FUZZ_THRESHOLD"
+  },
+  {
+    "file": "step_10b_coverage_audit.py",
+    "line": 126,
+    "value": 100,
+    "context": "\"coverage_pct\": round(coverage * 100, 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  },
+  {
+    "file": "step_10b_coverage_audit.py",
+    "line": 126,
+    "value": 2,
+    "context": "\"coverage_pct\": round(coverage * 100, 2),",
+    "kind": "unknown",
+    "suggestion": ""
+  }
+]
