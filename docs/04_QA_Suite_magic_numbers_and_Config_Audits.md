@@ -10,11 +10,11 @@
 
 1. **Scan for numeric literals**  
    `python QA_scan_magic_literals.py`  
-   → Produces `audit_reports/magic_numbers_audit.csv` + `magic_literals.json`
+   → Produces `QA/audit_reports/magic_numbers_audit.csv` + `magic_literals.json`
 
 2. **Reconcile with config.py**  
    `python QA_config_reconciler_numbers.py`  
-   → Produces `audit_reports/config_mapping.csv` + `config_suggestions.py` (sorted)
+   → Produces `QA/audit_reports/config_mapping.csv` + `config_suggestions.py` (sorted)
 
 3. **Assess spread/consistency** *(optional)*  
    `python QA_analyze_suggestions_clusters.py`  

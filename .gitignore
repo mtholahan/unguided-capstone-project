@@ -57,9 +57,9 @@ logs/*.tmp
 logs/*.bak
 
 # =========================
-# scripts/audit_reports
+# scripts/QA/audit_reports
 # =========================
-scripts/audit_reports
+scripts/QA/audit_reports
 
 # =========================
 # scripts/logs
