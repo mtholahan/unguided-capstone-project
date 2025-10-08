@@ -8,21 +8,25 @@
 
 ### Typical workflow
 
-1. **Scan for numeric literals**  
-   `python QA_scan_magic_literals.py`  
-   → Produces `QA/audit_reports/magic_numbers_audit.csv` + `magic_literals.json`
+**Scan for numeric literals**  
+`python QA_scan_magic_literals.py`  
+→ Produces `QA/audit_reports/magic_numbers_audit.csv` + `magic_literals.json`
 
-2. **Reconcile with config.py**  
-   `python QA_config_reconciler_numbers.py`  
-   → Produces `QA/audit_reports/config_mapping.csv` + `config_suggestions.py` (sorted)
+**Reconcile with config.py**  
+`python QA_config_reconciler_numbers.py`  
+→ Produces `QA/audit_reports/config_mapping.csv` + `config_suggestions.py` (sorted)
 
-3. **Assess spread/consistency** *(optional)*  
-   `python QA_analyze_suggestions_clusters.py`  
-   → Console table showing clusters/ranges to guide consolidation
+**Assess spread/consistency** *(optional)*  
+`python QA_analyze_suggestions_clusters.py`  
+→ Console table showing clusters/ranges to guide consolidation
 
-4. **Audit actual config usage**  
-   `python QA_config_usage_audit.py`  
-   → CSV + color-coded console grouping of unused constants by category
+**Audit actual config usage**  
+`python QA_config_usage_audit.py`  
+→ CSV + color-coded console grouping of unused constants by category
+
+Run the whole suite  
+
+`QA_run_all.py` 
 
 ### Where files live
 
