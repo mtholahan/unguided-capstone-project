@@ -1,5 +1,5 @@
 """
-scan_magic_literals.py (numeric-only edition)
+QA_scan_magic_literals.py (numeric-only edition)
 -------------------------------------------------------------
 Scans all Step_XX Python scripts to identify numeric
 "magic numbers" that should ideally live in config.py.
@@ -9,7 +9,7 @@ Outputs:
     • audit_reports/magic_literals.json  (for config_reconciler.py)
 
 Usage:
-    python scan_magic_literals.py
+    python QA_scan_magic_literals.py
 -------------------------------------------------------------
 """
 
@@ -30,7 +30,7 @@ CONFIG_FILE = SCRIPTS_DIR / "config.py"
 
 EXCLUDE_FILES = {
     "base_step.py", "config.py", "utils.py", "main.py",
-    "magic_number_audit.py", "scan_magic_literals.py",
+    "magic_number_audit.py", "QA_scan_magic_literals.py",
     "find_tqdm_hits.py", "step_99_ScratchPad.py", "__init__.py"
 }
 
