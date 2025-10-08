@@ -27,11 +27,19 @@ import pandas as pd
 
 
 def default_paths():
+    """Locate the scripts and output directories safely."""
     here = Path(__file__).resolve().parent
-    scripts_dir = here
-    out_dir = scripts_dir / "audit_reports"
-    return scripts_dir, out_dir
 
+    # If config.py is in this folder → use it; otherwise, check parent
+    if (here / "config.py").exists():
+        scripts_dir = here
+    elif (here.parent / "config.py").exists():
+        scripts_dir = here.parent
+    else:
+        raise FileNotFoundError("Could not locate config.py")
+
+    out_dir = here / "audit_reports"
+    return scripts_dir, out_dir
 
 def load_config_constants(config_file: Path):
     constants = {}
@@ -102,12 +110,19 @@ def main():
     config_file = Path(args.config_file).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # 🔧 Auto-fix: If config file doesn't exist where expected, retry parent folder
+    if not config_file.exists() and (scripts_dir.parent / "config.py").exists():
+        config_file = scripts_dir.parent / "config.py"
+
     json_path = output_dir / "magic_literals.json"
     if not json_path.exists():
         print(f"❌ Missing {json_path}. Run QA_scan_magic_literals.py first.")
         return
 
     config_constants = load_config_constants(config_file)
+    if not config_constants:
+        print(f"⚠️ Failed to parse {config_file}. No constants loaded.")
+        return
 
     data = json.loads(json_path.read_text(encoding="utf-8"))
     print(f"🔍 Loaded {len(data)} numeric constants from JSON")
@@ -154,7 +169,6 @@ def main():
     df.to_csv(mapping_csv, index=False, encoding="utf-8")
     print(f"📊 Mapping  → {mapping_csv}")
 
-    # Alphabetically sorted suggestions (keep duplicates – variety is useful)
     suggestions = df[df["status"] == "New constant suggested"].copy()
     suggestions.sort_values(by="proposed_name", inplace=True, ignore_index=True)
 
