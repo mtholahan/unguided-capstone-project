@@ -51,6 +51,7 @@ class Step00AcquireMusicbrainz(BaseStep):
 
     # ------------------------------------------------------------------
     def run(self):
+        self.setup_logger()
         target_dir = MB_RAW_DIR
         seven_zip = SEVEN_ZIP_PATH
         target_dir.mkdir(parents=True, exist_ok=True)

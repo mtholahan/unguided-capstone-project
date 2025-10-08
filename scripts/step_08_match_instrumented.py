@@ -1,15 +1,16 @@
 """
-Step 08: Match TMDb (Instrumented)
-----------------------------------
+Step 08: Match TMDb (Instrumented, Refactored)
+----------------------------------------------
 Performs exact + fuzzy matching between normalized TMDb and MusicBrainz datasets.
-Uploads results and metrics to Azure Blob (optional). Fully instrumented for monitoring.
+Uploads results and metrics to Azure Blob (optional).
+Refactored for BaseStep consistency and PowerShell-safe progress iteration.
 """
 
 from base_step import BaseStep
-import pandas as pd, requests, numpy as np, os, argparse
+import pandas as pd, requests, numpy as np, os, argparse, time
 from rapidfuzz import fuzz, process
 from config import TMDB_DIR, DEBUG_MODE, TMDB_API_KEY, AZURE_CONN_STR, BLOB_CONTAINER
-from utils import normalize_for_matching_extended as normalize, make_progress_bar  # ✅ unified helper
+from utils import normalize_for_matching_extended as normalize
 from azure.storage.blob import BlobServiceClient
 from pathlib import Path
 
@@ -37,33 +38,40 @@ class SafeWriterMixin:
     def upload_to_blob(self, local_path: Path):
         """Upload a local file to Azure Blob Storage."""
         if not AZURE_CONN_STR:
-            self.logger.info("Skipping Azure upload (no connection string set).")
+            self.logger.info("☁️ Azure upload skipped (no connection string set).")
             return
         try:
             blob_service = BlobServiceClient.from_connection_string(AZURE_CONN_STR)
             blob_client = blob_service.get_blob_client(
                 container=BLOB_CONTAINER,
-                blob=f"outputs/{local_path.name}"
+                blob=f"outputs/{local_path.name}",
             )
             with open(local_path, "rb") as data:
                 blob_client.upload_blob(data, overwrite=True)
             self.logger.info(f"☁️ Uploaded {local_path.name} → blob:{BLOB_CONTAINER}/outputs/")
         except Exception as e:
-            self.logger.warning(f"⚠️ Azure upload skipped or failed: {e}")
+            self.logger.warning(f"⚠️ Azure upload failed: {e}")
 
 
+# ============================================================
+# Helper: Fetch alternative titles with basic retry logic
+# ============================================================
 def fetch_alt_titles(tmdb_id: str) -> list[str]:
-    """Fetch alternative titles for a TMDb movie."""
+    """Fetch alternative titles for a TMDb movie (retry-safe)."""
     if not USE_ALT_TITLES or not TMDB_API_KEY:
         return []
-    try:
-        url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/alternative_titles"
-        r = requests.get(url, params={"api_key": TMDB_API_KEY})
-        r.raise_for_status()
-        titles = [t.get("title", "") for t in r.json().get("titles", []) if t.get("title")]
-        return [normalize(t) for t in titles]
-    except Exception:
-        return []
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/alternative_titles"
+    for attempt in range(3):
+        try:
+            r = requests.get(url, params={"api_key": TMDB_API_KEY}, timeout=10)
+            r.raise_for_status()
+            titles = [t.get("title", "") for t in r.json().get("titles", []) if t.get("title")]
+            return [normalize(t) for t in titles]
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+            else:
+                return []
 
 
 # ============================================================
@@ -87,6 +95,10 @@ class Step08MatchTMDb(BaseStep, SafeWriterMixin):
         return df
 
     def run(self):
+        self.setup_logger()
+        self.logger.info("🚀 Starting Step 08: Match TMDb (Instrumented, Refactored)")
+
+        # --- Load datasets ---
         self.logger.info("📥 Loading normalized TMDB + MB datasets...")
         tmdb_df = pd.read_parquet(self.tmdb_norm)
         mb_path = TMDB_DIR / "tmdb_input_candidates_clean.csv"
@@ -97,88 +109,104 @@ class Step08MatchTMDb(BaseStep, SafeWriterMixin):
 
         mb_df = pd.read_csv(mb_path, dtype=str)
 
-        # Sampling for quick test runs
         if self.sample and self.sample < len(tmdb_df):
             tmdb_df = tmdb_df.sample(self.sample, random_state=42)
-            self.logger.info(f"🔬 Using sample of {self.sample} TMDB rows for testing.")
+            self.logger.info(f"🔬 Using sample of {self.sample:,} TMDB rows for testing.")
 
         # --- Data validation ---
         self.logger.info(f"TMDB shape={tmdb_df.shape}, MB shape={mb_df.shape}")
         for df, name in [(tmdb_df, "TMDB"), (mb_df, "MB")]:
-            nulls = df[['title', 'year']].isna().sum().to_dict()
+            nulls = df[["title", "year"]].isna().sum().to_dict()
             self.logger.info(f"{name} null counts: {nulls}")
 
-        tmdb_df = self._ensure_normalized(tmdb_df, 'title')
-        mb_df = self._ensure_normalized(mb_df, 'title')
+        tmdb_df = self._ensure_normalized(tmdb_df, "title")
+        mb_df = self._ensure_normalized(mb_df, "title")
 
-        tmdb_df['year'] = pd.to_numeric(tmdb_df['year'], errors='coerce')
-        mb_df['year'] = pd.to_numeric(mb_df['year'], errors='coerce')
-        mb_df = mb_df.dropna(subset=['normalized_title'])
+        tmdb_df["year"] = pd.to_numeric(tmdb_df["year"], errors="coerce")
+        mb_df["year"] = pd.to_numeric(mb_df["year"], errors="coerce")
+        mb_df = mb_df.dropna(subset=["normalized_title"])
 
-        tmdb_df = tmdb_df.sort_values(['tmdb_id', 'year']).reset_index(drop=True)
-        mb_df = mb_df.sort_values(['release_group_id', 'year']).reset_index(drop=True)
+        tmdb_df = tmdb_df.sort_values(["tmdb_id", "year"]).reset_index(drop=True)
+        mb_df = mb_df.sort_values(["release_group_id", "year"]).reset_index(drop=True)
 
-        # --- Exact match ---
+        # --- Exact matches ---
         exact = tmdb_df.merge(
             mb_df[["normalized_title", "year", "title", "release_group_id"]],
-            on=["normalized_title", "year"], how="inner", suffixes=("_tmdb", "_mb")
+            on=["normalized_title", "year"],
+            how="inner",
+            suffixes=("_tmdb", "_mb"),
         )
-        exact_matches = [{
-            "tmdb_id": r.tmdb_id,
-            "tmdb_title": r.title_tmdb,
-            "tmdb_year": r.year,
-            "matched_title": r.title_mb,
-            "release_group_id": r.release_group_id,
-            "mb_year": r.year,
-            "score": 100,
-            "match_mode": "exact",
-        } for r in exact.itertuples(index=False)]
 
+        exact_matches = [
+            {
+                "tmdb_id": r.tmdb_id,
+                "tmdb_title": r.title_tmdb,
+                "tmdb_year": r.year,
+                "matched_title": r.title_mb,
+                "release_group_id": r.release_group_id,
+                "mb_year": r.year,
+                "score": 100,
+                "match_mode": "exact",
+            }
+            for r in exact.itertuples(index=False)
+        ]
         self.logger.info(f"✅ Exact matches: {len(exact_matches):,}")
 
-        remaining = tmdb_df[~tmdb_df['tmdb_id'].isin(exact['tmdb_id'])]
-        norm_to_mb = {r.normalized_title: (r.title, r.release_group_id, r.year) for r in mb_df.itertuples(index=False)}
+        remaining = tmdb_df[~tmdb_df["tmdb_id"].isin(exact["tmdb_id"])]
+        norm_to_mb = {
+            r.normalized_title: (r.title, r.release_group_id, r.year)
+            for r in mb_df.itertuples(index=False)
+        }
 
         matches, misses = list(exact_matches), []
-        alt_rescue_count = 0
-        no_candidate_count = 0
+        alt_rescue_count, no_candidate_count = 0, 0
 
-        # ✅ Unified progress bar for fuzzy matching
-        with make_progress_bar(total=len(remaining), desc="Fuzzy Matching", unit="movie") as bar:
-            for mv in remaining.itertuples(index=False):
-                q_norm, q_year = mv.normalized_title, mv.year
-                pool_df = mb_df[mb_df['year'].between(q_year - YEAR_VARIANCE, q_year + YEAR_VARIANCE)]
-                pool = pool_df['normalized_title'].tolist()
+        # --- Fuzzy matching ---
+        for mv in self.progress_iter(remaining.itertuples(index=False), desc="Fuzzy Matching"):
+            q_norm, q_year = mv.normalized_title, mv.year
+            pool_df = mb_df[mb_df["year"].between(q_year - YEAR_VARIANCE, q_year + YEAR_VARIANCE)]
+            pool = pool_df["normalized_title"].tolist()
 
-                if not pool:
-                    misses.append({"tmdb_id": mv.tmdb_id, "tmdb_title": mv.title, "tmdb_year": q_year, "reason": "no_candidates"})
-                    no_candidate_count += 1
-                    bar.update(1)
-                    continue
-
-                best_n = process.extract(
-                    q_norm, pool,
-                    scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),
-                    limit=TOP_N, processor=None
+            if not pool:
+                misses.append(
+                    {
+                        "tmdb_id": mv.tmdb_id,
+                        "tmdb_title": mv.title,
+                        "tmdb_year": q_year,
+                        "reason": "no_candidates",
+                    }
                 )
-                best_cand, best_score = (best_n[0][0], best_n[0][1]) if best_n else ("", 0)
-                match_mode = "fuzzy"
+                no_candidate_count += 1
+                continue
 
-                if best_score < FUZZ_THRESHOLD and USE_ALT_TITLES:
-                    for alt in fetch_alt_titles(mv.tmdb_id):
-                        alt_n = process.extract(
-                            alt, pool,
-                            scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),
-                            limit=TOP_N, processor=None
-                        )
-                        if alt_n and alt_n[0][1] > best_score:
-                            best_cand, best_score = alt_n[0][0], alt_n[0][1]
-                            match_mode = "alt_rescue"
-                            alt_rescue_count += 1
+            best_n = process.extract(
+                q_norm,
+                pool,
+                scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),
+                limit=TOP_N,
+                processor=None,
+            )
+            best_cand, best_score = (best_n[0][0], best_n[0][1]) if best_n else ("", 0)
+            match_mode = "fuzzy"
 
-                if best_score >= FUZZ_THRESHOLD:
-                    mb_title, rgid, mb_year = norm_to_mb.get(best_cand, ("", "", None))
-                    matches.append({
+            if best_score < FUZZ_THRESHOLD and USE_ALT_TITLES:
+                for alt in fetch_alt_titles(mv.tmdb_id):
+                    alt_n = process.extract(
+                        alt,
+                        pool,
+                        scorer=lambda a, b, **_: int(0.7 * fuzz.token_set_ratio(a, b) + 0.3 * fuzz.partial_ratio(a, b)),
+                        limit=TOP_N,
+                        processor=None,
+                    )
+                    if alt_n and alt_n[0][1] > best_score:
+                        best_cand, best_score = alt_n[0][0], alt_n[0][1]
+                        match_mode = "alt_rescue"
+                        alt_rescue_count += 1
+
+            if best_score >= FUZZ_THRESHOLD:
+                mb_title, rgid, mb_year = norm_to_mb.get(best_cand, ("", "", None))
+                matches.append(
+                    {
                         "tmdb_id": mv.tmdb_id,
                         "tmdb_title": mv.title,
                         "tmdb_year": q_year,
@@ -187,19 +215,23 @@ class Step08MatchTMDb(BaseStep, SafeWriterMixin):
                         "mb_year": mb_year,
                         "score": int(best_score),
                         "match_mode": match_mode,
-                    })
-                else:
-                    misses.append({
+                    }
+                )
+            else:
+                misses.append(
+                    {
                         "tmdb_id": mv.tmdb_id,
                         "tmdb_title": mv.title,
                         "tmdb_year": q_year,
                         "best_candidate": best_cand,
                         "score": int(best_score),
-                    })
+                    }
+                )
 
-                if DEBUG_MODE:
-                    self.logger.info(f"[DEBUG] {mv.title} ({q_year}) → {best_cand} [{best_score}] mode={match_mode}")
-                bar.update(1)
+            if DEBUG_MODE:
+                self.logger.info(
+                    f"[DEBUG] {mv.title} ({q_year}) → {best_cand} [{best_score}] mode={match_mode}"
+                )
 
         # --- Outputs ---
         self.safe_overwrite(pd.DataFrame(matches), self.output_matches)
@@ -233,11 +265,12 @@ class Step08MatchTMDb(BaseStep, SafeWriterMixin):
             "median_match_score": round(median_score, 2),
             "rows_alt_rescue": alt_rescue_count,
             "rows_no_candidates": no_candidate_count,
+            "source_dir": str(TMDB_DIR),
         }
 
         self.write_metrics("step08_match_tmdb", metrics)
         self.logger.info(f"📈 Metrics logged: {metrics}")
-        self.logger.info("🎬 Step 08 (Instrumented) completed successfully.")
+        self.logger.info("🎬 [DONE] Step 08 (Instrumented, Refactored) completed successfully.")
 
 
 if __name__ == "__main__":

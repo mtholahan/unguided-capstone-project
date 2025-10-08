@@ -16,6 +16,7 @@ class Step03CheckStructure(BaseStep):
 
     # ------------------------------------------------------------------
     def run(self):
+        self.setup_logger()
         # --- Flexible matching: accept files with or without .tsv extensions ---
         whitelist_stems = {Path(f).stem for f in TSV_WHITELIST}
         input_files = sorted([

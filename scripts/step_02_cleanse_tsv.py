@@ -18,6 +18,7 @@ class Step02CleanseTSV(BaseStep):
 
     # ------------------------------------------------------------------
     def run(self):
+        self.setup_logger()
         MB_CLEANSED_DIR.mkdir(parents=True, exist_ok=True)
 
         # Normalize whitelist to allow entries with or without ".tsv"

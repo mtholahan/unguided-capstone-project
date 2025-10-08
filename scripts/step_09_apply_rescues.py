@@ -1,21 +1,18 @@
-"""Step 09: Apply Rescues (Enhanced)
+"""Step 09: Apply Rescues (Enhanced & Polished)
+-----------------------------------------------
 Hybrid manual rescue pass to fix known false negatives or missing OSTs.
-Now supports tmdb_id injection and smarter override behavior.
+Adds metrics, progress_iter, and unified logging style.
 """
 
 from base_step import BaseStep
 import pandas as pd
-from config import TMDB_DIR, ROW_LIMIT, DEBUG_MODE, TMDB_PAGE_LIMIT
+from config import TMDB_DIR, DEBUG_MODE
 import os
 
 
 class Step09ApplyRescues(BaseStep):
-    def __init__(
-        self,
-        name: str = "Step 09: Apply Manual Rescues (Enhanced)",
-        threshold: float = 90.0,
-    ):
-        super().__init__(name="Step 09: Apply Manual Rescues (Enhanced)")
+    def __init__(self, name="Step 09: Apply Manual Rescues (Enhanced & Polished)", threshold: float = 90.0):
+        super().__init__(name=name)
         self.threshold = threshold
 
         self.match_file = TMDB_DIR / "tmdb_match_results.csv"
@@ -25,7 +22,8 @@ class Step09ApplyRescues(BaseStep):
 
     # ------------------------------------------------------------------
     def run(self):
-        self.logger.info("🎬 Step 09: Starting enhanced manual rescue integration…")
+        self.setup_logger()
+        self.logger.info("🚀 Starting Step 09: Apply Manual Rescues (Polished)")
 
         # --- Load fuzzy match results ---
         if not self.match_file.exists() or os.path.getsize(self.match_file) == 0:
@@ -46,10 +44,8 @@ class Step09ApplyRescues(BaseStep):
         if "score" in df.columns:
             df.rename(columns={"score": "match_score"}, inplace=True)
 
-        # Identify common columns
         title_col = next((c for c in df.columns if "title" in c and "tmdb" in c), "tmdb_title")
         year_col = next((c for c in df.columns if "year" in c and "tmdb" in c), "tmdb_year")
-        artist_col = next((c for c in df.columns if "artist" in c), "mb_artist")
 
         df["match_score"] = pd.to_numeric(df.get("match_score", 0), errors="coerce").fillna(0)
         final_df = df[df["match_score"] >= self.threshold].copy()
@@ -67,7 +63,7 @@ class Step09ApplyRescues(BaseStep):
         rescues = pd.read_csv(self.rescue_file, dtype=str)
         rescues.columns = [c.lower().strip() for c in rescues.columns]
 
-        for _, row in rescues.iterrows():
+        for _, row in self.progress_iter(rescues.iterrows(), desc="Applying Rescues"):
             title = str(row.get("golden_title", "")).strip()
             year = str(row.get("expected_year", "")).strip()
             artist = str(row.get("expected_artist", "")).strip()
@@ -99,7 +95,6 @@ class Step09ApplyRescues(BaseStep):
                 action = "injected"
                 manual_only += 1
 
-            # --- Build new rescue row ---
             rescue_entry = {
                 "tmdb_id": tmdb_id,
                 "tmdb_title": title,
@@ -119,21 +114,36 @@ class Step09ApplyRescues(BaseStep):
         # --- Summary ---
         after_rows = len(final_df)
         self.logger.info("📊 Rescue Summary")
-        self.logger.info(f"   Injected:        {rescued_count}")
-        self.logger.info(f"   Manual-only:     {manual_only}")
-        self.logger.info(f"   Skipped:         {skipped_count}")
-        self.logger.info(f"   Overridden:      {overridden_count}")
-        self.logger.info(f"   Before:          {before_rows}")
-        self.logger.info(f"   After:           {after_rows}")
+        self.logger.info(f"   Injected:     {rescued_count}")
+        self.logger.info(f"   Manual-only:  {manual_only}")
+        self.logger.info(f"   Skipped:      {skipped_count}")
+        self.logger.info(f"   Overridden:   {overridden_count}")
+        self.logger.info(f"   Before:       {before_rows}")
+        self.logger.info(f"   After:        {after_rows}")
 
         # --- Write audit + enhanced outputs ---
         if audit_records:
-            pd.DataFrame(audit_records).to_csv(self.audit_file, index=False)
-            self.logger.info(f"🧾 Rescue audit saved to {self.audit_file.name} ({len(audit_records)} records)")
+            pd.DataFrame(audit_records).to_csv(self.audit_file, index=False, encoding="utf-8", newline="")
+            self.logger.info(f"🧾 Rescue audit saved → {self.audit_file.name} ({len(audit_records)} records)")
 
-        final_df.to_csv(self.output_enhanced, index=False)
-        self.logger.info(f"💾 Enhanced matches saved to {self.output_enhanced.name} ({after_rows} rows)")
+        final_df.to_csv(self.output_enhanced, index=False, encoding="utf-8", newline="")
+        self.logger.info(f"💾 Enhanced matches saved → {self.output_enhanced.name} ({after_rows:,} rows)")
+
+        # --- Metrics ---
+        metrics = {
+            "rows_before": before_rows,
+            "rows_after": after_rows,
+            "rescued_count": rescued_count,
+            "manual_only": manual_only,
+            "skipped": skipped_count,
+            "overridden": overridden_count,
+            "threshold": self.threshold,
+            "row_limit_active": False,
+        }
+        self.write_metrics("step09_apply_rescues", metrics)
+        self.logger.info(f"📈 Metrics logged: {metrics}")
+        self.logger.info("✅ [DONE] Step 09 completed successfully.")
+
 
 if __name__ == "__main__":
-    step = Step09ApplyRescues()
-    step.run()
+    Step09ApplyRescues().run()

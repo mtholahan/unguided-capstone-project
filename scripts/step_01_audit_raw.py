@@ -17,6 +17,7 @@ class Step01AuditRaw(BaseStep):
 
     # ------------------------------------------------------------------
     def run(self):
+        self.setup_logger()
         # Normalize whitelist to allow entries with or without ".tsv"
         tsv_whitelist = {
             Path(f).stem.lower()  # e.g. "artist" from "artist.tsv"

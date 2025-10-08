@@ -1,22 +1,24 @@
-"""Step 04: MusicBrainz Full Join (Final, Data-Driven)
-Performs enriched join of release, release_group, artist_credit.
+"""Step 04: MusicBrainz Full Join (Refactored)
+---------------------------------------------
+Performs enriched join of release, release_group, and artist_credit tables.
 Restores secondary types, derives is_soundtrack, and recovers artist names
 via release_group fallback if direct artist_credit.id join fails.
+
+Refactored for BaseStep.progress_iter() integration and consistent logging.
 """
 
 from base_step import BaseStep
+from config import MB_CLEANSED_DIR, DATA_DIR, ROW_LIMIT
 import csv
-from config import MB_CLEANSED_DIR, DATA_DIR, ROW_LIMIT, DEBUG_MODE
-from utils import make_progress_bar  # ✅ unified progress helper
 import random
 
 
 class Step04MBFullJoin(BaseStep):
     def __init__(self, name="Step 04: MB Full Join"):
-        super().__init__(name="Step 04: MB Full Join")
-        self.data = {}
+        super().__init__(name=name)
 
     def load_tsv(self, path):
+        """Safely loads a TSV into header and rows."""
         csv.field_size_limit(1_000_000)
         with open(path, encoding="utf-8") as f:
             reader = csv.reader(f, delimiter="\t")
@@ -36,18 +38,20 @@ class Step04MBFullJoin(BaseStep):
         return "(unknown artist)"
 
     def run(self):
+        self.setup_logger()
+        self.logger.info("🚀 Starting Step 04: MusicBrainz Full Join")
+
         # --- Input paths (GUID-aware) ---
         guided_path = MB_CLEANSED_DIR / "release_enriched_guided.tsv"
         default_path = MB_CLEANSED_DIR / "release_enriched.tsv"
-
-        # Prefer the GUID-enriched file if present
         release_path = guided_path if guided_path.exists() else default_path
+
         if guided_path.exists():
             self.logger.info("📘 Using GUID-enriched file: release_enriched_guided.tsv")
         else:
-            self.logger.warning("⚠️ GUID-enriched file not found; falling back to release_enriched.tsv")
+            self.logger.warning("⚠️ GUID-enriched file not found; using release_enriched.tsv")
 
-        # Other references
+        # Reference tables
         rg_path = MB_CLEANSED_DIR / "release_group.tsv"
         rgst_path = MB_CLEANSED_DIR / "release_group_secondary_type.tsv"
         rgstj_path = MB_CLEANSED_DIR / "release_group_secondary_type_join.tsv"
@@ -59,18 +63,14 @@ class Step04MBFullJoin(BaseStep):
                 self.fail(f"Missing input file: {p}")
                 return
 
-        # --- Load tables ---
-        self.logger.info("📥 Loading reference tables...")
+        # --- Load reference tables ---
+        self.logger.info("📥 Loading lookup tables...")
         rg_header, rg_rows = self.load_tsv(rg_path)
         rgst_header, rgst_rows = self.load_tsv(rgst_path)
         rgstj_header, rgstj_rows = self.load_tsv(rgstj_path)
         ac_header, ac_rows = self.load_tsv(ac_path)
-
-        # --- Log diagnostics ---
-        self.logger.info(f"Artist_credit header: {ac_header}")
-        self.logger.info("Sample artist_credit rows:")
-        for row in ac_rows[:3]:
-            self.logger.info(f"   {row}")
+        self.logger.info(f"✅ Loaded reference tables: "
+                         f"release_group={len(rg_rows):,}, artist_credit={len(ac_rows):,}")
 
         # --- Restore secondary types ---
         st_map = {r[0]: r[1] for r in rgst_rows if len(r) >= 2}
@@ -84,8 +84,6 @@ class Step04MBFullJoin(BaseStep):
         # --- Build maps ---
         ac_map = {r[0]: r for r in ac_rows if len(r) > 1}
         rg_map = {r[0]: r for r in rg_rows if len(r) > 1}
-        self.logger.info(f"🎵 Loaded artist_credit: {len(ac_map):,}")
-        self.logger.info(f"🎬 Loaded release_group: {len(rg_map):,}")
 
         # --- Prepare join output ---
         output_path = DATA_DIR / "joined_release_data.tsv"
@@ -105,80 +103,80 @@ class Step04MBFullJoin(BaseStep):
         joined_rows, soundtrack_count, recovered_artists = 0, 0, 0
         soundtrack_samples = []
 
+        # --- Begin join process ---
+        self.logger.info(f"🎬 Starting full join for up to {effective_limit:,} rows...")
+
         with open(release_path, encoding="utf-8") as fin, open(
             output_path, "w", encoding="utf-8", newline=""
         ) as fout:
             reader = csv.reader(fin, delimiter="\t")
             writer = csv.writer(fout, delimiter="\t")
-            next(reader, None)
+            next(reader, None)  # skip header
             writer.writerow(header)
 
-            # ✅ Unified progress bar
-            with make_progress_bar(total=min(total_rows, effective_limit),
-                                   desc="Joining Releases",
-                                   leave=True,
-                                   unit="rows") as bar:
-                for i, row in enumerate(reader, start=1):
-                    if ROW_LIMIT and i > ROW_LIMIT:
-                        break
-                    if len(row) < 5:
-                        continue
+            for _ in self.progress_iter(range(effective_limit), desc="Joining Releases"):
+                try:
+                    row = next(reader)
+                except StopIteration:
+                    break
+                if len(row) < 5:
+                    continue
 
-                    release_id = row[0]
-                    artist_credit_id = row[3] if len(row) > 3 else None
-                    release_group_id = row[4] if len(row) > 4 else None
+                release_id = row[0]
+                artist_credit_id = row[3] if len(row) > 3 else None
+                release_group_id = row[4] if len(row) > 4 else None
 
-                    # --- Artist join, with two-hop fallback ---
-                    ac = ac_map.get(artist_credit_id, [])
-                    rg = rg_map.get(release_group_id, [])
-                    if not ac and len(rg) > 3:
-                        rg_artist_credit_id = rg[3]
-                        ac = ac_map.get(rg_artist_credit_id, [])
-                        if ac:
-                            recovered_artists += 1
+                # --- Artist join with fallback ---
+                ac = ac_map.get(artist_credit_id, [])
+                rg = rg_map.get(release_group_id, [])
+                if not ac and len(rg) > 3:
+                    rg_artist_credit_id = rg[3]
+                    ac = ac_map.get(rg_artist_credit_id, [])
+                    if ac:
+                        recovered_artists += 1
 
-                    ac_name = self.safe_get_artist_name(ac)
-                    rg_name = rg[2] if len(rg) > 2 else ""
+                ac_name = self.safe_get_artist_name(ac)
+                rg_name = rg[2] if len(rg) > 2 else ""
 
-                    sec_types = rg_secondary.get(release_group_id, [])
-                    is_soundtrack = any("soundtrack" in s for s in sec_types)
+                sec_types = rg_secondary.get(release_group_id, [])
+                is_soundtrack = any("soundtrack" in s for s in sec_types)
 
-                    if is_soundtrack:
-                        soundtrack_count += 1
-                        if len(soundtrack_samples) < 10 or random.random() < 0.001:
-                            soundtrack_samples.append(
-                                {
-                                    "release_id": release_id,
-                                    "release_group": rg_name,
-                                    "artist_credit": ac_name,
-                                    "secondary_types": ", ".join(sec_types),
-                                }
-                            )
+                if is_soundtrack:
+                    soundtrack_count += 1
+                    if len(soundtrack_samples) < 10 or random.random() < 0.001:
+                        soundtrack_samples.append(
+                            {
+                                "release_id": release_id,
+                                "release_group": rg_name,
+                                "artist_credit": ac_name,
+                                "secondary_types": ", ".join(sec_types),
+                            }
+                        )
 
-                    writer.writerow(
-                        row + [rg_name, ac_name, ", ".join(sec_types), int(is_soundtrack)]
-                    )
+                writer.writerow(
+                    row + [rg_name, ac_name, ", ".join(sec_types), int(is_soundtrack)]
+                )
 
-                    joined_rows += 1
-                    if joined_rows % 100_000 == 0:
-                        self.logger.info(f"Processed {joined_rows:,} joined rows...")
-                    bar.update(1)
+                joined_rows += 1
+                if joined_rows % 100_000 == 0:
+                    self.logger.info(f"📈 Processed {joined_rows:,} joined rows...")
 
+        # --- Summary and Metrics ---
         soundtrack_pct = (soundtrack_count / joined_rows * 100) if joined_rows else 0
-        self.logger.info(
-            f"✅ [DONE] Joined {joined_rows:,} releases "
-            f"({soundtrack_count:,} soundtracks = {soundtrack_pct:.1f}%) → {output_path.name}"
-        )
-        self.logger.info(f"🎯 Recovered {recovered_artists:,} artist names via release_group fallback.")
+        metrics = {
+            "rows_total": joined_rows,
+            "soundtrack_count": soundtrack_count,
+            "soundtrack_pct": round(soundtrack_pct, 2),
+            "recovered_artists": recovered_artists,
+            "row_limit_active": bool(ROW_LIMIT),
+        }
 
-        unique_groups = len(set(r["release_group"] for r in soundtrack_samples))
-        self.logger.info(
-            f"🧩 Validation summary: {unique_groups} unique soundtrack groups sampled "
-            f"({soundtrack_count:,} total soundtracks = {soundtrack_pct:.1f}%)."
-        )
+        self.write_metrics("step04_mb_full_join", metrics)
+        self.logger.info(f"📊 Metrics recorded: {metrics}")
 
+        # --- Validation sample ---
         if soundtrack_samples:
-            self.logger.info("🎧 Validation sample (soundtrack matches):")
+            self.logger.info("🎧 Sample soundtrack matches:")
             for row in soundtrack_samples[:5]:
                 self.logger.info(
                     f"   release_id={row['release_id']} | group='{row['release_group']}' | "
@@ -187,7 +185,12 @@ class Step04MBFullJoin(BaseStep):
         else:
             self.logger.warning("⚠️ No soundtrack rows found during validation.")
 
+        self.logger.info(
+            f"✅ [DONE] Joined {joined_rows:,} releases "
+            f"({soundtrack_count:,} soundtracks = {soundtrack_pct:.1f}%) → {output_path.name}"
+        )
+        self.logger.info(f"🎯 Recovered {recovered_artists:,} artist names via release_group fallback.")
+
 
 if __name__ == "__main__":
-    step = Step04MBFullJoin()
-    step.run()
+    Step04MBFullJoin().run()

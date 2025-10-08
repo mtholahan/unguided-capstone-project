@@ -108,7 +108,7 @@ TMDB_TOTAL_LIMIT: int = 10000         # Hard stop for cumulative fetches
 
 # Performance limits
 CHUNK_SIZE = 5_000              # Default CSV / ETL batch size
-ROW_LIMIT = 1_000_000           # Max rows to process per batch
+ROW_LIMIT = 10_000              # Max rows to process per batch
 AUDIT_SAMPLE_LIMIT = 100_000    # Sampling limit for audits
 SLEEP_SECONDS = 1               # Default throttle for API calls
 

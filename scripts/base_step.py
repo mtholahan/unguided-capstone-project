@@ -16,6 +16,49 @@ from config import AZURE_CONN_STR, BLOB_CONTAINER
 from utils import make_progress_bar
 
 
+# ============================================================
+# 🪶 Module-level logger setup (shared by main.py and BaseStep)
+# ============================================================
+def setup_logger(name="Pipeline", log_dir="D:/Capstone_Staging/logs"):
+    """
+    Shared logger factory for the orchestrator (main.py) and individual Steps.
+    Mirrors BaseStep.setup_logger for unified formatting.
+    """
+    import logging
+    from pathlib import Path
+    import sys
+
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except AttributeError:
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8")
+
+    log_dir = Path(log_dir)
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_file = log_dir / "pipeline.log"
+
+    if not logging.getLogger().handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.FileHandler(log_file, mode="w", encoding="utf-8"),
+                logging.StreamHandler(sys.stdout),
+            ],
+        )
+
+    logger = logging.getLogger(name)
+
+    # Force PowerShell-safe flushing
+    for handler in logger.handlers:
+        if isinstance(handler, logging.StreamHandler):
+            handler.flush = lambda: sys.stdout.flush()
+
+    logger.info(f"Initialized logger for {name}")
+    return logger
+
+
 class BaseStep:
     # ============================================================
     # 🔧 Constructor with auto-Config fallback + Git metadata logging
