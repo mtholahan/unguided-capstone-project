@@ -36,17 +36,6 @@ ENV/
 *~
 
 # =========================
-# Data & Results (local / staging)
-# =========================
-results/*.csv
-data/raw/
-data/*.zip
-data/*.tar.gz
-data/*.csv
-D:\Capstone_Staging/**
-!D:\Capstone_Staging/README.md
-
-# =========================
 # QA & Audit Artifacts
 # =========================
 audit_reports/**
@@ -66,6 +55,11 @@ logs/archive/
 logs/debug_*.log
 logs/*.tmp
 logs/*.bak
+
+# =========================
+# scripts/audit_reports
+# =========================
+scripts/audit_reports
 
 # =========================
 # Notebooks & Slides
