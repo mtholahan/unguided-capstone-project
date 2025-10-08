@@ -27,7 +27,7 @@ def print_config_summary():
 # 2. Core Paths
 # ============================================================
 
-BASE_DIR = Path("D:/Capstone_Staging")
+BASE_DIR = Path(r"D:/Capstone_Staging")
 DATA_DIR = BASE_DIR / "data"
 RESULTS_DIR = DATA_DIR / "results"
 METRICS_DIR = DATA_DIR / "metrics"
@@ -36,8 +36,8 @@ MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
 TMDB_DIR = DATA_DIR / "tmdb"
 
-SCRIPTS_PATH = Path("C:/Projects/unguided-capstone-project/scripts")
-SEVEN_ZIP_PATH = Path("C:/Program Files/7-Zip/7z.exe")
+SCRIPTS_PATH = Path(r"C:/Projects/unguided-capstone-project/scripts")
+SEVEN_ZIP_PATH = Path(r"C:/Program Files/7-Zip/7z.exe")
 
 # ============================================================
 # 3. Database Settings
@@ -98,7 +98,7 @@ FILTER_SAMPLE_SIZE: int = 42          # Debug sample size for diagnostic subsets
 SOUNDTRACK_SUBSET_LIMIT: int = 100    # Max rows for subset parquet exports
 
 # ---------------------------
-#  TMDb API / Metadata Fetch
+#  TMDb API / data Fetch
 # ---------------------------
 TMDB_RESULT_LIMIT: int = 1000         # Total titles to query (cap)
 TMDB_PAGE_SIZE: int = 500             # Max results per page
@@ -146,17 +146,16 @@ BLOB_CONTAINER = os.getenv("AZURE_BLOB_CONTAINER", "capstone-outputs")
 
 # --- MusicBrainz Inputs ---
 TSV_WHITELIST = {
-    "artist",
-    "artist_credit",
-    "release",
-    "release_group",
-    "release_group_secondary_type",
-    "release_group_secondary_type_join",
+    "artist.tsv",
+    "artist_credit.tsv",
+    "release.tsv",
+    "release_group.tsv",
+    "release_group_secondary_type.tsv",
+    "release_group_secondary_type_join.tsv",
 }
 
 MB_RAW_FILES = {name: MB_RAW_DIR / name for name in TSV_WHITELIST}
 MB_TSV_FILES = {name: MB_CLEANSED_DIR / name for name in TSV_WHITELIST}
-
 MB_DUMP_ARCHIVE = BASE_DIR / "mbdump.tar.bz2"
 MB_DUMP_DIR = BASE_DIR / "mbdump"
 MB_PARQUET_SOUNDTRACKS = MB_RAW_DIR / "soundtracks.parquet"
@@ -284,3 +283,7 @@ class Config:
 
     def __repr__(self):
         return f"<Config DATA_DIR={self.DATA_DIR} ROW_LIMIT={self.ROW_LIMIT}>"
+    
+    def get(self, key, default=None):
+        return getattr(self, key, default)
+

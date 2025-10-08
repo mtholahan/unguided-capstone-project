@@ -4,7 +4,6 @@ Respects TSV_WHITELIST in config.py and saves raw TSVs to MB_RAW_DIR.
 """
 
 from base_step import BaseStep
-import os
 import re
 import requests
 import subprocess
@@ -13,110 +12,108 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from config import (
     CHUNK_SIZE,
+    MB_DUMP_URL,
     MAX_RETRY_ATTEMPTS,
     MB_RAW_DIR,
     SEVEN_ZIP_PATH,
     TSV_WHITELIST,
-    ROW_LIMIT,
-    DEBUG_MODE,
 )
-from utils import make_progress_bar  # ✅ unified progress helper
 
 
 class Step00AcquireMusicbrainz(BaseStep):
-    BASE_URL = "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/"
     FILENAME = "mbdump.tar.bz2"
 
     def __init__(self, name="Step 00: Acquire MusicBrainz", cleanup_archives: bool = True):
         super().__init__(name=name)
         self.cleanup_archives = cleanup_archives
 
+    # ------------------------------------------------------------------
     def download_with_progress(self, url: str, dest_path: Path):
-        """Download file with progress bar using make_progress_bar."""
+        """Download file with progress bar via BaseStep.progress_iter()."""
         response = requests.get(url, stream=True)
         response.raise_for_status()
 
         total = int(response.headers.get("content-length", 0))
         chunk_size = max(1024, CHUNK_SIZE)
-
-        if total == 0:
-            self.logger.warning(f"⚠️  No content-length header detected for {url}. Progress bar may be inaccurate.")
-
         desc = f"Downloading {self.FILENAME}"
 
-        with open(dest_path, "wb") as file, make_progress_bar(
-            total=total if total > 0 else None,
-            desc=desc,
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            leave=True,
-        ) as bar:
-            for chunk in response.iter_content(chunk_size=chunk_size):
+        with open(dest_path, "wb") as file:
+            for chunk in self.progress_iter(
+                response.iter_content(chunk_size=chunk_size),
+                desc=desc,
+                unit="B",
+                leave=True,
+                total=total if total > 0 else None,
+            ):
                 if not chunk:
                     continue
-                size = file.write(chunk)
-                if bar:
-                    bar.update(size)
+                file.write(chunk)
 
+    # ------------------------------------------------------------------
     def run(self):
         target_dir = MB_RAW_DIR
         seven_zip = SEVEN_ZIP_PATH
-        max_attempts = MAX_RETRY_ATTEMPTS
-
         target_dir.mkdir(parents=True, exist_ok=True)
-
-        self.logger.info(
-            f"Archive cleanup policy: cleanup_archives={self.cleanup_archives}. "
-            + ("Tarballs will be removed after extraction." if self.cleanup_archives else "Tarballs will be preserved.")
-        )
 
         tar_bz2 = target_dir / self.FILENAME
         tar_path = target_dir / self.FILENAME.replace(".bz2", "")
 
-        # Step 0: Ensure we have a usable tar file
-        if tar_path.exists():
-            self.logger.info(f"Found existing {tar_path}, reusing it.")
-        elif tar_bz2.exists():
-            self.logger.info(f"{tar_path} not found, extracting from {tar_bz2}...")
-            subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}", "-y"], check=True)
-            if not tar_path.exists():
-                raise FileNotFoundError(f"Extraction failed: {tar_path} not created.")
+        # ------------------------------------------------------------------
+        # Step 0 – Safeguard: skip if all whitelisted TSVs already exist
+        whitelist_stems = {Path(n).stem for n in TSV_WHITELIST}
+        existing_stems = {f.stem for f in target_dir.glob("*.tsv")}
+        missing = sorted(whitelist_stems - existing_stems)
+        present = sorted(whitelist_stems & existing_stems)
+
+        if len(present) == len(whitelist_stems):
+            self.logger.info(f"✅ All whitelisted TSVs already exist in {target_dir}. Skipping Step 00.")
+            return
+        elif present:
+            self.logger.info(f"⚠️ Partial TSVs found ({len(present)}/{len(whitelist_stems)}). Missing: {missing}")
         else:
-            # Step 1: Find the latest dump folder
+            self.logger.info(f"⬇️ No whitelisted TSVs found — proceeding with acquisition.")
+
+        # ------------------------------------------------------------------
+        # Step 1 – Ensure we have a usable tar file
+        if tar_path.exists():
+            self.logger.info(f"Reusing existing tar archive: {tar_path}")
+        elif tar_bz2.exists():
+            self.logger.info(f"Extracting tar from existing {tar_bz2}...")
+            subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}", "-y"], check=True)
+        else:
+            # Step 2 – Find latest dump folder
             self.logger.info("Checking MusicBrainz fullexport directory for latest dump...")
-            with requests.get(self.BASE_URL) as response:
+            with requests.get(MB_DUMP_URL) as response:
                 soup = BeautifulSoup(response.text, "html.parser")
                 folders = sorted(
                     [a["href"].strip("/") for a in soup.find_all("a", href=True)
                      if re.match(r"\d{8}-\d{6}", a["href"])],
-                    reverse=True
+                    reverse=True,
                 )
 
-            # Step 2: Download mbdump.tar.bz2
-            for folder in folders[:max_attempts]:
-                url = f"{self.BASE_URL}{folder}/{self.FILENAME}"
+            # Step 3 – Download mbdump.tar.bz2
+            for folder in folders[:MAX_RETRY_ATTEMPTS]:
+                url = f"{MB_DUMP_URL}{folder}/{self.FILENAME}"
                 try:
                     self.logger.info(f"Trying download URL: {url}")
                     self.download_with_progress(url, tar_bz2)
-                    self.logger.info(f"Downloaded dump to: {tar_bz2}")
                     break
                 except requests.exceptions.HTTPError:
                     self.logger.warning(f"Not found: {url}")
             else:
-                self.logger.error("No usable dump found in the last 10 attempts.")
+                self.logger.error("No usable dump found in recent directories.")
                 return
 
             subprocess.run([str(seven_zip), "x", str(tar_bz2), f"-o{target_dir}", "-y"], check=True)
 
-        # Step 3: List tar contents and match against whitelist
-        whitelist = {Path(n).name for n in TSV_WHITELIST}
+        # ------------------------------------------------------------------
+        # Step 4 – Extract whitelisted TSVs in one pass (normalize to stems)
+        whitelist_stems = {Path(n).stem for n in TSV_WHITELIST}
         result = subprocess.run(
             [str(seven_zip), "l", str(tar_path)],
-            capture_output=True, text=True, check=True
+            capture_output=True, text=True, check=True,
         )
         lines = result.stdout.splitlines()
-
         internal_paths = {}
         for line in lines:
             parts = line.split()
@@ -124,63 +121,60 @@ class Step00AcquireMusicbrainz(BaseStep):
                 continue
             full_path = parts[-1]
             name = Path(full_path).name
-            if name in whitelist:
-                internal_paths.setdefault(name, []).append(full_path)
+            stem = Path(name).stem
+            if stem in whitelist_stems:
+                internal_paths.setdefault(stem, []).append(full_path)
 
-        missing = [name for name in sorted(whitelist) if name not in internal_paths]
+        missing = [n for n in sorted(whitelist_stems) if n not in internal_paths]
         if missing:
-            self.logger.warning(f"⚠️  Missing whitelisted TSVs: {missing}")
+            self.logger.warning(f"⚠️ Missing whitelisted TSVs: {missing}")
 
-        self.logger.info(f"Whitelisted TSVs to extract: {sorted(list(whitelist))}")
-        self.logger.info(f"TSVs found in archive and will be extracted: {sorted(list(internal_paths.keys()))}")
+        extract_targets = []
+        for paths in internal_paths.values():
+            extract_targets.extend([f"-ir!{p}" for p in paths])
 
-        # Step 4: Extract the whitelisted TSVs
-        extracted_count = 0
-        for name, paths in internal_paths.items():
-            for pth in paths:
-                self.logger.info(f"Extracting {name} from internal path: {pth}")
-                subprocess.run(
-                    [str(seven_zip), "e", str(tar_path), f"-o{target_dir}", f"-ir!{pth}", "-y"],
-                    check=True
-                )
-                extracted_count += 1
-        self.logger.info(f"Finished extracting {extracted_count} TSV(s) to {target_dir}")
+        if not extract_targets:
+            self.logger.warning("⚠️ No whitelisted TSVs found to extract. Check TSV_WHITELIST.")
+        else:
+            cmd = [str(seven_zip), "e", str(tar_path), f"-o{target_dir}", "-y"] + extract_targets
+            self.logger.info(f"Extracting {len(extract_targets)} TSV(s) from tar in one pass...")
+            subprocess.run(cmd, check=True)
+            self.logger.info(f"✅ Extraction complete. TSVs written to {target_dir}")
 
-        # Step 5: Sanity-check for release_first_release_date
-        self.logger.info("Scanning for 'release_first_release_date'...")
-        found_inflated = False
-        for root, _, files in os.walk(target_dir):
-            for fname in files:
-                if "release_first_release_date" in fname:
-                    self.logger.info(f"FOUND in extracted dir: {Path(root) / fname}")
-                    found_inflated = True
-        if not found_inflated:
-            self.logger.warning("'release_first_release_date' not found in extracted files.")
+        # ------------------------------------------------------------------
+        # Step 5 – Normalize file extensions (.tsv)
+        for file in target_dir.iterdir():
+            if file.is_file() and "." not in file.name and file.stem in whitelist_stems:
+                new_name = file.with_suffix(".tsv")
+                self.logger.info(f"Renaming {file.name} → {new_name.name}")
+                file.rename(new_name)
 
+        # ------------------------------------------------------------------
+        # Step 6 – Basic validation
         try:
             with tarfile.open(tar_path, "r") as tf:
-                found_in_archive = any("release_first_release_date" in m.name for m in tf.getmembers())
-                if found_in_archive:
-                    self.logger.info("Found inside tar archive.")
-                else:
-                    self.logger.warning("'release_first_release_date' not found in tar archive.")
+                found = any("release_first_release_date" in m.name for m in tf.getmembers())
+                msg = "Found 'release_first_release_date' in tar archive." if found \
+                    else "⚠️  'release_first_release_date' not found in tar archive."
+                self.logger.info(msg)
         except Exception as e:
             self.logger.warning(f"Could not open tar for inspection: {e}")
 
-        # Step 6: Cleanup
+        # ------------------------------------------------------------------
+        # Step 7 – Cleanup (keep .tar for reuse)
         if self.cleanup_archives:
-            for f in [tar_bz2, tar_path]:
-                try:
-                    f.unlink()
-                    self.logger.info(f"Removed file: {f}")
-                except Exception as e:
-                    self.logger.warning(f"Cleanup issue with {f}: {e}")
+            try:
+                tar_bz2.unlink()
+                self.logger.info(f"Removed bz2 archive: {tar_bz2}")
+            except FileNotFoundError:
+                pass
+            except Exception as e:
+                self.logger.warning(f"Cleanup issue with {tar_bz2}: {e}")
         else:
-            self.logger.info("Skipping cleanup of archives per configuration.")
+            self.logger.info("Preserving both tar and bz2 archives per configuration.")
 
-        self.logger.info(f"[DONE] Step 00 complete.")
+        self.logger.info("[DONE] Step 00 complete.")
 
 
 if __name__ == "__main__":
-    step = Step00AcquireMusicbrainz()
-    step.run()
+    Step00AcquireMusicbrainz().run()

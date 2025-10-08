@@ -5,78 +5,97 @@ Respects ROW_LIMIT if set in config.py and provides progress feedback.
 
 from base_step import BaseStep
 import csv
+import pandas as pd
+from pathlib import Path
 from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE
-from utils import make_progress_bar
+
 
 class Step01AuditRaw(BaseStep):
     def __init__(self, name="Step 01: Audit Raw"):
-        super().__init__(name="Step 01: Audit Raw")
+        super().__init__(name=name)
+        self.output_summary = MB_RAW_DIR / "audit_summary.csv"
 
+    # ------------------------------------------------------------------
     def run(self):
-        raw_files = sorted([
-            f for f in MB_RAW_DIR.iterdir()
-            if f.name in TSV_WHITELIST
-        ])
+        # Normalize whitelist to allow entries with or without ".tsv"
+        tsv_whitelist = {
+            Path(f).stem.lower()  # e.g. "artist" from "artist.tsv"
+            for f in TSV_WHITELIST
+        }
 
-        if not raw_files:
-            self.logger.warning(f"⚠️  No whitelisted files found in {MB_RAW_DIR}")
+        raw_files = [
+            f for f in MB_RAW_DIR.glob("*.tsv")
+            if f.stem.lower() in tsv_whitelist
+        ]
+
+        # 🧠 Skip if audit summary already exists
+        if self.output_summary.exists():
+            self.logger.info(f"✅ Audit summary already exists at {self.output_summary}. Skipping Step 01.")
             return
 
-        self.logger.info(f"🧾 Auditing {len(raw_files)} raw TSV files from {MB_RAW_DIR} (ROW_LIMIT={ROW_LIMIT or '∞'})")
+        if not raw_files:
+            self.logger.warning(f"⚠️ No whitelisted TSVs found in {MB_RAW_DIR}. Did Step 00 run?")
+            return
+
+        self.logger.info(
+            f"🧾 Auditing {len(raw_files)} TSVs in {MB_RAW_DIR} "
+            f"(ROW_LIMIT={ROW_LIMIT or '∞'})"
+        )
 
         csv.field_size_limit(1_000_000)
+        results = []
 
-        for tsv_path in self.progress_iter(raw_files, desc="Auditing TSVs"):
+        # ------------------------------------------------------------------
+        for tsv_path in self.progress_iter(raw_files, desc="Auditing TSVs", unit="file"):
+            row_count = 0
+            col_count = 0
+            error_flag = None
+
             try:
-                # Read header and compute total rows first
                 with open(tsv_path, encoding="utf-8", errors="replace") as f:
                     reader = csv.reader(f, delimiter="\t")
-                    try:
-                        headers = next(reader)
-                    except StopIteration:
-                        self.logger.warning(f"{tsv_path.name}: empty file — skipping.")
-                        continue
+                    header = next(reader, [])
+                    col_count = len(header)
 
-                    # Compute total rows safely (without leaving file open twice)
-                    total_rows = sum(1 for _ in f)
-                    effective_limit = ROW_LIMIT or total_rows
-                    row_count = 0
-
-                # Reopen file for main iteration (fresh handle)
-                with open(tsv_path, encoding="utf-8", errors="replace") as f:
-                    reader = csv.reader(f, delimiter="\t")
-                    next(reader)  # skip header again
-
-                    bar_desc = tsv_path.name[:30]
-                    with make_progress_bar(
-                        total=min(total_rows, effective_limit),
-                        desc=bar_desc,
-                        leave=False,
-                        unit="rows"
-                    ) as bar:
-                        for i, row in enumerate(reader, start=1):
-                            if ROW_LIMIT and i > ROW_LIMIT:
-                                self.logger.info(
-                                    f"[ROW_LIMIT] Stopping early after {ROW_LIMIT:,} rows ({tsv_path.name})"
-                                )
-                                break
-
-                            row_count += 1
-                            bar.update(1)
-
-                msg = (
-                    f"{tsv_path.name}: {row_count:,} rows (limited by ROW_LIMIT={ROW_LIMIT})"
-                    if ROW_LIMIT
-                    else f"{tsv_path.name}: {row_count:,} rows, {len(headers)} columns"
-                )
-                self.logger.info(msg)
+                    for row in self.progress_iter(reader, desc=tsv_path.name[:30], unit="row", leave=False):
+                        row_count += 1
+                        if ROW_LIMIT and row_count >= ROW_LIMIT:
+                            self.logger.info(
+                                f"[ROW_LIMIT] Stopping early after {ROW_LIMIT:,} rows ({tsv_path.name})"
+                            )
+                            break
 
             except Exception as e:
-                self.logger.error(f"❌ Error reading {tsv_path.name}: {e}")
+                error_flag = str(e)
+                self.logger.warning(f"❌ Error reading {tsv_path.name}: {e}")
 
-        self.logger.info(f"[DONE] Audited {len(raw_files)} TSV files → {MB_RAW_DIR}")
+            results.append(
+                {
+                    "filename": tsv_path.name,
+                    "rows": row_count,
+                    "cols": col_count,
+                    "error": error_flag or "",
+                }
+            )
+
+        # ------------------------------------------------------------------
+        df = pd.DataFrame(results)
+        df.to_csv(self.output_summary, index=False, encoding="utf-8")
+        self.logger.info(f"✅ Audit summary written to {self.output_summary}")
+
+        if DEBUG_MODE:
+            self.logger.info("🔎 Audit preview:")
+            self.logger.info(df.head().to_string())
+
+        metrics = {
+            "files_audited": len(df),
+            "files_with_errors": int(df["error"].astype(bool).sum()),
+            "rows_total": int(df["rows"].sum()),
+        }
+        self.write_metrics("step01_audit_raw", metrics)
+        self.logger.info(f"📊 Metrics logged: {metrics}")
+        self.logger.info("✅ Step 01 complete.")
 
 
 if __name__ == "__main__":
-    step = Step01AuditRaw()
-    step.run()
+    Step01AuditRaw().run()
