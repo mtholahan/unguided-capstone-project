@@ -62,6 +62,11 @@ logs/*.bak
 scripts/audit_reports
 
 # =========================
+# scripts/logs
+# =========================
+scripts/logs
+
+# =========================
 # Notebooks & Slides
 # =========================
 notebooks/*_output.ipynb

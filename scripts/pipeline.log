@@ -1,0 +1,165 @@
+2025-10-05 16:42:18,213 - Initialized step: Step 02: Cleanse TSV
+2025-10-05 16:42:18,213 - Logging to: C:\Projects\unguided-capstone-project\scripts\pipeline.log
+2025-10-05 16:42:58,236 - 🧹 Cleansing 6 TSV files from D:\Capstone_Staging\data\musicbrainz_raw (ROW_LIMIT=1000000)
+2025-10-05 16:43:00,933 - artist: processed 100,000 rows
+2025-10-05 16:43:01,657 - artist: processed 200,000 rows
+2025-10-05 16:43:02,374 - artist: processed 300,000 rows
+2025-10-05 16:43:03,086 - artist: processed 400,000 rows
+2025-10-05 16:43:03,826 - artist: processed 500,000 rows
+2025-10-05 16:43:04,589 - artist: processed 600,000 rows
+2025-10-05 16:43:05,367 - artist: processed 700,000 rows
+2025-10-05 16:43:06,117 - artist: processed 800,000 rows
+2025-10-05 16:43:06,866 - artist: processed 900,000 rows
+2025-10-05 16:43:07,907 - artist: processed 1,000,000 rows
+2025-10-05 16:43:07,908 - [ROW_LIMIT] Stopping after 1,000,000 rows (artist)
+2025-10-05 16:43:07,952 - ✅ Cleaned: artist → artist.tsv (999,998 rows, 2 skipped)
+2025-10-05 16:43:10,587 - artist_credit: processed 100,000 rows
+2025-10-05 16:43:11,079 - artist_credit: processed 200,000 rows
+2025-10-05 16:43:11,597 - artist_credit: processed 300,000 rows
+2025-10-05 16:43:12,078 - artist_credit: processed 400,000 rows
+2025-10-05 16:43:12,599 - artist_credit: processed 500,000 rows
+2025-10-05 16:43:13,115 - artist_credit: processed 600,000 rows
+2025-10-05 16:43:13,728 - artist_credit: processed 700,000 rows
+2025-10-05 16:43:14,257 - artist_credit: processed 800,000 rows
+2025-10-05 16:43:14,756 - artist_credit: processed 900,000 rows
+2025-10-05 16:43:15,319 - artist_credit: processed 1,000,000 rows
+2025-10-05 16:43:15,319 - [ROW_LIMIT] Stopping after 1,000,000 rows (artist_credit)
+2025-10-05 16:43:15,321 - ✅ Cleaned: artist_credit → artist_credit.tsv (1,000,000 rows, 0 skipped)
+2025-10-05 16:43:19,388 - release: processed 100,000 rows
+2025-10-05 16:43:20,054 - release: processed 200,000 rows
+2025-10-05 16:43:20,687 - release: processed 300,000 rows
+2025-10-05 16:43:21,336 - release: processed 400,000 rows
+2025-10-05 16:43:22,007 - release: processed 500,000 rows
+2025-10-05 16:43:22,653 - release: processed 600,000 rows
+2025-10-05 16:43:23,328 - release: processed 700,000 rows
+2025-10-05 16:43:23,967 - release: processed 800,000 rows
+2025-10-05 16:43:24,652 - release: processed 900,000 rows
+2025-10-05 16:43:25,317 - release: processed 1,000,000 rows
+2025-10-05 16:43:25,317 - [ROW_LIMIT] Stopping after 1,000,000 rows (release)
+2025-10-05 16:43:25,317 - ✅ Cleaned: release → release.tsv (1,000,000 rows, 0 skipped)
+2025-10-05 16:43:28,052 - release_group: processed 100,000 rows
+2025-10-05 16:43:28,567 - release_group: processed 200,000 rows
+2025-10-05 16:43:29,058 - release_group: processed 300,000 rows
+2025-10-05 16:43:29,566 - release_group: processed 400,000 rows
+2025-10-05 16:43:30,065 - release_group: processed 500,000 rows
+2025-10-05 16:43:30,561 - release_group: processed 600,000 rows
+2025-10-05 16:43:31,063 - release_group: processed 700,000 rows
+2025-10-05 16:43:31,562 - release_group: processed 800,000 rows
+2025-10-05 16:43:32,078 - release_group: processed 900,000 rows
+2025-10-05 16:43:32,614 - release_group: processed 1,000,000 rows
+2025-10-05 16:43:32,615 - [ROW_LIMIT] Stopping after 1,000,000 rows (release_group)
+2025-10-05 16:43:32,616 - ✅ Cleaned: release_group → release_group.tsv (1,000,000 rows, 0 skipped)
+2025-10-05 16:43:32,619 - ✅ Cleaned: release_group_secondary_type → release_group_secondary_type.tsv (11 rows, 0 skipped)
+2025-10-05 16:43:33,036 - release_group_secondary_type_join: processed 100,000 rows
+2025-10-05 16:43:33,266 - release_group_secondary_type_join: processed 200,000 rows
+2025-10-05 16:43:34,324 - release_group_secondary_type_join: processed 300,000 rows
+2025-10-05 16:43:34,559 - release_group_secondary_type_join: processed 400,000 rows
+2025-10-05 16:43:34,809 - release_group_secondary_type_join: processed 500,000 rows
+2025-10-05 16:43:35,053 - release_group_secondary_type_join: processed 600,000 rows
+2025-10-05 16:43:35,292 - release_group_secondary_type_join: processed 700,000 rows
+2025-10-05 16:43:35,537 - release_group_secondary_type_join: processed 800,000 rows
+2025-10-05 16:43:35,775 - ✅ Cleaned: release_group_secondary_type_join → release_group_secondary_type_join.tsv (879,859 rows, 0 skipped)
+2025-10-05 16:43:35,776 - [DONE] Cleansed 6 TSV files → D:\Capstone_Staging\data\musicbrainz_raw\cleansed
+2025-10-05 16:43:35,777 - Found release file: D:\Capstone_Staging\data\musicbrainz_raw\cleansed\release.tsv
+2025-10-05 16:43:39,989 - Assigned official MusicBrainz release headers (14 columns).
+2025-10-05 16:43:39,989 - Columns in release file: ['id', 'gid', 'name', 'artist_credit', 'release_group', 'status', 'packaging', 'language', 'script', 'barcode', 'comment', 'edits_pending', 'quality', 'last_updated']
+2025-10-05 16:43:46,819 - ✅ Added release_year → release_enriched.tsv (coverage=89.7%)
+2025-10-05 16:43:46,835 - 🔎 Validation: First 3 enriched rows:
+2025-10-05 16:43:46,835 -    {'id': 9, 'release_year': 2010}
+2025-10-05 16:43:46,835 -    {'id': 10, 'release_year': 2010}
+2025-10-05 16:43:46,843 -    {'id': 3257193, 'release_year': 2021}
+2025-10-06 12:51:38,311 - Initialized step: Step 02: Cleanse TSV
+2025-10-06 12:51:38,311 - Logging to: C:\Projects\unguided-capstone-project\scripts\pipeline.log
+2025-10-06 12:52:44,563 - 🧹 Cleansing 6 TSV files from D:\Capstone_Staging\data\musicbrainz_raw (ROW_LIMIT=10000)
+2025-10-06 12:52:46,565 - [ROW_LIMIT] Stopping after 10,000 rows (artist)
+2025-10-06 12:52:46,572 - ✅ Cleaned: artist → artist.tsv (10,000 rows, 0 skipped)
+2025-10-06 12:52:48,483 - [ROW_LIMIT] Stopping after 10,000 rows (artist_credit)
+2025-10-06 12:52:48,499 - ✅ Cleaned: artist_credit → artist_credit.tsv (10,000 rows, 0 skipped)
+2025-10-06 12:52:51,836 - [ROW_LIMIT] Stopping after 10,000 rows (release)
+2025-10-06 12:52:51,836 - ✅ Cleaned: release → release.tsv (10,000 rows, 0 skipped)
+2025-10-06 12:52:54,030 - [ROW_LIMIT] Stopping after 10,000 rows (release_group)
+2025-10-06 12:52:54,045 - ✅ Cleaned: release_group → release_group.tsv (10,000 rows, 0 skipped)
+2025-10-06 12:52:54,061 - ✅ Cleaned: release_group_secondary_type → release_group_secondary_type.tsv (11 rows, 0 skipped)
+2025-10-06 12:52:54,265 - [ROW_LIMIT] Stopping after 10,000 rows (release_group_secondary_type_join)
+2025-10-06 12:52:54,273 - ✅ Cleaned: release_group_secondary_type_join → release_group_secondary_type_join.tsv (10,000 rows, 0 skipped)
+2025-10-06 12:52:54,275 - [DONE] Cleansed 6 TSV files → D:\Capstone_Staging\data\musicbrainz_raw\cleansed
+2025-10-06 12:52:54,276 - Found release file: D:\Capstone_Staging\data\musicbrainz_raw\cleansed\release.tsv
+2025-10-06 12:52:54,937 - Assigned official MusicBrainz release headers (14 columns).
+2025-10-06 12:52:54,937 - Columns in release file: ['id', 'gid', 'name', 'artist_credit', 'release_group', 'status', 'packaging', 'language', 'script', 'barcode', 'comment', 'edits_pending', 'quality', 'last_updated']
+2025-10-06 12:52:55,289 - ✅ Added release_year → release_enriched.tsv (coverage=94.0%)
+2025-10-06 12:52:55,291 - 🔎 Validation: First 3 enriched rows:
+2025-10-06 12:52:55,359 -    {'id': 9, 'release_year': 2010}
+2025-10-06 12:52:55,359 -    {'id': 10, 'release_year': 2010}
+2025-10-06 12:52:55,374 -    {'id': 3257193, 'release_year': 2021}
+2025-10-06 14:39:43,234 - Initialized step: Step 02: Cleanse TSV
+2025-10-06 14:39:43,234 - Logging to: C:\Projects\unguided-capstone-project\scripts\pipeline.log
+2025-10-07 13:34:33,064 - Initialized step: Step 02: Cleanse TSV
+2025-10-07 13:34:33,110 - Logging to: C:\Projects\unguided-capstone-project\scripts\pipeline.log
+2025-10-07 13:34:33,110 - 🧹 Cleansing 6 TSV files from D:\Capstone_Staging\data\musicbrainz_raw (ROW_LIMIT=1000000)
+2025-10-07 13:34:35,688 - artist: processed 100,000 rows
+2025-10-07 13:34:36,360 - artist: processed 200,000 rows
+2025-10-07 13:34:37,016 - artist: processed 300,000 rows
+2025-10-07 13:34:37,704 - artist: processed 400,000 rows
+2025-10-07 13:34:38,438 - artist: processed 500,000 rows
+2025-10-07 13:34:39,172 - artist: processed 600,000 rows
+2025-10-07 13:34:39,876 - artist: processed 700,000 rows
+2025-10-07 13:34:40,657 - artist: processed 800,000 rows
+2025-10-07 13:34:41,376 - artist: processed 900,000 rows
+2025-10-07 13:34:42,141 - artist: processed 1,000,000 rows
+2025-10-07 13:34:42,141 - [ROW_LIMIT] Stopping after 1,000,000 rows (artist)
+2025-10-07 13:34:42,141 - ✅ Cleaned: artist → artist.tsv (999,998 rows, 2 skipped)
+2025-10-07 13:34:44,892 - artist_credit: processed 100,000 rows
+2025-10-07 13:34:45,375 - artist_credit: processed 200,000 rows
+2025-10-07 13:34:45,845 - artist_credit: processed 300,000 rows
+2025-10-07 13:34:46,329 - artist_credit: processed 400,000 rows
+2025-10-07 13:34:46,797 - artist_credit: processed 500,000 rows
+2025-10-07 13:34:47,282 - artist_credit: processed 600,000 rows
+2025-10-07 13:34:47,750 - artist_credit: processed 700,000 rows
+2025-10-07 13:34:48,228 - artist_credit: processed 800,000 rows
+2025-10-07 13:34:48,719 - artist_credit: processed 900,000 rows
+2025-10-07 13:34:49,202 - artist_credit: processed 1,000,000 rows
+2025-10-07 13:34:49,202 - [ROW_LIMIT] Stopping after 1,000,000 rows (artist_credit)
+2025-10-07 13:34:49,203 - ✅ Cleaned: artist_credit → artist_credit.tsv (1,000,000 rows, 0 skipped)
+2025-10-07 13:34:53,359 - release: processed 100,000 rows
+2025-10-07 13:34:53,953 - release: processed 200,000 rows
+2025-10-07 13:34:54,547 - release: processed 300,000 rows
+2025-10-07 13:34:55,155 - release: processed 400,000 rows
+2025-10-07 13:34:55,769 - release: processed 500,000 rows
+2025-10-07 13:34:56,360 - release: processed 600,000 rows
+2025-10-07 13:34:56,955 - release: processed 700,000 rows
+2025-10-07 13:34:57,563 - release: processed 800,000 rows
+2025-10-07 13:34:58,179 - release: processed 900,000 rows
+2025-10-07 13:34:58,828 - release: processed 1,000,000 rows
+2025-10-07 13:34:58,828 - [ROW_LIMIT] Stopping after 1,000,000 rows (release)
+2025-10-07 13:34:58,828 - ✅ Cleaned: release → release.tsv (1,000,000 rows, 0 skipped)
+2025-10-07 13:35:01,726 - release_group: processed 100,000 rows
+2025-10-07 13:35:02,222 - release_group: processed 200,000 rows
+2025-10-07 13:35:02,700 - release_group: processed 300,000 rows
+2025-10-07 13:35:03,172 - release_group: processed 400,000 rows
+2025-10-07 13:35:03,657 - release_group: processed 500,000 rows
+2025-10-07 13:35:04,172 - release_group: processed 600,000 rows
+2025-10-07 13:35:04,673 - release_group: processed 700,000 rows
+2025-10-07 13:35:05,172 - release_group: processed 800,000 rows
+2025-10-07 13:35:05,656 - release_group: processed 900,000 rows
+2025-10-07 13:35:06,165 - release_group: processed 1,000,000 rows
+2025-10-07 13:35:06,165 - [ROW_LIMIT] Stopping after 1,000,000 rows (release_group)
+2025-10-07 13:35:06,165 - ✅ Cleaned: release_group → release_group.tsv (1,000,000 rows, 0 skipped)
+2025-10-07 13:35:06,165 - ✅ Cleaned: release_group_secondary_type → release_group_secondary_type.tsv (11 rows, 0 skipped)
+2025-10-07 13:35:06,547 - release_group_secondary_type_join: processed 100,000 rows
+2025-10-07 13:35:06,766 - release_group_secondary_type_join: processed 200,000 rows
+2025-10-07 13:35:07,219 - release_group_secondary_type_join: processed 300,000 rows
+2025-10-07 13:35:07,438 - release_group_secondary_type_join: processed 400,000 rows
+2025-10-07 13:35:07,672 - release_group_secondary_type_join: processed 500,000 rows
+2025-10-07 13:35:07,892 - release_group_secondary_type_join: processed 600,000 rows
+2025-10-07 13:35:08,125 - release_group_secondary_type_join: processed 700,000 rows
+2025-10-07 13:35:08,367 - release_group_secondary_type_join: processed 800,000 rows
+2025-10-07 13:35:08,548 - ✅ Cleaned: release_group_secondary_type_join → release_group_secondary_type_join.tsv (879,859 rows, 0 skipped)
+2025-10-07 13:35:08,548 - [DONE] Cleansed 6 TSV files → D:\Capstone_Staging\data\musicbrainz_raw\cleansed
+2025-10-07 13:35:08,553 - Found release file: D:\Capstone_Staging\data\musicbrainz_raw\cleansed\release.tsv
+2025-10-07 13:35:13,031 - Assigned official MusicBrainz release headers (14 columns).
+2025-10-07 13:35:13,031 - Columns in release file: ['id', 'gid', 'name', 'artist_credit', 'release_group', 'status', 'packaging', 'language', 'script', 'barcode', 'comment', 'edits_pending', 'quality', 'last_updated']
+2025-10-07 13:35:20,094 - ✅ Added release_year → release_enriched.tsv (coverage=89.7%)
+2025-10-07 13:35:20,094 - 🔎 Validation: First 3 enriched rows:
+2025-10-07 13:35:20,203 -    {'id': 9, 'release_year': 2010}
+2025-10-07 13:35:20,203 -    {'id': 10, 'release_year': 2010}
+2025-10-07 13:35:20,203 -    {'id': 3257193, 'release_year': 2021}

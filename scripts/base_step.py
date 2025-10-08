@@ -19,7 +19,7 @@ from utils import make_progress_bar
 # ============================================================
 # 🪶 Module-level logger setup (shared by main.py and BaseStep)
 # ============================================================
-def setup_logger(name="Pipeline", log_dir="D:/Capstone_Staging/logs"):
+def setup_logger(name="Pipeline", log_dir="C:/Projects/unguided-capstone-project/logs"):
     """
     Shared logger factory for the orchestrator (main.py) and individual Steps.
     Mirrors BaseStep.setup_logger for unified formatting.
