@@ -46,6 +46,31 @@ Central location for runtime tuning and debugging flags:
 - `GOLDEN_TEST_MODE`, `GOLDEN_TEST_SIZE` – benchmark/testing flags
 - `STEP_METRICS` – runtime metrics store
 
+## 🪜 Phase 1 Magic Number Migration Table
+
+| Constant Name             | Default Value | Source Script(s)                                             | Purpose / Usage                              | Notes                                       |
+| ------------------------- | ------------- | ------------------------------------------------------------ | -------------------------------------------- | ------------------------------------------- |
+| `DEFAULT_RETRY_COUNT`     | `2`           | `main.py`                                                    | Retry limit for resumable steps              | Applies to lightweight loops and retries    |
+| `RETRY_DELAY_SECONDS`     | `5`           | `main.py`                                                    | Delay between retry attempts                 | Adjustable per environment                  |
+| `DOWNLOAD_BUFFER_SIZE`    | `1024`        | `step_00_acquire_musicbrainz.py`                             | Chunk size for streamed file downloads       | Matches MB dump streaming chunk size        |
+| `MAX_RETRY_ATTEMPTS`      | `10`          | `step_00_acquire_musicbrainz.py`                             | Download retry ceiling                       | Used for MusicBrainz acquisition robustness |
+| `GUID_SAMPLE_LIMIT`       | `6`           | `step_03b_rehydrate_guids.py`                                | Sample size for GUID rehydration test output | Used in local validation prints             |
+| `GUID_RETRY_LIMIT`        | `40`          | `step_03b_rehydrate_guids.py`                                | Max allowed missing GUIDs before halt        | Runtime validation                          |
+| `JOIN_SAMPLE_LIMIT`       | `100`         | `step_03b_rehydrate_guids.py`, `step_04_mb_full_join.py`     | Row limit for join audits                    | Prevents large-memory test sets             |
+| `JOIN_ITERATION_LIMIT`    | `5`           | `step_04_mb_full_join.py`                                    | Max join retry attempts                      | For partial join fallback                   |
+| `JOIN_TOLERANCE`          | `0.001`       | `step_04_mb_full_join.py`                                    | Float precision tolerance for join scoring   | Replace inline constants                    |
+| `FILTER_THRESHOLD`        | `0.02`        | `step_05_filter_soundtracks_enhanced.py`                     | Minimum match score for soundtrack inclusion | Data refinement control                     |
+| `FILTER_SAMPLE_SIZE`      | `42`          | `step_05_filter_soundtracks_enhanced.py`                     | Random sample size for debugging subsets     | For diagnostic previews                     |
+| `SOUNDTRACK_SUBSET_LIMIT` | `100`         | `step_05_filter_soundtracks_enhanced.py`                     | Max rows for subset export                   | Used in partial parquet outputs             |
+| `TMDB_RESULT_LIMIT`       | `1000`        | `step_06_fetch_tmdb.py`                                      | Number of candidate titles to query          | Reduces API load                            |
+| `TMDB_PAGE_SIZE`          | `500`         | `step_06_fetch_tmdb.py`                                      | Max results per TMDb page                    | Dependent on TMDb API                       |
+| `TMDB_RETRY_DELAY`        | `20`          | `step_06_fetch_tmdb.py`                                      | Pause between TMDb API calls                 | Respect rate limit                          |
+| `TMDB_TOTAL_LIMIT`        | `10000`       | `step_06_fetch_tmdb.py`                                      | Hard stop for cumulative API fetches         | Guardrail for runaway loops                 |
+| `AUDIT_SAMPLE_LIMIT`      | `30`          | `step_01_audit_raw.py`, `step_03_util_check_tsv_structure.py` | Sample size for audit reports                | Already partially implemented               |
+| `CLEANSE_SAMPLE_LIMIT`    | `20`          | `step_02_cleanse_tsv.py`                                     | Max sample size for cleaning checks          | Avoids full TSV scans                       |
+
+
+
 ------
 
 ### 🌐 **5. External Services**

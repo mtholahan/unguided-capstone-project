@@ -4,7 +4,26 @@
 
 ---
 
+- ### Status Note – 2025-10-08  
+  **Branch:** step5-refactor  
+  **Focus:** Logging and Progress Refactor (Phase 2)  
+
+  ✅ Completed:
+  - Integrated PowerShell-safe live console logging in `BaseStep`.
+  - Added Config.get() for flexible dictionary-style access.
+  - Verified Step03B (`rehydrate_guids`) full run with schema detection and metrics output.
+  - Standardized `self.setup_logger()` usage across all steps.
+  - Confirmed cross-shell logging consistency (VS Code + PowerShell 7).
+
+  🔄 Next session:
+  - Begin Step 04 refactor (MusicBrainz full join).
+  - Validate coverage reporting for enriched outputs.
+  - Re-run full pipeline (Steps 00–03B) with unified progress/logs.
+
+---
+
 ## 🎯 Current Focus
+
 **Milestone:** Step 5 – Local ETL Prototype (Steps 00–06)  
 **Objective:** Deliver mentor-ready local ETL pipeline with automation, OOP design, and logging.  
 **Status:** ✅ Ready for mentor submission (`step5-submission` branch pushed to GitHub).  
@@ -74,7 +93,8 @@ C:\Projects\unguided-capstone-project
 - All scripts refactored for OOP inheritance via `BaseStep` class.
 - TMDb API functions modularized for re-use in `step_06` and `step_10`.
 - Logs verified to capture run metadata (start/end time, row counts, file writes).
-- Current ETL output verified through Parquet export.
+- Current ETL output verified through Parquet export.-
+- BaseStep logging now streams live to console with immediate flush (PowerShell-safe).
 
 ---
 

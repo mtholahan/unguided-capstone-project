@@ -2,30 +2,14 @@
 
 From **PowerShell** or **Command Prompt**:
 
-```
+```bash
 cd C:\Projects\unguided-capstone-project
-# load environment variables
+# Load environment variables
 .\setup_env.ps1
-# then spawn Visual Code
+# Activate the virtual environment
+.\.venv\Scripts\Activate.ps1
+# Now spawn Visual Code
 code .
-```
-
-✅ That opens VS Code directly in your project root.
- If you’re already in VS Code, just choose:
- **File → Open Folder → C:\Projects\unguided-capstone-project**
-
-Also, if going to run code outside of Visual Code, say, with PowerShell 7, then make sure you load the venv there too!
-
-From PowerShell, anchor into the project folder
-
-```powershell
-cd C:\Projects\unguided-capstone-project\scripts
-```
-
-Then load the venv:
-
-```powershell
-C:\Projects\unguided-capstone-project> .\.venv\Scripts\Activate.ps1
 ```
 
 
