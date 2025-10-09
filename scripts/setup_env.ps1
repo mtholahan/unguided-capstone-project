@@ -64,9 +64,9 @@ if (Test-Path $ConfigPath) {
 }
 
 # --- 6️⃣ Define environment variables ---
-$env:DISCOGS_CONSUMER_KEY     = "<woTphKEaoIPOYHLyYhlp>"
-$env:DISCOGS_CONSUMER_SECRET  = "<ODdqgEESNliJmkOHZtsEqxurdzcgNyRL>"
-$env:TMDB_API_KEY             = "<8289cf63ae0018475953afaf51ce5464>"
+$env:DISCOGS_CONSUMER_KEY     = "woTphKEaoIPOYHLyYhlp"
+$env:DISCOGS_CONSUMER_SECRET  = "ODdqgEESNliJmkOHZtsEqxurdzcgNyRL"
+$env:TMDB_API_KEY             = "8289cf63ae0018475953afaf51ce5464"
 $env:LOG_LEVEL                = "INFO"
 $env:ENV                      = "dev"
 

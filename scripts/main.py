@@ -1,46 +1,54 @@
 """
-main.py — Pipeline Orchestrator (Refactored & Polished)
--------------------------------------------------------
-Executes all pipeline Steps sequentially (03B → 10B).
-Handles logging, timing, resume capability, and final
-metrics rollup into pipeline_metrics.csv.
+main.py — Discogs → TMDB Pipeline Orchestrator (v3)
+---------------------------------------------------
+Executes all pipeline steps sequentially.
+Supports resume, metrics, and checkpointing.
 """
 
-import time, json, traceback
+import time
+import json
+import traceback
 from datetime import datetime
 from pathlib import Path
-import pandas as pd
-from config import DEBUG_MODE, ROW_LIMIT
-from base_step import setup_logger
 from importlib import import_module
+from dotenv import load_dotenv
+import pandas as pd
+import os
+
+from base_step import setup_logger
+from config import LOG_LEVEL, DATA_DIR
 
 # -------------------------------------------------------------------------
-# Configuration
+# Load .env automatically
+# -------------------------------------------------------------------------
+load_dotenv()
+
+# -------------------------------------------------------------------------
+# Pipeline configuration
 # -------------------------------------------------------------------------
 STEPS = [
-    "step_03b_rehydrate_guids",
-    "step_04_mb_full_join",
-    "step_05_filter_soundtracks_enhanced",
-    "step_06_fetch_tmdb",
-    "step_07_prepare_tmdb_input",
-    "step_08_match_instrumented",
-    "step_09_apply_rescues",
-    "step_10_enrich_tmdb",
-    "step_10b_coverage_audit",
+    "step_01_acquire_discogs",
+    # "step_02_fetch_tmdb",
+    # "step_03_prepare_tmdb_input",
+    # "step_04_match_instrumented",
+    # "step_05_apply_rescues",
+    # "step_06_enrich_tmdb",
+    # "step_07_coverage_audit",
 ]
-CHECKPOINT_FILE = Path("D:/Capstone_Staging/pipeline_checkpoint.json")
-METRICS_DIR = Path("D:/Capstone_Staging/metrics")
+
+CHECKPOINT_FILE = Path(DATA_DIR) / "pipeline_checkpoint.json"
+METRICS_DIR = Path(DATA_DIR) / "metrics"
 METRICS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # -------------------------------------------------------------------------
-# Build step objects dynamically
+# Dynamic step loader
 # -------------------------------------------------------------------------
 def build_steps():
+    """Import all modules dynamically and instantiate step classes."""
     step_objs = []
     for mod_name in STEPS:
         module = import_module(mod_name)
-        cls_name = "".join([s.capitalize() for s in mod_name.split("_")[1:]])
         step_class = next(
             (getattr(module, c) for c in dir(module) if c.lower().startswith("step")), None
         )
@@ -50,7 +58,7 @@ def build_steps():
 
 
 # -------------------------------------------------------------------------
-# Helper: checkpoint + metrics rollup
+# Checkpoint & metrics helpers
 # -------------------------------------------------------------------------
 def save_checkpoint(step_name, success=True):
     data = {"last_step": step_name, "timestamp": datetime.now().isoformat(), "success": success}
@@ -58,7 +66,7 @@ def save_checkpoint(step_name, success=True):
 
 
 def rollup_metrics(logger, step_times):
-    """Aggregate all step JSON metrics into pipeline_metrics.csv"""
+    """Consolidate per-step metrics into one CSV."""
     rows = []
     for f in METRICS_DIR.glob("step*.json"):
         try:
@@ -78,46 +86,43 @@ def rollup_metrics(logger, step_times):
 
 
 # -------------------------------------------------------------------------
-# Main orchestration
+# Orchestration Entry Point
 # -------------------------------------------------------------------------
 def main(resume_from=None):
     logger = setup_logger("Pipeline")
     start_all = time.time()
 
-    logger.info("🚀 Starting Full Pipeline Run")
-    logger.info(f"🧭 Debug Mode: {DEBUG_MODE}")
-    logger.info(f"📏 Row Limit: {ROW_LIMIT or '∞'}")
-    logger.info(f"📂 Metrics Directory: {METRICS_DIR}")
-    if resume_from:
-        logger.info(f"🔁 Resuming from step: {resume_from}")
+    logger.info("🚀 Starting Discogs→TMDB Pipeline")
+    logger.info(f"📂 Data dir: {DATA_DIR}")
+    logger.info(f"🔧 Log level: {LOG_LEVEL}")
 
     step_times = {}
     steps = build_steps()
 
     resume_mode = bool(resume_from)
     resume_from_norm = resume_from.lower().strip() if resume_from else None
-    resume_triggered = False
+    resume_triggered = not resume_mode  # start from beginning if no resume flag
 
     for step in steps:
         step_name = step.__class__.__name__
-        short_name = step_name.replace("Step", "").strip().lower()
+        short_name = step_name.replace("Step", "").lower()
 
-        # Resume logic
-        if resume_mode and not resume_triggered:
+        # Resume control
+        if not resume_triggered:
             if resume_from_norm in step_name.lower() or resume_from_norm in short_name:
                 resume_triggered = True
-                logger.info(f"🔁 Resuming pipeline from: {step_name}")
+                logger.info(f"🔁 Resuming from: {step_name}")
             else:
                 logger.info(f"⏭️ Skipping {step_name} (before resume point)")
                 continue
 
-        # Execute step
+        # Run step
         logger.info(f"🚩 Running {step_name}")
         t0 = time.time()
         try:
             step.run()
             duration = round(time.time() - t0, 2)
-            step_times[f"step{step_name.split(':')[0][-2:]}"] = duration
+            step_times[step_name] = duration
             logger.info(f"✅ Completed {step_name} in {duration:.2f}s")
             save_checkpoint(step_name, success=True)
         except Exception as e:
@@ -127,17 +132,15 @@ def main(resume_from=None):
             save_checkpoint(step_name, success=False)
             break
 
-    # ---------------------------------------------------------------------
-    # Summary + Metrics rollup
-    # ---------------------------------------------------------------------
+    # Summary
     total_runtime = round(time.time() - start_all, 2)
     logger.info("🧾 Pipeline Summary")
     for step, duration in step_times.items():
-        logger.info(f"   ⏱ {step:<25} {duration:>6.2f}s")
+        logger.info(f"   ⏱ {step:<35} {duration:>6.2f}s")
     logger.info(f"🏁 Total Runtime: {total_runtime:.2f}s")
 
     rollup_metrics(logger, step_times)
-    logger.info("✅ Pipeline completed successfully (refactored main.py)")
+    logger.info("✅ Pipeline completed successfully")
     logger.info("-" * 60)
 
 
@@ -145,7 +148,7 @@ def main(resume_from=None):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Run the ETL pipeline orchestrator")
+    parser = argparse.ArgumentParser(description="Run the Discogs→TMDB ETL pipeline")
     parser.add_argument("--resume", type=str, default=None, help="Step name to resume from")
     args = parser.parse_args()
 

@@ -1,271 +1,101 @@
 """
-Capstone Project Configuration File
-Author: Mark
-Last Updated: Wed, 08-Oct-2025
-
-Centralized configuration for the Unguided Capstone ETL pipeline.
-Organized into logical sections for readability and maintainability.
+config.py v2  —  Unified configuration for Discogs→TMDB pipeline
+Author: Mark Holahan
+Created: 2025-10-09
+Purpose:
+    Replaces MusicBrainz-specific constants with Discogs + TMDB equivalents.
+    Populates progressively as steps 01–07 are refactored.
 """
 
-# ============================================================
-# 1. Imports & Environment Setup
-# ============================================================
-
-import os
 from pathlib import Path
-from dotenv import load_dotenv
-import pprint
+import os
 
-# Load environment variables
-load_dotenv()
 
+# === 1. Core metadata ===
+PROJECT_NAME = "UnguidedCapstone_DiscogsPipeline"
+VERSION = "0.2-dev"
+SOURCE_SYSTEM = "discogs"           # or "tmdb" if context-specific
+ENV = os.getenv("ENV", "dev")
+
+
+# === 2. Directory structure ===
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+
+# Discogs
+DISCOGS_RAW_DIR = DATA_DIR / "discogs_raw"
+DISCOGS_SUMMARY_PATH = DATA_DIR / "discogs_summary.tsv"
+
+# TMDB
+TMDB_RAW_DIR = DATA_DIR / "tmdb_raw"
+TMDB_OUTPUT_DIR = DATA_DIR / "tmdb_enriched"
+
+# Logs / temp
+LOG_DIR = BASE_DIR / "logs"
+TMP_DIR = BASE_DIR / "tmp"
+for d in [DATA_DIR, DISCOGS_RAW_DIR, TMDB_RAW_DIR, TMDB_OUTPUT_DIR, LOG_DIR, TMP_DIR]:
+    d.mkdir(parents=True, exist_ok=True)
+
+# === 3. API performance tuning ===
+API_TIMEOUT = 10                # seconds before aborting an API call
+RETRY_BACKOFF = 2.0             # seconds between retry attempts (multiplied by attempt count)
+MAX_THREADS = 4                 # max concurrent API fetch threads
+
+
+# === 4. Discogs API ===
+DISCOGS_API_URL = "https://api.discogs.com/database/search"
+DISCOGS_CONSUMER_KEY = os.getenv("DISCOGS_CONSUMER_KEY", "")
+DISCOGS_CONSUMER_SECRET = os.getenv("DISCOGS_CONSUMER_SECRET", "")
+DISCOGS_USER_AGENT = "UnguidedCapstonePipeline/1.1 +http://localhost"
+DISCOGS_PER_PAGE = 5
+DISCOGS_SLEEP_SEC = 1.5
+DISCOGS_MAX_RETRIES = 3
+
+
+# === 5. TMDB API ===
+TMDB_API_KEY = os.getenv("TMDB_API_KEY", "")
+TMDB_API_URL = "https://api.themoviedb.org/3"
+TMDB_SEARCH_URL = f"{TMDB_API_URL}/search/movie"
+TMDB_DISCOVER_URL = f"{TMDB_API_URL}/discover/movie"
+TMDB_GENRE_URL = f"{TMDB_API_URL}/genre/movie/list"
+TMDB_MAX_RESULTS = 5
+TMDB_SLEEP_SEC = 0.25
+# TMDB rate limiting
+# Approximate safe limits per API key: 40 requests per 10 seconds (4/sec)
+# Set lower (2–3/sec) for stability and to prevent 429 errors.
+TMDB_RATE_LIMIT = float(os.getenv("TMDB_RATE_LIMIT", 3.0))
+
+
+# === 6. Runtime / behavior ===
+API_TIMEOUT = 10                # seconds to wait before aborting a request
+RETRY_BACKOFF = 2.0             # seconds between retries (multiplied by attempt count)
+MAX_THREADS = 4                 # for future parallel fetches
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+SAVE_RAW_JSON = True            # toggle file writes for large batch runs
+GOLDEN_TEST_MODE = True         # 
+
+
+# === 7. Schema / normalization ===
+DISCOGS_FIELDS = [
+    "title", "year", "genre", "style", "country", "label", "id", "uri"
+]
+TMDB_FIELDS = [
+    "id", "title", "release_date", "genres", "popularity", "vote_average"
+]
+JOIN_KEYS = ["title", "year"]  # to be validated in step_04_match_instrumented
+
+
+# === 8. Utility ===
 def print_config_summary():
-    """Pretty-print all uppercase constants for quick debugging."""
-    pprint.pp({k: v for k, v in globals().items() if k.isupper()})
+    print(f"[Config] Environment: {ENV}")
+    print(f"[Config] Data dir: {DATA_DIR}")
+    print(f"[Config] Source: {SOURCE_SYSTEM}")
+    print(f"[Config] Discogs raw → {DISCOGS_RAW_DIR}")
+    print(f"[Config] TMDB output → {TMDB_OUTPUT_DIR}")
+    print(f"[Config] Log level: {LOG_LEVEL}")
 
-# ============================================================
-# 2. Core Paths
-# ============================================================
-
-BASE_DIR = Path(r"D:/Capstone_Staging")
-DATA_DIR = BASE_DIR = Path(r"D:/Capstone_Staging") / "data"
-RESULTS_DIR = DATA_DIR / "results"
-# METRICS_DIR = DATA_DIR / "metrics"
-
-MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
-MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
-TMDB_DIR = DATA_DIR / "tmdb"
-
-SCRIPTS_PATH = Path(r"C:/Projects/unguided-capstone-project/scripts")
-SEVEN_ZIP_PATH = Path(r"C:/Program Files/7-Zip/7z.exe")
-
-# ============================================================
-# 3. Database Settings
-# ============================================================
-
-PG_HOST = "localhost"
-PG_PORT = "5432"
-PG_DBNAME = "musicbrainz"
-PG_USER = "postgres"
-PG_PASSWORD = os.getenv("PG_PASSWORD")
-PG_SCHEMA = "public"
-
-# ============================================================
-# 4. Performance, Toggles & Thresholds
-# ============================================================
-
-DEBUG_MODE = True
-UNATTENDED = True
-
-# ---------------------------------------------------------------------
-# 🧮 PHASE 1 – PIPELINE RUNTIME CONSTANTS
-# ---------------------------------------------------------------------
-
-# ---------------------------
-#  Core Retry / General Loop
-# ---------------------------
-DEFAULT_RETRY_COUNT: int = 2          # Generic retry limit for small loops
-RETRY_DELAY_SECONDS: int = 5          # Delay (seconds) between lightweight retries
-
-# ---------------------------
-#  MusicBrainz Acquisition
-# ---------------------------
-DOWNLOAD_BUFFER_SIZE: int = 1024      # Stream buffer size (bytes) for MusicBrainz dump downloads
-MAX_RETRY_ATTEMPTS: int = 10          # Max retries for failed MB downloads
-
-# ---------------------------
-#  Audit / Cleansing Phases
-# ---------------------------
-AUDIT_SAMPLE_LIMIT: int = 1_000_000     # Sample size for audit reports
-CLEANSE_SAMPLE_LIMIT: int = 20          # Sample size for cleansing previews
-
-# ---------------------------
-#  GUID Rehydration / Joins
-# ---------------------------
-GUID_SAMPLE_LIMIT: int = 6            # Sample size for rehydration preview
-GUID_RETRY_LIMIT: int = 40            # Max missing GUIDs tolerated before halt
-JOIN_SAMPLE_LIMIT: int = 100          # Row limit for join audits
-JOIN_ITERATION_LIMIT: int = 5         # Max join retry attempts
-JOIN_TOLERANCE: float = 0.001         # Float precision tolerance for join scoring
-
-# ---------------------------
-#  Filtering / Soundtrack Refinement
-# ---------------------------
-FILTER_THRESHOLD: float = 0.02        # Minimum match score for soundtrack inclusion
-FILTER_SAMPLE_SIZE: int = 42          # Debug sample size for diagnostic subsets
-SOUNDTRACK_SUBSET_LIMIT: int = 100    # Max rows for subset parquet exports
-
-
-############################################################
-################## BEGIN KEY PARAMETERS ####################
-############################################################
-# ---------------------------
-#  TMDb API / data Fetch
-# ---------------------------
-TMDB_RESULT_LIMIT: int = 1000           # Total titles to query (cap)
-TMDB_PAGE_SIZE: int = 500               # Max results per page
-TMDB_RETRY_DELAY: int = 20              # Delay (seconds) between TMDb API calls
-TMDB_TOTAL_LIMIT: int = 10000           # Hard stop for cumulative fetches
-API_THROTTLE_SECONDS = 0.25             # Minimum delay (in seconds) between TMDb API requests to prevent hitting rate limits.
-                                        # Increase this if you encounter HTTP 429 (Too Many Requests) responses.
-
-
-# ---------------------------
-# ---------------------------
-# Performance limits
-# ---------------------------
-# ---------------------------
-CHUNK_SIZE = 5_000                  # Default CSV / ETL batch size
-ROW_LIMIT = 10_000                  # Max rows to process per batch
-AUDIT_SAMPLE_LIMIT = 100_000        # Sampling limit for audits
-SLEEP_SECONDS = 1                   # Default throttle for API calls
-
-# ---------------------------
-# Matching & Fuzzy Logic
-# ---------------------------
-FUZZ_THRESHOLD = 45                 # Minimum similarity score (0–100) required for a fuzzy title match to be accepted.
-                                    # Higher values make matches stricter (fewer but more precise results)
-                                    # This controls how loosely or strictly Step 08 selects candidates when computing fuzzy
-                                    # matches between TMDb and MusicBrainz titles.
-FUZZ_ACCEPT_THRESHOLD = 90.0        # Minimum fuzzy-match score (0–100) required for automatic acceptance in Step 09.
-                                    # Lower to include more potential matches; raise to increase precision
-YEAR_VARIANCE = 3                   # Allowed difference in release year between TMDb and MusicBrainz titles (in years)
-                                    # A value of 2 means titles within ±2 years are considered potentially the same release
-MAX_CANDIDATES_PER_TITLE = 25       # Maximum number of candidate titles to compare against each TMDb title
-                                    # during the fuzzy matching process. Acts as a performance safeguard.
-USE_ALT_TITLES = True               # Whether to fetch and include alternative (localized / international) titles 
-                                    # from the TMDb API during fuzzy matching. 
-                                    # Setting this to False disables extra API calls and speeds up matching.
-FORCE_RENORM = True                # Force re-normalization of title text even if a 'normalized_title' column already exists.
-                                    # Useful when normalization logic has changed or datasets were processed with older rules.
-TOP_N = 5                           # Number of top fuzzy-match candidates to evaluate per TMDb title
-                                    # (higher = slower but potentially more accurate matching).
-FILM_OST_FILTER = True              # When True, Step 07 keeps only titles whose text suggests a film soundtrack
-                                    # (matches patterns like 'original motion picture', 'film', 'movie', 'ost', 'score').
-                                    # Disable to include all MusicBrainz soundtracks regardless of media type.
-FILM_OST_PATTERN = (
-    r"(?i)(motion picture|original (motion )?picture soundtrack|soundtrack|"
-    r"music (from|of|for) (the )?(motion picture|movie|film)|"
-    r"original score|film score|movie score|theme from|"
-    r"music inspired by)"
-)
-# Regex used by Step 07 to detect likely film soundtrack titles.
-   # Broader than the default; matches “music from,” “original soundtrack,”
-   # and “theme from” so that compilation OSTs are not dropped.
-
-
-# ---------------------------
-# Coverage Audit & Similarity
-# ---------------------------
-COVERAGE_SIMILARITY_THRESHOLD = 0.85    # Minimum similarity (0–1.0) required for considering a TMDb title "covered" by MusicBrainz.
-                                        # Used in Step 10B coverage audit. Raise for stricter matches, lower for broader coverage.
-
-# ---------------------------
-# Golden test settings
-# ---------------------------
-GOLDEN_TEST_MODE = True
-GOLDEN_TEST_SIZE = 200
-
-############################################################
-################## END KEY PARAMETERS ######################
-############################################################
-
-# ---------------------------
-# Metrics dictionary populated dynamically
-# ---------------------------
-STEP_METRICS = {}
-
-# ============================================================
-# 5. External Services (URLs, Keys, Azure)
-# ============================================================
-
-TMDB_API_KEY = os.getenv("TMDB_API_KEY")
-
-# ---------------------------
-# URLs
-# ---------------------------
-MB_DUMP_URL = "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/"
-TMDB_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie"
-TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
-TMDB_GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list"
-
-# ---------------------------
-# Azure storage placeholders
-# ---------------------------
-AZURE_CONN_STR = os.getenv("AZURE_STORAGE_CONNECTION_STRING", "")
-BLOB_CONTAINER = os.getenv("AZURE_BLOB_CONTAINER", "capstone-outputs")
-
-# ============================================================
-# 6. Data File Mappings (MusicBrainz & TMDb)
-# ============================================================
-
-# ---------------------------
-# MusicBrainz Inputs
-# ---------------------------
-TSV_WHITELIST = {
-    "artist.tsv",
-    "artist_credit.tsv",
-    "release.tsv",
-    "release_group.tsv",
-    "release_group_secondary_type.tsv",
-    "release_group_secondary_type_join.tsv",
-}
-
-MB_RAW_FILES = {name: MB_RAW_DIR / name for name in TSV_WHITELIST}
-MB_TSV_FILES = {name: MB_CLEANSED_DIR / name for name in TSV_WHITELIST}
-MB_DUMP_ARCHIVE = BASE_DIR / "mbdump.tar.bz2"
-MB_DUMP_DIR = BASE_DIR / "mbdump"
-MB_PARQUET_SOUNDTRACKS = MB_RAW_DIR / "soundtracks.parquet"
-MB_SECONDARY_TYPE_JOIN_FILE = MB_RAW_DIR / "release_group_secondary_type_join_clean.tsv"
-
-# --- MusicBrainz Derived Files ---
-MB_RELEASE_ENRICHED_GUIDED_FILE = MB_CLEANSED_DIR / "release_enriched_guided.tsv"
-MB_RELEASE_ENRICHED_FILE = MB_CLEANSED_DIR / "release_enriched.tsv"
-MB_JOINED_RELEASE_FILE = MB_CLEANSED_DIR / "joined_release_data.tsv"
-MB_SOUNDTRACKS_FILE = MB_CLEANSED_DIR / "soundtracks.tsv"
-MB_SOUNDTRACKS_PARQUET = MB_CLEANSED_DIR / "soundtracks.parquet"
-
-# --- TMDb Data Inputs ---
-TOP_MOVIES_FILE = DATA_DIR / "top_movies_raw.csv"
-ENRICHED_FILE = TMDB_DIR / "enriched_top_1000.csv"
-TMDB_GENRE_FILE = TMDB_DIR / "tmdb_genre_top_1000.csv"
-TMDB_MOVIE_GENRE_FILE = TMDB_DIR / "tmdb_movie_genre_top_1000.csv"
-JUNK_TITLES_FILE = DATA_DIR / "junk_title_list.txt"
-
-# --- Output Files ---
-MATCHED_TSV = RESULTS_DIR / "matched_top_1000.tsv"
-UNMATCHED_TSV = RESULTS_DIR / "unmatched_top_1000.tsv"
-
-diagnostic_files = sorted(
-    RESULTS_DIR.glob("matched_diagnostics_1000_*.tsv"),
-    key=os.path.getmtime,
-    reverse=True,
-)
-MATCHED_DIAGNOSTICS_TSV = diagnostic_files[0] if diagnostic_files else None
-
-MATCH_OUTPUTS = {
-    "matched": MATCHED_TSV,
-    "unmatched": UNMATCHED_TSV,
-    "diagnostics": MATCHED_DIAGNOSTICS_TSV,
-}
-
-REFRESH_INPUTS = {
-    "tmdb_movie": str(ENRICHED_FILE),
-    "tmdb_genre": str(TMDB_GENRE_FILE),
-    "tmdb_movie_genre": str(TMDB_MOVIE_GENRE_FILE),
-    "soundtracks": str(MB_PARQUET_SOUNDTRACKS),
-    "matched_top_1000": str(MATCHED_TSV),
-    "unmatched_top_1000": str(UNMATCHED_TSV),
-    "matched_diagnostics": str(MATCHED_DIAGNOSTICS_TSV),
-}
-
-MB_STATIC_REFRESH = {name: str(MB_TSV_FILES[name]) for name in TSV_WHITELIST}
-
-# ============================================================
-# 7. Reference Data (Golden Titles)
-# ============================================================
-
-GOLDEN_TITLES = {
+# === Golden Movie List ===
+GOLDEN_TITLES = [
     "Star Wars",
     "The Empire Strikes Back",
     "Return of the Jedi",
@@ -286,7 +116,7 @@ GOLDEN_TITLES = {
     "Inception",
     "Back to the Future",
     "Frozen",
-}
+]
 
 GOLDEN_EXPECTED_YEARS = {
     "Star Wars": 1977,
@@ -311,36 +141,15 @@ GOLDEN_EXPECTED_YEARS = {
     "Frozen": 2013,
 }
 
-# ============================================================
-# 8. Config Class
-# ============================================================
+GOLDEN_TITLES_TEST = GOLDEN_TITLES[:5]  # First 5 for quick local runs
 
-class Config:
-    """Object-based wrapper for key pipeline paths and settings."""
+def get_active_title_list():
+    """Return the appropriate movie list based on ENV."""
+    if ENV.lower() in ("dev", "local"):
+        print("[Config] Using TEST title subset (5 titles).")
+        return GOLDEN_TITLES_TEST
+    print("[Config] Using FULL Golden Title list.")
+    return GOLDEN_TITLES
 
-    def __init__(self):
-        self.BASE_DIR = BASE_DIR
-        self.DATA_DIR = DATA_DIR
-        self.RESULTS_DIR = RESULTS_DIR
-        self.MB_RAW_DIR = MB_RAW_DIR
-        self.MB_CLEANSED_DIR = MB_CLEANSED_DIR
-        self.TMDB_DIR = TMDB_DIR
-
-        self.ROW_LIMIT = ROW_LIMIT
-        self.DEBUG_MODE = DEBUG_MODE
-        self.UNATTENDED = UNATTENDED
-
-        self.TMDB_API_KEY = TMDB_API_KEY
-        self.PG_HOST = PG_HOST
-        self.PG_PORT = PG_PORT
-        self.PG_DBNAME = PG_DBNAME
-        self.PG_USER = PG_USER
-        self.PG_PASSWORD = PG_PASSWORD
-        self.PG_SCHEMA = PG_SCHEMA
-
-    def __repr__(self):
-        return f"<Config DATA_DIR={self.DATA_DIR} ROW_LIMIT={self.ROW_LIMIT}>"
-    
-    def get(self, key, default=None):
-        return getattr(self, key, default)
-
+if __name__ == "__main__":
+    print_config_summary()
