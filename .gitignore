@@ -1,81 +1,136 @@
-# =========================
-# OS & System Files
-# =========================
+# =========================================================
+#  🧩 UNGUIDED CAPSTONE PIPELINE (.gitignore v2)
+#  For: C:\Projects\unguided-capstone-project
+#  Updated: 2025-10-09
+# =========================================================
+
+# ---------------------------------------------------------
+# 🖥️  OS & System Files
+# ---------------------------------------------------------
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# =========================
-# Python Bytecode / Build Artifacts
-# =========================
+# ---------------------------------------------------------
+# 🐍  Python Bytecode / Build Artifacts
+# ---------------------------------------------------------
 __pycache__/
 *.py[cod]
+*.pyo
 *.so
+*.egg-info/
+build/
+dist/
 
-# =========================
-# Virtual Environments
-# =========================
+# ---------------------------------------------------------
+# 🧰  Virtual Environments
+# ---------------------------------------------------------
 .venv/
 venv/
 ENV/
+env/
 *env/
+Scripts/
+bin/
+Lib/
+Include/
 
-# =========================
-# Jupyter & Editor Artifacts
-# =========================
+# ---------------------------------------------------------
+# 📒  Jupyter, IDE & Editor Artifacts
+# ---------------------------------------------------------
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 **/.virtual_documents/
 .vscode/
 .idea/
+*.code-workspace
 
-# =========================
-# Temporary / Backup Files
-# =========================
+# ---------------------------------------------------------
+# 🧹  Temporary / Backup Files
+# ---------------------------------------------------------
 *.bak
 *.tmp
 *~
+*.swp
+*.log.tmp
 
-# =========================
-# QA & Audit Artifacts
-# =========================
-QA/audit_reports/**
-!audit_reports/README.md
-!audit_reports/.keep
+# ---------------------------------------------------------
+# 📦  Data & Outputs
+# ---------------------------------------------------------
+data/
+!data/README.md             # keep placeholder
 
-metrics/**
+# ---------------------------------------------------------
+# 📈  Metrics, QA, & Reports
+# ---------------------------------------------------------
+metrics/
 !metrics/README.md
 !metrics/.keep
 
-# =========================
-# Logs
-# =========================
-# Keep main pipeline logs (C:\Projects\unguided-capstone-project\logs)
-# but exclude transient or archived files
+QA/audit_reports/
+!QA/audit_reports/README.md
+!QA/audit_reports/.keep
+
+# ---------------------------------------------------------
+# 🧾  Logs
+# ---------------------------------------------------------
+logs/
+!logs/README.md
 logs/archive/
 logs/debug_*.log
 logs/*.tmp
 logs/*.bak
 
-# =========================
-# scripts/QA/audit_reports
-# =========================
-scripts/QA/audit_reports
+# ---------------------------------------------------------
+# 🧩  Scripts & Utilities
+# ---------------------------------------------------------
+# keep all scripts but exclude transient or local test files
+scripts/*.tmp
+scripts/*_ScratchPad.py
+scripts/QA/
+scripts/logs/
 
-# =========================
-# scripts/logs
-# =========================
-scripts/logs
+# explicitly INCLUDE PowerShell utilities
+!scripts/setup_env.ps1
 
-# =========================
-# Notebooks & Slides
-# =========================
+# ---------------------------------------------------------
+# 📓  Notebooks & Presentations
+# ---------------------------------------------------------
 notebooks/*_output.ipynb
 slides/*.tmp
+slides/~$*
 
-# =========================
-# Secrets & Credentials
-# =========================
+# ---------------------------------------------------------
+# 🔐  Secrets & Credentials
+# ---------------------------------------------------------
 .env
 *.env
+*.key
+*.pem
+*.crt
+*.json
+secrets/
 credentials.json
-setup_env.ps1
+
+# ---------------------------------------------------------
+# 🧪  Tests & Coverage
+# ---------------------------------------------------------
+.coverage
+htmlcov/
+pytest_cache/
+.tox/
+
+# ---------------------------------------------------------
+# 🧠  Misc. Development Artifacts
+# ---------------------------------------------------------
+*.lock
+*.pid
+tmp/
+cache/
+__temp__/
+
+# ---------------------------------------------------------
+# 🧱  Archive / Legacy Files
+# ---------------------------------------------------------
+archive/
+!archive/README.md
