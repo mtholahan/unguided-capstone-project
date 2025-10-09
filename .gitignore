@@ -38,7 +38,7 @@ ENV/
 # =========================
 # QA & Audit Artifacts
 # =========================
-audit_reports/**
+QA/audit_reports/**
 !audit_reports/README.md
 !audit_reports/.keep
 
