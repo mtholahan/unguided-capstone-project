@@ -1,0 +1,389 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 497,
+    "per_page": 5,
+    "items": 2481,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Blade+Runner&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=497",
+      "next": "https://api.discogs.com/database/search?q=Blade+Runner&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "Worldwide",
+      "year": "2015",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Reissue"
+      ],
+      "label": [
+        "Warner Music Group",
+        "EastWest",
+        "Warner Music UK Ltd.",
+        "Warner Music UK Ltd.",
+        "Universal International Music B.V.",
+        "Nemo Studios",
+        "Warner-Tamerlane Music",
+        "Warner/Chappell",
+        "EMI Music Publishing Ltd.",
+        "Warner/Chappell North America",
+        "Warner Chappell Music",
+        "EMI Music Publishing (UK) Ltd.",
+        "Optimal Media GmbH"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Ambient",
+        "Soundtrack",
+        "Score"
+      ],
+      "id": 7097828,
+      "barcode": [
+        "0 825646 122110",
+        "825646122110",
+        "LC02982",
+        "GEMA/MCPS",
+        "BF 86627-01 A1 0825646122110",
+        "BF 86627-01 B1  0825646122110",
+        "BF 86627-01 A1 0825646122110 1=",
+        "BF 86627-01 B1 1\u0394 0825646122110",
+        "BF 86627-01 A1 0825646122110 3IX",
+        "BF 86627-01 B1 1IT 0825646122110",
+        "BF86627-01 A1 1=\u0190 0825646122110",
+        "BF86627-01 B1 1|- 0825646122110",
+        "BF86627-01 A1 3+V 0825646122110",
+        "BF86627-01 B1 0825646122110 1+=",
+        "BF86627-01 A1 0825646122110",
+        "BF86627-01 B1 0825646122110 1+\u0394",
+        "BF86627-01 A2 0825646122110 1+",
+        "BF86627-01 B2 0825646122110",
+        "BF86627-01 A2 0825646122110 1V",
+        "BF86627-01 B2 0825646122110 =V",
+        "BF86627-01 A2 0825646122110 11V",
+        "BF86627-01 B2 0825646122110",
+        "BF86627-01 A2 0825646122110 1V",
+        "BF86627-01 B2 0825646122110 1V"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/7097828-Vangelis-Blade-Runner",
+      "catno": "0825646122110",
+      "title": "Vangelis - Blade Runner",
+      "thumb": "https://i.discogs.com/zBXGm4lpf_evGNz6Mol-nN1zWuXePja6xuFco9vWgKg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwOTc4/MjgtMTU2Mjg5MDc4/NC04Nzk1LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/l9cJ3yBjZATxgJQILd0GjzMPvlup_BEPuwaql9ZGpLs/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwOTc4/MjgtMTU2Mjg5MDc4/NC04Nzk1LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/7097828",
+      "community": {
+        "want": 4419,
+        "have": 16692
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Gatefold, 180 Gram",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2013",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Limited Edition",
+        "Reissue",
+        "Remastered"
+      ],
+      "label": [
+        "Audio Fidelity",
+        "Warner Music Group",
+        "Morada Music",
+        "Atlantic Recording Corporation",
+        "PolyGram International Music B.V.",
+        "Rhino Entertainment Company",
+        "Audio Fidelity",
+        "Atlantic Recording Corporation",
+        "Atlantic Recording Corporation",
+        "EMI Music",
+        "Spheric B.V.",
+        "Pendulum Music",
+        "Nemo Studios",
+        "44.1",
+        "Cohearent Audio",
+        "Cohearent Audio",
+        "Quality Record Pressings"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Jazz",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Soundtrack",
+        "Ambient"
+      ],
+      "id": 4611015,
+      "barcode": [
+        "7 80014 21541 5",
+        "0780014215415",
+        "AFZLP 154-A",
+        "AFZLP 154-B",
+        "AFZLP - 154 - A KPG + MZ@CA",
+        "AFZLP - 154 - B KPG + MZ@CA"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/4611015-Vangelis-Blade-Runner",
+      "catno": "AFZLP 154",
+      "title": "Vangelis - Blade Runner",
+      "thumb": "https://i.discogs.com/X60RYrjmsOqDi6QJTphoDC-rkyG2Ni6jX2mbrVnP_ik/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2MTEw/MTUtMTQ4MjY5MDI2/NS02Njc5LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/Zyf3UlEpSgGHVz6Qwo7sWYNTxo_ZXGZoZQw6aB_G4wY/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2MTEw/MTUtMTQ4MjY5MDI2/NS02Njc5LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/4611015",
+      "community": {
+        "want": 2531,
+        "have": 3178
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Red Translucent, 180g, Gatefold",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Limited Edition",
+            "Reissue",
+            "Remastered"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2013",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Limited Edition",
+        "Numbered",
+        "Remastered"
+      ],
+      "label": [
+        "Audio Fidelity",
+        "Warner Music Group",
+        "Morada Music",
+        "Atlantic Recording Corporation",
+        "PolyGram International Music B.V.",
+        "Rhino Entertainment Company",
+        "Audio Fidelity",
+        "Atlantic Recording Corporation",
+        "Atlantic Recording Corporation",
+        "EMI Music",
+        "Spheric B.V.",
+        "Pendulum Music",
+        "Nemo Studios",
+        "44.1",
+        "Cohearent Audio",
+        "Cohearent Audio",
+        "Quality Record Pressings"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Jazz",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Soundtrack",
+        "Ambient"
+      ],
+      "id": 4369372,
+      "barcode": [
+        "7 80014 21541 5",
+        "0780014215415",
+        "AFZLP 154-A",
+        "AFZLP 154-B",
+        "AFZLP - 154 - A / KPG+MZ@CA",
+        "AFZLP 1- 54 - B / KPG+MZ@CA"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/4369372-Vangelis-Blade-Runner",
+      "catno": "AFZLP 154",
+      "title": "Vangelis - Blade Runner",
+      "thumb": "https://i.discogs.com/_JnaQqA6akAWwDC0pnnxc0s9y-BTjU56NtvwUOC7C7A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzNjkz/NzItMTY0NzQzMTE4/NC00Njc3LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/MRWBoK2U8J3SPWefMwcMyp1-FmEHe7MaXuuyHs7S73g/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzNjkz/NzItMTY0NzQzMTE4/NC00Njc3LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/4369372",
+      "community": {
+        "want": 2492,
+        "have": 2206
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Red Translucent, 180g, Gatefold",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Limited Edition",
+            "Numbered",
+            "Remastered"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Worldwide",
+      "year": "2017",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Record Store Day",
+        "Limited Edition",
+        "Picture Disc",
+        "Reissue"
+      ],
+      "label": [
+        "EastWest",
+        "Warner Music UK Ltd.",
+        "Warner Music UK Ltd.",
+        "Nemo Studios",
+        "Optimal Media GmbH",
+        "Warner Music Group"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Jazz",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Ambient"
+      ],
+      "id": 10149136,
+      "barcode": [
+        "0190295870935",
+        "BG59938-01 A1 0190295870935",
+        "BG59938-01 B2 0190295870935",
+        "GEMA/MCPS",
+        "LC02982"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/10149136-Vangelis-Blade-Runner",
+      "catno": "0190295870935",
+      "title": "Vangelis - Blade Runner",
+      "thumb": "https://i.discogs.com/dTwtY5S82PmqhIWlwq61kX9i28JEZlNBJXT64v92DII/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMTQ5/MTM2LTE0OTU3Nzc2/ODgtMTEzNy5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/-qvZ1hg52JBXZ2_KilfMME0ByqzfKPpw9LKbkFEzsgQ/rs:fit/g:sm/q:90/h:604/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMTQ5/MTM2LTE0OTU3Nzc2/ODgtMTEzNy5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/10149136",
+      "community": {
+        "want": 1152,
+        "have": 2385
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Record Store Day",
+            "Limited Edition",
+            "Picture Disc",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "1994",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "EastWest",
+        "Warner Music UK Ltd.",
+        "Warner Music UK Ltd.",
+        "Time Warner",
+        "PolyGram International Music B.V.",
+        "Nemo Studios",
+        "44.1",
+        "Warner Music Manufacturing Europe",
+        "WMME Alsdorf"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Jazz",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Ambient",
+        "Soundtrack"
+      ],
+      "id": 1306664,
+      "barcode": [
+        "745099657420",
+        "7 4509-96574-2 0",
+        "LC 1557",
+        "GEMA/BIEM",
+        "CA851",
+        "450996574-2 WME",
+        "[Warner \"Big W\" logo]",
+        "[Warner \"Big W\" logo] 9.",
+        "none",
+        "none",
+        "none"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/1306664-Vangelis-Blade-Runner",
+      "catno": "4509-96574-2",
+      "title": "Vangelis - Blade Runner",
+      "thumb": "https://i.discogs.com/3u73s315L8stxP_5pGMN9FpPMO89Sb7bOdk57aMtvcs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMDY2/NjQtMTMxODM2OTky/MC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/OA68rg8dnyYx_vpIxivj0YDc-z-nLxitTtJq9Ktzsgw/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMDY2/NjQtMTMxODM2OTky/MC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1306664",
+      "community": {
+        "want": 573,
+        "have": 2308
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    }
+  ]
+}

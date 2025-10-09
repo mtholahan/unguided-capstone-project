@@ -1,0 +1,269 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 811,
+    "per_page": 5,
+    "items": 4054,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Gladiator&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=811",
+      "next": "https://api.discogs.com/database/search?q=Gladiator&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1992",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "33 \u2153 RPM",
+        "Single"
+      ],
+      "label": [
+        "Def Jam Recordings",
+        "Columbia"
+      ],
+      "type": "release",
+      "genre": [
+        "Hip Hop"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 186845,
+      "barcode": [
+        "XSS 74245A",
+        "XSS 74245A",
+        "0098707424519"
+      ],
+      "master_id": 48122,
+      "master_url": "https://api.discogs.com/masters/48122",
+      "uri": "/release/186845-3rd-Bass-Gladiator",
+      "catno": "44-74245",
+      "title": "3rd Bass - Gladiator",
+      "thumb": "https://i.discogs.com/DMNqpyBs8ITkH0Hp9oDL3GaLqqmVkGidGfD03zDGyl4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Njg0/NS0xNTExNDQ2MzE5/LTQ0MjMuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/3EIgOvGxLXD3cFC9k7HEfjiNmdqPOzNa6qOhH7c9ygA/rs:fit/g:sm/q:90/h:587/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Njg0/NS0xNTExNDQ2MzE5/LTQ0MjMuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/186845",
+      "community": {
+        "want": 132,
+        "have": 576
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "33 \u2153 RPM",
+            "Single"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1992",
+      "format": [
+        "Vinyl",
+        "7\"",
+        "45 RPM"
+      ],
+      "label": [
+        "Touch And Go",
+        "Brixton Academy",
+        "MPO"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock"
+      ],
+      "style": [
+        "Alternative Rock"
+      ],
+      "id": 566644,
+      "barcode": [
+        "TG [LIZARD-1A1 crossed out] 110 A1 MPO",
+        "TG [110 B2 crossed out] 110 B2 MPO"
+      ],
+      "master_id": 507653,
+      "master_url": "https://api.discogs.com/masters/507653",
+      "uri": "/release/566644-The-Jesus-Lizard-Gladiator",
+      "catno": "TG110",
+      "title": "The Jesus Lizard - Gladiator",
+      "thumb": "https://i.discogs.com/I4O5uYQK25YdBk9woydQFbAcwbgiJ0iR3l7PhA8RfcM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2NjY0/NC0xMTMyMzMzOTA5/LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/EgHoYAY4nhdpa-VdrmNSYBDv_Vb5BeW4Q377j2fbTzA/rs:fit/g:sm/q:90/h:600/w:596/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2NjY0/NC0xMTMyMzMzOTA5/LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/566644",
+      "community": {
+        "want": 237,
+        "have": 218
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "7\"",
+            "45 RPM"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "year": "1985",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Rock-O-Rama Records",
+        "Rock-O-Rama Records",
+        "Roxxon Studio",
+        "SST Br\u00fcggemann GmbH"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock"
+      ],
+      "style": [
+        "Punk",
+        "Oi"
+      ],
+      "id": 838405,
+      "barcode": [
+        "GEMA",
+        "RRR 51 A SST",
+        "RRR 51 B SST"
+      ],
+      "master_id": 304317,
+      "master_url": "https://api.discogs.com/masters/304317",
+      "uri": "/release/838405-Vortex-Gladiator",
+      "catno": "RRR.51.",
+      "title": "Vortex (13) - Gladiator",
+      "thumb": "https://i.discogs.com/7-mAognfPB4mSIPEGusGgXKpprHwVp_6Ew9MR5vLX2s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzODQw/NS0xNTI5NDE3ODQ5/LTI2ODMuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/RnhjNQ-Ji5P9x3qSt-wtuqNeGgczFlI-vNf49Kp2A28/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzODQw/NS0xNTI5NDE3ODQ5/LTI2ODMuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/838405",
+      "community": {
+        "want": 145,
+        "have": 293
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "year": "2000",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Displeased Records",
+        "Sentinel",
+        "Sentinel"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock"
+      ],
+      "style": [
+        "Black Metal"
+      ],
+      "id": 1183041,
+      "barcode": [
+        "8712666006624",
+        "SENTINEL 2K0809 * DISPLEASED D-00066 *1",
+        "IFPI 2W01"
+      ],
+      "master_id": 317157,
+      "master_url": "https://api.discogs.com/masters/317157",
+      "uri": "/release/1183041-Unlord-Gladiator",
+      "catno": "D00066",
+      "title": "Unlord - Gladiator",
+      "thumb": "https://i.discogs.com/eoyqi4nYxJflKRU6WFhmQ7EFbZvbJBa_jbwo1ZSyxpE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExODMw/NDEtMTU2ODc0NTQz/NS0zMjg2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/v7KULUi3lp2RJKCvhQDFrHFgHU4UUffRjHgZBoSrInI/rs:fit/g:sm/q:90/h:606/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExODMw/NDEtMTU2ODc0NTQz/NS0zMjg2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1183041",
+      "community": {
+        "want": 66,
+        "have": 221
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1989",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "45 RPM",
+        "Single"
+      ],
+      "label": [
+        "Mute",
+        "Mute Records Ltd.",
+        "Mute Records Ltd.",
+        "Damont"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "Breakbeat",
+        "Dub",
+        "Electro"
+      ],
+      "id": 2280,
+      "barcode": [
+        "5 016025 201044",
+        "12 MUTE 104 B\u03362\u0336 A2 DAMONT A",
+        "12 MUTE 104 B1 P\u0336 \u0336M\u0336U\u0336T\u0336E\u0336 \u03368\u03368\u0336 \u0336A\u0336-\u03361\u0336 DAMONT"
+      ],
+      "master_id": 95635,
+      "master_url": "https://api.discogs.com/masters/95635",
+      "uri": "/Renegade-Soundwave-Space-Gladiator-The-Phantom/release/2280",
+      "catno": "12 MUTE 104",
+      "title": "Renegade Soundwave - Space Gladiator / The Phantom",
+      "thumb": "https://i.discogs.com/DoZQMyZeehi1sRS3iX5IYKZdCvWfrG6RVAboUOAD-BA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyODAt/MTI4MTI4MzQ2My5q/cGVn.jpeg",
+      "cover_image": "https://i.discogs.com/yXt5GYSDJUVy-n0qk18z08oSPnRVX1HLhRz18tAdJMU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyODAt/MTI4MTI4MzQ2My5q/cGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2280",
+      "community": {
+        "want": 694,
+        "have": 974
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "45 RPM",
+            "Single"
+          ]
+        }
+      ]
+    }
+  ]
+}

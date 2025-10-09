@@ -1,7 +1,24 @@
-import pandas as pd
-from pathlib import Path
+"""Quick test to confirm BaseStep live console logging in PowerShell 7."""
 
-TMDB_DIR = Path(r"D:\Capstone_Staging\data\tmdb")
+from base_step import BaseStep
+import time
 
-print("Step 06 output:", len(pd.read_csv(TMDB_DIR / "enriched_top_1000.csv")))
-print("Step 07 output:", len(pd.read_parquet(TMDB_DIR / "tmdb_movies_normalized.parquet")))
+class StepLoggingTest(BaseStep):
+    def __init__(self):
+        super().__init__("LoggingTest")
+
+    def run(self):
+        self.setup_logger()
+        self.logger.info("🚀 Starting BaseStep logging test...")
+
+        # simulate work
+        for i in self.progress_iter(range(5), desc="Simulated Work", unit="item"):
+            self.logger.info(f"Working on iteration {i+1}/5...")
+            time.sleep(0.8)
+
+        self.logger.warning("⚠️ This is a test warning (visible immediately).")
+        self.logger.info("✅ Logging test completed successfully.")
+
+
+if __name__ == "__main__":
+    StepLoggingTest().run()

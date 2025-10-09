@@ -1,0 +1,411 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 126,
+    "per_page": 5,
+    "items": 627,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Titanic+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=126",
+      "next": "https://api.discogs.com/database/search?q=Titanic+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "Europe",
+      "year": "1998",
+      "format": [
+        "CD",
+        "Album",
+        "Limited Edition"
+      ],
+      "label": [
+        "Sony Classical",
+        "Sony Music Soundtrax",
+        "Sony Music",
+        "DADC Austria"
+      ],
+      "type": "release",
+      "genre": [
+        "Pop",
+        "Classical",
+        "Folk, World, & Country",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Ballad"
+      ],
+      "id": 2377070,
+      "barcode": [
+        "5 099706 079729",
+        "LC 6868",
+        "01-060797-10",
+        "SACEM/SDRM/SACD/SGDL BIEM",
+        "S0100239681-0101 32",
+        "S0106069110-0101 52",
+        "IFPI L552",
+        "IFPI 94Z3",
+        "IFPI L552",
+        "IFPI 94Y4",
+        "S0100239681-0101 12 D2",
+        "IFPI L552",
+        "IFPI 94X7",
+        "S0106069110-0101 52  A8",
+        "IFPI L552",
+        "IFPI 946N"
+      ],
+      "master_id": 90717,
+      "master_url": "https://api.discogs.com/masters/90717",
+      "uri": "/release/2377070-James-Horner-Titanic",
+      "catno": "S2K 60797",
+      "title": "James Horner - Titanic",
+      "thumb": "https://i.discogs.com/zl1gtxPdjE9P6uPNlStCoKhPeEl3PudJ_SqYlvRduic/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzcw/NzAtMTcxMjc1NzE1/NS0yNzQ2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/vLGSLpnbWijTaybyTMoLiXNznroVnVYIiaK7GqGTe8w/rs:fit/g:sm/q:90/h:534/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzcw/NzAtMTcxMjc1NzE1/NS0yNzQ2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2377070",
+      "community": {
+        "want": 63,
+        "have": 151
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "2",
+          "descriptions": [
+            "Album",
+            "Limited Edition"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "1997",
+      "format": [
+        "CD",
+        "Album",
+        "Stereo"
+      ],
+      "label": [
+        "Sony Classical",
+        "Sony Music Soundtrax",
+        "Paramount",
+        "Twentieth Century Fox",
+        "Lightstorm Entertainment",
+        "Sony Corporation",
+        "Paramount Pictures",
+        "Twentieth Century Fox",
+        "Famous Music Corporation",
+        "TCF Music Publishing, Inc.",
+        "Ensign Music Corp.",
+        "Fox Film Music Corp.",
+        "Blue Sky Rider Songs",
+        "Sony Music Entertainment Inc.",
+        "Sony Music Entertainment Inc.",
+        "Sony Music Entertainment (Canada) Inc.",
+        "Sony Music",
+        "Todd-AO Scoring Stage",
+        "Todd-AO Scoring Stage",
+        "A&M Mastering Studios",
+        "Sony Music",
+        "DADC Austria",
+        "550 Music",
+        "Ensign Music Corp.",
+        "Famous Music Corporation",
+        "Irving Music, Inc.",
+        "PolyGram A.S., Norway",
+        "Sony Music Entertainment (Canada) Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Pop",
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Contemporary",
+        "Ballad",
+        "Soundtrack"
+      ],
+      "id": 467990,
+      "barcode": [
+        "5 099706 321323",
+        "5099706321323",
+        "LC 6868",
+        "SACEM SACD SDRM SGDL",
+        "BIEM",
+        "CB 801",
+        "CDK",
+        "CF",
+        "01-063213-10",
+        "07-063213-10/1",
+        "07-063213-10/2",
+        "Sony Music S0106321310-0101 42 B7",
+        "IFPI 945B",
+        "Sony Music S0106321310-0101 42 B15",
+        "IFPI 945B",
+        "Sony Music S0106321310-0101 42 A14",
+        "IFPI 94F8",
+        "Sony Music S0106321310-0101 22 A9",
+        "IFPI 945B",
+        "Sony Music S0106321310-0101 42 B4 *",
+        "IFPI 946C",
+        "Sony Music S0106321310-0101 42 A18",
+        "IFPI 945B",
+        "Sony Music S0106321310-0101 42 D11",
+        "IFPI 94F9",
+        "Sony Music S0106321310-0101 22 A7",
+        "IFPI 945B",
+        "Sony Music S0106321310-0101 12 D7",
+        "IFPI 943R",
+        "Sony Music S0106321310-0101 42 B8",
+        "(not entered)",
+        "Sony Music S0106321310-0101 42 B7",
+        "IFPI 94E8",
+        "Sony Music S0106321310-0101 32 A13",
+        "IFPI 94Y7",
+        "Sony Music S0106321310-0101 42 B11",
+        "IFPI 94D3",
+        "Sony Music S0106321310-0101 32 C2",
+        "IFPI 943Q",
+        "Sony Music S0106321310-0101 22 A7",
+        "IFPI 94W7",
+        "Sony Music S0106321310-0101 42 B8",
+        "IFPI 944A",
+        "Sony Music S0106321310-0101 32 A3",
+        "IFPI 94X6",
+        "Sony Music S0106321310-0101 32 A4",
+        "IFPI 94F8",
+        "Sony Music S0106321310-0101 42 A2",
+        "IFPI 942N",
+        "Sony Music S0106321310-0101 42 D4",
+        "IFPI 942Q",
+        "Sony Music S0106321310-0101 32 A21",
+        "IFPI 94Y5",
+        "Sony Music S0106321310-0101 42 A9",
+        "IFPI 944A",
+        "Sony Music S0106321310-0101 22 A1",
+        "IFPI 94Y4",
+        "Sony Music S0106321310-0101 42 F1",
+        "IFPI 942A",
+        "Sony Music S0106321310-0101 42 B12",
+        "IFPI 94D0",
+        "Sony Music S0106321310-0101 42 A5 \u2731",
+        "IFPI 946C",
+        "Sony Music S0106321310-0101 12 B2",
+        "IFPI 94X2",
+        "IFPI L552"
+      ],
+      "master_id": 90717,
+      "master_url": "https://api.discogs.com/masters/90717",
+      "uri": "/release/467990-James-Horner-Titanic-Music-From-The-Motion-Picture",
+      "catno": "SK 63213",
+      "title": "James Horner - Titanic (Music From The Motion Picture)",
+      "thumb": "https://i.discogs.com/khx_6yHHaB3WQWmeM27mZpL5LDvcJ1ZELufjvFAg1_Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2Nzk5/MC0xMTg1NTU2MzIw/LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/u5zUKF1KDloIO-FVYUUm5U2pnbOBtTgF_iNRpjOCUKw/rs:fit/g:sm/q:90/h:603/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2Nzk5/MC0xMTg1NTU2MzIw/LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/467990",
+      "community": {
+        "want": 105,
+        "have": 3007
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1997",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Sony Classical",
+        "Sony Music Soundtrax",
+        "Sony Music",
+        "Sony Music Entertainment Inc.",
+        "Sony Music Entertainment Inc.",
+        "Sony Music Entertainment (Canada) Inc.",
+        "Sony Music Entertainment Inc.",
+        "Sony Disc Manufacturing, Springfield"
+      ],
+      "type": "release",
+      "genre": [
+        "Pop",
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Contemporary",
+        "Ballad"
+      ],
+      "id": 3879263,
+      "barcode": [
+        "074646321324",
+        "0 7464-63213-2 4",
+        "63213 S1",
+        "CTDP-000277 15",
+        "CTDP-000277 3",
+        "CTDP-000277 10 A04",
+        "CTDP-000277 05",
+        "CTDP-000277 1 A01",
+        "CTDP-000277 2",
+        "CTDP-000277 1 A07",
+        "CTDP-000277 04",
+        "CTDP-000277 2",
+        "CTDP-000277 27 A05",
+        "CTDP-000277 1 A08 \ud83d\udf4a \ud83d\udf4a\ud83d\udf4a \ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a",
+        "IFPI L337",
+        "IFPI L322",
+        "IFPI 5100",
+        "IFPI 5087",
+        "IFPI 50AB",
+        "IFPI 508D",
+        "IFPI 6709",
+        "IFPI 5084",
+        "6706",
+        "IFPI 50F2",
+        "IFPI 50BE"
+      ],
+      "master_id": 90717,
+      "master_url": "https://api.discogs.com/masters/90717",
+      "uri": "/release/3879263-James-Horner-Titanic-Music-From-The-Motion-Picture",
+      "catno": "SK 63213",
+      "title": "James Horner - Titanic (Music From The Motion Picture)",
+      "thumb": "https://i.discogs.com/W0Asf3i15nIymRvw5MZOaHJx9gAYA3pMh7VexqeLzis/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Nzky/NjMtMTUzNjEwMTM4/OC04MDcwLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/Jb2CmQJlGyVHs1UfDgBiiJfRN14YUnbuIWRykF0q7ps/rs:fit/g:sm/q:90/h:589/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Nzky/NjMtMTUzNjEwMTM4/OC04MDcwLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/3879263",
+      "community": {
+        "want": 39,
+        "have": 1942
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1997",
+      "format": [
+        "CD",
+        "Single"
+      ],
+      "label": [
+        "Epic"
+      ],
+      "type": "release",
+      "genre": [
+        "Pop"
+      ],
+      "style": [
+        "Ballad"
+      ],
+      "id": 2960188,
+      "barcode": [
+        "5 099766 554754",
+        "5099766554754",
+        "LC 0199",
+        "MCPS/BIEM/SDRM",
+        "IFPI L041",
+        "85631 665547-5"
+      ],
+      "master_id": 134824,
+      "master_url": "https://api.discogs.com/masters/134824",
+      "uri": "/release/2960188-Celine-Dion-My-Heart-Will-Go-On-Love-Theme-From-Titanic",
+      "catno": "665547 5",
+      "title": "Celine Dion* - My Heart Will Go On (Love Theme From 'Titanic')",
+      "thumb": "https://i.discogs.com/cxDpSFIJrtvoMTdws90s9d7MaoSGe5rPqu5xg4K8EEk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5NjAx/ODgtMTcyNDIwMDA4/OC00MTU0LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/rIz5sYT9C8kgF7uR47ssNMFcwCte5SyiPh6k1cOab_A/rs:fit/g:sm/q:90/h:524/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5NjAx/ODgtMTcyNDIwMDA4/OC00MTU0LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2960188",
+      "community": {
+        "want": 32,
+        "have": 357
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Single"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "2022",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Limited Edition",
+        "Numbered",
+        "Reissue",
+        "Repress",
+        "Special Edition"
+      ],
+      "label": [
+        "Sony Classical",
+        "Music On Vinyl",
+        "At The Movies"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 25349170,
+      "barcode": [
+        "8719262027053"
+      ],
+      "master_id": 90717,
+      "master_url": "https://api.discogs.com/masters/90717",
+      "uri": "/release/25349170-James-Horner-Titanic-Music-From-The-Motion-Picture",
+      "catno": "MOVATM100",
+      "title": "James Horner - Titanic (Music From The Motion Picture)",
+      "thumb": "https://i.discogs.com/gTKwN75YHomCSy_E5GS491T_WQaM0PKMDyVZlcm1G2Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1MzQ5/MTcwLTE2Njk5OTk4/MzAtNTA0NS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/SSrRi9iTIcvQ-Qhajb4CniYHakieUuDxbh4vxMU9TDE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1MzQ5/MTcwLTE2Njk5OTk4/MzAtNTA0NS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/25349170",
+      "community": {
+        "want": 242,
+        "have": 811
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Smoke Colored",
+          "descriptions": [
+            "LP",
+            "Limited Edition",
+            "Numbered",
+            "Reissue",
+            "Repress",
+            "Special Edition"
+          ]
+        }
+      ]
+    }
+  ]
+}

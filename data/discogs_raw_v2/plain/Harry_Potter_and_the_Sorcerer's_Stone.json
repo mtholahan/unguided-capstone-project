@@ -1,0 +1,316 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 20,
+    "per_page": 5,
+    "items": 97,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Harry+Potter+and+the+Sorcerer%27s+Stone&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=20",
+      "next": "https://api.discogs.com/database/search?q=Harry+Potter+and+the+Sorcerer%27s+Stone&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "2025",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Record Store Day"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Rhino Records",
+        "Nonesuch",
+        "Warner Sunset Records",
+        "Rhino Records",
+        "Nonesuch",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "GZ Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Contemporary"
+      ],
+      "id": 33678306,
+      "barcode": [
+        "6 03497 82191 4",
+        "603497821914",
+        "6 03497 81855 6",
+        "603497818556",
+        "GEMA/BIEM",
+        "R1-83491 / 603497821914 - A 284918E1/B",
+        "R1-83491 / 603497821914 - B 284918E2/B",
+        "R1-83491 / 603497821914 - C 284918E3/B",
+        "R1-83491 / 603497821914 - D 284918E4/B"
+      ],
+      "master_id": 46342,
+      "master_url": "https://api.discogs.com/masters/46342",
+      "uri": "/release/33678306-John-Williams-Harry-Potter-And-The-Sorcerers-Stone-Original-Motion-Picture-Soundtrack",
+      "catno": "RCV1 83491",
+      "title": "John Williams (4) - Harry Potter And The Sorcerer's Stone (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/Y6YSfOX7BdA33U6YLGfhW094z5SC7tg6gmwev4bWoDA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzNjc4/MzA2LTE3NDQ0ODAw/ODgtMjY4Ny5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/pKgVijMdWfpvgbDgX1aQCHbxnq1-qH6mc1QVaZ60xxk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzNjc4/MzA2LTE3NDQ0ODAw/ODgtMjY4Ny5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/33678306",
+      "community": {
+        "want": 272,
+        "have": 1396
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Clear",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Record Store Day"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2017",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Picture Disc"
+      ],
+      "label": [
+        "Warner Bros. Records",
+        "Warner Sunset Records",
+        "Rhino Records",
+        "Nonesuch",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "Rhino Entertainment Company"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Contemporary"
+      ],
+      "id": 15382643,
+      "barcode": [
+        "R1-83491",
+        "081227933357"
+      ],
+      "master_id": 46342,
+      "master_url": "https://api.discogs.com/masters/46342",
+      "uri": "/release/15382643-John-Williams-Harry-Potter-And-The-Sorcerers-Stone",
+      "catno": "R1-83491",
+      "title": "John Williams (4) - Harry Potter And The Sorcerer's Stone",
+      "thumb": "https://i.discogs.com/RvJ1azx0fEv0DeRvVlqAWD2BF16xq0rUlKoLYZtHYHU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1Mzgy/NjQzLTE1OTA2MzU1/OTgtMjM4NC5wbmc.jpeg",
+      "cover_image": "https://i.discogs.com/KuUo4TcS5M9uqurComGtcs94HrP91NFXSySyf6dlVkI/rs:fit/g:sm/q:90/h:585/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1Mzgy/NjQzLTE1OTA2MzU1/OTgtMjM4NC5wbmc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/15382643",
+      "community": {
+        "want": 374,
+        "have": 85
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "descriptions": [
+            "LP",
+            "Picture Disc"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2001",
+      "format": [
+        "CD",
+        "Album",
+        "Limited Edition",
+        "Special Edition"
+      ],
+      "label": [
+        "Nonesuch",
+        "Warner Sunset Records",
+        "Atlantic",
+        "WEA Manufacturing Inc.",
+        "Warner Music Group",
+        "Atlantic Recording Corporation",
+        "Atlantic Recording Corporation",
+        "Nonesuch Records",
+        "Warner Bros.",
+        "Warner Bros.",
+        "WEA Mfg. Olyphant",
+        "WEA Mfg. Commerce"
+      ],
+      "type": "release",
+      "genre": [
+        "Non-Music",
+        "Pop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Modern Classical",
+        "Score",
+        "Theme",
+        "Vocal"
+      ],
+      "id": 828355,
+      "barcode": [
+        "0 7567-83491-2 6",
+        "075678349126",
+        "Y17528  3 83491-2 01 *M2 S4",
+        "ifpi L902",
+        "IFPI 2V2T",
+        "wea mfg./CA"
+      ],
+      "master_id": 46342,
+      "master_url": "https://api.discogs.com/masters/46342",
+      "uri": "/release/828355-John-Williams-Harry-Potter-And-The-Sorcerers-Stone-Original-Motion-Picture-Soundtrack",
+      "catno": "83491-2",
+      "title": "John Williams (4) - Harry Potter And The Sorcerer's Stone (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/IGc3Sh5dLfNNd1SnBXwhlV-yHyNdQhnCBfW6l_onIl8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgyODM1/NS0xNjA1NDY0MzI4/LTY3MjAuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/FPkuXfhxrICTKg-aCoMFX5GY0qvqmlCtZrcqq8qlzqc/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgyODM1/NS0xNjA1NDY0MzI4/LTY3MjAuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/828355",
+      "community": {
+        "want": 122,
+        "have": 942
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Limited Edition",
+            "Special Edition"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2001",
+      "format": [
+        "Cassette",
+        "Album"
+      ],
+      "label": [
+        "Nonesuch",
+        "Warner Sunset Records",
+        "Atlantic"
+      ],
+      "type": "release",
+      "genre": [
+        "Non-Music",
+        "Pop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Music Hall",
+        "Soundtrack",
+        "Modern Classical",
+        "Ballad"
+      ],
+      "id": 5791528,
+      "barcode": [
+        "0 7567-83491-4 0",
+        "1-887688-60-9"
+      ],
+      "master_id": 46342,
+      "master_url": "https://api.discogs.com/masters/46342",
+      "uri": "/release/5791528-John-Williams-Harry-Potter-And-The-Sorcerers-Stone",
+      "catno": "83491-4",
+      "title": "John Williams (4) - Harry Potter And The Sorcerer's Stone",
+      "thumb": "https://i.discogs.com/t9QBnEQteM8KMnRACk-ovER5SKIBeXM-_lCLq973jC0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU3OTE1/MjgtMTQ2ODM3NTI2/NC02ODQxLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/j4usrlN3so57lA5gQDqut2j8WaYBNeZdqcU6nFsZUi8/rs:fit/g:sm/q:90/h:923/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU3OTE1/MjgtMTQ2ODM3NTI2/NC02ODQxLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/5791528",
+      "community": {
+        "want": 84,
+        "have": 21
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Cassette",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2025",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Bros. Entertainment Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Contemporary"
+      ],
+      "id": 34172272,
+      "barcode": [
+        "603497821914",
+        "GEMA/BIEM",
+        "(Side A) 284918E1/C R1-83491/603497821914-A",
+        "(Side B) 284918E2/B R1-83491/603497821914-B",
+        "(Side C) 284918E3/C R1-83491/603497821914-C",
+        "(Side D)  284918E4/B R1-83491/603497821914-D"
+      ],
+      "master_id": 46342,
+      "master_url": "https://api.discogs.com/masters/46342",
+      "uri": "/release/34172272-John-Williams-Harry-Potter-And-The-Sorcerers-Stone-Original-Motion-Picture-Soundtrack",
+      "catno": "603497821914",
+      "title": "John Williams (4) - Harry Potter And The Sorcerer's Stone (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/ygdWMz-NzxpQRW3qTiGmSH5dnSuACUdeYF1oTCyrPNI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM0MTcy/MjcyLTE3NDkwMzgy/NTItNDcxNS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/S39zdgnEcSepY14APeSHgEmgLqQbijn6lFV-kVyI6Fw/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM0MTcy/MjcyLTE3NDkwMzgy/NTItNDcxNS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/34172272",
+      "community": {
+        "want": 52,
+        "have": 213
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    }
+  ]
+}

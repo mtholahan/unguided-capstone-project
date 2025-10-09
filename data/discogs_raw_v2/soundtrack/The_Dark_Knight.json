@@ -1,0 +1,352 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 91,
+    "per_page": 5,
+    "items": 452,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=The+Dark+Knight+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=91",
+      "next": "https://api.discogs.com/database/search?q=The+Dark+Knight+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "2008",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Air Lyndhurst Studios",
+        "James Newton Howard Studios",
+        "Remote Control Productions",
+        "Remote Control Productions",
+        "Marcussen Mastering",
+        "GZ Digital Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Score",
+        "Minimal"
+      ],
+      "id": 1439381,
+      "barcode": [
+        "0 9362-49859-7 6",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE A 77621E1/B",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE B 77621E2/D",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE C 77621E3/B",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE D 77621E4/B"
+      ],
+      "master_id": 8062,
+      "master_url": "https://api.discogs.com/masters/8062",
+      "uri": "/release/1439381-Hans-Zimmer-And-James-Newton-Howard-The-Dark-Knight-Original-Motion-Picture-Soundtrack",
+      "catno": "511101-1",
+      "title": "Hans Zimmer And James Newton Howard - The Dark Knight (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/qkhTZ1V8d-btxDk_M_QRpdYxWg9LTTZ110ktiVrdJak/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0Mzkz/ODEtMTU4Mjk2Mzky/My0xNTY4LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/ssT4dAZQyb5KePELOQuNHGVJqISgtMc0SZFMu2nBWfY/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0Mzkz/ODEtMTU4Mjk2Mzky/My0xNTY4LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1439381",
+      "community": {
+        "want": 1674,
+        "have": 2323
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Gatefold",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "USA & Europe",
+      "year": "2021",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Vinyl",
+        "LP",
+        "All Media",
+        "Album",
+        "Limited Edition",
+        "Reissue"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Warner Records",
+        "Warner Music Group",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Records Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "DC Comics",
+        "Warner-Olive Music, LLC",
+        "Air Lyndhurst Studios",
+        "James Newton Howard Studios",
+        "Remote Control Productions",
+        "Remote Control Productions",
+        "Marcussen Mastering",
+        "GZ Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Score",
+        "Minimal"
+      ],
+      "id": 20043043,
+      "barcode": [
+        "6 03497-84387 9",
+        "603497843879",
+        "GEMA/BIEM",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE A 77621E1/B",
+        "WARNER BROTHERS RECORDS 1-511101 B 77621E2/E",
+        "WARNER BROTHERS RECORDS 1-511101 C 77621E3/C",
+        "WARNER BROTHERS RECORDS 1-511101 D 77621E4/D"
+      ],
+      "master_id": 8062,
+      "master_url": "https://api.discogs.com/masters/8062",
+      "uri": "/release/20043043-Hans-Zimmer-And-James-Newton-Howard-The-Dark-Knight-Original-Motion-Picture-Soundtrack",
+      "catno": "RCV1 511101 / 603497843879",
+      "title": "Hans Zimmer And James Newton Howard - The Dark Knight (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/tO7OgYOnMX2URnx7XqrEng-T_4tNqJvy9xtSR8UZgso/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMDQz/MDQzLTE2NTQ4NTU2/NDMtOTg0NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/k5FAOvq9dY1n2fQjlay-KCMSxjH0wybCbGxouULueTQ/rs:fit/g:sm/q:90/h:607/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMDQz/MDQzLTE2NTQ4NTU2/NDMtOTg0NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/20043043",
+      "community": {
+        "want": 619,
+        "have": 3181
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Green (Neon) w/ Purple (Violet) Splatter",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Purple (Violet) w/ Green (Neon) Splatter",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "All Media",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Limited Edition",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2012",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "WaterTower Music",
+        "WaterTower Music",
+        "WaterTower Music",
+        "Sony Music Entertainment"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score"
+      ],
+      "id": 3839721,
+      "barcode": [
+        "7 94043 16281 7",
+        "WTM-39362-A",
+        "WTM-39362-B"
+      ],
+      "master_id": 456321,
+      "master_url": "https://api.discogs.com/masters/456321",
+      "uri": "/release/3839721-Hans-Zimmer-The-Dark-Knight-Rises-Original-Motion-Picture-Soundtrack",
+      "catno": "WTM39362",
+      "title": "Hans Zimmer - The Dark Knight Rises (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/ShKWaVsXz333D4aMyGaqDYpYz3nUU6fu6M3ObIHneVo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Mzk3/MjEtMTUzNzc0MjIz/My0zODQ2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/MEq042dywFWV47fpPQuegXHgYQqrtkWqKecxuHboVBA/rs:fit/g:sm/q:90/h:603/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Mzk3/MjEtMTUzNzc0MjIz/My0zODQ2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/3839721",
+      "community": {
+        "want": 531,
+        "have": 944
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "2008",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Warner Bros. Records",
+        "Warner Bros. Records Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Bros. Records Inc.",
+        "WEA International Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "DC Comics",
+        "Warner-Olive Music, LLC",
+        "Air Lyndhurst Studios",
+        "Remote Control Productions",
+        "James Newton Howard Studios",
+        "Remote Control Productions",
+        "Marcussen Mastering"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Score",
+        "Minimal"
+      ],
+      "id": 1398331,
+      "barcode": [
+        "0 9362-49860-0 3",
+        "093624986003",
+        "ASCAP",
+        "[Warner 'W' logo] 936249860-0 V01 JOY",
+        "IFPI L016",
+        "IFPI 05M3",
+        "[Warner 'W' logo] 936249860-0 V01 JOY",
+        "IFPI L016",
+        "IFPI 05R1",
+        "[Warner 'W' logo] 936249860-0 V01 JOY",
+        "IFPI L016",
+        "IFPI 05R5",
+        "[Warner 'W' logo] 936249860-0 V01 JOY",
+        "IFPI L016",
+        "IFPI 057S",
+        "[Warner 'W' logo] 936249860-0 V01 JOY",
+        "IFPI L016",
+        "IFPI 05R2",
+        "[Warner 'W' logo] 936249860-0 V01 JOY",
+        "IFPI L016",
+        "IFPI 05R7"
+      ],
+      "master_id": 8062,
+      "master_url": "https://api.discogs.com/masters/8062",
+      "uri": "/release/1398331-Hans-Zimmer-And-James-Newton-Howard-The-Dark-Knight-Original-Motion-Picture-Soundtrack",
+      "catno": "9362-49860-0",
+      "title": "Hans Zimmer And James Newton Howard - The Dark Knight (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/VTu2SWA1QBNDYWRM2sZz3WkWTNXlHm4_UT8qj3A8gds/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzOTgz/MzEtMTYyNTQwNjQ1/OS0xMTA2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/l_oV4n6DhB-kVpjV4E6n-6oDgNWpE77VXfTqk3HH9uc/rs:fit/g:sm/q:90/h:586/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzOTgz/MzEtMTYyNTQwNjQ1/OS0xMTA2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1398331",
+      "community": {
+        "want": 84,
+        "have": 705
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2008",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Bros. Records Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 2378267,
+      "barcode": [
+        "0 9362-49860-0 3",
+        "093624986003",
+        "Z70741 1 511101-2 TEXT 01 M1S10",
+        "Z70741 1 511101-2 TEXT 01 M1S3",
+        "Z70741 1 511101-2 TEXT 01 M1S11",
+        "IFPI L909",
+        "IFPI 2U7E",
+        "IFPI 2U7M",
+        "IFPI 2U7B"
+      ],
+      "master_id": 8062,
+      "master_url": "https://api.discogs.com/masters/8062",
+      "uri": "/release/2378267-Hans-Zimmer-and-James-Newton-Howard-The-Dark-Knight-Original-Motion-Picture-Soundtrack",
+      "catno": "511101-2",
+      "title": "Hans Zimmer and James Newton Howard - The Dark Knight (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/RLieqIs6pjQfJ60WINyk7nL88hfBRJ2FSrg1aHUNkU4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzgy/NjctMTY5MzM0NTg1/NS01Njk2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/ZpVvgii7bPDdcYFrOYmA9jzS8ulYwUQo6xGtIKO3GdA/rs:fit/g:sm/q:90/h:597/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzgy/NjctMTY5MzM0NTg1/NS01Njk2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2378267",
+      "community": {
+        "want": 76,
+        "have": 459
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    }
+  ]
+}

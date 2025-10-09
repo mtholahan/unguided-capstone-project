@@ -1,0 +1,312 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 633,
+    "per_page": 5,
+    "items": 3163,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Inception&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=633",
+      "next": "https://api.discogs.com/database/search?q=Inception&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "UK",
+      "year": "1991",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "45 RPM"
+      ],
+      "label": [
+        "Orbital Records",
+        "Noisegate Studios",
+        "Orbital Records Ltd",
+        "Orbital Records Ltd",
+        "Orbital Music Ltd",
+        "International Music Network",
+        "Broadcrest Ltd."
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "Breakbeat",
+        "Hardcore",
+        "Bleep"
+      ],
+      "id": 143543,
+      "barcode": [
+        "-\u0336D\u0336W\u0336M\u0336 \u03361\u0336-\u0336  12 ORBIT-11 A1 PEACE AND LOVE \u263a TRACE BC RESPECT TO CHOCI, JUMPIN JACK FROST AND THE TELEPATHY MASSIVE",
+        "-\u0336D\u0336W\u0336M\u0336 \u03361\u0336-\u0336  12 ORBIT-11 B1 BC",
+        "5 023091 120117",
+        "5023091120117"
+      ],
+      "master_id": 4472,
+      "master_url": "https://api.discogs.com/masters/4472",
+      "uri": "/release/143543-DJ-Trace-Inception",
+      "catno": "12 ORBIT 11",
+      "title": "DJ Trace - Inception",
+      "thumb": "https://i.discogs.com/7ZAII9V3OspnOk_Qd-VJzpUrpOgO8or3u1HgY8rkUXo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MzU0/My0xMjYxNDMzNDc1/LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/moa7ulFmGuKaskCZwwDqRB_ligHP6Vz22EUwsVrv7Y8/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MzU0/My0xMjYxNDMzNDc1/LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/143543",
+      "community": {
+        "want": 629,
+        "have": 741
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "45 RPM"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "USA & Europe",
+      "year": "2019",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Reissue",
+        "Remastered",
+        "Stereo"
+      ],
+      "label": [
+        "Impulse!",
+        "Impulse!",
+        "Vital Vinyl",
+        "Verve Label Group",
+        "Verve Label Group",
+        "Aisha Music",
+        "Music Sales Corp.",
+        "Longitude Music",
+        "Chappell & Co.",
+        "TRO-Hampshire House Publishing Corp.",
+        "Van Gelder Studio, Englewood Cliffs, New Jersey",
+        "GZ Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Jazz"
+      ],
+      "style": [
+        "Post Bop",
+        "Modal"
+      ],
+      "id": 14039326,
+      "barcode": [
+        "602577573903",
+        "6 02577 57390 3",
+        "BIEM / SDRM",
+        "BMI",
+        "ASCAP",
+        "00602577573903-A 189573E1/-A",
+        "00602577573903-B 189573E2/A"
+      ],
+      "master_id": 177612,
+      "master_url": "https://api.discogs.com/masters/177612",
+      "uri": "/release/14039326-McCoy-Tyner-Trio-Inception",
+      "catno": "000602577573903",
+      "title": "McCoy Tyner Trio - Inception",
+      "thumb": "https://i.discogs.com/YXT7PMwitXtzKUeaDE_yWfGhDw7uwZsotUihVRQkl78/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MDM5/MzI2LTE2NjEyNzYz/MzItMTAwMS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/VNx5uLvsKf9k18m1P0N2Z8duf8sI-k386526qswSDNw/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MDM5/MzI2LTE2NjEyNzYz/MzItMTAwMS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/14039326",
+      "community": {
+        "want": 89,
+        "have": 657
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Reissue",
+            "Remastered",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1962",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Mono"
+      ],
+      "label": [
+        "Impulse!",
+        "Van Gelder Studio, Englewood Cliffs, New Jersey",
+        "Am-Par Record Corp.",
+        "ABC-Paramount Records, Inc.",
+        "Van Gelder Studio, Englewood Cliffs, New Jersey",
+        "Longwear Plating"
+      ],
+      "type": "release",
+      "genre": [
+        "Jazz"
+      ],
+      "style": [
+        "Post Bop",
+        "Modal"
+      ],
+      "id": 659083,
+      "barcode": [
+        "A-18\u00b7A LW VAN GELDER",
+        "A-18\u00b7B LW VAN GELDER"
+      ],
+      "master_id": 177612,
+      "master_url": "https://api.discogs.com/masters/177612",
+      "uri": "/release/659083-McCoy-Tyner-Trio-Inception",
+      "catno": "A-18",
+      "title": "McCoy Tyner Trio - Inception",
+      "thumb": "https://i.discogs.com/EQkjalNSwyZESiRDfqrq5UwkeHA6FwofoQnw2OPlnyQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY1OTA4/My0xNTMxMTczMTE4/LTQ3ODguanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/W2tMFXF-cVJ0hOSRRYVatBcYTSQOTYRKkckcxUfHbic/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY1OTA4/My0xNTMxMTczMTE4/LTQ3ODguanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/659083",
+      "community": {
+        "want": 380,
+        "have": 226
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Gatefold",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Mono"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2010",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "45 RPM",
+        "Album",
+        "Limited Edition",
+        "Reissue",
+        "Remastered",
+        "Stereo"
+      ],
+      "label": [
+        "Analogue Productions",
+        "Impulse!",
+        "Impulse! Reissues",
+        "Record Technology Incorporated",
+        "Van Gelder Studio, Englewood Cliffs, New Jersey",
+        "AcousTech Mastering"
+      ],
+      "type": "release",
+      "genre": [
+        "Jazz"
+      ],
+      "style": [],
+      "id": 4787948,
+      "barcode": [],
+      "master_id": 177612,
+      "master_url": "https://api.discogs.com/masters/177612",
+      "uri": "/release/4787948-McCoy-Tyner-Trio-Inception",
+      "catno": "AIPJ-18",
+      "title": "McCoy Tyner Trio - Inception",
+      "thumb": "https://i.discogs.com/gV_6MIoujWr999c9SHiycw6bZhdAKSbomAxaj84BmKE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ3ODc5/NDgtMTYzMzY2MDMz/Mi0yMTYyLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/ePG8QjT-d05ZM5AFCqjgOet2oOHZn8ZaYhNFvvlyq1k/rs:fit/g:sm/q:90/h:603/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ3ODc5/NDgtMTYzMzY2MDMz/Mi0yMTYyLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/4787948",
+      "community": {
+        "want": 193,
+        "have": 314
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "180gm, Gatefold",
+          "descriptions": [
+            "12\"",
+            "45 RPM",
+            "Album",
+            "Limited Edition",
+            "Reissue",
+            "Remastered",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1962",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Stereo"
+      ],
+      "label": [
+        "Impulse!",
+        "Van Gelder Studio, Englewood Cliffs, New Jersey",
+        "Am-Par Record Corp.",
+        "Aisha Music Co.",
+        "World Music, Inc.",
+        "Big Seven Music",
+        "Chappell & Co."
+      ],
+      "type": "release",
+      "genre": [
+        "Jazz"
+      ],
+      "style": [
+        "Post Bop",
+        "Modal"
+      ],
+      "id": 779280,
+      "barcode": [
+        "BMI",
+        "ASCAP"
+      ],
+      "master_id": 177612,
+      "master_url": "https://api.discogs.com/masters/177612",
+      "uri": "/release/779280-McCoy-Tyner-Trio-Inception",
+      "catno": "AS-18",
+      "title": "McCoy Tyner Trio - Inception",
+      "thumb": "https://i.discogs.com/LC7R97lZDbETYJVe0rFZ2iS2oOtpowZkN0Fa0v8Hfik/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc3OTI4/MC0xNjAzNjI2MTg3/LTQ1NTUuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/Y_ihyCoI2ftm3kdnba8__h3WAzCZH1cP1bvSYDDrCik/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc3OTI4/MC0xNjAzNjI2MTg3/LTQ1NTUuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/779280",
+      "community": {
+        "want": 286,
+        "have": 203
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Gatefold",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Stereo"
+          ]
+        }
+      ]
+    }
+  ]
+}

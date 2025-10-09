@@ -1,0 +1,283 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 51,
+    "per_page": 5,
+    "items": 255,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=E.T.+the+Extra-Terrestrial+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=51",
+      "next": "https://api.discogs.com/database/search?q=E.T.+the+Extra-Terrestrial+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Picture Disc",
+        "Limited Edition"
+      ],
+      "label": [
+        "MCA Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Contemporary"
+      ],
+      "id": 1884257,
+      "barcode": [
+        "MCA 3041-W18",
+        "MCA 3042-W18",
+        "MCA 3041 W3",
+        "MCA-3042-W20",
+        "MCA 3041 W20 MCA",
+        "MCA-3042-W20"
+      ],
+      "master_id": 26860,
+      "master_url": "https://api.discogs.com/masters/26860",
+      "uri": "/release/1884257-John-Williams-ET-The-Extra-Terrestrial-Original-Motion-Picture-Soundtrack",
+      "catno": "MCA-6113",
+      "title": "John Williams (4) - E.T. The Extra-Terrestrial Original Motion Picture Soundtrack",
+      "thumb": "https://i.discogs.com/78BlAUutLyfb47O-Z4s0UzbUysUURFMrrfQuJRHMoOk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4ODQy/NTctMTQzNzUzOTk1/NC0yMTYwLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/nBy6tClj8Flqd-J9ZmFBqgX9NilSiw7Hp3G1il0TFz8/rs:fit/g:sm/q:90/h:603/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4ODQy/NTctMTQzNzUzOTk1/NC0yMTYwLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1884257",
+      "community": {
+        "want": 264,
+        "have": 1589
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Picture Disc",
+            "Limited Edition"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Limited Edition",
+        "Picture Disc"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Records Ltd."
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Soundtrack"
+      ],
+      "id": 1330186,
+      "barcode": [
+        "MCFP 3160A",
+        "MCFP 3160B",
+        "MCA 6109"
+      ],
+      "master_id": 26860,
+      "master_url": "https://api.discogs.com/masters/26860",
+      "uri": "/release/1330186-John-Williams-ET-The-Extra-Terrestrial-Original-Motion-Picture-Soundtrack",
+      "catno": "MCF 3160",
+      "title": "John Williams (4) - E.T. The Extra-Terrestrial (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/G-W8rNXoeg4EWsS2tPP_dYNfVtF3KOt41LZgvIP_juY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMzAx/ODYtMTI5NzE4MDkx/NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/9cySoHYdiO90Eyv9v9zzToHSPA8TOYt3nVE_jOCH3CM/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMzAx/ODYtMTI5NzE4MDkx/NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1330186",
+      "community": {
+        "want": 234,
+        "have": 1302
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Limited Edition",
+            "Picture Disc"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Pressing Plant, Pinckneyville"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Soundtrack",
+        "Score"
+      ],
+      "id": 693246,
+      "barcode": [
+        "0 76732-6109-1",
+        "076732610916",
+        "MCA-3041-WZ MCA SL",
+        "MCA-3042-WI",
+        "MCA-3041-W4   MCA SL          \u25c8-P-\u25c8 [STAMP]",
+        "MCA-3042-WI                                   \u25c8-P-\u25c8 [STAMP]",
+        "MCA-3041-WI   MCA SL          \u25c8-P-\u25c8 1 [STAMP]",
+        "MCA-3042-W6         -\u25c8 11[STAMP]"
+      ],
+      "master_id": 26860,
+      "master_url": "https://api.discogs.com/masters/26860",
+      "uri": "/release/693246-John-Williams-ET-The-Extra-Terrestrial-Music-From-The-Original-Motion-Picture-Soundtrack",
+      "catno": "MCA 6109",
+      "title": "John Williams (4) - E.T. The Extra-Terrestrial (Music From The Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/sEdTEaZ7JMyRf-okqXgG_rcB075-R_mniZfG5HnPu8Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY5MzI0/Ni0xMTQ4NDY2MDI2/LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/rzGK3iINxXxf0RbHKs7YaqZZ2bRzXnM4iKUFrBN6M4k/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY5MzI0/Ni0xMTQ4NDY2MDI2/LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/693246",
+      "community": {
+        "want": 388,
+        "have": 2554
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Pinckneyville",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Records, Inc.",
+        "Sonopress"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Neo-Classical",
+        "Post-Modern",
+        "Soundtrack"
+      ],
+      "id": 900197,
+      "barcode": [
+        "SACEM SDRM SACD SGDL",
+        "204889 A-3/82S 11",
+        "204889 B-1/82S 11"
+      ],
+      "master_id": 26860,
+      "master_url": "https://api.discogs.com/masters/26860",
+      "uri": "/release/900197-John-Williams-ET-The-Extra-Terrestrial-Music-From-The-Original-Motion-Picture-Soundtrack",
+      "catno": "204 889",
+      "title": "John Williams (4) - E.T. The Extra-Terrestrial (Music From The Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/L--IsTu_56r_dr8AvQLbRxMyXTfNBu9jUhf9R5YpakY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkwMDE5/Ny0xNTg4Njc2MzMx/LTkxNDYuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/W-bSCifkaIwgDc35V-vRGMtYrQQC7fYuv0jO2UAjtls/rs:fit/g:sm/q:90/h:589/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkwMDE5/Ny0xNTg4Njc2MzMx/LTkxNDYuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/900197",
+      "community": {
+        "want": 130,
+        "have": 1177
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP"
+      ],
+      "label": [
+        "MCA Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Soundtrack"
+      ],
+      "id": 2165128,
+      "barcode": [
+        "MCPS, BIEM",
+        "\"bilbo tape one \"etched into run-off side 1",
+        "MCF 3160 B2 etched into run-off side 2"
+      ],
+      "master_id": 26860,
+      "master_url": "https://api.discogs.com/masters/26860",
+      "uri": "/release/2165128-John-Williams-ET-The-Extra-Terrestrial-Music-From-The-Original-Motion-Picture-Soundtrack",
+      "catno": "MCF 3160",
+      "title": "John Williams (4) - E.T. The Extra-Terrestrial (Music From The Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/8DkuHTEfjbRo2315wrxFTG3PxuQTSsmumKASc7m79SQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxNjUx/MjgtMTI4MjAzNDY5/MS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/dGSQUGqVZ754CwRU9HMVw4MuD5ZbzHynWRVWup9Dy40/rs:fit/g:sm/q:90/h:568/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxNjUx/MjgtMTI4MjAzNDY5/MS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2165128",
+      "community": {
+        "want": 159,
+        "have": 943
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP"
+          ]
+        }
+      ]
+    }
+  ]
+}

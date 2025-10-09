@@ -1,0 +1,354 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 256,
+    "per_page": 5,
+    "items": 1280,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Back+to+the+Future+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=256",
+      "next": "https://api.discogs.com/database/search?q=Back+to+the+Future+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1985",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Compilation",
+        "Stereo"
+      ],
+      "label": [
+        "MCA Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Theme",
+        "Doo Wop",
+        "Pop Rock",
+        "Synth-pop"
+      ],
+      "id": 624916,
+      "barcode": [
+        "0 76732-6144-1",
+        "076732614419",
+        "MCA4498",
+        "MCA4499",
+        "MCA-4498-FD3-3",
+        "MCA-4499-FD3-5",
+        "MCA-4705-FD3-2 FUTURE DISC",
+        "MCA-4499-FD3-1",
+        "MCA-4705-FD3-4 FUTURE DISC",
+        "MCA-4499-FDS-7",
+        "MCA-4499-FDS-1 FUTURE DISC",
+        "MCA-4705-FDS-2",
+        "BMI"
+      ],
+      "master_id": 74169,
+      "master_url": "https://api.discogs.com/masters/74169",
+      "uri": "/release/624916-Various-Back-To-The-Future-Music-From-The-Motion-Picture-Soundtrack",
+      "catno": "MCA-6144",
+      "title": "Various - Back To The Future (Music From The Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/kOlalUbN3hv2eNAsFSClekPL6ro2VphVASDeuEZGxMQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNDkx/Ni0xNDk4MjQ3MTg5/LTEzNjkuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/5mbNwiHRKOepZysu070z5z_O0_NzUgs3UmQ0xqhFeko/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNDkx/Ni0xNDk4MjQ3MTg5/LTEzNjkuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/624916",
+      "community": {
+        "want": 2214,
+        "have": 5369
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Future Disc ",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Compilation",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "2021",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Compilation",
+        "Repress"
+      ],
+      "label": [
+        "Geffen Records",
+        "GZ Media",
+        "Geffen Records",
+        "Geffen Records",
+        "Chrysalis Records",
+        "Warner Bros. Records",
+        "Universal Studios",
+        "Future Disc"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock",
+        "Pop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 18213352,
+      "barcode": [
+        "602507421342",
+        "6 0250742134 2",
+        "LC07266",
+        "BIEM/SDRM",
+        "xxxxxxxxxxxxxxxxx 00602507421342-A 217220E1/A",
+        "xxxxxxxxxxxxxxxxx 00602507421342-B 217220E2/A",
+        "00602507421342-A 217220E1/K 02220016",
+        "00602507421342-B 217220E2/I 02201939"
+      ],
+      "master_id": 74169,
+      "master_url": "https://api.discogs.com/masters/74169",
+      "uri": "/release/18213352-Various-Music-from-the-Motion-Picture-Soundtrack-Back-To-The-Future",
+      "catno": "00602507421342",
+      "title": "Various - Music from the Motion Picture Soundtrack-Back To The Future",
+      "thumb": "https://i.discogs.com/BU_-6hobrCqtJTUkWSR1vD35Mm8QLyKydceAoewPu6c/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MjEz/MzUyLTE2MjY0MDIx/NDEtNDA1OS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/2iEGkL4hyIQFLhQ_N9oLnls6EGr6wKF8_kIcoXhmK3I/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MjEz/MzUyLTE2MjY0MDIx/NDEtNDA1OS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/18213352",
+      "community": {
+        "want": 220,
+        "have": 3048
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Compilation",
+            "Repress"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "1985",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Records",
+        "MCA Records, Inc.",
+        "Chrysalis Records",
+        "Warner Bros. Records Inc.",
+        "WEA Musik GmbH",
+        "Record Service GmbH",
+        "Future Disc",
+        "Record Service Alsdorf"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Rock",
+        "Pop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Rock & Roll",
+        "Modern Classical",
+        "Pop Rock",
+        "Synth-pop"
+      ],
+      "id": 505079,
+      "barcode": [
+        "0 2292-52334-1",
+        "0022925233417",
+        "GEMA/BIEM",
+        "LC 1056",
+        "WE 381",
+        "\u24ca",
+        "R/S ALSDORF 252334-1 A2 95",
+        "R/S ALSDORF 252334-1 Bx 95",
+        "R / S ALSDORF 252334-1 A2 102",
+        "R / S Alsdorf 252334-1 Bx 26",
+        "R / S Alsdorf 252334-1 A2 75",
+        "R / S Alsdorf 252334-1 B 116 D",
+        "R/S ALSDORF 252334-1 A2 D",
+        "R/S ALSDORF 252334-1 B 50",
+        "R / S Alsdorf 252334-1 A2 93",
+        "R / S Alsdorf 252334-1 Bx \u201eD\u201d"
+      ],
+      "master_id": 74169,
+      "master_url": "https://api.discogs.com/masters/74169",
+      "uri": "/release/505079-Various-Back-To-The-Future-Music-From-The-Motion-Picture-Soundtrack",
+      "catno": "252 334-1",
+      "title": "Various - Back To The Future - Music From The Motion Picture Soundtrack",
+      "thumb": "https://i.discogs.com/KJFGZ3RkXdHxE1_hGreVWbBXlVL8tFT6tt1VrhZ7ZEc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUwNTA3/OS0xNzIyODAwMzIw/LTgwMzAuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/0j6guK27Yt97twmvbMsxogt4On7due2Qp3LxQLaomsc/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUwNTA3/OS0xNzIyODAwMzIw/LTgwMzAuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/505079",
+      "community": {
+        "want": 730,
+        "have": 2588
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2020",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Compilation",
+        "Reissue"
+      ],
+      "label": [
+        "Geffen Records",
+        "UMe",
+        "Walmart",
+        "Future Disc",
+        "GZ Media",
+        "Precision Record Pressing",
+        "Universal Studios",
+        "UMG Recordings, Inc.",
+        "UMG Recordings, Inc.",
+        "Chrysalis Records",
+        "Warner Bros. Records Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Rock",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Theme",
+        "Doo Wop",
+        "Pop Rock",
+        "Synth-pop"
+      ],
+      "id": 16346673,
+      "barcode": [
+        "602507421854",
+        "10-99670 / B003249001-A 265970E1/B",
+        "10-99670 / B003249001-B 265970E2/A"
+      ],
+      "master_id": 74169,
+      "master_url": "https://api.discogs.com/masters/74169",
+      "uri": "/release/16346673-Various-Back-To-The-Future-Music-From-The-Motion-Picture-Soundtrack",
+      "catno": "B0032490-01",
+      "title": "Various - Back To The Future (Music From The Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/vosA7VHVmvTV9J_eojz8dx6Z44eo5pVfQ589O5iLBZg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MzQ2/NjczLTE2MTExMDUx/NDYtNTEzMS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/XaQNDlLc5QwRYTBc1DQxckeFIWf9T1l25p-ykFRzn5s/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MzQ2/NjczLTE2MTExMDUx/NDYtNTEzMS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/16346673",
+      "community": {
+        "want": 300,
+        "have": 1945
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Orange Mix",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Compilation",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2020",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Compilation",
+        "Reissue"
+      ],
+      "label": [
+        "Mondo Tees LLC",
+        "GZ Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Theme",
+        "Doo Wop",
+        "Pop Rock",
+        "Synth-pop"
+      ],
+      "id": 15806522,
+      "barcode": [
+        "8 10041 48331 7",
+        "810041483317",
+        "B0032231-01",
+        "B0032231-01",
+        "208860E1/A",
+        "208860E2/A"
+      ],
+      "master_id": 74169,
+      "master_url": "https://api.discogs.com/masters/74169",
+      "uri": "/release/15806522-Various-Back-To-The-Future-Music-From-The-Motion-Picture-Soundtrack",
+      "catno": "MOND-166",
+      "title": "Various - Back To The Future (Music From The Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/fSCRBf0MG1ajkjGp8sjIQpXSsNz66VEnRZATDq14I0I/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1ODA2/NTIyLTE1OTgxMzk5/NzAtNjczMy5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/6da0faR0pKrVHPxAQaYuuCoprSt_TX2zlCuWxbW8S1Q/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1ODA2/NTIyLTE1OTgxMzk5/NzAtNjczMy5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/15806522",
+      "community": {
+        "want": 441,
+        "have": 1640
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Blue/Red/Grey Tri-Color",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Compilation",
+            "Reissue"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,51 +1,81 @@
-# Ignore OS system files
+# =========================
+# OS & System Files
+# =========================
 .DS_Store
 Thumbs.db
 
-# Ignore Python bytecode
+# =========================
+# Python Bytecode / Build Artifacts
+# =========================
 __pycache__/
 *.py[cod]
 *.so
 
-# Ignore Jupyter checkpoint folders
+# =========================
+# Virtual Environments
+# =========================
+.venv/
+venv/
+ENV/
+*env/
+
+# =========================
+# Jupyter & Editor Artifacts
+# =========================
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 **/.virtual_documents/
-
-# Ignore VS Code settings
 .vscode/
+.idea/
 
-# Ignore temp or backup files
+# =========================
+# Temporary / Backup Files
+# =========================
 *.bak
 *.tmp
 *~
 
-# Ignore CSVs or raw exports in results/ or data/raw/
-results/*.csv
-data/raw/
-data/*.zip
-data/*.tar.gz
-data/*.csv
+# =========================
+# QA & Audit Artifacts
+# =========================
+QA/audit_reports/**
+!audit_reports/README.md
+!audit_reports/.keep
 
-# Ignore notebooks output artifacts (if applicable)
+metrics/**
+!metrics/README.md
+!metrics/.keep
+
+# =========================
+# Logs
+# =========================
+# Keep main pipeline logs (C:\Projects\unguided-capstone-project\logs)
+# but exclude transient or archived files
+logs/archive/
+logs/debug_*.log
+logs/*.tmp
+logs/*.bak
+
+# =========================
+# scripts/QA/audit_reports
+# =========================
+scripts/QA/audit_reports
+
+# =========================
+# scripts/logs
+# =========================
+scripts/logs
+
+# =========================
+# Notebooks & Slides
+# =========================
 notebooks/*_output.ipynb
-
-# Ignore slide auto-saves
 slides/*.tmp
 
-# Ignore secrets (if you ever add them)
+# =========================
+# Secrets & Credentials
+# =========================
 .env
 *.env
 credentials.json
-# Ignore personal environment setup script
 setup_env.ps1
-
-# Ignore log files
-*.log
-logs/
-
-# Ignore Python virtual environments
-venv/
-.venv/
-ENV/
-*env/
