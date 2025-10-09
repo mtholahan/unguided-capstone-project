@@ -24,13 +24,23 @@ import requests
 from typing import List, Dict, Any, Iterable, Optional
 
 from config import (
+    TMDB_API_KEY,
     API_TIMEOUT,
     RETRY_BACKOFF,
     LOG_LEVEL,
     MAX_THREADS,
     SAVE_RAW_JSON,
     DATA_DIR,
+    DISCOGS_CONSUMER_KEY,
+    DISCOGS_CONSUMER_SECRET,
+    DISCOGS_USER_AGENT,
 )
+
+try:
+    from config import AZURE_SAS_TOKEN
+except ImportError:
+    AZURE_SAS_TOKEN = None
+
 
 # ---------------------------------------------------------------------------
 # 🪶 Logging setup (per-module consistency)
@@ -42,28 +52,28 @@ logger.setLevel(getattr(logging, LOG_LEVEL.upper(), logging.INFO))
 # 🕒 Rate Limiter (thread-safe API pacing)
 # ---------------------------------------------------------------------------
 class RateLimiter:
-    """
-    Thread-safe rate limiter to prevent exceeding API request quotas.
-
-    Parameters
-    ----------
-    calls_per_second : float
-        Maximum allowed request rate. Example: 3.0 means ≤3 API calls/sec.
-    """
-
-    def __init__(self, calls_per_second: float = 3.0):
-        self.lock = threading.Lock()
-        self.min_interval = 1.0 / calls_per_second
+    def __init__(self, rate_per_sec: float = 3.0):
+        try:
+            self.min_interval = 1.0 / float(rate_per_sec)
+        except (TypeError, ValueError):
+            self.min_interval = 1.0 / 3.0
         self.last_call = 0.0
+        self.lock = threading.Lock()
 
     def wait(self):
-        """Block until it’s safe to make another API call."""
-        with self.lock:
-            now = time.perf_counter()
-            elapsed = now - self.last_call
-            if elapsed < self.min_interval:
-                time.sleep(self.min_interval - elapsed)
-            self.last_call = time.perf_counter()
+        import time
+        elapsed = time.time() - self.last_call
+        if elapsed < self.min_interval:
+            time.sleep(self.min_interval - elapsed)
+        self.last_call = time.time()
+
+    # 👇 Add these two methods
+    def __enter__(self):
+        self.wait()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False
 
 
 # ---------------------------------------------------------------------------
@@ -143,6 +153,12 @@ def is_mostly_digits(s: str, threshold: float = 0.7) -> bool:
         return False
     digits = sum(c.isdigit() for c in s)
     return digits / max(len(s), 1) > threshold
+
+
+def safe_filename(name: str) -> str:
+    """Return a filesystem-safe version of a string (Windows-compatible)."""
+    return re.sub(r'[^A-Za-z0-9_\-\.]+', '_', name)
+
 
 
 # ---------------------------------------------------------------------------
@@ -251,6 +267,7 @@ def get_cache_path(url: str, params: dict, cache_dir: Path = DATA_DIR / "cache")
     return cache_dir / f"{md5(key).hexdigest()}.json"
 
 
+
 def cached_request(
     url: str,
     params: dict = None,
@@ -260,11 +277,44 @@ def cached_request(
     backoff: float = RETRY_BACKOFF,
     use_cache: bool = True,
 ) -> Optional[dict]:
-    """Wrapper around safe_request() that stores results locally."""
-    cache_path = get_cache_path(url, params or {})
+    """Generic request wrapper with smart caching and automatic credential injection."""
+    import logging
+    params = params or {}
+    headers = headers or {}
+
+    # ============================================================
+    # 🧠 Auto-Injection Logic (by domain)
+    # ============================================================
+    # TMDB
+    if "themoviedb.org" in url and "api_key" not in params:
+        if TMDB_API_KEY:
+            params["api_key"] = TMDB_API_KEY
+        else:
+            logging.warning("⚠️ Missing TMDB_API_KEY in environment — TMDB calls may fail.")
+
+    # Discogs
+    if "api.discogs.com" in url:
+        if DISCOGS_CONSUMER_KEY and DISCOGS_CONSUMER_SECRET:
+            params.setdefault("key", DISCOGS_CONSUMER_KEY)
+            params.setdefault("secret", DISCOGS_CONSUMER_SECRET)
+        headers.setdefault("User-Agent", DISCOGS_USER_AGENT)
+        logging.debug("🔑 Injected Discogs credentials automatically.")
+
+    # Azure (for REST endpoints, not SDK)
+    if "blob.core.windows.net" in url and AZURE_SAS_TOKEN:
+        params.setdefault("sv", AZURE_SAS_TOKEN)
+        logging.debug("☁️ Attached Azure SAS token to request.")
+
+    # ============================================================
+    # 🧱 Caching Logic
+    # ============================================================
+    cache_path = get_cache_path(url, params)
     if use_cache and cache_path.exists():
         return read_json(cache_path)
 
+    # ============================================================
+    # 🔁 Execute Request
+    # ============================================================
     result = safe_request(url, params, headers, retries, timeout, backoff)
     if result and use_cache:
         save_json(result, cache_path)

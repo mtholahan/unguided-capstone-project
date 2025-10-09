@@ -1,100 +1,161 @@
 """
-config.py v2  —  Unified configuration for Discogs→TMDB pipeline
+config.py v3.0 — Unified configuration for Discogs→TMDB pipeline
 Author: Mark Holahan
-Created: 2025-10-09
+Refactor Date: 2025-10-09
+
 Purpose:
-    Replaces MusicBrainz-specific constants with Discogs + TMDB equivalents.
-    Populates progressively as steps 01–07 are refactored.
+    Centralized configuration and constants for the Unguided Capstone project.
+    Defines all paths, API settings, concurrency limits, and runtime behavior.
+    Designed for both local and cloud-safe operation.
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+import multiprocessing
 
-
-# === 1. Core metadata ===
+# ===============================================================
+# 🧭 PROJECT METADATA
+# ---------------------------------------------------------------
+# Core identifiers used for logging, versioning, and environment awareness.
+# ===============================================================
 PROJECT_NAME = "UnguidedCapstone_DiscogsPipeline"
-VERSION = "0.2-dev"
-SOURCE_SYSTEM = "discogs"           # or "tmdb" if context-specific
-ENV = os.getenv("ENV", "dev")
+VERSION = "0.3-prod"
+SOURCE_SYSTEM = "discogs"  # Default data origin for initial pipeline stages
+ENV = os.getenv("ENV", "dev")  # "dev", "local", "prod" — affects test data scope
 
 
-# === 2. Directory structure ===
+# ===============================================================
+# 🧱 DIRECTORY STRUCTURE
+# ---------------------------------------------------------------
+# Defines all working directories for raw data, intermediate artifacts,
+# metrics, logs, and temporary files. Created automatically at runtime.
+# ===============================================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
-
-# Discogs
-DISCOGS_RAW_DIR = DATA_DIR / "discogs_raw"
-DISCOGS_SUMMARY_PATH = DATA_DIR / "discogs_summary.tsv"
-
-# TMDB
-TMDB_RAW_DIR = DATA_DIR / "tmdb_raw"
-TMDB_OUTPUT_DIR = DATA_DIR / "tmdb_enriched"
-
-# Logs / temp
+RAW_DIR = DATA_DIR / "raw"
+INTERMEDIATE_DIR = DATA_DIR / "intermediate"
+METRICS_DIR = DATA_DIR / "metrics"
 LOG_DIR = BASE_DIR / "logs"
 TMP_DIR = BASE_DIR / "tmp"
-for d in [DATA_DIR, DISCOGS_RAW_DIR, TMDB_RAW_DIR, TMDB_OUTPUT_DIR, LOG_DIR, TMP_DIR]:
+
+# Specific subdirectories (Discogs, TMDB)
+DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
+TMDB_RAW_DIR = RAW_DIR / "tmdb_raw"
+TMDB_OUTPUT_DIR = DATA_DIR / "tmdb_enriched"
+
+# Ensure all required folders exist
+for d in [DATA_DIR, RAW_DIR, INTERMEDIATE_DIR, METRICS_DIR, LOG_DIR, TMP_DIR,
+          DISCOGS_RAW_DIR, TMDB_RAW_DIR, TMDB_OUTPUT_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
-# === 3. API performance tuning ===
-API_TIMEOUT = 10                # seconds before aborting an API call
-RETRY_BACKOFF = 2.0             # seconds between retry attempts (multiplied by attempt count)
-MAX_THREADS = 4                 # max concurrent API fetch threads
+
+# ===============================================================
+# ⚙️ CONCURRENCY SETTINGS
+# ---------------------------------------------------------------
+# Controls parallel execution limits per API; scales based on CPU count.
+# ===============================================================
+CPU_CORES = multiprocessing.cpu_count()
+
+DISCOGS_MAX_WORKERS = int(os.getenv("DISCOGS_MAX_WORKERS", min(4, CPU_CORES)))
+TMDB_MAX_WORKERS = int(os.getenv("TMDB_MAX_WORKERS", min(6, CPU_CORES)))
+DEFAULT_MAX_WORKERS = int(os.getenv("DEFAULT_MAX_WORKERS", min(4, CPU_CORES)))
+# Global thread limit — hard ceiling for any thread pool
+MAX_THREADS = int(os.getenv("MAX_THREADS", min(8, CPU_CORES * 2)))
 
 
-# === 4. Discogs API ===
+
+def get_safe_workers(api_name: str) -> int:
+    """Return safe thread count per API, capped by CPU cores."""
+    mapping = {
+        "discogs": DISCOGS_MAX_WORKERS,
+        "tmdb": TMDB_MAX_WORKERS,
+        "default": DEFAULT_MAX_WORKERS,
+    }
+    workers = mapping.get(api_name.lower(), DEFAULT_MAX_WORKERS)
+    return max(1, min(workers, CPU_CORES))
+
+
+# ===============================================================
+# 🌐 API PERFORMANCE TUNING
+# ---------------------------------------------------------------
+# Shared timeout, retry, and backoff parameters for API calls.
+# ===============================================================
+API_TIMEOUT = 10.0               # Seconds before an API request aborts
+RETRY_BACKOFF = 2.0              # Delay between retries (exponential multiplier)
+SAVE_RAW_JSON = True             # Whether to write raw API responses to disk
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")  # Default verbosity for loggers
+
+
+# ===============================================================
+# 🎵 DISCOGS API SETTINGS
+# ---------------------------------------------------------------
+# Base URL, keys, and pagination controls for Discogs data acquisition.
+# ===============================================================
 DISCOGS_API_URL = "https://api.discogs.com/database/search"
 DISCOGS_CONSUMER_KEY = os.getenv("DISCOGS_CONSUMER_KEY", "")
 DISCOGS_CONSUMER_SECRET = os.getenv("DISCOGS_CONSUMER_SECRET", "")
-DISCOGS_USER_AGENT = "UnguidedCapstonePipeline/1.1 +http://localhost"
-DISCOGS_PER_PAGE = 5
-DISCOGS_SLEEP_SEC = 1.5
-DISCOGS_MAX_RETRIES = 3
+DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
+
+DISCOGS_PER_PAGE = 5             # Number of results per request
+DISCOGS_SLEEP_SEC = 1.5          # Throttle delay between requests
+DISCOGS_MAX_RETRIES = 3          # Retry attempts before giving up
 
 
-# === 5. TMDB API ===
+# ===============================================================
+# 🎬 TMDB API SETTINGS
+# ---------------------------------------------------------------
+# Base URL and endpoints for TMDB movie data fetching and discovery.
+# ===============================================================
 TMDB_API_KEY = os.getenv("TMDB_API_KEY", "")
 TMDB_API_URL = "https://api.themoviedb.org/3"
 TMDB_SEARCH_URL = f"{TMDB_API_URL}/search/movie"
 TMDB_DISCOVER_URL = f"{TMDB_API_URL}/discover/movie"
 TMDB_GENRE_URL = f"{TMDB_API_URL}/genre/movie/list"
+
 TMDB_MAX_RESULTS = 5
-TMDB_SLEEP_SEC = 0.25
-# TMDB rate limiting
-# Approximate safe limits per API key: 40 requests per 10 seconds (4/sec)
-# Set lower (2–3/sec) for stability and to prevent 429 errors.
+TMDB_SLEEP_SEC = 0.25            # Delay between calls for rate stability
+
+# Rate limiter target — max requests per second
 TMDB_RATE_LIMIT = float(os.getenv("TMDB_RATE_LIMIT", 3.0))
 
 
-# === 6. Runtime / behavior ===
-API_TIMEOUT = 10                # seconds to wait before aborting a request
-RETRY_BACKOFF = 2.0             # seconds between retries (multiplied by attempt count)
-MAX_THREADS = 4                 # for future parallel fetches
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-SAVE_RAW_JSON = True            # toggle file writes for large batch runs
-GOLDEN_TEST_MODE = True         # 
+# ===============================================================
+# 🔢 FUZZY MATCHING PARAMETERS
+# ---------------------------------------------------------------
+# Used by Step 04 (Discogs↔TMDB join) to control matching behavior.
+# ===============================================================
+FUZZ_THRESHOLD = int(os.getenv("FUZZ_THRESHOLD", 85))   # Minimum score (0–100)
+YEAR_VARIANCE = int(os.getenv("YEAR_VARIANCE", 3))      # Allowable year gap
+TOP_N = int(os.getenv("TOP_N", 5))                      # Top candidates per match
 
 
-# === 7. Schema / normalization ===
+# ===============================================================
+# ☁️ AZURE PLACEHOLDER
+# ---------------------------------------------------------------
+# Placeholder for optional future blob storage integration.
+# ===============================================================
+AZURE_SAS_TOKEN = os.getenv("AZURE_SAS_TOKEN", None)
+
+
+# ===============================================================
+# 🧮 SCHEMA & NORMALIZATION SETTINGS
+# ---------------------------------------------------------------
+# Defines canonical field names and join keys for harmonization.
+# ===============================================================
 DISCOGS_FIELDS = [
     "title", "year", "genre", "style", "country", "label", "id", "uri"
 ]
 TMDB_FIELDS = [
     "id", "title", "release_date", "genres", "popularity", "vote_average"
 ]
-JOIN_KEYS = ["title", "year"]  # to be validated in step_04_match_instrumented
+JOIN_KEYS = ["title", "year"]  # Default harmonization join columns
 
 
-# === 8. Utility ===
-def print_config_summary():
-    print(f"[Config] Environment: {ENV}")
-    print(f"[Config] Data dir: {DATA_DIR}")
-    print(f"[Config] Source: {SOURCE_SYSTEM}")
-    print(f"[Config] Discogs raw → {DISCOGS_RAW_DIR}")
-    print(f"[Config] TMDB output → {TMDB_OUTPUT_DIR}")
-    print(f"[Config] Log level: {LOG_LEVEL}")
-
-# === Golden Movie List ===
+# ===============================================================
+# 🎬 GOLDEN TEST DATASETS
+# ---------------------------------------------------------------
+# Reference title lists for pipeline validation and quick local testing.
+# ===============================================================
 GOLDEN_TITLES = [
     "Star Wars",
     "The Empire Strikes Back",
@@ -141,15 +202,34 @@ GOLDEN_EXPECTED_YEARS = {
     "Frozen": 2013,
 }
 
-GOLDEN_TITLES_TEST = GOLDEN_TITLES[:5]  # First 5 for quick local runs
+GOLDEN_TITLES_TEST = GOLDEN_TITLES[:5]  # First 5 for lightweight dev runs
+
 
 def get_active_title_list():
-    """Return the appropriate movie list based on ENV."""
+    """Return either the test or full title set based on environment."""
     if ENV.lower() in ("dev", "local"):
         print("[Config] Using TEST title subset (5 titles).")
         return GOLDEN_TITLES_TEST
     print("[Config] Using FULL Golden Title list.")
     return GOLDEN_TITLES
 
+
+# ===============================================================
+# 🧾 UTILITY FUNCTIONS
+# ===============================================================
+def print_config_summary():
+    """Print a short summary of key configuration paths."""
+    print(f"[Config] Environment: {ENV}")
+    print(f"[Config] Data directory: {DATA_DIR}")
+    print(f"[Config] Raw data path: {RAW_DIR}")
+    print(f"[Config] Intermediate: {INTERMEDIATE_DIR}")
+    print(f"[Config] Discogs raw: {DISCOGS_RAW_DIR}")
+    print(f"[Config] TMDB raw: {TMDB_RAW_DIR}")
+    print(f"[Config] TMDB output: {TMDB_OUTPUT_DIR}")
+    print(f"[Config] Metrics directory: {METRICS_DIR}")
+    print(f"[Config] Log level: {LOG_LEVEL}")
+
+
+# Run summary when executed directly
 if __name__ == "__main__":
     print_config_summary()

@@ -1,13 +1,20 @@
 """
 base_step.py — Unified Base Class for Pipeline Steps
 ----------------------------------------------------
-Provides shared logging, metrics tracking, and (optional) Azure upload.
+Provides shared logging, metrics tracking, and optional Azure upload.
 All steps (01–07) inherit from BaseStep for consistent behavior.
+
+Version:
+    v4 — Oct 2025
+
+Author:
+    Mark Holahan
 """
 
 import os
 import sys
 import csv
+import json
 import logging
 import subprocess
 from pathlib import Path
@@ -17,8 +24,6 @@ from config import (
     DATA_DIR,
     LOG_DIR,
     LOG_LEVEL,
-    API_TIMEOUT,
-    RETRY_BACKOFF,
 )
 
 # Optional Azure dependency
@@ -31,12 +36,12 @@ except ImportError:
 # ============================================================
 # 🪶 Shared Logger Factory (used by BaseStep + main.py)
 # ============================================================
-def setup_logger(name="Pipeline"):
+def setup_logger(name="Pipeline", log_dir=LOG_DIR):
     """Initialize a unified logger writing to logs/pipeline.log and console."""
-    Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
-    log_file = Path(LOG_DIR) / "pipeline.log"
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
+    log_file = Path(log_dir) / "pipeline.log"
 
-    # Avoid reconfiguring logging multiple times
+    # Avoid reconfiguring multiple times
     if not logging.getLogger().handlers:
         logging.basicConfig(
             level=getattr(logging, LOG_LEVEL.upper(), logging.INFO),
@@ -66,13 +71,15 @@ class BaseStep:
         self.metrics_dir = self.data_dir / "metrics"
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
 
-        # --- Git metadata for reproducibility ---
+        # Git metadata for reproducibility
         try:
             branch = subprocess.check_output(
-                ["git", "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                stderr=subprocess.DEVNULL,
             ).decode("utf-8").strip()
             commit = subprocess.check_output(
-                ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
+                ["git", "rev-parse", "--short", "HEAD"],
+                stderr=subprocess.DEVNULL,
             ).decode("utf-8").strip()
         except Exception:
             branch, commit = "unknown", "unknown"
@@ -80,7 +87,7 @@ class BaseStep:
         self.logger.info(f"Initialized {name} [branch={branch}, commit={commit}]")
 
     # ============================================================
-    # 💾 Metrics Handling
+    # 💾 Metrics Handling — CSV
     # ============================================================
     def write_metrics(self, metrics: dict):
         """Append metrics to pipeline_metrics.csv with automatic headers."""
@@ -99,6 +106,32 @@ class BaseStep:
             writer.writerow(metrics)
 
         self.logger.info(f"📊 Logged metrics for {self.name}: {metrics}")
+
+    # ============================================================
+    # 💾 Metrics Handling — JSON (per-step summary)
+    # ============================================================
+    def save_metrics(self, filename: str, data: dict):
+        """
+        Save per-step metrics or outputs as a JSON file.
+        Compatible with main.py’s rollup_metrics() aggregator.
+        """
+        out_path = self.metrics_dir / filename
+        tmp = out_path.with_suffix(".tmp")
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        os.replace(tmp, out_path)
+        self.logger.info(f"📈 Saved metrics JSON → {out_path.name}")
+
+    # ============================================================
+    # 🧱 Atomic Write Helper (for any JSON-like file)
+    # ============================================================
+    def atomic_write(self, path: Path, data):
+        """Safely write JSON data atomically."""
+        tmp = path.with_suffix(".tmp")
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        os.replace(tmp, path)
+        self.logger.info(f"💾 Atomic write complete → {path.name}")
 
     # ============================================================
     # ☁️ Azure Upload (Optional)
@@ -123,14 +156,15 @@ class BaseStep:
     # 🧮 Safe CSV Write Helper
     # ============================================================
     def safe_overwrite(self, df: pd.DataFrame, path: Path):
-        """Write CSV atomically."""
+        """Write CSV atomically to avoid partial writes."""
         tmp = path.with_suffix(".tmp")
         df.to_csv(tmp, index=False)
         os.replace(tmp, path)
         self.logger.info(f"💾 Wrote {len(df):,} rows → {path.name}")
 
     # ============================================================
-    # 🧱 Abstract run() method
+    # 🚀 Abstract run() method
     # ============================================================
     def run(self):
+        """Each pipeline step must implement this method."""
         raise NotImplementedError("Each pipeline step must implement its own run() method.")
