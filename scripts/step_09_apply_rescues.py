@@ -6,12 +6,12 @@ Adds metrics, progress_iter, and unified logging style.
 
 from base_step import BaseStep
 import pandas as pd
-from config import TMDB_DIR, DEBUG_MODE
+from config import TMDB_DIR, DEBUG_MODE, FUZZ_ACCEPT_THRESHOLD
 import os
 
 
 class Step09ApplyRescues(BaseStep):
-    def __init__(self, name="Step 09: Apply Manual Rescues (Enhanced & Polished)", threshold: float = 90.0):
+    def __init__(self, name="Step 09: Apply Manual Rescues (Enhanced & Polished)", threshold: float = FUZZ_ACCEPT_THRESHOLD):
         super().__init__(name=name)
         self.threshold = threshold
 

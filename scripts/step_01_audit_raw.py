@@ -7,7 +7,7 @@ from base_step import BaseStep
 import csv
 import pandas as pd
 from pathlib import Path
-from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE
+from config import MB_RAW_DIR, TSV_WHITELIST, ROW_LIMIT, DEBUG_MODE, AUDIT_SAMPLE_LIMIT
 
 
 class Step01AuditRaw(BaseStep):
@@ -43,7 +43,7 @@ class Step01AuditRaw(BaseStep):
             f"(ROW_LIMIT={ROW_LIMIT or '∞'})"
         )
 
-        csv.field_size_limit(1_000_000)
+        csv.field_size_limit(AUDIT_SAMPLE_LIMIT)
         results = []
 
         # ------------------------------------------------------------------
@@ -58,6 +58,7 @@ class Step01AuditRaw(BaseStep):
                     header = next(reader, [])
                     col_count = len(header)
 
+                    # Show the first 30 characters of the file name in the progress bar.
                     for row in self.progress_iter(reader, desc=tsv_path.name[:30], unit="row", leave=False):
                         row_count += 1
                         if ROW_LIMIT and row_count >= ROW_LIMIT:

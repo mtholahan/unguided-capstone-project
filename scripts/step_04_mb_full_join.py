@@ -73,6 +73,7 @@ class Step04MBFullJoin(BaseStep):
                          f"release_group={len(rg_rows):,}, artist_credit={len(ac_rows):,}")
 
         # --- Restore secondary types ---
+        # Each valid record must have at least two columns — skip anything shorter.
         st_map = {r[0]: r[1] for r in rgst_rows if len(r) >= 2}
         rg_secondary = {}
         for j in rgstj_rows:
@@ -119,6 +120,7 @@ class Step04MBFullJoin(BaseStep):
                     row = next(reader)
                 except StopIteration:
                     break
+                # Skip rows that don’t contain at least the minimum expected number of columns.
                 if len(row) < 5:
                     continue
 
@@ -143,6 +145,7 @@ class Step04MBFullJoin(BaseStep):
 
                 if is_soundtrack:
                     soundtrack_count += 1
+                    # Take the first 10 soundtracks, then keep adding a tiny random 0.1% of the rest — just enough to spot-check diversity without flooding logs.
                     if len(soundtrack_samples) < 10 or random.random() < 0.001:
                         soundtrack_samples.append(
                             {
@@ -177,6 +180,7 @@ class Step04MBFullJoin(BaseStep):
         # --- Validation sample ---
         if soundtrack_samples:
             self.logger.info("🎧 Sample soundtrack matches:")
+            # Take only the first 5 items from the sample list.
             for row in soundtrack_samples[:5]:
                 self.logger.info(
                     f"   release_id={row['release_id']} | group='{row['release_group']}' | "

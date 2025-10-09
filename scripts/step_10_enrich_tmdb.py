@@ -13,7 +13,7 @@ import pandas as pd
 import requests
 import time
 import os
-from config import TMDB_DIR, TMDB_API_KEY, ROW_LIMIT, DEBUG_MODE
+from config import TMDB_DIR, TMDB_API_KEY, API_THROTTLE_SECONDS
 
 
 class Step10EnrichMatches(BaseStep):
@@ -24,7 +24,7 @@ class Step10EnrichMatches(BaseStep):
         self.output_file = TMDB_DIR / "tmdb_enriched_matches.csv"
         self.audit_file = TMDB_DIR / "tmdb_enrich_audit.csv"
         self.api_base = "https://api.themoviedb.org/3/movie"
-        self.sleep_time = 0.25  # polite throttle between API calls
+        self.sleep_time = API_THROTTLE_SECONDS  # polite throttle between API calls
 
     # -------------------------------------------------------------
     def clean_text(self, text: str) -> str:

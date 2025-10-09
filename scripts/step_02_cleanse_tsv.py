@@ -140,6 +140,7 @@ class Step02CleanseTSV(BaseStep):
 
             coverage = df["release_year"].notna().mean()
             self.logger.info(f"✅ Added release_year → {out_path.name} (coverage={coverage:.1%})")
+            # Keep coverage values rounded to three decimal places (thousandths).
             metrics["release_year_coverage"] = round(coverage, 3)
 
             if DEBUG_MODE:

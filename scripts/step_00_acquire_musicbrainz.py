@@ -118,6 +118,7 @@ class Step00AcquireMusicbrainz(BaseStep):
         internal_paths = {}
         for line in lines:
             parts = line.split()
+            # If this line doesn’t have enough columns to represent a file record, skip it.
             if len(parts) < 6:
                 continue
             full_path = parts[-1]

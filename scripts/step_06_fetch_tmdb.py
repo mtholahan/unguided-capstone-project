@@ -3,7 +3,7 @@
 Fetches movies from TMDb via the Discover or Search API.
 
 Modes:
-- Golden Test Mode (uses configured iconic titles)
+- Golden Test Mode (uses configured iconic titles; i.e. completely skip Discover API)
 - Regular Discover Mode (up to ROW_LIMIT or 10,000 movies)
 
 Outputs:
@@ -18,8 +18,8 @@ import pandas as pd
 import time
 from config import (
     TMDB_DIR, TMDB_API_KEY, ROW_LIMIT,
-    TMDB_DISCOVER_URL, TMDB_SEARCH_URL, TMDB_GENRE_URL,
-    GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
+    TMDB_DISCOVER_URL, TMDB_SEARCH_URL, TMDB_GENRE_URL, TMDB_PAGE_SIZE, TMDB_RESULT_LIMIT,
+    TMDB_TOTAL_LIMIT, GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
 )
 
 
@@ -28,8 +28,8 @@ class Step06FetchTMDb(BaseStep):
         super().__init__(name=name)
         self.api_key = TMDB_API_KEY
         self.output_path = TMDB_DIR / "enriched_top_1000.csv"
-        self.max_movies = 1000  # overridden by ROW_LIMIT or Golden Mode
-        self.max_pages = 500
+        self.max_movies = TMDB_RESULT_LIMIT  # overridden by ROW_LIMIT or Golden Mode
+        self.max_pages = TMDB_PAGE_SIZE
         self.session = requests.Session()
 
     # -------------------------------------------------------------
@@ -45,7 +45,7 @@ class Step06FetchTMDb(BaseStep):
             self.logger.info(f"🌟 Golden Test Mode active: fetching {len(GOLDEN_TITLES)} iconic movies.")
             movies = self._fetch_golden(GOLDEN_TITLES)
         else:
-            effective_limit = min(ROW_LIMIT or self.max_movies, 10_000)
+            effective_limit = min(ROW_LIMIT or self.max_movies, TMDB_TOTAL_LIMIT)
             self.logger.info(f"▶ Fetching up to {effective_limit:,} TMDb movies (Discover API)...")
             genre_map = self._fetch_genre_map()
             movies = self._fetch_discover_movies(effective_limit, genre_map)
@@ -93,6 +93,7 @@ Notes:
     def _fetch_discover_movies(self, limit: int, genre_map: dict) -> list[dict]:
         """Fetch popular movies using the TMDb Discover API."""
         url = TMDB_DISCOVER_URL
+        # Start downloading from the first page (page 1), where each page contains 20 movie entries — and keep paging through until the limit or max page count is reached.”
         movies, page, per_page = [], 1, 20
 
         for _ in self.progress_iter(range(limit), desc="Fetching TMDb Discover"):
@@ -207,10 +208,12 @@ Notes:
 
     # -------------------------------------------------------------
     def _safe_get(self, url: str, params: dict, retries: int = 3, backoff: float = 2.0):
-        """Simple retry wrapper for TMDb API calls."""
+        """Simple retry wrapper for TMDb API calls.
+           2.0 = A "backoff multiplier to gradually increases wait time after each failed API call
+        """
         for attempt in range(1, retries + 1):
             try:
-                r = self.session.get(url, params=params, timeout=10)
+                r = self.session.get(url, params=params, timeout=10)  # Request timeout (seconds)
                 r.raise_for_status()
                 return r
             except Exception as e:

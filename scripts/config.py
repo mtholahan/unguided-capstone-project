@@ -1,7 +1,7 @@
 """
 Capstone Project Configuration File
 Author: Mark
-Last Updated: Mon, 06-Oct-2025
+Last Updated: Wed, 08-Oct-2025
 
 Centralized configuration for the Unguided Capstone ETL pipeline.
 Organized into logical sections for readability and maintainability.
@@ -28,9 +28,9 @@ def print_config_summary():
 # ============================================================
 
 BASE_DIR = Path(r"D:/Capstone_Staging")
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = BASE_DIR = Path(r"D:/Capstone_Staging") / "data"
 RESULTS_DIR = DATA_DIR / "results"
-METRICS_DIR = DATA_DIR / "metrics"
+# METRICS_DIR = DATA_DIR / "metrics"
 
 MB_RAW_DIR = DATA_DIR / "musicbrainz_raw"
 MB_CLEANSED_DIR = MB_RAW_DIR / "cleansed"
@@ -60,8 +60,6 @@ UNATTENDED = True
 # ---------------------------------------------------------------------
 # 🧮 PHASE 1 – PIPELINE RUNTIME CONSTANTS
 # ---------------------------------------------------------------------
-# These constants replace inline "magic numbers" in Steps 00–06.
-# Each group aligns with a specific part of the ETL pipeline.
 
 # ---------------------------
 #  Core Retry / General Loop
@@ -78,8 +76,8 @@ MAX_RETRY_ATTEMPTS: int = 10          # Max retries for failed MB downloads
 # ---------------------------
 #  Audit / Cleansing Phases
 # ---------------------------
-AUDIT_SAMPLE_LIMIT: int = 30          # Sample size for audit reports
-CLEANSE_SAMPLE_LIMIT: int = 20        # Sample size for cleansing previews
+AUDIT_SAMPLE_LIMIT: int = 1_000_000     # Sample size for audit reports
+CLEANSE_SAMPLE_LIMIT: int = 20          # Sample size for cleansing previews
 
 # ---------------------------
 #  GUID Rehydration / Joins
@@ -97,31 +95,84 @@ FILTER_THRESHOLD: float = 0.02        # Minimum match score for soundtrack inclu
 FILTER_SAMPLE_SIZE: int = 42          # Debug sample size for diagnostic subsets
 SOUNDTRACK_SUBSET_LIMIT: int = 100    # Max rows for subset parquet exports
 
+
+############################################################
+################## BEGIN KEY PARAMETERS ####################
+############################################################
 # ---------------------------
 #  TMDb API / data Fetch
 # ---------------------------
-TMDB_RESULT_LIMIT: int = 1000         # Total titles to query (cap)
-TMDB_PAGE_SIZE: int = 500             # Max results per page
-TMDB_RETRY_DELAY: int = 20            # Delay (seconds) between TMDb API calls
-TMDB_TOTAL_LIMIT: int = 10000         # Hard stop for cumulative fetches
+TMDB_RESULT_LIMIT: int = 1000           # Total titles to query (cap)
+TMDB_PAGE_SIZE: int = 500               # Max results per page
+TMDB_RETRY_DELAY: int = 20              # Delay (seconds) between TMDb API calls
+TMDB_TOTAL_LIMIT: int = 10000           # Hard stop for cumulative fetches
+API_THROTTLE_SECONDS = 0.25             # Minimum delay (in seconds) between TMDb API requests to prevent hitting rate limits.
+                                        # Increase this if you encounter HTTP 429 (Too Many Requests) responses.
 
 
+# ---------------------------
+# ---------------------------
 # Performance limits
-CHUNK_SIZE = 5_000              # Default CSV / ETL batch size
-ROW_LIMIT = 10_000              # Max rows to process per batch
-AUDIT_SAMPLE_LIMIT = 100_000    # Sampling limit for audits
-SLEEP_SECONDS = 1               # Default throttle for API calls
+# ---------------------------
+# ---------------------------
+CHUNK_SIZE = 5_000                  # Default CSV / ETL batch size
+ROW_LIMIT = 10_000                  # Max rows to process per batch
+AUDIT_SAMPLE_LIMIT = 100_000        # Sampling limit for audits
+SLEEP_SECONDS = 1                   # Default throttle for API calls
 
+# ---------------------------
 # Matching & Fuzzy Logic
-FUZZY_THRESHOLD = 120           # Default match cutoff
-YEAR_TOLERANCE = 1              # Allow ±1 year drift
-MAX_CANDIDATES_PER_TITLE = 25   # Candidate cap per title
+# ---------------------------
+FUZZ_THRESHOLD = 45                 # Minimum similarity score (0–100) required for a fuzzy title match to be accepted.
+                                    # Higher values make matches stricter (fewer but more precise results)
+                                    # This controls how loosely or strictly Step 08 selects candidates when computing fuzzy
+                                    # matches between TMDb and MusicBrainz titles.
+FUZZ_ACCEPT_THRESHOLD = 90.0        # Minimum fuzzy-match score (0–100) required for automatic acceptance in Step 09.
+                                    # Lower to include more potential matches; raise to increase precision
+YEAR_VARIANCE = 3                   # Allowed difference in release year between TMDb and MusicBrainz titles (in years)
+                                    # A value of 2 means titles within ±2 years are considered potentially the same release
+MAX_CANDIDATES_PER_TITLE = 25       # Maximum number of candidate titles to compare against each TMDb title
+                                    # during the fuzzy matching process. Acts as a performance safeguard.
+USE_ALT_TITLES = True               # Whether to fetch and include alternative (localized / international) titles 
+                                    # from the TMDb API during fuzzy matching. 
+                                    # Setting this to False disables extra API calls and speeds up matching.
+FORCE_RENORM = True                # Force re-normalization of title text even if a 'normalized_title' column already exists.
+                                    # Useful when normalization logic has changed or datasets were processed with older rules.
+TOP_N = 5                           # Number of top fuzzy-match candidates to evaluate per TMDb title
+                                    # (higher = slower but potentially more accurate matching).
+FILM_OST_FILTER = True              # When True, Step 07 keeps only titles whose text suggests a film soundtrack
+                                    # (matches patterns like 'original motion picture', 'film', 'movie', 'ost', 'score').
+                                    # Disable to include all MusicBrainz soundtracks regardless of media type.
+FILM_OST_PATTERN = (
+    r"(?i)(motion picture|original (motion )?picture soundtrack|soundtrack|"
+    r"music (from|of|for) (the )?(motion picture|movie|film)|"
+    r"original score|film score|movie score|theme from|"
+    r"music inspired by)"
+)
+# Regex used by Step 07 to detect likely film soundtrack titles.
+   # Broader than the default; matches “music from,” “original soundtrack,”
+   # and “theme from” so that compilation OSTs are not dropped.
 
+
+# ---------------------------
+# Coverage Audit & Similarity
+# ---------------------------
+COVERAGE_SIMILARITY_THRESHOLD = 0.85    # Minimum similarity (0–1.0) required for considering a TMDb title "covered" by MusicBrainz.
+                                        # Used in Step 10B coverage audit. Raise for stricter matches, lower for broader coverage.
+
+# ---------------------------
 # Golden test settings
-GOLDEN_TEST_MODE = False
+# ---------------------------
+GOLDEN_TEST_MODE = True
 GOLDEN_TEST_SIZE = 200
 
+############################################################
+################## END KEY PARAMETERS ######################
+############################################################
+
+# ---------------------------
 # Metrics dictionary populated dynamically
+# ---------------------------
 STEP_METRICS = {}
 
 # ============================================================
@@ -130,13 +181,17 @@ STEP_METRICS = {}
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
+# ---------------------------
 # URLs
+# ---------------------------
 MB_DUMP_URL = "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/"
 TMDB_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie"
 TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 TMDB_GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list"
 
+# ---------------------------
 # Azure storage placeholders
+# ---------------------------
 AZURE_CONN_STR = os.getenv("AZURE_STORAGE_CONNECTION_STRING", "")
 BLOB_CONTAINER = os.getenv("AZURE_BLOB_CONTAINER", "capstone-outputs")
 
@@ -144,7 +199,9 @@ BLOB_CONTAINER = os.getenv("AZURE_BLOB_CONTAINER", "capstone-outputs")
 # 6. Data File Mappings (MusicBrainz & TMDb)
 # ============================================================
 
-# --- MusicBrainz Inputs ---
+# ---------------------------
+# MusicBrainz Inputs
+# ---------------------------
 TSV_WHITELIST = {
     "artist.tsv",
     "artist_credit.tsv",

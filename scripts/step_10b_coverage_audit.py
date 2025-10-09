@@ -8,13 +8,13 @@ audit and summary metrics.
 
 from base_step import BaseStep
 import pandas as pd
-from config import TMDB_DIR, DEBUG_MODE
+from config import TMDB_DIR, COVERAGE_SIMILARITY_THRESHOLD
 from difflib import SequenceMatcher
 import os
 
 
 class Step10BCoverageAudit(BaseStep):
-    def __init__(self, name="Step 10B: OST Coverage Audit", similarity_threshold=0.85):
+    def __init__(self, name="Step 10B: OST Coverage Audit", similarity_threshold=COVERAGE_SIMILARITY_THRESHOLD):
         super().__init__(name=name)
         self.similarity_threshold = similarity_threshold
 
@@ -101,7 +101,7 @@ class Step10BCoverageAudit(BaseStep):
 
         # --- Write per-title audit ---
         audit_df = pd.DataFrame(audit_rows)
-        audit_df.to_csv(self.output_csv, index=False, encoding="utf-8", newline="")
+        audit_df.to_csv(self.output_csv, index=False, encoding="utf-8", lineterminator="\n")
         total = len(audit_df)
 
         # --- Write summary file ---

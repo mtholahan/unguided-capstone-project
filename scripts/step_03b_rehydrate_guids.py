@@ -119,7 +119,7 @@ class Step03BRehydrateGuids(BaseStep):
             self.logger.info("🔎 Sample of enriched rows:")
             for _, row in sample.iterrows():
                 self.logger.info(
-                    f"   id={row.get('id', '?')} | name={str(row.get('name', ''))[:40]} | "
+                    f"   id={row.get('id', '?')} | name={str(row.get('name', ''))[:40]} | " # max characters to display for long names in logs
                     f"{ac_col}={row.get(ac_col)} → {row.get('artist_credit_gid')} | "
                     f"{rg_col}={row.get(rg_col)} → {row.get('release_group_gid')}"
                 )

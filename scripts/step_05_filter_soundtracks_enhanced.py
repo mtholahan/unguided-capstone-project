@@ -1,7 +1,8 @@
-"""Step 05 Enhanced: Filter Soundtracks (+ Analytics and Parquet Output)
------------------------------------------------------------------------
+# v2.1 — Year inference & metrics
+"""Step 05 Enhanced: Filter Soundtracks (+ Year Repair, Analytics, Parquet)
+--------------------------------------------------------------------------
 Filters the joined dataset to include only soundtrack releases.
-Adds release-year extraction, writes both TSV and Parquet versions,
+Repairs missing/invalid release years from raw text, writes TSV/Parquet,
 and logs Power BI–compatible metrics.
 
 Input :  DATA_DIR/joined_release_data.tsv
@@ -17,7 +18,9 @@ from config import DATA_DIR, MB_CLEANSED_DIR, ROW_LIMIT
 import csv, re
 import pandas as pd
 from pathlib import Path
+from datetime import datetime
 
+CURRENT_YEAR = datetime.now().year
 
 class Step05FilterSoundtracksEnhanced(BaseStep):
     def __init__(self, name="Step 05 Enhanced: Filter Soundtracks"):
@@ -79,9 +82,22 @@ class Step05FilterSoundtracksEnhanced(BaseStep):
         return year_map
 
     # -------------------------------------------------------------
+    @staticmethod
+    def infer_year_from_text(text: str) -> int:
+        """Infer a plausible year from free text (e.g., raw_row). Returns -1 if unknown."""
+        if not text:
+            return -1
+        # prefer 4-digit 19xx/20xx; take earliest occurrence
+        m = re.search(r"(19|20)\d{2}", text)
+        if not m:
+            return -1
+        year = int(m.group(0))
+        return year if 1900 <= year <= (CURRENT_YEAR + 1) else -1
+
+    # -------------------------------------------------------------
     def run(self):
         self.setup_logger()
-        self.logger.info("🚀 Starting Step 05: Filter Soundtracks (Enhanced, Cleansed Input)")
+        self.logger.info("🚀 Starting Step 05: Filter Soundtracks (Enhanced + Year Repair)")
 
         joined_path = DATA_DIR / "joined_release_data.tsv"
         output_tsv = DATA_DIR / "soundtracks.tsv"
@@ -95,6 +111,7 @@ class Step05FilterSoundtracksEnhanced(BaseStep):
         release_year_map = self.load_release_year_map()
 
         matched, skipped = 0, 0
+        repaired_count, empty_year_count = 0, 0
         row_count = sum(1 for _ in open(joined_path, encoding="utf-8"))
         effective_limit = ROW_LIMIT or row_count
         self.logger.info(
@@ -131,14 +148,27 @@ class Step05FilterSoundtracksEnhanced(BaseStep):
                 if release_group_id not in soundtrack_ids:
                     skipped += 1
                 else:
+                    raw_text = "|".join(row)
                     year = release_year_map.get(release_group_id, -1)
-                    writer.writerow([release_group_id, year, "|".join(row), "Soundtrack"])
+                    if year is None:
+                        year = -1
+                    # repair year if missing/invalid
+                    if not (1900 <= int(year) <= (CURRENT_YEAR + 1)):
+                        empty_year_count += 1
+                        inferred = self.infer_year_from_text(raw_text)
+                        if inferred != -1:
+                            year = inferred
+                            repaired_count += 1
+                        else:
+                            year = -1
+                    writer.writerow([release_group_id, year, raw_text, "Soundtrack"])
                     matched += 1
 
                 if (matched + skipped) % 100_000 == 0:
                     self.logger.info(f"📈 Processed {matched + skipped:,} rows... (matched = {matched:,})")
 
         self.logger.info(f"💾 Wrote {matched:,} soundtrack rows → {output_tsv.name} ({skipped:,} skipped)")
+        self.logger.info(f"🩹 Year repair: empty/invalid={empty_year_count:,}, repaired={repaired_count:,}")
 
         # --- Post-validation ---
         with open(output_tsv, encoding="utf-8") as f:
@@ -173,10 +203,12 @@ class Step05FilterSoundtracksEnhanced(BaseStep):
             "match_pct": round(100 * matched / max(row_count, 1), 2),
             "row_limit_active": bool(ROW_LIMIT),
             "source_dir": str(MB_CLEANSED_DIR),
+            "years_empty_or_invalid": empty_year_count,
+            "years_repaired": repaired_count,
         }
         self.write_metrics("step05_filter_soundtracks", metrics)
         self.logger.info(f"📊 Metrics recorded: {metrics}")
-        self.logger.info("✅ [DONE] Step 05 completed successfully (cleansed lineage).")
+        self.logger.info("✅ [DONE] Step 05 completed successfully (enhanced).")
 
 
 if __name__ == "__main__":
