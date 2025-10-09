@@ -1,0 +1,306 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 169,
+    "per_page": 5,
+    "items": 845,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Return+of+the+Jedi&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=169",
+      "next": "https://api.discogs.com/database/search?q=Return+of+the+Jedi&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1983",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Buena Vista Records",
+        "The Star Wars Series",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Buena Vista Records",
+        "Allied Record Company",
+        "Electrosound Group Midwest, Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Non-Music",
+        "Classical",
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Story",
+        "Dialogue"
+      ],
+      "id": 496285,
+      "barcode": [
+        "62103-AES-683-A-1 > EMW\"",
+        "62103-AES-683-B-1 >"
+      ],
+      "master_id": 226228,
+      "master_url": "https://api.discogs.com/masters/226228",
+      "uri": "/release/496285-The-London-Symphony-Orchestra-The-Story-Of-Return-Of-The-Jedi",
+      "catno": "62103",
+      "title": "The London Symphony Orchestra* - The Story Of Return Of The Jedi",
+      "thumb": "https://i.discogs.com/F06yWKhEnpTVtu95vDQDjEWVDh_sjdT4xZZxNhK8CEY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NjI4/NS0xNTk1ODg2NTQ0/LTk5NDYuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/xEDTKegYh78vU1n5_rYyXLCejoZdMdDG9ppyy3SfvU4/rs:fit/g:sm/q:90/h:591/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NjI4/NS0xNTk1ODg2NTQ0/LTk5NDYuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/496285",
+      "community": {
+        "want": 337,
+        "have": 1968
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Electrosound Pressing",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1983",
+      "format": [
+        "Vinyl",
+        "LP",
+        "7\"",
+        "Styrene"
+      ],
+      "label": [
+        "Buena Vista Records",
+        "The Star Wars Series",
+        "Little LP",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Buena Vista Records",
+        "Buena Vista Records",
+        "Allied Record Company",
+        "PRC Recording Company, Richmond, IN"
+      ],
+      "type": "release",
+      "genre": [
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 1108615,
+      "barcode": [
+        "455-APRCR-483-1",
+        "455-APRCR-483-2"
+      ],
+      "master_id": 927165,
+      "master_url": "https://api.discogs.com/masters/927165",
+      "uri": "/release/1108615-Unknown-Artist-Star-Wars-Return-Of-The-Jedi",
+      "catno": "455",
+      "title": "Unknown Artist - Star Wars: Return Of The Jedi",
+      "thumb": "https://i.discogs.com/RgujH_KtpuTSvKbO-1cBPwHzx2R3L7FYAnBHa9l9Kgk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMDg2/MTUtMTczMTE2NDI4/NC03MDQ2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/hAwsZSpEz8QKTQms1oWPqrolsd9vq6N6kaB0sTVbk6M/rs:fit/g:sm/q:90/h:603/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMDg2/MTUtMTczMTE2NDI4/NC03MDQ2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1108615",
+      "community": {
+        "want": 234,
+        "have": 1053
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "7\"",
+            "Styrene"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1983",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Picture Disc",
+        "Special Edition"
+      ],
+      "label": [
+        "Buena Vista Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Non-Music",
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Movie Effects",
+        "Story"
+      ],
+      "id": 616743,
+      "barcode": [],
+      "master_id": 226228,
+      "master_url": "https://api.discogs.com/masters/226228",
+      "uri": "/release/616743-London-Symphony-Orchestra-The-Story-Of-Return-Of-The-Jedi",
+      "catno": "63155",
+      "title": "London Symphony Orchestra - The Story Of Return Of The Jedi",
+      "thumb": "https://i.discogs.com/qfKfbQMNGaCncwaAmRoDrbUpWRHNBbSQLzI6r1HQrw0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxNjc0/My0xNTk1OTEzMzMw/LTc2MTIuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/emVPLFwcefte0SpF2lVXbuM1uaYPR8ZmpJ_wQggJXDM/rs:fit/g:sm/q:90/h:394/w:400/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxNjc0/My0xNTk1OTEzMzMw/LTc2MTIuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/616743",
+      "community": {
+        "want": 223,
+        "have": 896
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Picture Disc",
+            "Special Edition"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1983",
+      "format": [
+        "Vinyl",
+        "LP",
+        "7\""
+      ],
+      "label": [
+        "Buena Vista Records",
+        "The Star Wars Series",
+        "Little LP",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Allied Record Company",
+        "Specialty Records Corporation"
+      ],
+      "type": "release",
+      "genre": [
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 4957627,
+      "barcode": [
+        "455-ASPEC-483-1 > SRC",
+        "455-ASPEC-483-1 > SRC"
+      ],
+      "master_id": 927165,
+      "master_url": "https://api.discogs.com/masters/927165",
+      "uri": "/release/4957627-Unknown-Artist-Return-Of-The-Jedi",
+      "catno": "455",
+      "title": "Unknown Artist - Return Of The Jedi",
+      "thumb": "https://i.discogs.com/1ypl782OKKRgPtP6qvD7oav1lKp9bQnPn5lrZLeIvz8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NTc2/MjctMTM4ODk3Nzk3/OS05ODQ1LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/0oekXbQ-5DH7I3RPxtRm11TLq-hTQ0qsjhTbEnvwJoU/rs:fit/g:sm/q:90/h:258/w:260/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NTc2/MjctMTM4ODk3Nzk3/OS05ODQ1LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/4957627",
+      "community": {
+        "want": 89,
+        "have": 214
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "7\""
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "2016",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Limited Edition",
+        "Reissue"
+      ],
+      "label": [
+        "RSO",
+        "Sony Classical",
+        "Sony Music Entertainment International Services GmbH",
+        "Sony Music Entertainment",
+        "Sony Classical",
+        "Sony Music Entertainment",
+        "Lucasfilm Ltd.",
+        "Sony Music Entertainment",
+        "MPO",
+        "Anvil Recording Studios",
+        "SST Br\u00fcggemann GmbH"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Neo-Romantic",
+        "Score"
+      ],
+      "id": 8920567,
+      "barcode": [
+        "889853211111",
+        "8 89853 21111 1",
+        "BIEM/GEMA",
+        "LC 06868",
+        "88985321111/6A",
+        "88985321111/6B",
+        "88875087451-11A  MPO  Kr SST",
+        "88875087451-11B  Kr SST  MPO"
+      ],
+      "master_id": 55429,
+      "master_url": "https://api.discogs.com/masters/55429",
+      "uri": "/release/8920567-John-Williams-Star-Wars-Return-Of-The-Jedi-The-Original-Motion-Picture-Soundtrack",
+      "catno": "28MW 0031",
+      "title": "John Williams (4) - Star Wars / Return Of The Jedi (The Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/PkSTE47xvMFdkTccuVriPlX4X0gWKzgaDkz3_Q9bIJw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg5MjA1/NjctMTQ3MTUwMDA4/OS00MTA4LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/hUZsfm24JsM1w3P2Qj4XOtAfR8Pwi-veNvaazcto3UQ/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg5MjA1/NjctMTQ3MTUwMDA4/OS00MTA4LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/8920567",
+      "community": {
+        "want": 434,
+        "have": 1968
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Gold",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Limited Edition",
+            "Reissue"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,369 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 184,
+    "per_page": 5,
+    "items": 919,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Frozen+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=184",
+      "next": "https://api.discogs.com/database/search?q=Frozen+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "Europe",
+      "year": "2013",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Walt Disney Records",
+        "Universal International Music B.V.",
+        "Walt Disney Records",
+        "Disney Enterprises, Inc.",
+        "EDC, Germany",
+        "Sunset Sound",
+        "Capitol Studios",
+        "Avatar Studios",
+        "Chalice Recording Studios",
+        "MixStar Studios",
+        "\u00d8ra Studio",
+        "Gateway Mastering"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Theme"
+      ],
+      "id": 5481007,
+      "barcode": [
+        "0 50087 30146 0",
+        "BIEM/SDRM",
+        "00500 873 014-6 01 # 53384580",
+        "IFPI L787",
+        "IFPI 0120",
+        "[4 x Universal Logo] 00500 873 014-6 02 # 53384580 MADE IN GERMANY BY EDC U",
+        "IFPI LV27",
+        "IFPI 0140",
+        "[4 x Universal Logo] 00500 873 014-6 02 \u274b 53384580 MADE IN GERMANY BY EDC U",
+        "IFPI LV26",
+        "IFPI 0140",
+        "[4 x Universal Logo] 00500 873 014-6 02 \u274b 53384580 MADE IN GERMANY BY EDC A",
+        "IFPI LV26",
+        "IFPI 0150",
+        "[4 x Universal Logo] 00500 873 014-6 02 # 53384580 MADE IN GERMANY BY EDC G",
+        "IFPI LZ87",
+        "IFPI 0151",
+        "[4 x Universal Logo] 00500 873 014-6 02 \u274b 53384580 MADE IN GERMANY BY EDC L",
+        "IFPI LV26",
+        "IFPI 0118",
+        "[4 x Universal Logo] 00500 873 014-6 02 \u274b 53384580 MADE IN GERMANY BY EDC H",
+        "IFPI LV26",
+        "IFPI 0126"
+      ],
+      "master_id": 681220,
+      "master_url": "https://api.discogs.com/masters/681220",
+      "uri": "/release/5481007-Kristen-Anderson-Lopez-And-Robert-Lopez-Christophe-Beck-Disney-Frozen-Soundtrack",
+      "catno": "050087301460",
+      "title": "Kristen Anderson-Lopez And Robert Lopez, Christophe Beck - Disney Frozen Soundtrack",
+      "thumb": "https://i.discogs.com/kVsvwA_jPGrZwE8wxi93xvX8kbFC00czQi3t1td_Sp8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0ODEw/MDctMTQ0MzI3MTc5/NS04NzgwLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/I7kePODW6wy57-saoQgV18fmIf-SJ8SEFviKJJ6tkyU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0ODEw/MDctMTQ0MzI3MTc5/NS04NzgwLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/5481007",
+      "community": {
+        "want": 43,
+        "have": 611
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "New Zealand",
+      "year": "2013",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Walt Disney Records",
+        "Walt Disney Records",
+        "Disney Enterprises, Inc.",
+        "Universal Music New Zealand",
+        "Sunset Sound",
+        "Capitol Studios",
+        "Avatar Studios",
+        "Chalice Recording Studios",
+        "MixStar Studios",
+        "\u00d8ra Studio",
+        "Gateway Mastering",
+        "Stebbing Recording Centre Ltd."
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score"
+      ],
+      "id": 13565895,
+      "barcode": [
+        "0 50087 30118 7",
+        "050087301187",
+        "STEBBING IFPI P801 8730118 12427A",
+        "['Universal' logo]",
+        "IFPI P801"
+      ],
+      "master_id": 681220,
+      "master_url": "https://api.discogs.com/masters/681220",
+      "uri": "/release/13565895-Kristen-Anderson-Lopez-And-Robert-Lopez-Christophe-Beck-Frozen-Soundtrack",
+      "catno": "8730118",
+      "title": "Kristen Anderson-Lopez And Robert Lopez / Christophe Beck - Frozen (Soundtrack)",
+      "thumb": "https://i.discogs.com/IGQB7OvsHfSsFoA1GzZFs-fQluANon6JgZRd9dQ9haM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNTY1/ODk1LTE2MDkwMzgx/NjktNzExNi5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/9XNnTjttmkgwlYdbsphhDEjY-1K4ehEKntxs3hWcIPw/rs:fit/g:sm/q:90/h:592/w:599/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNTY1/ODk1LTE2MDkwMzgx/NjktNzExNi5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/13565895",
+      "community": {
+        "want": 14,
+        "have": 112
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "year": "2013",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Walt Disney Records",
+        "Walt Disney Records",
+        "Disney Enterprises, Inc.",
+        "Universal Music Canada Inc.",
+        "Universal Music Canada Inc.",
+        "Cinram, Olyphant, PA",
+        "Cinram, Olyphant, PA"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Theme"
+      ],
+      "id": 11558992,
+      "barcode": [
+        "050087301187",
+        "0 50087 30118 7",
+        "Z128460  M0S1",
+        "ifpi L909",
+        "IFPI 2U9C"
+      ],
+      "master_id": 681220,
+      "master_url": "https://api.discogs.com/masters/681220",
+      "uri": "/release/11558992-Kristen-Anderson-Lopez-Robert-Lopez-Christophe-Beck-Disney-Frozen-Soundtrack",
+      "catno": "D001959402",
+      "title": "Kristen Anderson-Lopez, Robert Lopez & Christophe Beck - Disney Frozen Soundtrack",
+      "thumb": "https://i.discogs.com/CvUFLCW59tHjsrECLUuTK_F9Eq7rsfLf2j99PItVMXc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTU4/OTkyLTE1MTg1ODI3/MTgtOTc4My5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/b_DwohGyUPBbcp_rzbNddxMreqVaeITXfvwgGnRyB54/rs:fit/g:sm/q:90/h:604/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTU4/OTkyLTE1MTg1ODI3/MTgtOTc4My5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/11558992",
+      "community": {
+        "want": 12,
+        "have": 150
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2013",
+      "format": [
+        "CD",
+        "Album"
+      ],
+      "label": [
+        "Walt Disney Records",
+        "Walt Disney Records",
+        "Disney Enterprises, Inc.",
+        "Wonderland Music Company, Inc.",
+        "Five Hundred South Songs",
+        "Boosey & Hawkes",
+        "The Eastwood Scoring Stage",
+        "Sunset Sound",
+        "Capitol Studios",
+        "Avatar Studios",
+        "Chalice Recording Studios",
+        "MixStar Studios",
+        "\u00d8ra Studio",
+        "The Eastwood Scoring Stage",
+        "JCB Music",
+        "Gateway Mastering",
+        "Sony DADC"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Theme"
+      ],
+      "id": 6438248,
+      "barcode": [
+        "050087295745",
+        "0 50087 29574 5",
+        "DIDX-1034775 3 A13",
+        "IFPI L327",
+        "IFPI 5061",
+        "BMI",
+        "SESAC",
+        "ASCAP"
+      ],
+      "master_id": 681220,
+      "master_url": "https://api.discogs.com/masters/681220",
+      "uri": "/release/6438248-Kristen-Anderson-Lopez-And-Robert-Lopez-Christophe-Beck-Frozen-An-Original-Walt-Disney-Records-Sound",
+      "catno": "D001906102",
+      "title": "Kristen Anderson-Lopez And Robert Lopez, Christophe Beck - Frozen (An Original Walt Disney Records Soundtrack)",
+      "thumb": "https://i.discogs.com/3shJ8UpANHr6ZYre0YecKLavwS7uqlEr0UI1JrV-xcM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY0Mzgy/NDgtMTU2MTk4ODIx/NS04MjI0LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/OV3FSG95PfwuP_2LxID9FJIWHKf9sKAr_AOWbV9pY3Q/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY0Mzgy/NDgtMTU2MTk4ODIx/NS04MjI0LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/6438248",
+      "community": {
+        "want": 28,
+        "have": 668
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2014",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Vinyl",
+        "LP",
+        "Single Sided",
+        "Etched",
+        "Vinyl",
+        "LP",
+        "All Media",
+        "Limited Edition",
+        "Numbered"
+      ],
+      "label": [
+        "Walt Disney Records",
+        "Walt Disney Records",
+        "Disney Enterprises, Inc.",
+        "Nashville Record Productions",
+        "United Record Pressing"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Score",
+        "Theme"
+      ],
+      "id": 5631373,
+      "barcode": [
+        "0 5008730409 6",
+        "D001988201-LP1A-RE-1 II WG/NRP \u24ca",
+        "D001988201-LP1-B-RE-1 II WG/NRP \u24ca",
+        "D001988201LP2-A II NRP \u24ca",
+        "D001988201LP3-A NRP \u24ca",
+        "D001988201LP3-B NRP \u24ca"
+      ],
+      "master_id": 681220,
+      "master_url": "https://api.discogs.com/masters/681220",
+      "uri": "/release/5631373-Kristen-Anderson-Lopez-Robert-Lopez-Christophe-Beck-Frozen",
+      "catno": "D001988101",
+      "title": "Kristen Anderson-Lopez, Robert Lopez & Christophe Beck - Frozen",
+      "thumb": "https://i.discogs.com/TpTfEJns_lC2Sqw3j29mAhq7wpQZxqJYbX2YoiP_Dug/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2MzEz/NzMtMTQwMjAyNjcz/My01NjQyLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/6-ouoc3b43q1lfJzXmYxRhon0Ft4q1NDwhIAYZIg5Zw/rs:fit/g:sm/q:90/h:541/w:550/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2MzEz/NzMtMTQwMjAyNjcz/My01NjQyLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/5631373",
+      "community": {
+        "want": 1002,
+        "have": 621
+      },
+      "format_quantity": 3,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Blue Translucent",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Blue Translucent",
+          "descriptions": [
+            "LP",
+            "Single Sided",
+            "Etched"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Clear",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "All Media",
+          "qty": "1",
+          "descriptions": [
+            "Limited Edition",
+            "Numbered"
+          ]
+        }
+      ]
+    }
+  ]
+}

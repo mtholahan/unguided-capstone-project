@@ -1,0 +1,287 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 71,
+    "per_page": 5,
+    "items": 355,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Gladiator+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=71",
+      "next": "https://api.discogs.com/database/search?q=Gladiator+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1992",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "33 \u2153 RPM",
+        "Single"
+      ],
+      "label": [
+        "Def Jam Recordings",
+        "Columbia"
+      ],
+      "type": "release",
+      "genre": [
+        "Hip Hop"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 186845,
+      "barcode": [
+        "XSS 74245A",
+        "XSS 74245A",
+        "0098707424519"
+      ],
+      "master_id": 48122,
+      "master_url": "https://api.discogs.com/masters/48122",
+      "uri": "/release/186845-3rd-Bass-Gladiator",
+      "catno": "44-74245",
+      "title": "3rd Bass - Gladiator",
+      "thumb": "https://i.discogs.com/DMNqpyBs8ITkH0Hp9oDL3GaLqqmVkGidGfD03zDGyl4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Njg0/NS0xNTExNDQ2MzE5/LTQ0MjMuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/3EIgOvGxLXD3cFC9k7HEfjiNmdqPOzNa6qOhH7c9ygA/rs:fit/g:sm/q:90/h:587/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Njg0/NS0xNTExNDQ2MzE5/LTQ0MjMuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/186845",
+      "community": {
+        "want": 132,
+        "have": 576
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "33 \u2153 RPM",
+            "Single"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1992",
+      "format": [
+        "CD",
+        "Single",
+        "Promo"
+      ],
+      "label": [
+        "Def Jam Recordings",
+        "Columbia"
+      ],
+      "type": "release",
+      "genre": [
+        "Hip Hop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 1377167,
+      "barcode": [],
+      "master_id": 48122,
+      "master_url": "https://api.discogs.com/masters/48122",
+      "uri": "/release/1377167-3rd-Bass-Gladiator",
+      "catno": "CSK 74235",
+      "title": "3rd Bass - Gladiator",
+      "thumb": "https://i.discogs.com/gIhQNjWeA7qqy5OJ4LIgVI14R5XshTAlZulZ7HtEzzY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNzcx/NjctMTIyMzUwMjYx/Mi5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/nlEzNgEHdbPQQB-0CXRvvfrv9IFNPCcDMdNmCQ5V9VU/rs:fit/g:sm/q:90/h:591/w:580/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNzcx/NjctMTIyMzUwMjYx/Mi5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1377167",
+      "community": {
+        "want": 31,
+        "have": 33
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Single",
+            "Promo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1992",
+      "format": [
+        "Cassette",
+        "Single"
+      ],
+      "label": [
+        "Columbia",
+        "Columbia Records",
+        "Sony Music Entertainment Inc.",
+        "Sony Music Entertainment Inc.",
+        "Columbia Pictures Industries, Inc.",
+        "Double R Productions, Inc.",
+        "Chung King Studios",
+        "Chung King Studios",
+        "Burbank Plaza Music, Inc.",
+        "Rhyming Is Fundamental Music",
+        "Def Jam Music, Inc.",
+        "Precision Mastering"
+      ],
+      "type": "release",
+      "genre": [
+        "Hip Hop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 5128371,
+      "barcode": [
+        "0 9870-74235-4"
+      ],
+      "master_id": 48122,
+      "master_url": "https://api.discogs.com/masters/48122",
+      "uri": "/release/5128371-3rd-Bass-Gladiator",
+      "catno": "38T 74235",
+      "title": "3rd Bass - Gladiator",
+      "thumb": "https://i.discogs.com/l7jXkUW3QjFfmXpz0pksgUGOITW_NFNP7IqcQ-q8d7Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMjgz/NzEtMTY3ODY1NDI1/Ny04NDIyLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/20M7VbPDfHtVQC6nQaxOfojL5IpvwB-DhcS_oWh7XTs/rs:fit/g:sm/q:90/h:947/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMjgz/NzEtMTY3ODY1NDI1/Ny04NDIyLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/5128371",
+      "community": {
+        "want": 21,
+        "have": 20
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Cassette",
+          "qty": "1",
+          "descriptions": [
+            "Single"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Europe",
+      "year": "2017",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Remastered"
+      ],
+      "label": [
+        "Decca",
+        "UMG Soundtracks",
+        "UMG Recordings, Inc.",
+        "Decca Music Group Limited",
+        "DreamWorks LLC",
+        "Universal Studios",
+        "Air Lyndhurst Studios",
+        "Abbey Road Studios",
+        "Record Industry",
+        "SKG Songs",
+        "Dreamworks Distribution L.L.C.",
+        "Skouras Design"
+      ],
+      "type": "release",
+      "genre": [
+        "Folk, World, & Country",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Contemporary"
+      ],
+      "id": 10418765,
+      "barcode": [
+        "028948321285",
+        "0 28948 32128 5",
+        "BIEM/SDRM",
+        "LC 00171",
+        "19781 1A 00028948321285",
+        "19781 1B 00028948321285",
+        "19781 1C 00028948321285",
+        "19781 1D 00028948321285"
+      ],
+      "master_id": 26432,
+      "master_url": "https://api.discogs.com/masters/26432",
+      "uri": "/release/10418765-Hans-Zimmer-And-Lisa-Gerrard-Gladiator-Music-From-The-Motion-Picture",
+      "catno": "483 2128",
+      "title": "Hans Zimmer And Lisa Gerrard - Gladiator (Music From The Motion Picture)",
+      "thumb": "https://i.discogs.com/_QQmuIph5jeNIc5ow6e9zzrW_NlYFxe1O2JbieGYklA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwNDE4/NzY1LTE1MDMxMjk4/ODUtNzk1My5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/w0uaFSbbWBNXu3eL5u7Pol79NAsFDJ80buuJsZiz7pU/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwNDE4/NzY1LTE1MDMxMjk4/ODUtNzk1My5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/10418765",
+      "community": {
+        "want": 1013,
+        "have": 3200
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "180 Gram",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Remastered"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1992",
+      "format": [
+        "CD",
+        "Single"
+      ],
+      "label": [
+        "Def Jam Recordings",
+        "Columbia",
+        "DADC"
+      ],
+      "type": "release",
+      "genre": [
+        "Hip Hop",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack"
+      ],
+      "id": 1321985,
+      "barcode": [
+        "0 9870 - 74245 2",
+        "DIDP\u2013077230  1",
+        "DADC Logo",
+        "DIDP 077230",
+        "098707424526"
+      ],
+      "master_id": 48122,
+      "master_url": "https://api.discogs.com/masters/48122",
+      "uri": "/release/1321985-3rd-Bass-Gladiator-12-Mixes",
+      "catno": "44K 74245",
+      "title": "3rd Bass - Gladiator (12\" Mixes)",
+      "thumb": "https://i.discogs.com/qVtxkuU0Ls4KiytBcVu1T0xnAXSA9KpdlPFtz84vzbk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMjE5/ODUtMTY5MDU4NTQ2/MC01MDMzLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/dP4q8DEV2f8nmD10Kqn_X7pOanttPEPzE9hpfWtC35Q/rs:fit/g:sm/q:90/h:593/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMjE5/ODUtMTY5MDU4NTQ2/MC01MDMzLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1321985",
+      "community": {
+        "want": 62,
+        "have": 74
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Single"
+          ]
+        }
+      ]
+    }
+  ]
+}

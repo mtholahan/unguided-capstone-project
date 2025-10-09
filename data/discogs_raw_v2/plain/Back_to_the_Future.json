@@ -1,0 +1,358 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 2000,
+    "per_page": 5,
+    "items": 19773,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Back+to+the+Future&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2000",
+      "next": "https://api.discogs.com/database/search?q=Back+to+the+Future&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1985",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Compilation",
+        "Stereo"
+      ],
+      "label": [
+        "MCA Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Theme",
+        "Doo Wop",
+        "Pop Rock",
+        "Synth-pop"
+      ],
+      "id": 624916,
+      "barcode": [
+        "0 76732-6144-1",
+        "076732614419",
+        "MCA4498",
+        "MCA4499",
+        "MCA-4498-FD3-3",
+        "MCA-4499-FD3-5",
+        "MCA-4705-FD3-2 FUTURE DISC",
+        "MCA-4499-FD3-1",
+        "MCA-4705-FD3-4 FUTURE DISC",
+        "MCA-4499-FDS-7",
+        "MCA-4499-FDS-1 FUTURE DISC",
+        "MCA-4705-FDS-2",
+        "BMI"
+      ],
+      "master_id": 74169,
+      "master_url": "https://api.discogs.com/masters/74169",
+      "uri": "/release/624916-Various-Back-To-The-Future-Music-From-The-Motion-Picture-Soundtrack",
+      "catno": "MCA-6144",
+      "title": "Various - Back To The Future (Music From The Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/kOlalUbN3hv2eNAsFSClekPL6ro2VphVASDeuEZGxMQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNDkx/Ni0xNDk4MjQ3MTg5/LTEzNjkuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/5mbNwiHRKOepZysu070z5z_O0_NzUgs3UmQ0xqhFeko/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNDkx/Ni0xNDk4MjQ3MTg5/LTEzNjkuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/624916",
+      "community": {
+        "want": 2214,
+        "have": 5369
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Future Disc ",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Compilation",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "USA & Europe",
+      "year": "2022",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Masterworks Broadway",
+        "Sony Music Entertainment"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Musical"
+      ],
+      "id": 24930179,
+      "barcode": [
+        "1 94399 42041 6"
+      ],
+      "master_id": 2912239,
+      "master_url": "https://api.discogs.com/masters/2912239",
+      "uri": "/release/24930179-Back-to-The-Future-Original-Cast-Back-To-The-Future-The-Musical",
+      "catno": "19439942041",
+      "title": "\"Back to The Future\" Original Cast - Back To The Future: The Musical",
+      "thumb": "https://i.discogs.com/TeBwSv0jjFadNSQ-lmETFRJZaFNI62c3HXiffanUPN8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTMw/MTc5LTE2NjY3MTAy/NjMtODk0NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/xzLlJDsuJLxBS3gSSEnxW6uVewXAJVdDcbxbuH1jR7M/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTMw/MTc5LTE2NjY3MTAy/NjMtODk0NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/24930179",
+      "community": {
+        "want": 88,
+        "have": 468
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1996",
+      "format": [
+        "Vinyl",
+        "Album",
+        "33 \u2153 RPM",
+        "12\""
+      ],
+      "label": [
+        "Detrechno Records",
+        "Zenobia Pub."
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "Techno",
+        "Electro"
+      ],
+      "id": 46784,
+      "barcode": [
+        "BMI"
+      ],
+      "master_id": 25565,
+      "master_url": "https://api.discogs.com/masters/25565",
+      "uri": "/release/46784-Sole-Tech-Back-To-The-Future-The-Album",
+      "catno": "DTR-1AV",
+      "title": "Sole Tech - Back To The Future - The Album",
+      "thumb": "https://i.discogs.com/jkLB31vdR-H9lg19L99oLAx_Rq0zD3Od2KgIbswqKUE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2Nzg0/LTAwMS5qcGc.jpeg",
+      "cover_image": "https://i.discogs.com/k1BfoZHL-w2FwbTuNZc4brKMMdBe71VBzDcrzkWSqmI/rs:fit/g:sm/q:90/h:545/w:537/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2Nzg0/LTAwMS5qcGc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/46784",
+      "community": {
+        "want": 1447,
+        "have": 441
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "descriptions": [
+            "Album",
+            "33 \u2153 RPM",
+            "12\""
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2016",
+      "format": [
+        "Box Set",
+        "Compilation",
+        "Deluxe Edition",
+        "Limited Edition",
+        "Reissue",
+        "Vinyl",
+        "LP",
+        "Vinyl",
+        "LP",
+        "Vinyl",
+        "LP"
+      ],
+      "label": [
+        "Mondo",
+        "Universal Music Special Markets",
+        "Universal",
+        "Amblin Entertainment",
+        "Universal Studios",
+        "Geffen Records",
+        "Mondo Tees",
+        "USI B Music Publishing",
+        "Universal Music Enterprises",
+        "Mondo Tees LLC",
+        "Var\u00e8se Sarabande Records, LLC",
+        "Mondo Tees LLC",
+        "The Burbank Studios",
+        "Group IV Recording Studios",
+        "Bernie Grundman Mastering",
+        "Group IV Recording Studios"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score"
+      ],
+      "id": 8028935,
+      "barcode": [
+        "24334\u00b71(2)..",
+        "B0023595-01-LP1-A",
+        "25315\u00b72(2)",
+        "B0023595-01-LP1-B",
+        "25132.3(3)\u00b7\u00b7\u00b7",
+        "B0023595-01-LP2-A REI",
+        "24338.4(2)..",
+        "B0023595-01-LP2-B",
+        "24403\u00b71(3)\u00b7\u00b7\u00b7",
+        "B0023684-01-LP1-A",
+        "24403.2(3)\u00b7\u00b7\u00b7",
+        "B0023684-01-LP1-B",
+        "24403.3(3)\u00b7\u00b7\u00b7",
+        "B0023684-01-LP2-A",
+        "24403.i(3)\u00b7\u00b7\u00b7",
+        "B0023684-01-LP2-B",
+        "25011\u00b71(3)\u00b7\u00b7\u00b7",
+        "MOND-060-A",
+        "2523i1.2(3)",
+        "MOND-060-B",
+        "25011.3(3)...",
+        "MOND-060-C",
+        "25011\u00b74(3)\u00b7\u00b7",
+        "MOND-060-D"
+      ],
+      "master_id": 0,
+      "master_url": null,
+      "uri": "/release/8028935-Alan-Silvestri-Back-To-The-Future-Trilogy",
+      "catno": "none",
+      "title": "Alan Silvestri - Back To The Future Trilogy",
+      "thumb": "https://i.discogs.com/vsgFd-LSsIR3AYSqHTInsGdHJK3pgVjSvMBs9S-l-_Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgwMjg5/MzUtMTQ1Mzc1OTE1/MS0xMTAyLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/iMeXevbYQMYoph5PAIKkSxkXmgBx0f9XBOwOn5jrbvM/rs:fit/g:sm/q:90/h:614/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgwMjg5/MzUtMTQ1Mzc1OTE1/MS0xMTAyLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/8028935",
+      "community": {
+        "want": 983,
+        "have": 706
+      },
+      "format_quantity": 6,
+      "formats": [
+        {
+          "name": "Box Set",
+          "qty": "1",
+          "descriptions": [
+            "Compilation",
+            "Deluxe Edition",
+            "Limited Edition",
+            "Reissue"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Gatefold, 180 Gram Yellow Marble Vinyl",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Gatefold, 180 Gram Pink Vinyl with Green Splatter",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Gatefold, 180 Gram Brown Vinyl",
+          "descriptions": [
+            "LP"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2016",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Limited Edition",
+        "Reissue"
+      ],
+      "label": [
+        "Mondo",
+        "Universal Music Enterprises",
+        "Record Technology Incorporated",
+        "Record Technology Incorporated",
+        "Record Technology Incorporated",
+        "Mondo"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Soundtrack"
+      ],
+      "id": 8310174,
+      "barcode": [
+        "6 02547 44665 7",
+        "B0023395-01-LP1-A CB 24339.1(2)..",
+        "B0023395-01-LP1-B CB 25315.2(2)",
+        "B0023395-01-LP2-A RE1 CB 25132.3(3)..",
+        "B0023395-01-LP2-B CB 24339.4(2).."
+      ],
+      "master_id": 574579,
+      "master_url": "https://api.discogs.com/masters/574579",
+      "uri": "/release/8310174-Alan-Silvestri-Back-To-The-Future-Original-Score",
+      "catno": "MOND-058",
+      "title": "Alan Silvestri - Back To The Future - Original Score",
+      "thumb": "https://i.discogs.com/fCY86LSasM6LM76thB6rUJyiiG3636aXh07vFrvsOko/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzMTAx/NzQtMTQ1OTA5ODc4/NS0xOTkxLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/XMJh2mDM5VEoBLrwWDn3Uqp0WfRku7YKo3FDEiJpl_o/rs:fit/g:sm/q:90/h:609/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzMTAx/NzQtMTQ1OTA5ODc4/NS0xOTkxLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/8310174",
+      "community": {
+        "want": 770,
+        "have": 1874
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Clear with Electric Blue Splatter, 180g",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Limited Edition",
+            "Reissue"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,328 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 887,
+    "per_page": 5,
+    "items": 4433,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=The+Dark+Knight&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=887",
+      "next": "https://api.discogs.com/database/search?q=The+Dark+Knight&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "USA & Europe",
+      "year": "2021",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Vinyl",
+        "LP",
+        "All Media",
+        "Album",
+        "Limited Edition",
+        "Reissue"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Warner Records",
+        "Warner Music Group",
+        "Warner Bros. Entertainment Inc.",
+        "Warner Records Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "DC Comics",
+        "Warner-Olive Music, LLC",
+        "Air Lyndhurst Studios",
+        "James Newton Howard Studios",
+        "Remote Control Productions",
+        "Remote Control Productions",
+        "Marcussen Mastering",
+        "GZ Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Score",
+        "Minimal"
+      ],
+      "id": 20043043,
+      "barcode": [
+        "6 03497-84387 9",
+        "603497843879",
+        "GEMA/BIEM",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE A 77621E1/B",
+        "WARNER BROTHERS RECORDS 1-511101 B 77621E2/E",
+        "WARNER BROTHERS RECORDS 1-511101 C 77621E3/C",
+        "WARNER BROTHERS RECORDS 1-511101 D 77621E4/D"
+      ],
+      "master_id": 8062,
+      "master_url": "https://api.discogs.com/masters/8062",
+      "uri": "/release/20043043-Hans-Zimmer-And-James-Newton-Howard-The-Dark-Knight-Original-Motion-Picture-Soundtrack",
+      "catno": "RCV1 511101 / 603497843879",
+      "title": "Hans Zimmer And James Newton Howard - The Dark Knight (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/tO7OgYOnMX2URnx7XqrEng-T_4tNqJvy9xtSR8UZgso/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMDQz/MDQzLTE2NTQ4NTU2/NDMtOTg0NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/k5FAOvq9dY1n2fQjlay-KCMSxjH0wybCbGxouULueTQ/rs:fit/g:sm/q:90/h:607/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMDQz/MDQzLTE2NTQ4NTU2/NDMtOTg0NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/20043043",
+      "community": {
+        "want": 619,
+        "have": 3181
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Green (Neon) w/ Purple (Violet) Splatter",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Purple (Violet) w/ Green (Neon) Splatter",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "All Media",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Limited Edition",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2008",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Warner Sunset Records",
+        "Air Lyndhurst Studios",
+        "James Newton Howard Studios",
+        "Remote Control Productions",
+        "Remote Control Productions",
+        "Marcussen Mastering",
+        "GZ Digital Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Score",
+        "Minimal"
+      ],
+      "id": 1439381,
+      "barcode": [
+        "0 9362-49859-7 6",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE A 77621E1/B",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE B 77621E2/D",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE C 77621E3/B",
+        "WARNER BROTHERS RECORDS 1-511101 SIDE D 77621E4/B"
+      ],
+      "master_id": 8062,
+      "master_url": "https://api.discogs.com/masters/8062",
+      "uri": "/release/1439381-Hans-Zimmer-And-James-Newton-Howard-The-Dark-Knight-Original-Motion-Picture-Soundtrack",
+      "catno": "511101-1",
+      "title": "Hans Zimmer And James Newton Howard - The Dark Knight (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/qkhTZ1V8d-btxDk_M_QRpdYxWg9LTTZ110ktiVrdJak/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0Mzkz/ODEtMTU4Mjk2Mzky/My0xNTY4LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/ssT4dAZQyb5KePELOQuNHGVJqISgtMc0SZFMu2nBWfY/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0Mzkz/ODEtMTU4Mjk2Mzky/My0xNTY4LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1439381",
+      "community": {
+        "want": 1674,
+        "have": 2323
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Gatefold",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1984",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "33 \u2153 RPM",
+        "Mini-Album"
+      ],
+      "label": [
+        "Not On Label (Dark Knight Self-released)"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock"
+      ],
+      "style": [
+        "Heavy Metal",
+        "Power Metal"
+      ],
+      "id": 2215840,
+      "barcode": [],
+      "master_id": 0,
+      "master_url": null,
+      "uri": "/Dark-Knight-Dark-Knight/release/2215840",
+      "catno": "DK-666-SS",
+      "title": "Dark Knight (3) - Dark Knight",
+      "thumb": "https://i.discogs.com/onuXfBZN9OLULSZkFCA8pWyVmaRL2GP6W-Qm5UCIg9Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyMTU4/NDAtMTM2NTg4MzAy/MC00Njk0LmdpZg.jpeg",
+      "cover_image": "https://i.discogs.com/Fmjp5VsNRkp4uW5fyRG73m-3NT10IwgFS2rfe73uZqQ/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyMTU4/NDAtMTM2NTg4MzAy/MC00Njk0LmdpZg.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2215840",
+      "community": {
+        "want": 321,
+        "have": 125
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "33 \u2153 RPM",
+            "Mini-Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2008",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "Picture Disc",
+        "33 \u2153 RPM"
+      ],
+      "label": [
+        "Warner Bros. Records Inc.",
+        "Warner Bros. Records Inc.",
+        "WEA International Inc.",
+        "Warner Bros. Entertainment Inc.",
+        "DC Comics",
+        "Pirates Press",
+        "Warner Bros. Entertainment Inc.",
+        "GZ Digital Media",
+        "Warner-Olive Music, LLC",
+        "Warner Music Group"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Modern Classical",
+        "Score",
+        "Minimal"
+      ],
+      "id": 1486045,
+      "barcode": [
+        "0 9362-49832-6 2",
+        "093624983262",
+        "77887E1/A 0-513710 SIDE A WARNER BROS RECORDS",
+        "77887E2/B 0-513710 SIDE B WARNER BROS RECORDS",
+        "ASCAP"
+      ],
+      "master_id": 1170390,
+      "master_url": "https://api.discogs.com/masters/1170390",
+      "uri": "/release/1486045-Hans-Zimmer-And-James-Newton-Howard-The-Dark-Knight",
+      "catno": "0-513710",
+      "title": "Hans Zimmer And James Newton Howard - The Dark Knight",
+      "thumb": "https://i.discogs.com/6RptKMQ-x0eUFyDgI2e9VaEOwIoUh2Pd3w76FwdKlBg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0ODYw/NDUtMTMwOTIwNjY5/NS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/OGqMaap-kZWqsWAq96YrI158zsbJUdyRuotS8eo8j44/rs:fit/g:sm/q:90/h:500/w:506/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0ODYw/NDUtMTMwOTIwNjY5/NS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1486045",
+      "community": {
+        "want": 255,
+        "have": 200
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "Picture Disc",
+            "33 \u2153 RPM"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "2014",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "EP",
+        "45 RPM"
+      ],
+      "label": [
+        "Sect Records",
+        "Calyx Mastering",
+        "MPO"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "Techno",
+        "House"
+      ],
+      "id": 5342340,
+      "barcode": [
+        "Sect 17 A MPO Loop-O/Calyx 45 RPM",
+        "Sect 17 B MPO Loop-O/Calyx 45 RPM"
+      ],
+      "master_id": 647780,
+      "master_url": "https://api.discogs.com/masters/647780",
+      "uri": "/release/5342340-DJ-Skull-The-Dark-Knight-EP",
+      "catno": "Sect 17",
+      "title": "DJ Skull - The Dark Knight EP",
+      "thumb": "https://i.discogs.com/WjbXh651FimTT7prlzsA644BDZTazJGt4u-cD-ip9JE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUzNDIz/NDAtMTM5MTAxMTE2/MS05MTc5LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/lol9aulISn5KAp2T4Wu1ycq8e8gKKeyFvYxegRbVUHM/rs:fit/g:sm/q:90/h:476/w:481/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUzNDIz/NDAtMTM5MTAxMTE2/MS05MTc5LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/5342340",
+      "community": {
+        "want": 124,
+        "have": 106
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "EP",
+            "45 RPM"
+          ]
+        }
+      ]
+    }
+  ]
+}

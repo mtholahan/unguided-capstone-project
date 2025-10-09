@@ -1,0 +1,319 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 242,
+    "per_page": 5,
+    "items": 1207,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=The+Empire+Strikes+Back&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=242",
+      "next": "https://api.discogs.com/database/search?q=The+Empire+Strikes+Back&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "France",
+      "year": "2009",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Soulab",
+        "Ginger X Studio",
+        "Ginger X Studio",
+        "Ginger X Studio",
+        "Color Sound Studio",
+        "The Pusher Distribution",
+        "MPO"
+      ],
+      "type": "release",
+      "genre": [
+        "Funk / Soul"
+      ],
+      "style": [
+        "Funk"
+      ],
+      "id": 1868589,
+      "barcode": [
+        "3760179350272",
+        "SACEM/SACD/SDRM/SCAM",
+        "SOULA B LP 001 A MPO",
+        "SOULA BLP 001 B MPO"
+      ],
+      "master_id": 540167,
+      "master_url": "https://api.discogs.com/masters/540167",
+      "uri": "/Uptown-Funk-Empire-The-Empire-Strikes-Back/release/1868589",
+      "catno": "Soulablp001",
+      "title": "Uptown Funk Empire - The Empire Strikes Back",
+      "thumb": "https://i.discogs.com/LBVZe4WSk-BpIYuCQA8CLG3TuxJSR8TxfYcGK22PBxk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Njg1/ODktMTQ2NzY2NDA4/My0yNTMzLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/fEpAEipaINNqvvlhcVxFrC0zw4N9-Ary-hoHbkN3ui4/rs:fit/g:sm/q:90/h:607/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Njg1/ODktMTQ2NzY2NDA4/My0yNTMzLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1868589",
+      "community": {
+        "want": 1224,
+        "have": 1040
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1980",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "RSO",
+        "RSO Records, Inc.",
+        "PolyGram Distribution, Inc.",
+        "RSO Records, Inc.",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Fox Fanfare Music, Inc.",
+        "Bantha Music",
+        "PRC Recording Company, Richmond, IN",
+        "Anvil Recording Studios",
+        "Twentieth Century Fox Studios"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Contemporary"
+      ],
+      "id": 1306165,
+      "barcode": [
+        "BMI",
+        "72",
+        "2658 134",
+        "2479 238",
+        "2479 239",
+        "RS-2-4201-AS",
+        "RS-2-4201 BS",
+        "RS-2-4201 CS",
+        "RS-2-4201 DS",
+        "RS-2-4201-AS-PRC-R1-1-11",
+        "RS-2-4201-BS-PRC-R2-1-1",
+        "RS-2-4201-CS-PRC-R1-1-1",
+        "RS-2-4201-DS-PRC-R1-1-1"
+      ],
+      "master_id": 55328,
+      "master_url": "https://api.discogs.com/masters/55328",
+      "uri": "/release/1306165-John-Williams-4London-Symphony-Orchestra-Star-Wars-The-Empire-Strikes-Back",
+      "catno": "RS-2-4201",
+      "title": "John Williams (4), The London Symphony Orchestra* - Star Wars / The Empire Strikes Back",
+      "thumb": "https://i.discogs.com/6MIXISChcqiAJv-sSxiYOORqSQXJ0CTv5vManVOkCSA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMDYx/NjUtMTYxNjQ2NTU2/Mi03OTYzLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/mKLchVPFoCQhVH_gSm7ITxLnMZZiRKI0m3kEU9uKWPU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMDYx/NjUtMTYxNjQ2NTU2/Mi03OTYzLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1306165",
+      "community": {
+        "want": 1197,
+        "have": 4367
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "72 - Richmond Press",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1980",
+      "format": [
+        "Vinyl",
+        "LP",
+        "7\""
+      ],
+      "label": [
+        "Buena Vista Records",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Little LP",
+        "Allied Record Company",
+        "Superior Record Pressing Corp., Somerdale, NJ"
+      ],
+      "type": "release",
+      "genre": [
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 1108609,
+      "barcode": [
+        "451-APE-980 1",
+        "451-APE-980 2"
+      ],
+      "master_id": 604248,
+      "master_url": "https://api.discogs.com/masters/604248",
+      "uri": "/release/1108609-Unknown-Artist-Star-Wars-The-Empire-Strikes-Back",
+      "catno": "451",
+      "title": "Unknown Artist - Star Wars: The Empire Strikes Back",
+      "thumb": "https://i.discogs.com/kQHv9m0F9IEfpzle4loftDcpizBRMahRzWcdeiaz44Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMDg2/MDktMTI0ODM5ODUw/Ny5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/-alMKUbjhjZmFf1zhWPovyh01Cv-ZStECvBBCz-syOQ/rs:fit/g:sm/q:90/h:448/w:450/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMDg2/MDktMTI0ODM5ODUw/Ny5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1108609",
+      "community": {
+        "want": 242,
+        "have": 1369
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "7\""
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1980",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "RSO",
+        "RSO Records, Inc.",
+        "PolyGram Distribution, Inc.",
+        "RSO Records, Inc.",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Fox Fanfare Music, Inc.",
+        "Bantha Music",
+        "Anvil Recording Studios",
+        "Twentieth Century Fox Studios",
+        "Columbia Records Pressing Plant, Pitman"
+      ],
+      "type": "release",
+      "genre": [
+        "Classical",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Contemporary"
+      ],
+      "id": 8729469,
+      "barcode": [
+        "BMI",
+        "56",
+        "2658 134",
+        "2479 238",
+        "2479 239",
+        "RS-2-4201-AS",
+        "RS-2-4201 BS",
+        "RS-2-4201 CS",
+        "RS-2-4201 DS"
+      ],
+      "master_id": 55328,
+      "master_url": "https://api.discogs.com/masters/55328",
+      "uri": "/release/8729469-John-Williams-4London-Symphony-Orchestra-Star-Wars-The-Empire-Strikes-Back",
+      "catno": "RS-2-4201",
+      "title": "John Williams (4), The London Symphony Orchestra* - Star Wars / The Empire Strikes Back",
+      "thumb": "https://i.discogs.com/WJBiUG8cU1Ajd50OaxJwFaeVO_Cvzeiq0ux9H18W9Fk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg3Mjk0/NjktMTU1MzM4MzU5/MS05NzI2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/F2hLhy6vYMQKt2J0p0wxBM5luXd9bpgVvqfNa_w7nA0/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg3Mjk0/NjktMTU1MzM4MzU5/MS05NzI2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/8729469",
+      "community": {
+        "want": 984,
+        "have": 2934
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "56 - Pitman Pressing",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1983",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Reissue"
+      ],
+      "label": [
+        "Buena Vista Records",
+        "The Star Wars Series",
+        "P.G. Productions",
+        "Lucasfilm Ltd.",
+        "Lucasfilm Ltd.",
+        "Buena Vista Records",
+        "Allied Record Company",
+        "PRC Recording Company, Richmond, IN"
+      ],
+      "type": "release",
+      "genre": [
+        "Non-Music",
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Story",
+        "Dialogue"
+      ],
+      "id": 496283,
+      "barcode": [
+        "62102-APRCR-283-A \u2460 > 1-2-4-06",
+        "62102-APRCR-283-B \u2460 > 1-2-4-06"
+      ],
+      "master_id": 514871,
+      "master_url": "https://api.discogs.com/masters/514871",
+      "uri": "/release/496283-London-Symphony-Orchestra-The-Story-Of-The-Empire-Strikes-Back",
+      "catno": "62102",
+      "title": "London Symphony Orchestra - The Story Of The Empire Strikes Back",
+      "thumb": "https://i.discogs.com/ABzFv9RZFxqXTA_kwZ5bJRKUKpuLrE_QZK5m6HjyRGA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NjI4/My0xNTk1ODA0NjM4/LTg5MzUuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/7UYfKUHiHT9wRx4ifQa_cfTThaORYUkBFtOXo7fNJzo/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NjI4/My0xNTk1ODA0NjM4/LTg5MzUuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/496283",
+      "community": {
+        "want": 269,
+        "have": 795
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Reissue"
+          ]
+        }
+      ]
+    }
+  ]
+}

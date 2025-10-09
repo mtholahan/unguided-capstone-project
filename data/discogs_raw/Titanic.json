@@ -1,0 +1,293 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 1899,
+    "per_page": 5,
+    "items": 9493,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Titanic&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=1899",
+      "next": "https://api.discogs.com/database/search?q=Titanic&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "Europe",
+      "year": "1970",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Stereo"
+      ],
+      "label": [
+        "CBS",
+        "CBS, Haarlem"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock"
+      ],
+      "style": [
+        "Prog Rock"
+      ],
+      "id": 772880,
+      "barcode": [
+        "\u24c9",
+        "GEMA ",
+        "BIEM",
+        "S 64104-1",
+        "S 64104-2",
+        "S 64104-1",
+        "S 64104-2",
+        "S 64104-A",
+        "S 64104-2"
+      ],
+      "master_id": 125373,
+      "master_url": "https://api.discogs.com/masters/125373",
+      "uri": "/release/772880-Titanic-Titanic",
+      "catno": "S 64104",
+      "title": "Titanic (3) - Titanic",
+      "thumb": "https://i.discogs.com/dXFY81M4jRipqx9sTq3DE6qFxeuxNs8LJ2I4A7Qfko4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc3Mjg4/MC0xNTE4MjY3OTc1/LTU2NjMuanBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/FuuMk_KX6WXPjrHMUPQDa3cMDtfv9QrjfuuEGJu4zlo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc3Mjg4/MC0xNTE4MjY3OTc1/LTU2NjMuanBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/772880",
+      "community": {
+        "want": 479,
+        "have": 1351
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "genre": [
+        "Rock"
+      ],
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Reissue"
+      ],
+      "style": [
+        "Prog Rock"
+      ],
+      "id": 1897142,
+      "label": [
+        "CBS",
+        "CBS Disques S.a."
+      ],
+      "type": "release",
+      "barcode": [
+        "BIEM / STEMRA"
+      ],
+      "master_id": 125373,
+      "master_url": "https://api.discogs.com/masters/125373",
+      "uri": "/release/1897142-Titanic-Titanic",
+      "catno": "S 64104",
+      "title": "Titanic (3) - Titanic",
+      "thumb": "https://i.discogs.com/v5OFMl9q7w2lm6PnUEbxfR7DQKesJmxU8hwxFFfa7oo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4OTcx/NDItMTMwMzk4OTgx/NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/TQInfF_W4Ost5_MJX8klPMK-RktUwwm3LUb3OInyxlY/rs:fit/g:sm/q:90/h:500/w:496/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4OTcx/NDItMTMwMzk4OTgx/NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1897142",
+      "community": {
+        "want": 205,
+        "have": 768
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "year": "1970",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Stereo"
+      ],
+      "label": [
+        "CBS",
+        "S\u00e9rie Apollo"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock"
+      ],
+      "style": [
+        "Prog Rock"
+      ],
+      "id": 1897138,
+      "barcode": [
+        "B.I.E.M.",
+        "\u24c9",
+        "CBS 64104  A1",
+        "CBS 64104  B1",
+        "CBS 64104  A \u230313",
+        "CBS 64104  B \u230311"
+      ],
+      "master_id": 125373,
+      "master_url": "https://api.discogs.com/masters/125373",
+      "uri": "/release/1897138-Titanic-Titanic",
+      "catno": "S 7 64104",
+      "title": "Titanic (3) - Titanic",
+      "thumb": "https://i.discogs.com/RRKLkILS9F1oThujW33bkHLEnao22aPkNIEB4jDckDk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4OTcx/MzgtMTcwOTkzOTEz/MC05MDI1LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/mDkLS08IkdLM6sZ1jW4gYIbbDONvEvt1OmbmLnhK5Rg/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4OTcx/MzgtMTcwOTkzOTEz/MC05MDI1LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1897138",
+      "community": {
+        "want": 205,
+        "have": 536
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2019",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Sub Pop",
+        "Sub Pop Records",
+        "Sub Pop Records",
+        "Sub Pop Records",
+        "Record Technology Incorporated",
+        "Record Technology Incorporated",
+        "Salt Mastering"
+      ],
+      "type": "release",
+      "genre": [
+        "Rock",
+        "Pop"
+      ],
+      "style": [
+        "Baroque Pop",
+        "Dream Pop",
+        "Indie Rock",
+        "Indie Pop",
+        "Soft Rock",
+        "Art Rock"
+      ],
+      "id": 13494298,
+      "barcode": [
+        "0 98787 12321 0",
+        "098787123210",
+        "SP 1232 A re 32075.1(3)",
+        "SP 1232 B Salt 31752.2(3)..."
+      ],
+      "master_id": 1527838,
+      "master_url": "https://api.discogs.com/masters/1527838",
+      "uri": "/release/13494298-Weyes-Blood-Titanic-Rising",
+      "catno": "SP 1232",
+      "title": "Weyes Blood - Titanic Rising",
+      "thumb": "https://i.discogs.com/TsWWIzBx36rgxZoy3kBfsuTMU0mVJrpJf83Ufg6VOJY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNDk0/Mjk4LTE1NTUyNjIz/NDItODc1NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/6jWP7d6wBq7Bux1my_nbbVDtUSGobIP_Fxw0a0dMbbY/rs:fit/g:sm/q:90/h:594/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNDk0/Mjk4LTE1NTUyNjIz/NDItODc1NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/13494298",
+      "community": {
+        "want": 1739,
+        "have": 10172
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Italy",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Stereo"
+      ],
+      "label": [
+        "RCA",
+        "RCA Italiana",
+        "Serraglio srl",
+        "Serraglio Edizioni",
+        "Edizioni RCA",
+        "RCA S.P.A.",
+        "Studio Quattro 1, Roma",
+        "Studio Quattro 1, Roma",
+        "RCA Studios, Rome",
+        "RCA Records Factory, Italy"
+      ],
+      "type": "release",
+      "genre": [
+        "Pop"
+      ],
+      "style": [
+        "Ballad"
+      ],
+      "id": 2578088,
+      "barcode": [
+        "LKAY 36670 ",
+        "LKAY 36671 ",
+        "LKAY 36670 IS - I A 34 P \u0394 Di Toma",
+        "LKAY 36671 1S - IC 95 6 Di Toma  P \u0394",
+        "SIAE"
+      ],
+      "master_id": 492399,
+      "master_url": "https://api.discogs.com/masters/492399",
+      "uri": "/release/2578088-Francesco-De-Gregori-Titanic",
+      "catno": "PL 31622",
+      "title": "Francesco De Gregori - Titanic",
+      "thumb": "https://i.discogs.com/tEf_brBNIOs97bPU-CpaotoXtVFPjrvB24cTqXliHkQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1Nzgw/ODgtMTI5MTM4MzA1/Ny5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/5L-b9_BTTDUkvUE74SbPr-mmV9FvgwUJZ8xAbfWarl8/rs:fit/g:sm/q:90/h:350/w:350/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1Nzgw/ODgtMTI5MTM4MzA1/Ny5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2578088",
+      "community": {
+        "want": 139,
+        "have": 1405
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Stereo"
+          ]
+        }
+      ]
+    }
+  ]
+}

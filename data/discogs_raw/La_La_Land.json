@@ -1,0 +1,291 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 2000,
+    "per_page": 5,
+    "items": 80959,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=La+La+Land&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2000",
+      "next": "https://api.discogs.com/database/search?q=La+La+Land&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "Belgium",
+      "year": "2001",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "45 RPM"
+      ],
+      "label": [
+        "Music Man Records",
+        "N.E.W.S.",
+        "N.E.W.S.",
+        "N.E.W.S.",
+        "Curtis A. Jones Music",
+        "Star Trax Recording",
+        "Chicago Trax Recording Studio",
+        "Relief Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "House",
+        "Electro",
+        "Techno"
+      ],
+      "id": 11227,
+      "barcode": [
+        "5414165006381",
+        "5 414165 006381",
+        "MM 079 A1",
+        "MM 079 B1",
+        "SABAM"
+      ],
+      "master_id": 93476,
+      "master_url": "https://api.discogs.com/masters/93476",
+      "uri": "/release/11227-Green-Velvet-La-La-Land",
+      "catno": "MM 079",
+      "title": "Green Velvet - La La Land",
+      "thumb": "https://i.discogs.com/GHQ3G5eAFQuoFXIb_7o6ukXYU4J9RcVq6wdnGBF3aO4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMjI3/LTE1NzI3NzYyNzYt/ODU5Mi5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/uPp91icc4sZNnVYC4F3D99kmvJOD9g8nThq3VoF5C1k/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMjI3/LTE1NzI3NzYyNzYt/ODU5Mi5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/11227",
+      "community": {
+        "want": 536,
+        "have": 1935
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\"",
+            "45 RPM"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Belgium",
+      "year": "2001",
+      "format": [
+        "Vinyl",
+        "12\"",
+        "33 \u2153 RPM"
+      ],
+      "label": [
+        "Music Man Records",
+        "N.E.W.S.",
+        "N.E.W.S.",
+        "N.E.W.S.",
+        "Cajual Music"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "Techno"
+      ],
+      "id": 19212,
+      "barcode": [
+        "5414165007326",
+        "SABAM"
+      ],
+      "master_id": 93476,
+      "master_url": "https://api.discogs.com/masters/93476",
+      "uri": "/release/19212-Green-Velvet-La-La-Land-Remixes",
+      "catno": "MM 079 R",
+      "title": "Green Velvet - La La Land (Remixes)",
+      "thumb": "https://i.discogs.com/NH4KDkc6JVVFspg4PWF3aCFHb0vapE0fD6w0lX_ys74/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjEy/LTE2MTg3NTY4NzMt/NTgxMC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/fORgqKPfQCmU1lCwA5G6bxL7-U_GJxH78XufH85_yPM/rs:fit/g:sm/q:90/h:603/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjEy/LTE2MTg3NTY4NzMt/NTgxMC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/19212",
+      "community": {
+        "want": 611,
+        "have": 1707
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "descriptions": [
+            "12\"",
+            "33 \u2153 RPM"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "2002",
+      "format": [
+        "Vinyl",
+        "12\""
+      ],
+      "label": [
+        "Credence",
+        "EMI Records Ltd.",
+        "EMI Records Ltd.",
+        "Cajual Music",
+        "Junior Boy's Own",
+        "Disco Inn",
+        "Gigi Riva Sound Studio",
+        "Gigi Riva Sound Studio"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "House",
+        "Techno",
+        "Tech House"
+      ],
+      "id": 33534,
+      "barcode": [
+        "7 24355 09506 0 ",
+        "724355095060",
+        "LC0299"
+      ],
+      "master_id": 93476,
+      "master_url": "https://api.discogs.com/masters/93476",
+      "uri": "/release/33534-Green-Velvet-La-La-Land",
+      "catno": "12cred 025",
+      "title": "Green Velvet - La La Land",
+      "thumb": "https://i.discogs.com/kpoNyRoHhmPNf1QUMl0u7WIuTZwQafptO5DFb_dqz-8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzNTM0/LTEyMzU5MjQ1OTMu/anBlZw.jpeg",
+      "cover_image": "https://i.discogs.com/4oipjYhAHDlYxuyaQtYDkf3H9G4GVUovnk20dbo_TiU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzNTM0/LTEyMzU5MjQ1OTMu/anBlZw.jpeg",
+      "resource_url": "https://api.discogs.com/releases/33534",
+      "community": {
+        "want": 329,
+        "have": 1304
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\""
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2001",
+      "format": [
+        "Vinyl",
+        "12\""
+      ],
+      "label": [
+        "Relief Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic"
+      ],
+      "style": [
+        "House",
+        "Techno",
+        "Electro"
+      ],
+      "id": 19878,
+      "barcode": [
+        "RR-2004-A PCMJR-HEMI",
+        "RR-2004-B PCMJR-HEMI",
+        "765257200411",
+        "7 65257 20041 1"
+      ],
+      "master_id": 93476,
+      "master_url": "https://api.discogs.com/masters/93476",
+      "uri": "/release/19878-Green-Velvet-La-La-Land",
+      "catno": "RR2004-1",
+      "title": "Green Velvet - La La Land",
+      "thumb": "https://i.discogs.com/iGEOmnRYneUsnpm5bQG7xKRhJ3nVbv-_dYXUnNxMtns/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5ODc4/LTE3MzU1MjM4MjIt/NjM1Mi5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/RQPJ4iJ7zz053pm96Z0arM5QztzvJCD31clRMicAEVs/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5ODc4/LTE3MzU1MjM4MjIt/NjM1Mi5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/19878",
+      "community": {
+        "want": 644,
+        "have": 921
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "12\""
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2017",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Interscope Records",
+        "Interscope Records",
+        "Interscope Records",
+        "Summit Entertainment, LLC",
+        "Berry Drive Studios",
+        "Conway Studios",
+        "Igloo Music",
+        "The Bakery",
+        "Universal Music Distribution",
+        "Universal Music Distribution"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Musical",
+        "Score"
+      ],
+      "id": 9740448,
+      "barcode": [
+        "6 02557 38804 6",
+        "602557388046",
+        "B0025619-01JK02",
+        "B0025619-01 ST02",
+        "B0025619-01EV04",
+        "B0025619-01-A-RE1",
+        "B0025619-01 B-RE1"
+      ],
+      "master_id": 1112057,
+      "master_url": "https://api.discogs.com/masters/1112057",
+      "uri": "/release/9740448-Justin-Hurwitz-La-La-Land-Original-Motion-Picture-Soundtrack",
+      "catno": "B0025619-01",
+      "title": "Justin Hurwitz - La La Land  (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/rZGmbc8IAbMpyYWqZY_KWHOVW57IM-a3U9ooj883-XI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk3NDA0/NDgtMTY3MjY0MjQz/OC03OTc3LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/qw_LT0HGvNYZ9l-0_qE4h8o1NevGfLSBQJRqmjU9oww/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk3NDA0/NDgtMTY3MjY0MjQz/OC03OTc3LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/9740448",
+      "community": {
+        "want": 1374,
+        "have": 8754
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    }
+  ]
+}

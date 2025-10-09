@@ -1,0 +1,403 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 92,
+    "per_page": 5,
+    "items": 456,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=Blade+Runner+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=92",
+      "next": "https://api.discogs.com/database/search?q=Blade+Runner+soundtrack&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "Europe",
+      "year": "2017",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Epic",
+        "Alcon Sleeping Giant",
+        "Sony Music",
+        "Alcon Sleeping Giant (ASG) Records",
+        "Alcon Sleeping Giant (ASG) Records",
+        "Sony Music Entertainment",
+        "Sony Music Entertainment International Services GmbH",
+        "Warner/Chappell",
+        "RCA Records",
+        "MPL Communications Inc.",
+        "Capitol CMG Publishing Studio",
+        "Alcon Sleeping Giant",
+        "Blade Runner Music",
+        "Warner-Tamerlane Publishing Corp.",
+        "Edition Primus Rolf Budde KG",
+        "Remote Control Productions",
+        "Sleeping Giant Studios",
+        "The Bakery",
+        "GZ Media",
+        "Epic Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Rock",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Soundtrack",
+        "Ambient",
+        "Dark Ambient",
+        "Industrial"
+      ],
+      "id": 11240550,
+      "barcode": [
+        "1 90758 03641 0",
+        "190758036410",
+        "LC00199",
+        "BIEM/GEMA",
+        "ASCAP",
+        "19075803641-1",
+        "19075803641-2",
+        "166626E1/A",
+        "166626E2/A",
+        "166626E3/A",
+        "166626E4/A",
+        "166626E1/B",
+        "166626E2/B",
+        "166626E3/A",
+        "166626E4/A",
+        "166626E1/C",
+        "166626E2/B",
+        "166626E3/B",
+        "166626E4/B",
+        "166626E1/D",
+        "166626E2/D",
+        "166626E3/C",
+        "166626E4/E"
+      ],
+      "master_id": 1250568,
+      "master_url": "https://api.discogs.com/masters/1250568",
+      "uri": "/release/11240550-Hans-Zimmer-Benjamin-Wallfisch-Blade-Runner-2049-Original-Motion-Picture-Soundtrack",
+      "catno": "19075803641",
+      "title": "Hans Zimmer & Benjamin Wallfisch - Blade Runner 2049 (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/jRLrfvD0N0hmt3BWaM-8MHZeo5JaLJktxJRDQ_IZREE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMjQw/NTUwLTE1MTczMjUx/MjctOTQxMi5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/_GSvtj11fSEHowgOLq11cnyrC-vGk_QnDS37wptP5tM/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMjQw/NTUwLTE1MTczMjUx/MjctOTQxMi5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/11240550",
+      "community": {
+        "want": 1072,
+        "have": 4644
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Worldwide",
+      "year": "2015",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Reissue"
+      ],
+      "label": [
+        "Warner Music Group",
+        "EastWest",
+        "Warner Music UK Ltd.",
+        "Warner Music UK Ltd.",
+        "Universal International Music B.V.",
+        "Nemo Studios",
+        "Warner-Tamerlane Music",
+        "Warner/Chappell",
+        "EMI Music Publishing Ltd.",
+        "Warner/Chappell North America",
+        "Warner Chappell Music",
+        "EMI Music Publishing (UK) Ltd.",
+        "Optimal Media GmbH"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Ambient",
+        "Soundtrack",
+        "Score"
+      ],
+      "id": 7097828,
+      "barcode": [
+        "0 825646 122110",
+        "825646122110",
+        "LC02982",
+        "GEMA/MCPS",
+        "BF 86627-01 A1 0825646122110",
+        "BF 86627-01 B1  0825646122110",
+        "BF 86627-01 A1 0825646122110 1=",
+        "BF 86627-01 B1 1\u0394 0825646122110",
+        "BF 86627-01 A1 0825646122110 3IX",
+        "BF 86627-01 B1 1IT 0825646122110",
+        "BF86627-01 A1 1=\u0190 0825646122110",
+        "BF86627-01 B1 1|- 0825646122110",
+        "BF86627-01 A1 3+V 0825646122110",
+        "BF86627-01 B1 0825646122110 1+=",
+        "BF86627-01 A1 0825646122110",
+        "BF86627-01 B1 0825646122110 1+\u0394",
+        "BF86627-01 A2 0825646122110 1+",
+        "BF86627-01 B2 0825646122110",
+        "BF86627-01 A2 0825646122110 1V",
+        "BF86627-01 B2 0825646122110 =V",
+        "BF86627-01 A2 0825646122110 11V",
+        "BF86627-01 B2 0825646122110",
+        "BF86627-01 A2 0825646122110 1V",
+        "BF86627-01 B2 0825646122110 1V"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/7097828-Vangelis-Blade-Runner",
+      "catno": "0825646122110",
+      "title": "Vangelis - Blade Runner",
+      "thumb": "https://i.discogs.com/zBXGm4lpf_evGNz6Mol-nN1zWuXePja6xuFco9vWgKg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwOTc4/MjgtMTU2Mjg5MDc4/NC04Nzk1LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/l9cJ3yBjZATxgJQILd0GjzMPvlup_BEPuwaql9ZGpLs/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwOTc4/MjgtMTU2Mjg5MDc4/NC04Nzk1LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/7097828",
+      "community": {
+        "want": 4419,
+        "have": 16692
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Gatefold, 180 Gram",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Reissue"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2019",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Vinyl",
+        "LP",
+        "All Media",
+        "Album",
+        "Reissue",
+        "Repress"
+      ],
+      "label": [
+        "Mondo",
+        "Epic",
+        "Alcon Sleeping Giant (ASG) Records",
+        "Alcon Sleeping Giant (ASG) Records",
+        "Mondo",
+        "Remote Control Productions",
+        "The Bakery",
+        "Sleeping Giant Studios",
+        "The Bakery"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Dark Ambient",
+        "Soundtrack",
+        "Score"
+      ],
+      "id": 13931058,
+      "barcode": [
+        "190758514819",
+        "Bakery 19075803641 A-RE1",
+        "\u203eV\u203e 19075803641-B",
+        "\u203eV\u203e19075803641-C",
+        "\u203eV\u203e 19075803641-D"
+      ],
+      "master_id": 1250568,
+      "master_url": "https://api.discogs.com/masters/1250568",
+      "uri": "/release/13931058-Hans-Zimmer-And-Benjamin-Wallfisch-Blade-Runner-2049-Original-Motion-Picture-Soundtrack",
+      "catno": "MOND-183",
+      "title": "Hans Zimmer And Benjamin Wallfisch - Blade Runner 2049 (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/pOJW-R5eI0aSAW_8cMmfaemC5U5JGyOtblE8-F6rUGc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzOTMx/MDU4LTE1ODg1MTM4/OTEtOTIxOC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/FXeJ3g6_ldlfqJzpW_n-ChKk1m3OlHxPgAarnp7_ovU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzOTMx/MDU4LTE1ODg1MTM4/OTEtOTIxOC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/13931058",
+      "community": {
+        "want": 1341,
+        "have": 1791
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "180g, Pink",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "180g, Teal",
+          "descriptions": [
+            "LP"
+          ]
+        },
+        {
+          "name": "All Media",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Reissue",
+            "Repress"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Japan",
+      "year": "1994",
+      "format": [
+        "CD",
+        "Album",
+        "Stereo"
+      ],
+      "label": [
+        "EastWest Japan",
+        "EastWest",
+        "Time Warner",
+        "Warner Music UK Ltd.",
+        "Warner Music UK Ltd.",
+        "East West Japan Inc.",
+        "Warner Music Japan Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Soundtrack",
+        "Modern Classical",
+        "Ambient"
+      ],
+      "id": 2893347,
+      "barcode": [
+        "4 988029 073242",
+        "4988029073242",
+        "\u00a52,400 ( \u7a0e\u8fbc )  (\u7a0e\u629c\u4fa1\u683c\u00a52,330)",
+        "\u7a0e\u8fbc\u5b9a\u4fa1 \u00a52,400",
+        "JASRAC",
+        "\u2605[ 94\u30fb7\u30fb25(94\u30fb6) ] \u24ce\u24cd",
+        "AMCE-732 1 \ud83d\udf4a \ud83d\udf4a\ud83d\udf4a \ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a\ud83d\udf4a"
+      ],
+      "master_id": 12717,
+      "master_url": "https://api.discogs.com/masters/12717",
+      "uri": "/release/2893347-Vangelis-%E3%83%B4%E3%82%A1%E3%83%B3%E3%82%B2%E3%83%AA%E3%82%B9-Blade-Runner-Soundtrack-%E3%83%96%E3%83%AC%E3%83%BC%E3%83%89%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E3%82%B5%E3%82%A6%E3%83%B3%E3%83%89%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF",
+      "catno": "AMCE-732",
+      "title": "Vangelis = \u30f4\u30a1\u30f3\u30b2\u30ea\u30b9* - Blade Runner (Soundtrack) = \u30d6\u30ec\u30fc\u30c9\u30e9\u30f3\u30ca\u30fc\u30fb\u30b5\u30a6\u30f3\u30c9\u30c8\u30e9\u30c3\u30af",
+      "thumb": "https://i.discogs.com/IvXiATEB2b4xu363BDJpwNQz_yji7C_lF38haN7bYHk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4OTMz/NDctMTQzMzgyOTYx/NC0xNDQ2LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/37AP3sIkx6AKkH2Q_7plZSjcfV3LcHfOlRlN5qEh718/rs:fit/g:sm/q:90/h:524/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4OTMz/NDctMTQzMzgyOTYx/NC0xNDQ2LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/2893347",
+      "community": {
+        "want": 294,
+        "have": 65
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Stereo"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2017",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Epic",
+        "Alcon Sleeping Giant",
+        "Alcon Sleeping Giant (ASG) Records",
+        "Alcon Sleeping Giant (ASG) Records",
+        "Epic Records",
+        "Sony Music Entertainment",
+        "Sleeping Giant Studios",
+        "The Bakery",
+        "Remote Control Productions"
+      ],
+      "type": "release",
+      "genre": [
+        "Electronic",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score",
+        "Soundtrack",
+        "Ambient",
+        "Dark Ambient",
+        "Industrial"
+      ],
+      "id": 11343552,
+      "barcode": [
+        "190758036410",
+        "Bakery 19075803641 A-RE1",
+        "\u203eV\u203e 19075803641-B",
+        "\u203eV\u203e 19075803641-C",
+        "\u203eV\u203e 19075803641-D",
+        "ASCAP"
+      ],
+      "master_id": 1250568,
+      "master_url": "https://api.discogs.com/masters/1250568",
+      "uri": "/release/11343552-Hans-Zimmer-Benjamin-Wallfisch-Blade-Runner-2049-Original-Motion-Picture-Soundtrack",
+      "catno": "19075803641",
+      "title": "Hans Zimmer & Benjamin Wallfisch - Blade Runner 2049 (Original Motion Picture Soundtrack)",
+      "thumb": "https://i.discogs.com/iWY-mV0v4h7RXtXLhmhjmqAgFg9KA5Q9KTH-isTqSL8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMzQz/NTUyLTE1MTQ3NjU2/NTgtOTY1MC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/w5DpJ7uw0mAOBRTZCCMrn8jQ0F6PviA_61zDGJel-pc/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMzQz/NTUyLTE1MTQ3NjU2/NTgtOTY1MC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/11343552",
+      "community": {
+        "want": 454,
+        "have": 2079
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "150 g",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        }
+      ]
+    }
+  ]
+}

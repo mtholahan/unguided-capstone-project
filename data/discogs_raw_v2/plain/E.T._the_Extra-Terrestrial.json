@@ -1,0 +1,325 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 114,
+    "per_page": 5,
+    "items": 567,
+    "urls": {
+      "last": "https://api.discogs.com/database/search?q=E.T.+the+Extra-Terrestrial&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=114",
+      "next": "https://api.discogs.com/database/search?q=E.T.+the+Extra-Terrestrial&type=release&per_page=5&key=woTphKEaoIPOYHLyYhlp&secret=ODdqgEESNliJmkOHZtsEqxurdzcgNyRL&page=2"
+    }
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Special Edition",
+        "Box Set"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Records, Inc.",
+        "Universal Studios, Inc.",
+        "MCA Records, Inc.",
+        "Universal Studios, Inc.",
+        "MCA Records, Inc.",
+        "MCA Pressing Plant, Gloversville"
+      ],
+      "type": "release",
+      "genre": [
+        "Children's"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 1570832,
+      "barcode": [
+        "0 7674-10000-1",
+        "076741000012",
+        "MCA 3240",
+        "MCA 3241",
+        "MCA 3240-AM4",
+        "MCA 3241-AM6",
+        "MCA 3240-AM3 \u56de-G-\u56de",
+        "MCA 3241-AM2 \u56de-G-\u56de 6"
+      ],
+      "master_id": 168998,
+      "master_url": "https://api.discogs.com/masters/168998",
+      "uri": "/release/1570832-Michael-Jackson-John-Williams-ET-The-Extra-Terrestrial",
+      "catno": "MCA 70000",
+      "title": "Michael Jackson / John Williams (4) - E.T. The Extra-Terrestrial",
+      "thumb": "https://i.discogs.com/RPATVaDNAuxRBiyBU1GD1_ORAD6CXkZif7Ur5zx-2XY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1NzA4/MzItMTM0NzI4NDcx/Ni04NjQ1LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/xXH3gUKL2hZiF8KS5KZP60sKFjvACioQTxmImmYcU8k/rs:fit/g:sm/q:90/h:597/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1NzA4/MzItMTM0NzI4NDcx/Ni04NjQ1LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1570832",
+      "community": {
+        "want": 936,
+        "have": 2721
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "Gloversville Pressing",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Special Edition"
+          ]
+        },
+        {
+          "name": "Box Set",
+          "qty": "1"
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "2023",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Reissue",
+        "Remastered"
+      ],
+      "label": [
+        "Mondo",
+        "Amblin Entertainment",
+        "Universal",
+        "Geffen Records",
+        "Universal Studios",
+        "Universal Studios",
+        "Geffen Records",
+        "UMG Recordings, Inc.",
+        "USI B Music Publishing",
+        "Mondo Tees LLC",
+        "MGM Music Scoring Stage",
+        "Uniteye",
+        "Uniteye",
+        "NBC Universal Studio Post Audio",
+        "The Bakery",
+        "Peter Maurice Music Co. Ltd.",
+        "Record Technology Incorporated",
+        "GZ Media"
+      ],
+      "type": "release",
+      "genre": [
+        "Stage & Screen"
+      ],
+      "style": [
+        "Score"
+      ],
+      "id": 27121245,
+      "barcode": [
+        "8 10041 48855 8"
+      ],
+      "master_id": 26860,
+      "master_url": "https://api.discogs.com/masters/26860",
+      "uri": "/release/27121245-John-Williams-ET-The-Extra-Terrestrial",
+      "catno": "MOND-279",
+      "title": "John Williams (4) - E.T. The Extra-Terrestrial",
+      "thumb": "https://i.discogs.com/4xonO5i0-sm4Ed5g1BRXVf6cxPcg0UUdxlOr6xGbSaY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3MTIx/MjQ1LTE2ODQ0NTMw/NjMtMjM4NC5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/NKJis_25wGbh7yWzfzoHVbfaLpvvqTLTyZ8myeqwoc0/rs:fit/g:sm/q:90/h:590/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3MTIx/MjQ1LTE2ODQ0NTMw/NjMtMjM4NC5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/27121245",
+      "community": {
+        "want": 139,
+        "have": 1276
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "2",
+          "text": "Clear With Blue Smoke [Full Moon Color], 180 Gram, 40th Anniversary Edition",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Reissue",
+            "Remastered"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "US",
+      "year": "1983",
+      "format": [
+        "Vinyl",
+        "LP",
+        "7\"",
+        "Styrene"
+      ],
+      "label": [
+        "Buena Vista Records",
+        "Read-Along Adventure",
+        "Little LP",
+        "Walt Disney Productions",
+        "Universal City Studios, Inc.",
+        "PRC Recording Company, Richmond, IN"
+      ],
+      "type": "release",
+      "genre": [
+        "Children's",
+        "Stage & Screen"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 1080480,
+      "barcode": [
+        "PRC-RICH",
+        "456-APRC-RICH-183-A >3-2-2-1\u221e",
+        "456-APRC-RICH-183-B >3-2-1-1\u221e"
+      ],
+      "master_id": 201279,
+      "master_url": "https://api.discogs.com/masters/201279",
+      "uri": "/release/1080480-Drew-Barrymore-ET-The-Extra-Terrestrial",
+      "catno": "456",
+      "title": "Drew Barrymore - E.T. The Extra-Terrestrial",
+      "thumb": "https://i.discogs.com/8G6CiCBdaQu0HNAK-Fyk4mkffi4zSNfbATcVIR4VHws/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwODA0/ODAtMTI4NjY0MDI1/OS5qcGVn.jpeg",
+      "cover_image": "https://i.discogs.com/2cylD8G9Ceoax3zS9xZeGDpt1FlvuZ7N5VuT-vlonZA/rs:fit/g:sm/q:90/h:536/w:540/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwODA0/ODAtMTI4NjY0MDI1/OS5qcGVn.jpeg",
+      "resource_url": "https://api.discogs.com/releases/1080480",
+      "community": {
+        "want": 52,
+        "have": 277
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "text": "PRC Richmond Pressing",
+          "descriptions": [
+            "LP",
+            "7\"",
+            "Styrene"
+          ]
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Box Set"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Records"
+      ],
+      "type": "release",
+      "genre": [
+        "Children's"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 5298964,
+      "barcode": [],
+      "master_id": 168998,
+      "master_url": "https://api.discogs.com/masters/168998",
+      "uri": "/release/5298964-Michael-Jackson-John-Williams-ET-The-Extra-Terrestrial",
+      "catno": "MCA 70000",
+      "title": "Michael Jackson / John Williams (4) - E.T. The Extra-Terrestrial",
+      "thumb": "https://i.discogs.com/woxy4SKmRGIv87EH7oxy2hICHq5CqERGTJ9zOa2sXvg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUyOTg5/NjQtMTQwOTk5MjU0/OS02MzgwLmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/TlyFeOjJLSdNMrWuM4TPUoGOro3wyqAP4ZP43ta2Las/rs:fit/g:sm/q:90/h:605/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUyOTg5/NjQtMTQwOTk5MjU0/OS02MzgwLmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/5298964",
+      "community": {
+        "want": 328,
+        "have": 312
+      },
+      "format_quantity": 1,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        },
+        {
+          "name": "Box Set",
+          "qty": "1"
+        }
+      ]
+    },
+    {
+      "country": "UK",
+      "year": "1982",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album",
+        "Vinyl",
+        "LP",
+        "Album",
+        "Picture Disc",
+        "Box Set"
+      ],
+      "label": [
+        "MCA Records",
+        "MCA Records",
+        "MCA Records",
+        "MCA Records, Inc.",
+        "MCA Records, Inc."
+      ],
+      "type": "release",
+      "genre": [
+        "Children's"
+      ],
+      "style": [
+        "Story"
+      ],
+      "id": 9312838,
+      "barcode": [
+        "MCFP 3160A",
+        "MCFP 3160B"
+      ],
+      "master_id": 168998,
+      "master_url": "https://api.discogs.com/masters/168998",
+      "uri": "/release/9312838-Michael-Jackson-John-Williams-ET-The-Extra-Terrestrial",
+      "catno": "MCA 70000",
+      "title": "Michael Jackson / John Williams (4) - E.T. The Extra-Terrestrial",
+      "thumb": "https://i.discogs.com/oxgRELoHV2V9r5ZLYxupZDj1TbyIr-Mfv0FEJGdU5nI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkzMTI4/MzgtMTQ5NDQ5MjA0/MS02Nzk1LmpwZWc.jpeg",
+      "cover_image": "https://i.discogs.com/5ilcdpXrUoOum51hJzOoB3ecUsuM0EeTPVOKEeNaYFI/rs:fit/g:sm/q:90/h:593/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkzMTI4/MzgtMTQ5NDQ5MjA0/MS02Nzk1LmpwZWc.jpeg",
+      "resource_url": "https://api.discogs.com/releases/9312838",
+      "community": {
+        "want": 346,
+        "have": 138
+      },
+      "format_quantity": 2,
+      "formats": [
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album"
+          ]
+        },
+        {
+          "name": "Vinyl",
+          "qty": "1",
+          "descriptions": [
+            "LP",
+            "Album",
+            "Picture Disc"
+          ]
+        },
+        {
+          "name": "Box Set",
+          "qty": "1"
+        }
+      ]
+    }
+  ]
+}
