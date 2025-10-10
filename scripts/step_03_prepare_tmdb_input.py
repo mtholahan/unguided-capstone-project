@@ -1,13 +1,46 @@
 """
-step_03_prepare_tmdb_input.py
+Step 03 – Prepare TMDB Input
 ---------------------------------
 Purpose:
-    Harmonize Discogs and TMDB data into a unified candidate dataset
-    with normalized comparable fields for fuzzy matching.
+    Harmonize Discogs and TMDB raw data into a unified candidate
+    dataset for fuzzy matching. This step consolidates both sources,
+    normalizes text fields, and generates candidate title pairs for
+    Step 04 (Discogs↔TMDB fuzzy matching).
 
+Modes of Operation:
+    1️⃣  USE_GOLDEN_LIST = True
+        • Uses the in-code GOLDEN_TITLES_TEST subset.
+        • Processes limited data for reproducible mentor review runs.
+
+    2️⃣  USE_GOLDEN_LIST = False
+        • Dynamically infers titles from existing Discogs raw files.
+        • Processes all cached JSONs in `data/raw/discogs_raw/plain`
+          and `.../soundtrack` directories.
+
+Automation Highlights:
+    • Parallelized candidate generation via ThreadPoolExecutor.
+    • Applies normalization (lowercase, punctuation stripping,
+      keyword filtering) for cross-source alignment.
+    • Exports both CSV and Parquet versions of the unified candidate
+      table for downstream consumption.
+    • Fully parameterized—no manual path edits required.
+
+Deliverables:
+    • `data/intermediate/discogs_tmdb_candidates_extended.csv`
+    • Matching Parquet file and metrics JSON
+    • `tmdb_input_extended_metrics.json` summarizing counts, averages,
+      and runtime.
+
+Dependencies:
+    • Steps 01 and 02 must have produced Discogs and TMDB JSON files.
+    • Relies on helper utilities in `utils.py` for normalization logic.
+
+Author:
+    Mark Holahan
 Version:
-    v4.7 – Oct 2025
+    v5.0 – Oct 2025 (refactored for dual-mode title resolution)
 """
+
 
 from base_step import BaseStep
 import json
@@ -17,7 +50,6 @@ import concurrent.futures
 from pathlib import Path
 import pandas as pd
 import os
-
 from utils import normalize_for_matching_extended
 from config import (
     DATA_DIR,
@@ -26,33 +58,33 @@ from config import (
     INTERMEDIATE_DIR,
     USE_GOLDEN_LIST,
     GOLDEN_TITLES_TEST,
-    MAX_DISCOG_TITLES,
     DEFAULT_MAX_WORKERS,
 )
 
-# --- Ensure paths are resolved from project root ---
+# --- Ensure paths resolve from project root ---
 os.chdir(Path(__file__).resolve().parents[1])
 
 # ===============================================================
 # 🔤 Helpers
 # ===============================================================
-
 FILM_OST_KEYWORDS = [
     "soundtrack", "score", "stage & screen", "original motion picture", "ost", "motion picture"
 ]
 EXCLUDE_TERMS = ["tv", "series", "game", "anime", "broadway", "musical", "soap", "documentary"]
 YEAR_PATTERN = re.compile(r"(19|20)\d{2}")
 
-# --- Safe filename helper (consistent with Step 02) ---
+
 def safe_filename(name: str) -> str:
     """Return a filesystem-safe version of a string (Windows-compatible)."""
     return re.sub(r"[^A-Za-z0-9_\-\.]+", "_", name)
 
-def infer_year_from_text(text: str) -> int | None:
+
+def infer_year_from_text(text: str):
     if not text:
         return None
     match = YEAR_PATTERN.search(str(text))
     return int(match.group(0)) if match else None
+
 
 def is_film_soundtrack(title: str, genres: list | None, styles: list | None) -> bool:
     blob = " ".join([title] + (genres or []) + (styles or [])).lower()
@@ -74,7 +106,7 @@ class Step03PrepareTMDBInput(BaseStep):
         self.output_csv = Path(INTERMEDIATE_DIR) / "discogs_tmdb_candidates_extended.csv"
         self.output_parquet = self.output_csv.with_suffix(".parquet")
         self.max_workers = DEFAULT_MAX_WORKERS
-        self.logger.info(f"Initialized Step 03 v4.5 with {self.max_workers} workers")
+        self.logger.info(f"Initialized Step 03 v4.8 with {self.max_workers} workers")
 
     # -----------------------------------------------------------
     # 🔄 Build candidate pairs
@@ -107,13 +139,11 @@ class Step03PrepareTMDBInput(BaseStep):
             tmdb_records = []
             if tmdb_path.exists():
                 tmdb_json = json.loads(tmdb_path.read_text(encoding="utf-8"))
-                # Handle both list and dict formats
                 results = (
                     tmdb_json.get("results", [])
                     if isinstance(tmdb_json, dict)
                     else tmdb_json
                 )
-
                 for r in results:
                     tmdb_records.append({
                         "movie_ref": title,
@@ -146,7 +176,7 @@ class Step03PrepareTMDBInput(BaseStep):
                             "tmdb_genre": t["genre"],
                             "discogs_style": d["style"],
                         })
-            elif discogs_records:  # fallback: Discogs only
+            elif discogs_records:
                 for d in discogs_records:
                     pairs.append({
                         "movie_ref": title,
@@ -158,18 +188,17 @@ class Step03PrepareTMDBInput(BaseStep):
                         "tmdb_genre": None,
                         "discogs_style": d["style"],
                     })
-
             return pairs
 
         except Exception as e:
             self.logger.error(f"{title}: build_candidates failed → {e}")
             return []
 
-     # -----------------------------------------------------------
+    # -----------------------------------------------------------
     # 🚀 Run
     # -----------------------------------------------------------
     def run(self):
-        self.logger.info("🎬 Starting Step 03 v4.7: Discogs→TMDB harmonization")
+        self.logger.info("🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization")
         t0 = time.time()
         all_pairs = []
 
@@ -178,7 +207,6 @@ class Step03PrepareTMDBInput(BaseStep):
             titles_to_process = GOLDEN_TITLES_TEST
             mode = "GOLDEN"
         else:
-            # --- Gather Discogs JSONs dynamically ---
             discogs_files = []
             for subdir in ["plain", "soundtrack"]:
                 path = self.discogs_raw_dir / subdir
@@ -187,10 +215,7 @@ class Step03PrepareTMDBInput(BaseStep):
                     self.logger.info(f"📂 Found {count} files in {path}")
                     discogs_files.extend(path.glob("*.json"))
 
-            titles_to_process = [
-                f.stem.replace("_", " ") for f in discogs_files
-            ][:MAX_DISCOG_TITLES]
-
+            titles_to_process = [f.stem.replace("_", " ") for f in discogs_files]
             mode = f"AUTO ({len(titles_to_process)} titles)"
 
         self.logger.info(f"🔧 Mode={mode} | Titles to process={len(titles_to_process)}")
@@ -228,15 +253,14 @@ class Step03PrepareTMDBInput(BaseStep):
             "mode": mode,
             "titles_total": len(titles_to_process),
             "pairs_total": len(df),
-            "avg_pairs_per_title": (
-                len(df) / len(titles_to_process)
-            ) if titles_to_process else 0,
+            "avg_pairs_per_title": (len(df) / len(titles_to_process)) if titles_to_process else 0,
             "duration_sec": duration,
             "max_workers": self.max_workers,
         }
         self.save_metrics("tmdb_input_extended_metrics.json", {"summary": metrics})
         self.write_metrics(metrics)
         self.logger.info(f"✅ Step 03 completed in {duration:.2f}s | Mode={mode}")
+
 
 # ===============================================================
 # Entrypoint

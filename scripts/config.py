@@ -1,239 +1,204 @@
 """
-config.py v3.0 — Unified configuration for Discogs→TMDB pipeline
-Author: Mark Holahan
-Refactor Date: 2025-10-09
+config.py
+---------------------------------------------------------------
+Central configuration for the Discogs→TMDB Data Pipeline
+(Springboard Unguided Capstone Project)
 
+Version:
+    v3.2 — Oct 2025
 Purpose:
-    Centralized configuration and constants for the Unguided Capstone project.
-    Defines all paths, API settings, concurrency limits, and runtime behavior.
-    Designed for both local and cloud-safe operation.
+    - Restore all previously used constants
+    - Unify "mode control" logic (golden vs. active, local vs. API)
+    - Maintain backward compatibility for Steps 01–07
+---------------------------------------------------------------
 """
 
 import os
-from pathlib import Path
 import multiprocessing
+from pathlib import Path
+import pandas as pd
 
 # ===============================================================
-# 🧭 PROJECT METADATA
-# ---------------------------------------------------------------
-# Core identifiers used for logging, versioning, and environment awareness.
+# 🌎 ENVIRONMENT SETTINGS
 # ===============================================================
-PROJECT_NAME = "UnguidedCapstone_DiscogsPipeline"
-VERSION = "0.3-prod"
-SOURCE_SYSTEM = "discogs"  # Default data origin for initial pipeline stages
-ENV = os.getenv("ENV", "dev")  # "dev", "local", "prod" — affects test data scope
-
-
-# ===============================================================
-# 🧱 DIRECTORY STRUCTURE
-# ---------------------------------------------------------------
-# Defines all working directories for raw data, intermediate artifacts,
-# metrics, logs, and temporary files. Created automatically at runtime.
-# ===============================================================
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
+ROOT_DIR = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
 INTERMEDIATE_DIR = DATA_DIR / "intermediate"
+PROCESSED_DIR = DATA_DIR / "processed"
+LOG_DIR = ROOT_DIR / "logs"
 METRICS_DIR = DATA_DIR / "metrics"
-LOG_DIR = BASE_DIR / "logs"
-TMP_DIR = BASE_DIR / "tmp"
-
-# Specific subdirectories (Discogs, TMDB)
-DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
-TMDB_RAW_DIR = RAW_DIR / "tmdb_raw"
-TMDB_OUTPUT_DIR = DATA_DIR / "tmdb_enriched"
-
-# Ensure all required folders exist
-for d in [DATA_DIR, RAW_DIR, INTERMEDIATE_DIR, METRICS_DIR, LOG_DIR, TMP_DIR,
-          DISCOGS_RAW_DIR, TMDB_RAW_DIR, TMDB_OUTPUT_DIR]:
-    d.mkdir(parents=True, exist_ok=True)
-
-
-# ===============================================================
-# ⚙️ CONCURRENCY SETTINGS
-# ---------------------------------------------------------------
-# Controls parallel execution limits per API; scales based on CPU count.
-# ===============================================================
 CPU_CORES = multiprocessing.cpu_count()
 
-DISCOGS_MAX_WORKERS = int(os.getenv("DISCOGS_MAX_WORKERS", min(4, CPU_CORES)))
-TMDB_MAX_WORKERS = int(os.getenv("TMDB_MAX_WORKERS", min(6, CPU_CORES)))
-DEFAULT_MAX_WORKERS = int(os.getenv("DEFAULT_MAX_WORKERS", min(4, CPU_CORES)))
-# Global thread limit — hard ceiling for any thread pool
+ENV = os.getenv("ENV", "dev")  # "dev", "test", or "prod"
+
+for d in [DATA_DIR, RAW_DIR, INTERMEDIATE_DIR, PROCESSED_DIR, LOG_DIR, METRICS_DIR]:
+    d.mkdir(parents=True, exist_ok=True)
+
+# ===============================================================
+# 🎛️ PIPELINE MODE CONTROLS
+# ===============================================================
+USE_GOLDEN_LIST = False          # True → use curated GOLDEN_TITLES
+TITLE_LIST_PATH = DATA_DIR / "movie_titles_200.txt"  # Full active title list
+
+RUN_LOCAL = False                # True → offline mode; skip API calls
+FORCE_CACHE_ONLY = RUN_LOCAL
+SAVE_RAW_JSON = True
+ALLOW_API_FETCH = not RUN_LOCAL
+
+DISCOG_MAX_TITLES = 50          # Batch limiter for Step 01
+TMDB_MAX_RESULTS = 5
 MAX_THREADS = int(os.getenv("MAX_THREADS", min(8, CPU_CORES * 2)))
 
-
-def get_safe_workers(api_name: str) -> int:
-    """Return safe thread count per API, capped by CPU cores."""
-    mapping = {
-        "discogs": DISCOGS_MAX_WORKERS,
-        "tmdb": TMDB_MAX_WORKERS,
-        "default": DEFAULT_MAX_WORKERS,
-    }
-    workers = mapping.get(api_name.lower(), DEFAULT_MAX_WORKERS)
-    return max(1, min(workers, CPU_CORES))
-
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
 # ===============================================================
-# 🌐 API PERFORMANCE TUNING
-# ---------------------------------------------------------------
-# Shared timeout, retry, and backoff parameters for API calls.
+# 🕐 API TIMEOUTS / RETRIES
 # ===============================================================
-API_TIMEOUT = 10.0               # Seconds before an API request aborts
-RETRY_BACKOFF = 2.0              # Delay between retries (exponential multiplier)
-SAVE_RAW_JSON = True             # Whether to write raw API responses to disk
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")  # Default verbosity for loggers
-
+API_TIMEOUT = 20                 # seconds
+API_MAX_RETRIES = 3
+RETRY_BACKOFF = 2.0              # seconds between retries
 
 # ===============================================================
-# 🎵 DISCOGS API SETTINGS
-# ---------------------------------------------------------------
-# Base URL, keys, and pagination controls for Discogs data acquisition.
+# 🎞️ DISCOGS SETTINGS
 # ===============================================================
 DISCOGS_API_URL = "https://api.discogs.com/database/search"
 DISCOGS_CONSUMER_KEY = os.getenv("DISCOGS_CONSUMER_KEY", "")
 DISCOGS_CONSUMER_SECRET = os.getenv("DISCOGS_CONSUMER_SECRET", "")
 DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 
-DISCOGS_PER_PAGE = 5             # Number of results per request
-DISCOGS_SLEEP_SEC = 1.5          # Throttle delay between requests
-DISCOGS_MAX_RETRIES = 3          # Retry attempts before giving up
+DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
+DISCOGS_RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-MAX_DISCOG_TITLES = 200          # Adjustable batch size
-
+DISCOGS_MAX_RETRIES = 3
+DISCOGS_PER_PAGE = 5
+DISCOGS_SLEEP_SEC = 3.0     # routine delay between individual API requests
+RATE_LIMIT_SLEEP_SEC = 60   # Cooldown period after Discogs returns HTTP 429 (“Too Many Requests”)
 
 # ===============================================================
-# 🎬 TMDB API SETTINGS
-# ---------------------------------------------------------------
-# Base URL and endpoints for TMDB movie data fetching and discovery.
+# 🎥 TMDB SETTINGS
 # ===============================================================
+TMDB_API_URL = "https://api.themoviedb.org/3/search/movie"
 TMDB_API_KEY = os.getenv("TMDB_API_KEY", "")
-TMDB_API_URL = "https://api.themoviedb.org/3"
-TMDB_SEARCH_URL = f"{TMDB_API_URL}/search/movie"
-TMDB_DISCOVER_URL = f"{TMDB_API_URL}/discover/movie"
-TMDB_GENRE_URL = f"{TMDB_API_URL}/genre/movie/list"
-
-TMDB_MAX_RESULTS = 5
-TMDB_SLEEP_SEC = 0.25            # Delay between calls for rate stability
-
-# Rate limiter target — max requests per second
-TMDB_RATE_LIMIT = float(os.getenv("TMDB_RATE_LIMIT", 3.0))
+TMDB_SLEEP_SEC = 0.8
+TMDB_RAW_DIR = RAW_DIR / "tmdb_raw"
+TMDB_RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ===============================================================
-# 🔢 FUZZY MATCHING PARAMETERS
-# ---------------------------------------------------------------
-# Used by Step 04 (Discogs↔TMDB join) to control matching behavior.
+# 🧩 STEP-SPECIFIC PARAMETERS (Backward-Compatible)
 # ===============================================================
-FUZZ_THRESHOLD = int(os.getenv("FUZZ_THRESHOLD", 85))   # Minimum score (0–100)
-YEAR_VARIANCE = int(os.getenv("YEAR_VARIANCE", 3))      # Allowable year gap
-TOP_N = int(os.getenv("TOP_N", 5))                      # Top candidates per match
+# These were previously scattered in step scripts; kept here to
+# preserve compatibility for Steps 02–04 without breaking imports.
 
+# --- Step 02: TMDB Fetch ---
+TMDB_SEARCH_URL = TMDB_API_URL
+TMDB_RATE_LIMIT = 40             # max requests per 10 seconds (API guideline)
 
-# ===============================================================
-# ☁️ AZURE PLACEHOLDER
-# ---------------------------------------------------------------
-# Placeholder for optional future blob storage integration.
-# ===============================================================
-AZURE_SAS_TOKEN = os.getenv("AZURE_SAS_TOKEN", None)
+# --- Step 03: Prepare TMDB Input ---
+DEFAULT_MAX_WORKERS = MAX_THREADS   # alias for concurrency defaults
 
-
-# ===============================================================
-# 🧮 SCHEMA & NORMALIZATION SETTINGS
-# ---------------------------------------------------------------
-# Defines canonical field names and join keys for harmonization.
-# ===============================================================
-DISCOGS_FIELDS = [
-    "title", "year", "genre", "style", "country", "label", "id", "uri"
-]
-TMDB_FIELDS = [
-    "id", "title", "release_date", "genres", "popularity", "vote_average"
-]
-JOIN_KEYS = ["title", "year"]  # Default harmonization join columns
-
+# --- Step 04: Match Discogs ↔ TMDB ---
+FUZZ_THRESHOLD = 85             # minimum fuzzy-match ratio for candidate acceptance
+YEAR_VARIANCE = 2               # acceptable difference between Discogs/TMDB year
+TOP_N = 5                       # number of top TMDB results to consider per title
 
 # ===============================================================
-# 🎬 GOLDEN TEST DATASETS
-# ---------------------------------------------------------------
-# Reference title lists for pipeline validation and quick local testing.
+# 🎬 GOLDEN TITLE LISTS
 # ===============================================================
-
-USE_GOLDEN_LIST = False     # A toggle to swith to using below hard-coded list (or subset)
-                            # or using real-time pull against Discogs API
 GOLDEN_TITLES = [
-    "Star Wars",
-    "The Empire Strikes Back",
-    "Return of the Jedi",
-    "Jurassic Park",
-    "E.T. the Extra-Terrestrial",
-    "Indiana Jones and the Raiders of the Lost Ark",
-    "Jaws",
-    "The Lord of the Rings: The Fellowship of the Ring",
-    "The Lord of the Rings: The Two Towers",
-    "The Lord of the Rings: The Return of the King",
-    "Harry Potter and the Sorcerer's Stone",
-    "Titanic",
-    "Pulp Fiction",
-    "The Godfather",
-    "The Godfather Part II",
-    "The Dark Knight",
-    "Gladiator",
-    "Inception",
-    "Back to the Future",
-    "Frozen",
+    "Inception", "Interstellar", "The Dark Knight", "Blade Runner", "The Matrix",
+    "Pulp Fiction", "Forrest Gump", "The Godfather", "The Shawshank Redemption", "Fight Club",
+    "Back to the Future", "Gladiator", "Titanic", "Avatar", "Jurassic Park",
+    "Star Wars", "The Lord of the Rings", "Harry Potter", "La La Land", "The Lion King", "Frozen"
+    "Jaws"
 ]
+GOLDEN_TITLES_TEST = GOLDEN_TITLES[:5]
 
-GOLDEN_EXPECTED_YEARS = {
-    "Star Wars": 1977,
-    "The Empire Strikes Back": 1980,
-    "Return of the Jedi": 1983,
-    "Jurassic Park": 1993,
-    "E.T. the Extra-Terrestrial": 1982,
-    "Indiana Jones and the Raiders of the Lost Ark": 1981,
-    "Jaws": 1975,
-    "The Lord of the Rings: The Fellowship of the Ring": 2001,
-    "The Lord of the Rings: The Two Towers": 2002,
-    "The Lord of the Rings: The Return of the King": 2003,
-    "Harry Potter and the Sorcerer's Stone": 2001,
-    "Titanic": 1997,
-    "Pulp Fiction": 1994,
-    "The Godfather": 1972,
-    "The Godfather Part II": 1974,
-    "The Dark Knight": 2008,
-    "Gladiator": 2000,
-    "Inception": 2010,
-    "Back to the Future": 1985,
-    "Frozen": 2013,
-}
+# ===============================================================
+# 🎬 TITLE SOURCE RESOLVER
+# ===============================================================
+def get_active_title_list(path=None):
+    """
+    Resolve the working title list based on control flags and environment.
 
-GOLDEN_TITLES_TEST = GOLDEN_TITLES[:5]  # First 5 for lightweight dev runs
+    Priority:
+      1️⃣ USE_GOLDEN_LIST=True        → GOLDEN_TITLES
+      2️⃣ TITLE_LIST_PATH exists      → load from .csv or .txt
+      3️⃣ ENV in ('dev','local')      → GOLDEN_TITLES_TEST (5 titles)
+      4️⃣ Otherwise                   → raise FileNotFoundError
 
+    Behavior:
+      • Reads first column of CSV or each line of TXT.
+      • Trims whitespace and drops empty rows.
+      • Prints clear message describing which source was used.
+    """
+    import pandas as pd
+    from pathlib import Path
 
-def get_active_title_list():
-    """Return either the test or full title set based on environment."""
+    # 1️⃣ Curated list override
+    if USE_GOLDEN_LIST:
+        print("[Config] Using curated GOLDEN_TITLES list (USE_GOLDEN_LIST=True).")
+        return GOLDEN_TITLES
+
+    # 2️⃣ External file source
+    file_path = Path(path or TITLE_LIST_PATH)
+    if file_path.exists():
+        try:
+            if file_path.suffix.lower() == ".csv":
+                df = pd.read_csv(file_path)
+                titles = df.iloc[:, 0].dropna().astype(str).tolist()
+            else:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    titles = [line.strip() for line in f if line.strip()]
+
+            print(f"[Config] Loaded {len(titles)} active titles from {file_path.name}.")
+            return titles
+
+        except Exception as e:
+            print(f"[Config] ⚠️ Failed to read {file_path}: {e}")
+
+    # 3️⃣ Development fallback
     if ENV.lower() in ("dev", "local"):
-        print("[Config] Using TEST title subset (5 titles).")
+        print("[Config] ⚠️ No external title list found — using GOLDEN_TITLES_TEST (dev fallback).")
         return GOLDEN_TITLES_TEST
-    print("[Config] Using FULL Golden Title list.")
-    return GOLDEN_TITLES
+
+    # 4️⃣ Production enforcement
+    raise FileNotFoundError(
+        f"❌ Title list file not found: {file_path}. "
+        f"Create this file or set USE_GOLDEN_LIST=True."
+    )
 
 
 # ===============================================================
-# 🧾 UTILITY FUNCTIONS
+# 🧮 WORKER MANAGEMENT
 # ===============================================================
-def print_config_summary():
-    """Print a short summary of key configuration paths."""
-    print(f"[Config] Environment: {ENV}")
-    print(f"[Config] Data directory: {DATA_DIR}")
-    print(f"[Config] Raw data path: {RAW_DIR}")
-    print(f"[Config] Intermediate: {INTERMEDIATE_DIR}")
-    print(f"[Config] Discogs raw: {DISCOGS_RAW_DIR}")
-    print(f"[Config] TMDB raw: {TMDB_RAW_DIR}")
-    print(f"[Config] TMDB output: {TMDB_OUTPUT_DIR}")
-    print(f"[Config] Metrics directory: {METRICS_DIR}")
-    print(f"[Config] Log level: {LOG_LEVEL}")
+def get_safe_workers(step_name: str = "generic") -> int:
+    """Return a safe number of threads to avoid overloading APIs."""
+    if ENV.lower() in ("dev", "local"):
+        return 4
+    return MAX_THREADS
 
+# ===============================================================
+# 🧩 MODE SUMMARY FUNCTION
+# ===============================================================
+def print_mode_summary():
+    """Print current mode settings for pipeline debugging."""
+    print("\n========== PIPELINE MODE SUMMARY ==========")
+    print(f"ENVIRONMENT       : {ENV}")
+    print(f"USE_GOLDEN_LIST   : {USE_GOLDEN_LIST}")
+    print(f"RUN_LOCAL (offline): {RUN_LOCAL}")
+    print(f"ALLOW_API_FETCH   : {ALLOW_API_FETCH}")
+    print(f"SAVE_RAW_JSON     : {SAVE_RAW_JSON}")
+    print(f"DISCOG_MAX_TITLES : {DISCOG_MAX_TITLES}")
+    print(f"TITLE_LIST_PATH   : {TITLE_LIST_PATH if TITLE_LIST_PATH.exists() else '(not found)'}")
+    print(f"API_TIMEOUT       : {API_TIMEOUT}s, RETRIES={API_MAX_RETRIES}")
+    print("===========================================\n")
 
-# Run summary when executed directly
+# ===============================================================
+# ✅ POST-LOAD TEST
+# ===============================================================
 if __name__ == "__main__":
-    print_config_summary()
+    print_mode_summary()
+    titles = get_active_title_list()
+    print(f"Loaded {len(titles)} titles for processing.")

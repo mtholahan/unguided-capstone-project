@@ -90,6 +90,10 @@ scripts/*_ScratchPad.py
 scripts/QA/
 scripts/logs/
 
+# explicitly include all main scripts for pipeline steps
+!scripts/*.py
+
+
 # explicitly INCLUDE PowerShell utilities
 !scripts/setup_env.ps1
 
