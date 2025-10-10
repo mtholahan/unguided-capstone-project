@@ -1,153 +1,269 @@
-# v2.2 — Film OST Heuristic Filter Added, Toggle via config
-
 """
-Step 07 (Enhanced): Prepare TMDb Input with Film-Only + Heuristic OST Filtering
--------------------------------------------------------------------------------
+Step 03 – Prepare TMDB Input
+---------------------------------
+Purpose:
+    Harmonize Discogs and TMDB raw data into a unified candidate
+    dataset for fuzzy matching. This step consolidates both sources,
+    normalizes text fields, and generates candidate title pairs for
+    Step 04 (Discogs↔TMDB fuzzy matching).
 
-Normalizes MusicBrainz + TMDb titles, removes non-film soundtracks,
-accepts repaired years, and computes deterministic overlaps.
-Adds optional heuristic filtering to retain only likely *film* soundtracks
-based on title patterns (e.g., 'original motion picture', 'film', 'movie', 'ost', 'score').
-The filter can be toggled via `FILM_OST_FILTER` in `config.py`.
+Modes of Operation:
+    1️⃣  USE_GOLDEN_LIST = True
+        • Uses the in-code GOLDEN_TITLES_TEST subset.
+        • Processes limited data for reproducible mentor review runs.
+
+    2️⃣  USE_GOLDEN_LIST = False
+        • Dynamically infers titles from existing Discogs raw files.
+        • Processes all cached JSONs in `data/raw/discogs_raw/plain`
+          and `.../soundtrack` directories.
+
+Automation Highlights:
+    • Parallelized candidate generation via ThreadPoolExecutor.
+    • Applies normalization (lowercase, punctuation stripping,
+      keyword filtering) for cross-source alignment.
+    • Exports both CSV and Parquet versions of the unified candidate
+      table for downstream consumption.
+    • Fully parameterized—no manual path edits required.
+
+Deliverables:
+    • `data/intermediate/discogs_tmdb_candidates_extended.csv`
+    • Matching Parquet file and metrics JSON
+    • `tmdb_input_extended_metrics.json` summarizing counts, averages,
+      and runtime.
+
+Dependencies:
+    • Steps 01 and 02 must have produced Discogs and TMDB JSON files.
+    • Relies on helper utilities in `utils.py` for normalization logic.
+
+Author:
+    Mark Holahan
+Version:
+    v5.0 – Oct 2025 (refactored for dual-mode title resolution)
 """
+
 
 from base_step import BaseStep
-from config import DATA_DIR, TMDB_DIR, DEBUG_MODE, FILM_OST_FILTER, FILM_OST_PATTERN
-from utils import normalize_for_matching_extended as normalize
-import pandas as pd
-from datetime import datetime
+import json
 import re
+import time
+import concurrent.futures
+from pathlib import Path
+import pandas as pd
+import os
+from utils import normalize_for_matching_extended
+from config import (
+    DATA_DIR,
+    DISCOGS_RAW_DIR,
+    TMDB_RAW_DIR,
+    INTERMEDIATE_DIR,
+    USE_GOLDEN_LIST,
+    GOLDEN_TITLES_TEST,
+    DEFAULT_MAX_WORKERS,
+)
 
-class Step07PrepareTMDbInput(BaseStep):
-    def __init__(self, name="Step 07 (Enhanced): Prepare TMDb Input"):
-        super().__init__(name=name)
-        self.input_parquet = DATA_DIR / "soundtracks.parquet"
-        self.tmdb_input_csv = TMDB_DIR / "enriched_top_1000.csv"
-        self.output_csv = TMDB_DIR / "tmdb_input_candidates_clean.csv"
-        self.CURRENT_YEAR = datetime.now().year
+# --- Ensure paths resolve from project root ---
+os.chdir(Path(__file__).resolve().parents[1])
 
-    def extract_title(self, raw):
-        try:
-            parts = str(raw).split("|")
-            for part in parts:
-                p = part.strip()
-                if len(p) > 3 and not all(c in "0123456789abcdef-" for c in p.lower()):
-                    return p
-        except Exception:
-            pass
+# ===============================================================
+# 🔤 Helpers
+# ===============================================================
+FILM_OST_KEYWORDS = [
+    "soundtrack", "score", "stage & screen", "original motion picture", "ost", "motion picture"
+]
+EXCLUDE_TERMS = ["tv", "series", "game", "anime", "broadway", "musical", "soap", "documentary"]
+YEAR_PATTERN = re.compile(r"(19|20)\d{2}")
+
+
+def safe_filename(name: str) -> str:
+    """Return a filesystem-safe version of a string (Windows-compatible)."""
+    return re.sub(r"[^A-Za-z0-9_\-\.]+", "_", name)
+
+
+def infer_year_from_text(text: str):
+    if not text:
         return None
+    match = YEAR_PATTERN.search(str(text))
+    return int(match.group(0)) if match else None
 
-    def _filter_film_soundtracks(self, df: pd.DataFrame) -> pd.DataFrame:
-        bad_patterns = r"(tv|series|game|anime|theme|sound\s*effect)"
-        keep_mask = ~df["raw_row"].str.contains(bad_patterns, case=False, na=False)
-        filtered = df[keep_mask].copy()
-        dropped = len(df) - len(filtered)
-        self.logger.info(f"🎬 Filtered out {dropped:,} non-film soundtracks; kept {len(filtered):,}.")
-        return filtered
 
-    @staticmethod
-    def infer_year_from_text(text: str, current_year: int) -> int:
-        if not text:
-            return -1
-        m = re.search(r"(19|20)\d{2}", text)
-        if not m:
-            return -1
-        year = int(m.group(0))
-        return year if 1900 <= year <= (current_year + 1) else -1
+def is_film_soundtrack(title: str, genres: list | None, styles: list | None) -> bool:
+    blob = " ".join([title] + (genres or []) + (styles or [])).lower()
+    if any(term in blob for term in EXCLUDE_TERMS):
+        return False
+    return any(kw in blob for kw in FILM_OST_KEYWORDS)
 
-    def _apply_heuristic_film_ost_filter(self, df: pd.DataFrame) -> pd.DataFrame:
-        pattern = FILM_OST_PATTERN
-        mask = df["title"].str.contains(pattern, case=False, na=False)
-        before = len(df)
-        filtered = df[mask].copy()
-        self.logger.info(f"🎞️ Heuristic film-OST filter: kept {len(filtered):,} / {before:,} ({len(filtered)/max(before,1)*100:.1f}%)")
-        return filtered
 
+# ===============================================================
+# 🎬 Step 03 – Extended Harmonization
+# ===============================================================
+class Step03PrepareTMDBInput(BaseStep):
+    """Harmonize Discogs + TMDB data into unified candidate table."""
+
+    def __init__(self):
+        super().__init__("step_03_prepare_tmdb_input")
+        self.discogs_raw_dir = Path(DISCOGS_RAW_DIR)
+        self.tmdb_raw_dir = Path(TMDB_RAW_DIR)
+        self.output_csv = Path(INTERMEDIATE_DIR) / "discogs_tmdb_candidates_extended.csv"
+        self.output_parquet = self.output_csv.with_suffix(".parquet")
+        self.max_workers = DEFAULT_MAX_WORKERS
+        self.logger.info(f"Initialized Step 03 v4.8 with {self.max_workers} workers")
+
+    # -----------------------------------------------------------
+    # 🔄 Build candidate pairs
+    # -----------------------------------------------------------
+    def build_candidates_for_title(self, title: str) -> list[dict]:
+        try:
+            # ---------------------- Discogs ----------------------
+            discogs_path = self.discogs_raw_dir / "plain" / f"{safe_filename(title)}.json"
+            if not discogs_path.exists():
+                return []
+
+            discogs_json = json.loads(discogs_path.read_text(encoding="utf-8"))
+            discogs_results = discogs_json.get("results", [])
+            discogs_records = []
+            for r in discogs_results:
+                if not is_film_soundtrack(r.get("title", ""), r.get("genre"), r.get("style")):
+                    continue
+                discogs_records.append({
+                    "movie_ref": title,
+                    "source": "discogs",
+                    "title_raw": r.get("title"),
+                    "title_norm": normalize_for_matching_extended(r.get("title")),
+                    "year": r.get("year") or infer_year_from_text(r.get("title")),
+                    "genre": ", ".join(r.get("genre", [])),
+                    "style": ", ".join(r.get("style", [])),
+                })
+
+            # ---------------------- TMDB --------------------------
+            tmdb_path = self.tmdb_raw_dir / f"{safe_filename(title)}.json"
+            tmdb_records = []
+            if tmdb_path.exists():
+                tmdb_json = json.loads(tmdb_path.read_text(encoding="utf-8"))
+                results = (
+                    tmdb_json.get("results", [])
+                    if isinstance(tmdb_json, dict)
+                    else tmdb_json
+                )
+                for r in results:
+                    tmdb_records.append({
+                        "movie_ref": title,
+                        "source": "tmdb",
+                        "title_raw": r.get("title") or r.get("original_title"),
+                        "title_norm": normalize_for_matching_extended(
+                            r.get("title") or r.get("original_title")
+                        ),
+                        "year": (
+                            r.get("release_date")[:4]
+                            if r.get("release_date")
+                            else infer_year_from_text(r.get("title"))
+                        ),
+                        "genre": ", ".join(map(str, r.get("genre_ids", []))),
+                        "style": "",
+                    })
+
+            # ---------------------- Pair generation ----------------
+            pairs = []
+            if discogs_records and tmdb_records:
+                for d in discogs_records:
+                    for t in tmdb_records:
+                        pairs.append({
+                            "movie_ref": title,
+                            "discogs_title_norm": d["title_norm"],
+                            "tmdb_title_norm": t["title_norm"],
+                            "discogs_year": d["year"],
+                            "tmdb_year": t["year"],
+                            "discogs_genre": d["genre"],
+                            "tmdb_genre": t["genre"],
+                            "discogs_style": d["style"],
+                        })
+            elif discogs_records:
+                for d in discogs_records:
+                    pairs.append({
+                        "movie_ref": title,
+                        "discogs_title_norm": d["title_norm"],
+                        "tmdb_title_norm": None,
+                        "discogs_year": d["year"],
+                        "tmdb_year": None,
+                        "discogs_genre": d["genre"],
+                        "tmdb_genre": None,
+                        "discogs_style": d["style"],
+                    })
+            return pairs
+
+        except Exception as e:
+            self.logger.error(f"{title}: build_candidates failed → {e}")
+            return []
+
+    # -----------------------------------------------------------
+    # 🚀 Run
+    # -----------------------------------------------------------
     def run(self):
-        self.setup_logger()
-        self.logger.info("🚀 Starting Step 07 (Enhanced): Prepare TMDb Input")
+        self.logger.info("🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization")
+        t0 = time.time()
+        all_pairs = []
 
-        if not self.input_parquet.exists():
-            self.fail(f"Missing input file: {self.input_parquet}")
-            return
+        # --- Determine which titles to process -----------------
+        if USE_GOLDEN_LIST:
+            titles_to_process = GOLDEN_TITLES_TEST
+            mode = "GOLDEN"
+        else:
+            discogs_files = []
+            for subdir in ["plain", "soundtrack"]:
+                path = self.discogs_raw_dir / subdir
+                if path.exists():
+                    count = len(list(path.glob("*.json")))
+                    self.logger.info(f"📂 Found {count} files in {path}")
+                    discogs_files.extend(path.glob("*.json"))
 
-        self.logger.info(f"📥 Loading MB soundtracks from {self.input_parquet}")
-        df = pd.read_parquet(self.input_parquet)
-        df = self._filter_film_soundtracks(df)
+            titles_to_process = [f.stem.replace("_", " ") for f in discogs_files]
+            mode = f"AUTO ({len(titles_to_process)} titles)"
 
-        self.logger.info("🧼 Extracting and normalizing MB titles")
-        df["title"] = [self.extract_title(r) for r in df["raw_row"]]
-        df["normalized_title"] = [normalize(t) for t in df["title"]]
+        self.logger.info(f"🔧 Mode={mode} | Titles to process={len(titles_to_process)}")
 
-        # Apply heuristic OST filter if enabled
-        if FILM_OST_FILTER:
-            df = self._apply_heuristic_film_ost_filter(df)
+        # --- Parallel execution -------------------------------
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            future_map = {
+                executor.submit(self.build_candidates_for_title, title): title
+                for title in titles_to_process
+            }
+            for future in concurrent.futures.as_completed(future_map):
+                title = future_map[future]
+                try:
+                    pairs = future.result()
+                    if pairs:
+                        all_pairs.extend(pairs)
+                except Exception as e:
+                    self.logger.error(f"{title}: thread failed → {e}")
 
-        repaired_again = 0
-        def coerce_year(y, raw_text):
-            nonlocal repaired_again
-            try:
-                y = int(float(y))
-            except Exception:
-                y = -1
-            if not (1900 <= y <= self.CURRENT_YEAR + 1):
-                inf = self.infer_year_from_text(raw_text, self.CURRENT_YEAR)
-                if inf != -1:
-                    repaired_again += 1
-                    return inf
-                return -1
-            return y
+        # --- Aggregate results --------------------------------
+        df = pd.DataFrame(all_pairs)
+        self.logger.info(f"🧩 Candidate pairs collected: {len(df)} rows")
 
-        df["release_year"] = [coerce_year(y, r) for y, r in zip(df.get("release_year", -1), df["raw_row"])]
+        if df.empty:
+            self.logger.warning("⚠️ No candidate pairs generated — check TMDB/Discogs alignment.")
+        else:
+            df.to_csv(self.output_csv, index=False)
+            df.to_parquet(self.output_parquet, index=False)
+            self.logger.info(f"📁 Saved harmonized data → {self.output_csv}")
+            self.logger.info(f"📊 Columns: {list(df.columns)}")
 
-        reasons = {"short_title": 0, "digits_only": 0, "bad_year": 0, "bad_type": 0, "passed": 0}
-        def is_valid(row):
-            nt = str(row.get("normalized_title") or "").strip()
-            if len(nt) < 3:
-                reasons["short_title"] += 1; return False
-            if nt.isdigit():
-                reasons["digits_only"] += 1; return False
-            yr = int(row.get("release_year", -1))
-            if yr != -1 and not (1900 <= yr <= self.CURRENT_YEAR + 1):
-                reasons["bad_year"] += 1; return False
-            if "soundtrack" not in str(row.get("release_group_secondary_type", "")).lower():
-                reasons["bad_type"] += 1; return False
-            reasons["passed"] += 1; return True
-
-        df = df[df.apply(is_valid, axis=1)].drop_duplicates(["normalized_title", "release_year"])
-        out_df = df.rename(columns={"release_year": "year"})[
-            ["normalized_title", "title", "release_group_id", "year", "release_group_secondary_type"]
-        ]
-
-        self.logger.info(f"🩹 Year repair second pass: {repaired_again:,} repairs; valid_year_rows={(out_df['year']!=-1).sum():,}")
-
-        if (out_df["year"] != -1).any():
-            yr_known = out_df[out_df["year"] != -1]
-            self.logger.info(f"📅 MB year stats: min={int(yr_known['year'].min())}, median={yr_known['year'].median()}, max={int(yr_known['year'].max())}")
-
-        out_df.to_csv(self.output_csv, index=False)
-        self.logger.info(f"✅ Saved MB candidates → {self.output_csv.name} ({len(out_df):,} rows)")
-
+        # --- Metrics & summary --------------------------------
+        duration = round(time.time() - t0, 2)
         metrics = {
-            "rows_mb_candidates": len(out_df),
-            "year_repaired_second_pass": int(repaired_again),
-            "year_known_rows": int((out_df['year'] != -1).sum()),
-            "year_unknown_rows": int((out_df['year'] == -1).sum()),
-            "heuristic_filter_applied": bool(FILM_OST_FILTER),
+            "mode": mode,
+            "titles_total": len(titles_to_process),
+            "pairs_total": len(df),
+            "avg_pairs_per_title": (len(df) / len(titles_to_process)) if titles_to_process else 0,
+            "duration_sec": duration,
+            "max_workers": self.max_workers,
         }
-        self.write_metrics("step07_prepare_tmdb_input", metrics)
-        self.logger.info(f"📈 Metrics recorded: {metrics}")
+        self.save_metrics("tmdb_input_extended_metrics.json", {"summary": metrics})
+        self.write_metrics(metrics)
+        self.logger.info(f"✅ Step 03 completed in {duration:.2f}s | Mode={mode}")
 
-        if DEBUG_MODE:
-            self.logger.info("🔍 Debug preview (first 5 MB rows):")
-            self.logger.info(out_df.head().to_string())
 
-        self.logger.info("✅ [DONE] Step 07 (Enhanced + Heuristic Filter) completed successfully.")
-
-        year_stats = out_df['year'].replace(-1, pd.NA).describe()
-        self.logger.info(f"🎯 MB universe size: {len(out_df):,} "
-                 f"(median year {year_stats['50%']:.0f})")
- 
-
+# ===============================================================
+# Entrypoint
+# ===============================================================
 if __name__ == "__main__":
-    Step07PrepareTMDbInput().run()
+    Step03PrepareTMDBInput().run()

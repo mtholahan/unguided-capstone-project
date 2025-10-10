@@ -1,124 +1,266 @@
 """
-Discogs API Coverage Test v2
+Step 01 – Acquire Discogs Data
+---------------------------------
+Purpose:
+    Entry point for the Discogs→TMDB prototype pipeline.
+    Retrieves soundtrack release metadata from the Discogs API
+    and prepares it for downstream TMDB enrichment (Steps 02–04).
 
-Compares plain vs soundtrack-enhanced queries for TMDb movie titles.
-Saves all raw JSON responses and summarizes coverage by query type.
+Modes of Operation:
+    1️⃣  USE_GOLDEN_LIST = True
+        • Uses the hard-coded GOLDEN_TITLES list in config.py.
+        • Ignores DISCOG_MAX_TITLES.
+        • Deterministic, small-scale test runs for mentor validation.
+
+    2️⃣  USE_GOLDEN_LIST = False
+        • Reads movie titles from TITLE_LIST_PATH on local disk
+          (e.g., data/movie_titles_200.txt or titles_active.csv).
+        • Applies DISCOG_MAX_TITLES as an upper cap.
+        • Enables large-scale testing and coverage analysis.
+
+Automation Highlights:
+    • Fully parameterized via config.py (no manual edits required).
+    • Parallelized Discogs API calls with safe worker management.
+    • Local caching, offline (RUN_LOCAL) mode, and metrics logging.
+    • Generates discogs_coverage.json summary for analysis.
+
+Deliverables:
+    • Raw JSONs cached under data/raw/discogs_raw/
+    • Metrics JSON under data/metrics/
+    • Updated README and slide-deck section documenting
+      mode behavior, automation, and test coverage.
+
+Author:
+    Mark Holahan
+Version:
+    v5.0 – Oct 2025 
 """
 
-import os
 import time
-import json
-from pathlib import Path
+import re
 import requests
+import concurrent.futures
+from pathlib import Path
+from base_step import BaseStep
+from utils import cached_request
+from config import (
+    DISCOGS_API_URL,
+    DISCOGS_RAW_DIR,
+    DISCOGS_PER_PAGE,
+    DISCOGS_SLEEP_SEC,
+    RATE_LIMIT_SLEEP_SEC,
+    DISCOG_MAX_TITLES,
+    SAVE_RAW_JSON,
+    USE_GOLDEN_LIST,
+    GOLDEN_TITLES,
+    RUN_LOCAL,
+    get_active_title_list,
+    get_safe_workers,
+    print_mode_summary,
+)
 
 
-# === 1. Environment variables from PowerShell ===
-DISCOGS_KEY = os.getenv("DISCOGS_CONSUMER_KEY")
-DISCOGS_SECRET = os.getenv("DISCOGS_CONSUMER_SECRET")
+# ===============================================================
+# 🔤 Filename helpers
+# ===============================================================
+def safe_filename(name: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_\-\.]+", "_", name)
 
-if not DISCOGS_KEY or not DISCOGS_SECRET:
-    raise ValueError("❌ Missing Discogs consumer credentials. Run setup_env.ps1 first!")
+def clean_title_for_query(title: str) -> str:
+    """Normalize movie titles for Discogs search queries."""
+    title_clean = re.sub(r"\s*\([^)]*\)", "", title)
+    title_clean = re.sub(r"\s{2,}", " ", title_clean)
+    title_clean = title_clean.strip().strip(" -:")
+    return title_clean
 
-HEADERS = {
-    "User-Agent": "UnguidedCapstonePipeline/1.1 +http://localhost"
-}
+# ===============================================================
+# 🎵 Step 01 – Acquire Discogs data
+# ===============================================================
+class Step01AcquireDiscogs(BaseStep):
+    """Parallel Discogs acquisition with caching + metrics."""
 
+    def __init__(self):
+        super().__init__("step_01_acquire_discogs")
+        self.raw_dir = Path(DISCOGS_RAW_DIR)
+        self.raw_dir.mkdir(parents=True, exist_ok=True)
+        self.max_workers = get_safe_workers("discogs")
 
-# === 2. Test titles (sample from TMDb list) ===
-movie_titles = [
-    "Star Wars",
-    "The Empire Strikes Back",
-    "Return of the Jedi",
-    "Jurassic Park",
-    "E.T. the Extra-Terrestrial",
-    "Indiana Jones and the Raiders of the Lost Ark",
-    "Jaws",
-    "The Lord of the Rings: The Fellowship of the Ring",
-    "The Lord of the Rings: The Two Towers",
-    "The Lord of the Rings: The Return of the King",
-    "Harry Potter and the Sorcerer's Stone",
-    "Titanic",
-    "Pulp Fiction",
-    "The Godfather",
-    "The Godfather Part II",
-    "The Dark Knight",
-    "Gladiator",
-    "Inception",
-    "Back to the Future",
-    "Frozen",
-]
+        # --- Title source resolution ---
+        print_mode_summary()
 
+        if USE_GOLDEN_LIST:
+            # Case A: Hard-coded titles, deterministic mode
+            titles = GOLDEN_TITLES
+            self.source = "GOLDEN"
+            self.logger.info(
+                f"🎬 Using GOLDEN_TITLES ({len(titles)} items) — DISCOG_MAX_TITLES ignored."
+            )
+        else:
+            # Case B: External title file, capped by DISCOG_MAX_TITLES
+            titles = get_active_title_list()
+            if not titles:
+                raise RuntimeError(
+                    "USE_GOLDEN_LIST=False but no active title list found — "
+                    "ensure TITLE_LIST_PATH exists and is non-empty."
+                )
 
-# === 3. Output directories ===
-base_dir = Path("../data/discogs_raw_v2")
-plain_dir = base_dir / "plain"
-soundtrack_dir = base_dir / "soundtrack"
-for d in [plain_dir, soundtrack_dir]:
-    d.mkdir(parents=True, exist_ok=True)
+            if DISCOG_MAX_TITLES and len(titles) > DISCOG_MAX_TITLES:
+                self.logger.info(
+                    f"Truncating title list from {len(titles)} → {DISCOG_MAX_TITLES} (config cap)."
+                )
+                titles = titles[:DISCOG_MAX_TITLES]
 
+            self.source = f"ACTIVE_FILE({len(titles)})"
 
-# === 4. Core search function ===
-def search_discogs(title, mode="plain", sleep=1.5):
-    """Query Discogs for title or 'title soundtrack' and return soundtrack-like results."""
-    query = title if mode == "plain" else f"{title} soundtrack"
-    url = "https://api.discogs.com/database/search"
-    params = {
-        "q": query,
-        "type": "release",
-        "per_page": 5,
-        "key": DISCOGS_KEY,
-        "secret": DISCOGS_SECRET,
-    }
+        self.movie_titles = titles
 
-    r = requests.get(url, params=params, headers=HEADERS)
-    data = r.json()
-
-    # Save raw response
-    out_dir = plain_dir if mode == "plain" else soundtrack_dir
-    with open(out_dir / f"{title.replace(' ', '_')}.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-    print(f"📁 Saved {mode} JSON: {title}")
-
-    if r.status_code != 200:
-        print(f"⚠️ {title} ({mode}): error {r.status_code} ({r.text})")
-        return 0
-
-    results = data.get("results", [])
-
-    # Filter: look for clear soundtrack/score tags
-    keywords = ["soundtrack", "score", "stage & screen", "ost", "original motion picture"]
-    matches = [
-        item for item in results
-        if any(
-            kw in str((item.get("genre") or []) + (item.get("style") or []) + [item.get("title", "")]).lower()
-            for kw in keywords
+        self.logger.info(
+            f"🎬 Discogs acquisition initialized — Source={self.source} | "
+            f"{len(self.movie_titles)} titles | {self.max_workers} workers."
         )
-    ]
 
-    time.sleep(sleep)
-    return len(matches)
+    # ------------------------------------------------------------
+    # Local JSON loader
+    # ------------------------------------------------------------
+    def read_json(self, path: Path):
+        import json
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            self.logger.warning(f"⚠️ Failed to read {path.name}: {e}")
+            return None
+
+    # ------------------------------------------------------------
+    # Discogs API worker
+    # ------------------------------------------------------------
+    def fetch_discogs_for_title(self, title: str) -> dict:
+        """Fetch Discogs data (plain + soundtrack), skipping API if cached."""
+        result = {"movie": title, "plain_hits": 0, "soundtrack_hits": 0}
+        keywords = [
+            "soundtrack", "score", "stage & screen", "ost",
+            "original motion picture", "banda sonora", "film", "película"
+        ]
+
+        cleaned_title = clean_title_for_query(title)
+        if cleaned_title != title:
+            self.logger.debug(f"🎬 Cleaned title: '{title}' → '{cleaned_title}'")
+
+        for mode in ("plain", "soundtrack"):
+            query = cleaned_title if mode == "plain" else f"{cleaned_title} soundtrack"
+            params = {"q": query, "type": "release", "per_page": DISCOGS_PER_PAGE}
+            safe_title = safe_filename(title)
+            out_dir = self.raw_dir / mode
+            out_path = out_dir / f"{safe_title}.json"
+
+            # 🗂️ Cached data
+            if out_path.exists():
+                self.logger.debug(f"⏩ Using cached {mode} file for {safe_title}")
+                data = self.read_json(out_path)
+                continue
+
+            if RUN_LOCAL:
+                self.logger.warning(
+                    f"🌐 Skipping API (RUN_LOCAL=True) and no cache for {safe_title} ({mode})"
+                )
+                continue
+
+            # 🌐 Make request with rate-limit awareness
+            data = None
+            attempt = 0
+            while data is None and attempt < 3:
+                attempt += 1
+                try:
+                    response = cached_request(DISCOGS_API_URL, params=params)
+                    if response.status_code == 429:
+                        retry_after = int(response.headers.get("Retry-After", RATE_LIMIT_SLEEP_SEC))
+                        self.logger.warning(
+                            f"⚠️ Discogs rate limit reached. Sleeping {retry_after} seconds..."
+                        )
+                        time.sleep(retry_after)
+                        continue  # retry same query after cooldown
+                    elif response.status_code != 200:
+                        self.logger.error(
+                            f"❌ Discogs API error {response.status_code} for '{query}'"
+                        )
+                        break
+                    else:
+                        data = response.json()
+                        if SAVE_RAW_JSON and data:
+                            out_dir.mkdir(parents=True, exist_ok=True)
+                            self.atomic_write(out_path, data)
+                        time.sleep(DISCOGS_SLEEP_SEC)
+                except requests.RequestException as e:
+                    self.logger.error(f"💥 Request failed for {query}: {e}")
+                    time.sleep(5)  # small retry pause
+                    continue
+
+            if not data:
+                continue
+
+            results = data.get("results", [])
+            matches = [
+                item for item in results
+                if any(
+                    kw in str(
+                        (item.get("genre") or [])
+                        + (item.get("style") or [])
+                        + [item.get("title", "")]
+                    ).lower()
+                    for kw in keywords
+                )
+            ]
+            result[f"{mode}_hits"] = len(matches)
+
+        return result
+
+    # ------------------------------------------------------------
+    # Run step
+    # ------------------------------------------------------------
+    def run(self):
+        self.logger.info(f"🎵 Starting Step 01: Acquire Discogs data [{self.source}]")
+        t0 = time.time()
+        results = []
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            future_map = {
+                executor.submit(self.fetch_discogs_for_title, title): title
+                for title in self.movie_titles
+            }
+            for future in concurrent.futures.as_completed(future_map):
+                title = future_map[future]
+                try:
+                    results.append(future.result())
+                except Exception as e:
+                    self.logger.error(f"{title}: thread failed → {e}")
+
+        duration = round(time.time() - t0, 2)
+        total = len(results)
+        plain_total = sum(r["plain_hits"] > 0 for r in results)
+        soundtrack_total = sum(r["soundtrack_hits"] > 0 for r in results)
+
+        summary = {
+            "titles_total": total,
+            "discog_max_titles": DISCOG_MAX_TITLES,
+            "plain_coverage": plain_total / total if total else 0,
+            "soundtrack_coverage": soundtrack_total / total if total else 0,
+            "duration_sec": duration,
+            "max_workers": self.max_workers,
+            "run_local": RUN_LOCAL,
+            "source": self.source,
+        }
+
+        self.save_metrics("discogs_coverage.json", {"summary": summary, "details": results})
+        self.write_metrics(summary)
+        self.logger.info(
+            f"🎯 Coverage: {plain_total}/{total} plain, "
+            f"{soundtrack_total}/{total} soundtrack | {duration:.2f}s total."
+        )
+        self.logger.info("✅ Step 01 completed successfully.")
 
 
-# === 5. Run comparisons ===
-coverage = []
-for title in movie_titles:
-    plain_hits = search_discogs(title, "plain")
-    soundtrack_hits = search_discogs(title, "soundtrack")
-    coverage.append({
-        "movie": title,
-        "plain_hits": plain_hits,
-        "soundtrack_hits": soundtrack_hits
-    })
-    print(f"{title:20} Plain: {plain_hits:<3}  Soundtrack: {soundtrack_hits:<3}")
-
-
-# === 6. Summary ===
-total_titles = len(movie_titles)
-plain_total = sum(c["plain_hits"] > 0 for c in coverage)
-soundtrack_total = sum(c["soundtrack_hits"] > 0 for c in coverage)
-
-print("\n🎯 Coverage Comparison Summary:")
-print(f"Plain query:      {plain_total}/{total_titles} titles ({plain_total/total_titles:.1%})")
-print(f"With 'soundtrack': {soundtrack_total}/{total_titles} titles ({soundtrack_total/total_titles:.1%})")
-
-print("\n✅ Raw responses saved to data/discogs_raw_v2/{plain, soundtrack}/")
+# ===============================================================
+# Entrypoint
+# ===============================================================
+if __name__ == "__main__":
+    Step01AcquireDiscogs().run()

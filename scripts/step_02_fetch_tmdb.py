@@ -1,229 +1,216 @@
-"""Step 06: Fetch TMDb (Refactored)
------------------------------------
-Fetches movies from TMDb via the Discover or Search API.
+"""
+Step 02 – Fetch TMDB Data
+---------------------------------
+Purpose:
+    Retrieve movie metadata from The Movie Database (TMDB) for each
+    Discogs-acquired title produced in Step 01. This step enriches
+    the soundtrack dataset with canonical TMDB identifiers, release
+    years, and popularity metrics for downstream matching (Steps 03–04).
 
-Modes:
-- Golden Test Mode (uses configured iconic titles; i.e. completely skip Discover API)
-- Regular Discover Mode (up to ROW_LIMIT or 10,000 movies)
+Modes of Operation:
+    1️⃣  USE_GOLDEN_LIST = True
+        • Reads the in-code GOLDEN_TITLES list defined in config.py.
+        • Ignores DISCOG_MAX_TITLES.
+        • Supports reproducible, small-batch validation runs.
 
-Outputs:
-- TMDB_DIR/enriched_top_1000.csv
-- TMDB_DIR/Step06_Documentation.txt
-- metrics/step06_fetch_tmdb.json
+    2️⃣  USE_GOLDEN_LIST = False
+        • Loads titles from TITLE_LIST_PATH on local disk
+          (for example: data/movie_titles_200.txt or titles_active.csv).
+        • Applies DISCOG_MAX_TITLES as an upper cap.
+        • Enables large-scale tests (up to 200 titles).
+
+Automation Highlights:
+    • Parallelized API calls with thread-safe RateLimiter to respect
+      TMDB_RATE_LIMIT and API quotas.
+    • Caching layer writes JSON payloads under data/raw/tmdb_raw/,
+      allowing deterministic re-runs in RUN_LOCAL mode.
+    • Centralized configuration (no manual code edits needed).
+    • Metrics automatically written to data/metrics/tmdb_fetch_metrics.json.
+
+Deliverables:
+    • Raw TMDB JSON files (per title)
+    • Aggregated metrics JSON with success, cache, and error counts
+    • Log entries summarizing runtime, rate limit, and coverage
+
+Dependencies:
+    • Step 01 must complete successfully to supply Discogs-based title inputs.
+    • Requires TMDB_API_KEY environment variable to be set.
+
+Author:
+    Mark Holahan
+Version:
+    v6.0 – Oct 2025 (refactored for dual-mode title sourcing)
 """
 
-from base_step import BaseStep
-import requests
-import pandas as pd
 import time
+import re
+import concurrent.futures
+from pathlib import Path
+from base_step import BaseStep
+from utils import cached_request, RateLimiter
 from config import (
-    TMDB_DIR, TMDB_API_KEY, ROW_LIMIT,
-    TMDB_DISCOVER_URL, TMDB_SEARCH_URL, TMDB_GENRE_URL, TMDB_PAGE_SIZE, TMDB_RESULT_LIMIT,
-    TMDB_TOTAL_LIMIT, GOLDEN_TITLES, GOLDEN_EXPECTED_YEARS, GOLDEN_TEST_MODE
+    TMDB_SEARCH_URL,
+    TMDB_RATE_LIMIT,
+    TMDB_RAW_DIR,
+    DISCOG_MAX_TITLES,
+    RUN_LOCAL,
+    SAVE_RAW_JSON,
+    USE_GOLDEN_LIST,
+    GOLDEN_TITLES,
+    get_active_title_list,
+    get_safe_workers,
 )
 
+# ===============================================================
+# 🔤 Safe filename helper
+# ===============================================================
+def safe_filename(name: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_\-\.]+", "_", name)
 
-class Step06FetchTMDb(BaseStep):
-    def __init__(self, name="Step 06: Fetch TMDb Discover"):
-        super().__init__(name=name)
-        self.api_key = TMDB_API_KEY
-        self.output_path = TMDB_DIR / "enriched_top_1000.csv"
-        self.max_movies = TMDB_RESULT_LIMIT  # overridden by ROW_LIMIT or Golden Mode
-        self.max_pages = TMDB_PAGE_SIZE
-        self.session = requests.Session()
 
-    # -------------------------------------------------------------
-    def run(self):
-        self.setup_logger()
-        self.logger.info("🚀 Starting Step 06: Fetch TMDb (Refactored)")
-
-        if not self.api_key:
-            self.fail("TMDB_API_KEY not set in environment or config.")
-            return
-
-        if GOLDEN_TEST_MODE:
-            self.logger.info(f"🌟 Golden Test Mode active: fetching {len(GOLDEN_TITLES)} iconic movies.")
-            movies = self._fetch_golden(GOLDEN_TITLES)
-        else:
-            effective_limit = min(ROW_LIMIT or self.max_movies, TMDB_TOTAL_LIMIT)
-            self.logger.info(f"▶ Fetching up to {effective_limit:,} TMDb movies (Discover API)...")
-            genre_map = self._fetch_genre_map()
-            movies = self._fetch_discover_movies(effective_limit, genre_map)
-
-        # --- Write output CSV ---
-        df = pd.DataFrame(movies)
-        self.output_path.parent.mkdir(parents=True, exist_ok=True)
-        df.to_csv(self.output_path, index=False)
-        self.logger.info(f"✅ Wrote {len(df):,} rows → {self.output_path.name}")
-
-        # --- Write documentation ---
-        doc_text = f"""
-Step 06 Output Documentation
-============================
-File: {self.output_path.name}
-Schema:
-  tmdb_id, title, release_year, genres
-
-Modes:
-  Golden Test Mode: {GOLDEN_TEST_MODE}
-  ROW_LIMIT: {ROW_LIMIT or '∞'}
-  Default max_movies: {self.max_movies}
-
-Notes:
-  - Discover endpoint limited to {self.max_pages} pages (~10,000 movies).
-  - Golden Test Mode overrides ROW_LIMIT.
-"""
-        doc_path = TMDB_DIR / "Step06_Documentation.txt"
-        with open(doc_path, "w", encoding="utf-8") as f:
-            f.write(doc_text)
-        self.logger.info(f"📝 Wrote documentation → {doc_path.name}")
-
-        # --- Metrics ---
-        metrics = {
-            "rows_total": len(df),
-            "mode": "golden" if GOLDEN_TEST_MODE else "discover",
-            "row_limit_active": bool(ROW_LIMIT),
-            "api_key_present": bool(self.api_key),
-        }
-        self.write_metrics("step06_fetch_tmdb", metrics)
-        self.logger.info(f"📊 Metrics recorded: {metrics}")
-        self.logger.info("✅ [DONE] Step 06 completed successfully.")
-
-    # -------------------------------------------------------------
-    def _fetch_discover_movies(self, limit: int, genre_map: dict) -> list[dict]:
-        """Fetch popular movies using the TMDb Discover API."""
-        url = TMDB_DISCOVER_URL
-        # Start downloading from the first page (page 1), where each page contains 20 movie entries — and keep paging through until the limit or max page count is reached.”
-        movies, page, per_page = [], 1, 20
-
-        for _ in self.progress_iter(range(limit), desc="Fetching TMDb Discover"):
-            if len(movies) >= limit or page > self.max_pages:
-                break
-
-            params = {
-                "api_key": self.api_key,
-                "page": page,
-                "sort_by": "popularity.desc",
-                "language": "en-US",
-                "include_adult": "false",
-            }
-
-            try:
-                r = self._safe_get(url, params)
-                data = r.json()
-            except Exception as e:
-                self.logger.error(f"❌ Error fetching page {page}: {e}")
-                break
-
-            results = data.get("results", [])
-            if not results:
-                break
-
-            for m in results:
-                if len(movies) >= limit:
-                    break
-                tmdb_id = m.get("id")
-                title = m.get("title", "")
-                rd = m.get("release_date") or ""
-                try:
-                    year = int(rd.split("-")[0])
-                except Exception:
-                    year = None
-                genre_ids = m.get("genre_ids", [])
-                genres = "|".join(genre_map.get(gid, "") for gid in genre_ids)
-                movies.append({
-                    "tmdb_id": tmdb_id,
-                    "title": title,
-                    "release_year": year,
-                    "genres": genres
-                })
-
-            page += 1
-
-        self.logger.info(f"🎬 Completed TMDb fetch: {len(movies):,} movies collected.")
-        return movies
-
-    # -------------------------------------------------------------
-    def _fetch_golden(self, titles: set[str]) -> list[dict]:
-        """Fetch Golden Test Mode movies by title search."""
-        url = TMDB_SEARCH_URL
-        movies = []
-
-        for title in self.progress_iter(titles, desc="Fetching Golden Set"):
-            try:
-                r = self._safe_get(url, {"api_key": self.api_key, "query": title, "language": "en-US"})
-                results = r.json().get("results", [])
-            except Exception as e:
-                self.logger.error(f"❌ TMDb error for {title}: {e}")
-                continue
-
-            if not results:
-                self.logger.warning(f"⚠️ No TMDb result for golden title: {title}")
-                continue
-
-            expected_year = GOLDEN_EXPECTED_YEARS.get(title)
-            chosen = results[0]
-
-            if expected_year:
-                for cand in results:
-                    rd = cand.get("release_date") or ""
-                    try:
-                        year = int(rd.split("-")[0])
-                    except Exception:
-                        year = None
-                    if year == expected_year:
-                        chosen = cand
-                        break
-
-            rd = chosen.get("release_date") or ""
-            try:
-                year = int(rd.split("-")[0])
-            except Exception:
-                year = None
-            genres = "|".join(str(gid) for gid in chosen.get("genre_ids", []))
-
-            movies.append({
-                "tmdb_id": chosen.get("id"),
-                "title": chosen.get("title", ""),
-                "release_year": year,
-                "genres": genres
-            })
-
-        self.logger.info(f"🏆 Golden Mode fetch complete: {len(movies):,} titles.")
-        return movies
-
-    # -------------------------------------------------------------
-    def _fetch_genre_map(self) -> dict[int, str]:
-        """Fetch genre ID → name map."""
-        url = TMDB_GENRE_URL
+# ===============================================================
+# 🧩 JSON extraction helper
+# ===============================================================
+def extract_json(resp):
+    """Return consistent JSON from either Response-like or dict."""
+    if resp is None:
+        return {}
+    if isinstance(resp, dict):
+        return resp
+    if hasattr(resp, "json"):
         try:
-            r = self._safe_get(url, {"api_key": self.api_key, "language": "en-US"})
-            data = r.json().get("genres", [])
-            genre_map = {g["id"]: g["name"] for g in data}
-            self.logger.info(f"🎭 Loaded {len(genre_map):,} TMDb genres.")
-            return genre_map
-        except Exception as e:
-            self.logger.error(f"❌ Failed to fetch genre map: {e}")
+            return resp.json() or {}
+        except Exception:
             return {}
-
-    # -------------------------------------------------------------
-    def _safe_get(self, url: str, params: dict, retries: int = 3, backoff: float = 2.0):
-        """Simple retry wrapper for TMDb API calls.
-           2.0 = A "backoff multiplier to gradually increases wait time after each failed API call
-        """
-        for attempt in range(1, retries + 1):
-            try:
-                r = self.session.get(url, params=params, timeout=10)  # Request timeout (seconds)
-                r.raise_for_status()
-                return r
-            except Exception as e:
-                if attempt == retries:
-                    raise
-                wait = backoff * attempt
-                self.logger.warning(f"⚠️ TMDb request failed (attempt {attempt}/{retries}): {e} → retrying in {wait:.1f}s")
-                time.sleep(wait)
-        return None
+    return {}
 
 
+# ===============================================================
+# 🎬 Step 02 – Fetch TMDB data
+# ===============================================================
+class Step02FetchTMDB(BaseStep):
+    """Parallel TMDB acquisition with caching, rate limiting, and metrics."""
+
+    def __init__(self):
+        super().__init__("step_02_fetch_tmdb")
+        self.rate_limiter = RateLimiter(TMDB_RATE_LIMIT)
+        self.raw_dir = Path(TMDB_RAW_DIR)
+        self.raw_dir.mkdir(parents=True, exist_ok=True)
+        self.max_workers = get_safe_workers("tmdb")
+
+        # --- Title source logic
+        if USE_GOLDEN_LIST:
+            titles = GOLDEN_TITLES
+            source = "GOLDEN"
+        else:
+            titles = get_active_title_list()
+            source = "ACTIVE"
+
+        self.movie_titles = titles[:DISCOG_MAX_TITLES]
+        self.source = source
+
+        self.logger.info(
+            f"🎬 TMDB acquisition initialized — Source={source} | "
+            f"{len(self.movie_titles)} titles (limit={DISCOG_MAX_TITLES}) | "
+            f"{self.max_workers} workers (rate={TMDB_RATE_LIMIT}/s)."
+        )
+
+    # --------------------------
+    # TMDB worker
+    # --------------------------
+    def fetch_tmdb_data(self, title: str) -> dict:
+        """Fetch and cache TMDB results for a single movie title."""
+        safe_title = safe_filename(title)
+        cache_file = self.raw_dir / f"{safe_title}.json"
+
+        # ✅ Use cache if available
+        if cache_file.exists():
+            self.logger.debug(f"⏩ Using cached TMDB file for {safe_title}")
+            return {"title": title, "results_count": 0, "cached": True}
+
+        if RUN_LOCAL:
+            self.logger.warning(f"🌐 Skipping TMDB API (RUN_LOCAL=True) — no cache for {title}")
+            return {"title": title, "results_count": 0, "cached": False}
+
+        try:
+            with self.rate_limiter:
+                resp = cached_request(TMDB_SEARCH_URL, params={"query": title})
+
+            data = extract_json(resp)
+            results = data.get("results", []) if isinstance(data, dict) else []
+
+            if results:
+                payload = [
+                    {
+                        "query_title": title,
+                        "tmdb_id": r.get("id"),
+                        "original_title": r.get("original_title"),
+                        "release_date": r.get("release_date"),
+                        "vote_average": r.get("vote_average"),
+                        "popularity": r.get("popularity"),
+                    }
+                    for r in results
+                ]
+                if SAVE_RAW_JSON:
+                    self.atomic_write(cache_file, payload)
+                self.logger.info(f"🎬 {title}: {len(results)} TMDB results fetched.")
+                return {"title": title, "results_count": len(results)}
+
+            # handle empty/no results
+            self.logger.debug(f"{title}: No TMDB results found.")
+            return {"title": title, "results_count": 0}
+
+        except Exception as e:
+            self.logger.error(f"{title}: TMDB fetch failed → {e}")
+            return {"title": title, "results_count": 0, "error": str(e)}
+
+    # --------------------------
+    # Main run sequence
+    # --------------------------
+    def run(self):
+        self.logger.info(f"🎥 Starting Step 02: Fetch TMDB data [{self.source}]")
+        t0 = time.time()
+        results = []
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            future_map = {
+                executor.submit(self.fetch_tmdb_data, title): title
+                for title in self.movie_titles
+            }
+            for future in concurrent.futures.as_completed(future_map):
+                title = future_map[future]
+                try:
+                    results.append(future.result())
+                except Exception as e:
+                    self.logger.error(f"{title}: thread failed → {e}")
+
+        duration = round(time.time() - t0, 2)
+        total = len(results)
+        successes = sum(r["results_count"] > 0 for r in results)
+        cached = sum(r.get("cached", False) for r in results)
+        errors = sum(1 for r in results if r.get("error"))
+
+        summary = {
+            "titles_total": total,
+            "successful_fetches": successes,
+            "cached_skipped": cached,
+            "errors": errors,
+            "duration_sec": duration,
+            "max_workers": self.max_workers,
+            "run_local": RUN_LOCAL,
+            "source": self.source,
+        }
+
+        self.save_metrics("tmdb_fetch_metrics.json", {"summary": summary, "details": results})
+        self.write_metrics(summary)
+        self.logger.info(
+            f"✅ Step 02 completed in {duration:.2f}s | "
+            f"{successes}/{total} successes, {cached} cached skips, {errors} errors."
+        )
+
+
+# ===============================================================
+# Entrypoint
+# ===============================================================
 if __name__ == "__main__":
-    Step06FetchTMDb().run()
+    Step02FetchTMDB().run()

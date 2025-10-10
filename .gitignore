@@ -1,81 +1,108 @@
-# =========================
-# OS & System Files
-# =========================
+# =========================================================
+#  🧩  UNGUIDED CAPSTONE PIPELINE — CLEAN .GITIGNORE (v3)
+#  Updated: 2025-10-10
+# =========================================================
+
+# --- OS / Editor ---
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.code-workspace
 
-# =========================
-# Python Bytecode / Build Artifacts
-# =========================
+# --- Python build / bytecode ---
 __pycache__/
 *.py[cod]
+*.pyo
 *.so
+*.egg-info/
+build/
+dist/
 
-# =========================
-# Virtual Environments
-# =========================
+# --- Virtual environments ---
 .venv/
 venv/
 ENV/
+env/
 *env/
+Scripts/
+bin/
+Lib/
+Include/
 
-# =========================
-# Jupyter & Editor Artifacts
-# =========================
+# --- Jupyter & transient docs ---
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 **/.virtual_documents/
-.vscode/
-.idea/
 
-# =========================
-# Temporary / Backup Files
-# =========================
+# --- Temp / backup / lock files ---
 *.bak
 *.tmp
 *~
+*.swp
+*.log.tmp
+*.lock
+*.pid
+tmp/
+cache/
+__temp__/
 
-# =========================
-# QA & Audit Artifacts
-# =========================
-QA/audit_reports/**
-!audit_reports/README.md
-!audit_reports/.keep
+# --- Data folders (include actual artifacts now) ---
+!data/
+!data/**
 
-metrics/**
-!metrics/README.md
-!metrics/.keep
+# --- Evidence (newly included for mentor review) ---
+# First unignore the folder itself in case its parent was ignored earlier
+!evidence/
+!evidence/**
 
-# =========================
-# Logs
-# =========================
-# Keep main pipeline logs (C:\Projects\unguided-capstone-project\logs)
-# but exclude transient or archived files
-logs/archive/
-logs/debug_*.log
-logs/*.tmp
-logs/*.bak
+# Ensure we still ignore unwanted checkpoint folders or temp files
+evidence/.ipynb_checkpoints/
+evidence/~$*
 
-# =========================
-# scripts/QA/audit_reports
-# =========================
-scripts/QA/audit_reports
 
-# =========================
-# scripts/logs
-# =========================
-scripts/logs
+# --- Logs (retain logs for reproducibility) ---
+!logs/
+!logs/**
 
-# =========================
-# Notebooks & Slides
-# =========================
+# --- Metrics & reports ---
+!metrics/
+!metrics/**
+
+# --- Notebooks & slides ---
 notebooks/*_output.ipynb
 slides/*.tmp
+slides/~$*
 
-# =========================
-# Secrets & Credentials
-# =========================
+# --- Secrets & credentials ---
 .env
 *.env
+*.key
+*.pem
+*.crt
+*.json
+secrets/
 credentials.json
-setup_env.ps1
+
+# --- Tests & coverage ---
+.coverage
+htmlcov/
+pytest_cache/
+.tox/
+
+# --- Archive ---
+archive/
+!archive/README.md
+
+# --- ✅ Scripts & code (always include) ---
+!scripts/
+!scripts/**/*.py
+!scripts/**/*.ps1
+
+# --- 🚫 But never track virtual environments ---
+.venv/
+scripts/.venv/
+scripts/.venv/**
+
+

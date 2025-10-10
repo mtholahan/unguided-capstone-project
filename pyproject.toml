@@ -1,0 +1,46 @@
+# pyproject.toml
+# ---------------------------------------------------------------
+# Central configuration for the Discogs→TMDB Data Pipeline
+# ---------------------------------------------------------------
+
+[project]
+name = "unguided-capstone-project"
+version = "0.1.0"
+description = "Discogs→TMDB data pipeline (Springboard Unguided Capstone)"
+authors = [{ name = "Your Name", email = "your.email@example.com" }]
+requires-python = ">=3.10"
+
+# ---------------------------------------------------------------
+# Code Quality & Formatting
+# ---------------------------------------------------------------
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I"]          # E=pycodestyle, F=flake8, I=isort
+ignore = ["E501", "W293"]         # ignore long-line and blank-line warnings
+exclude = ["venv", "__pycache__"]
+
+[tool.pylint.MASTER]
+max-line-length = 100
+disable = [
+  "C0114", "C0115", "C0116",      # docstring warnings
+  "W1203",                        # f-string logging (intentional)
+]
+
+# ---------------------------------------------------------------
+# Test Configuration
+# ---------------------------------------------------------------
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["scripts/tests"]
+pythonpath = ["scripts"]
+
+# ---------------------------------------------------------------
+# Build Configuration
+# ---------------------------------------------------------------
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

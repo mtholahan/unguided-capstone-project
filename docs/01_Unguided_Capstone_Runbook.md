@@ -1,15 +1,11 @@
 ## 🧭 Step 1 – Launch VS Code in the Right Folder
 
-From **PowerShell** or **Command Prompt**:
+From Terminal with **PowerShell** 
 
 ```bash
 cd C:\Projects\unguided-capstone-project
-# Load environment variables
+# Load environment variables and venv
 .\setup_env.ps1
-# Activate the virtual environment
-.\.venv\Scripts\Activate.ps1
-# Now spawn Visual Code
-code .
 ```
 
 
@@ -24,9 +20,9 @@ Once VS Code opens:
 
 2. Type and select → **Python: Select Interpreter**.
 
-3. Choose your virtual environment:
+3. Choose your virtual environment (you should see a partial path of the unguided-capstone project)
 
-   ```
+   ```powershell
    .venv\Scripts\python.exe
    ```
 
@@ -38,29 +34,21 @@ Once VS Code opens:
 
 ------
 
-## 🧩 Step 3 – Open the Scripts Directory
+## 🧩 Step 3 – Spawn Visual Code from the Scripts Directory
 
-In the **Explorer panel (Ctrl + Shift + E)**:
+Run
 
-- Navigate to `scripts/`
+```powershell
+code .
+```
 
-- You should see all your files, e.g.:
 
-  ```
-  step_05_*.py
-  step_06_fetch_tmdb.py
-  step_07_prepare_tmdb_input.py
-  step_08_match_tmdb.py
-  test_step_08_comparison.py
-  ```
-
-Click any of them to edit.
 
 ------
 
 ## ▶️ Step 4 – Run a Script in VS Code’s Terminal
 
-You can execute your steps directly from the integrated terminal:
+You can execute your steps directly from the integrated terminal (Ctrl + Shift + ` to load)
 
 ```
 python scripts\step_06_fetch_tmdb.py
@@ -162,10 +150,10 @@ python main.py --resume 8
 
 - **Install recommended VS Code extensions**:
 
-  - *Python* (by Microsoft)
-  - *Pylance*
-  - *Jupyter* (for notebook analysis)
   - *Code Runner* (if you want one-click runs)
+  - *Jupyter* (for notebook analysis)
+  - *Pylance*
+  - *Python* (by Microsoft)
 
 ------
 
