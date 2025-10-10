@@ -1,19 +1,17 @@
 # =========================================================
-#  🧩 UNGUIDED CAPSTONE PIPELINE (.gitignore v2)
-#  For: C:\Projects\unguided-capstone-project
-#  Updated: 2025-10-09
+#  🧩  UNGUIDED CAPSTONE PIPELINE — CLEAN .GITIGNORE (v3)
+#  Updated: 2025-10-10
 # =========================================================
 
-# ---------------------------------------------------------
-# 🖥️  OS & System Files
-# ---------------------------------------------------------
+# --- OS / Editor ---
 .DS_Store
 Thumbs.db
 desktop.ini
+.vscode/
+.idea/
+*.code-workspace
 
-# ---------------------------------------------------------
-# 🐍  Python Bytecode / Build Artifacts
-# ---------------------------------------------------------
+# --- Python build / bytecode ---
 __pycache__/
 *.py[cod]
 *.pyo
@@ -22,9 +20,7 @@ __pycache__/
 build/
 dist/
 
-# ---------------------------------------------------------
-# 🧰  Virtual Environments
-# ---------------------------------------------------------
+# --- Virtual environments ---
 .venv/
 venv/
 ENV/
@@ -35,78 +31,44 @@ bin/
 Lib/
 Include/
 
-# ---------------------------------------------------------
-# 📒  Jupyter, IDE & Editor Artifacts
-# ---------------------------------------------------------
+# --- Jupyter & transient docs ---
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 **/.virtual_documents/
-.vscode/
-.idea/
-*.code-workspace
 
-# ---------------------------------------------------------
-# 🧹  Temporary / Backup Files
-# ---------------------------------------------------------
+# --- Temp / backup / lock files ---
 *.bak
 *.tmp
 *~
 *.swp
 *.log.tmp
+*.lock
+*.pid
+tmp/
+cache/
+__temp__/
 
-# ---------------------------------------------------------
-# 📦  Data & Outputs
-# ---------------------------------------------------------
+# --- Data folders (keep structure only) ---
 data/
-!data/README.md             # keep placeholder
+!data/.keep
+!data/README.md
 
-# ---------------------------------------------------------
-# 📈  Metrics, QA, & Reports
-# ---------------------------------------------------------
+# --- Metrics & reports ---
 metrics/
-!metrics/README.md
 !metrics/.keep
+!metrics/README.md
 
-QA/audit_reports/
-!QA/audit_reports/README.md
-!QA/audit_reports/.keep
-
-# ---------------------------------------------------------
-# 🧾  Logs
-# ---------------------------------------------------------
+# --- Logs ---
 logs/
+!logs/.keep
 !logs/README.md
-logs/archive/
-logs/debug_*.log
-logs/*.tmp
-logs/*.bak
 
-# ---------------------------------------------------------
-# 🧩  Scripts & Utilities
-# ---------------------------------------------------------
-# keep all scripts but exclude transient or local test files
-scripts/*.tmp
-scripts/*_ScratchPad.py
-scripts/QA/
-scripts/logs/
-
-# explicitly include all main scripts for pipeline steps
-!scripts/*.py
-
-
-# explicitly INCLUDE PowerShell utilities
-!scripts/setup_env.ps1
-
-# ---------------------------------------------------------
-# 📓  Notebooks & Presentations
-# ---------------------------------------------------------
+# --- Notebooks & slides ---
 notebooks/*_output.ipynb
 slides/*.tmp
 slides/~$*
 
-# ---------------------------------------------------------
-# 🔐  Secrets & Credentials
-# ---------------------------------------------------------
+# --- Secrets & credentials ---
 .env
 *.env
 *.key
@@ -116,25 +78,24 @@ slides/~$*
 secrets/
 credentials.json
 
-# ---------------------------------------------------------
-# 🧪  Tests & Coverage
-# ---------------------------------------------------------
+# --- Tests & coverage ---
 .coverage
 htmlcov/
 pytest_cache/
 .tox/
 
-# ---------------------------------------------------------
-# 🧠  Misc. Development Artifacts
-# ---------------------------------------------------------
-*.lock
-*.pid
-tmp/
-cache/
-__temp__/
-
-# ---------------------------------------------------------
-# 🧱  Archive / Legacy Files
-# ---------------------------------------------------------
+# --- Archive ---
 archive/
 !archive/README.md
+
+# --- ✅ Scripts & code (always include) ---
+!scripts/
+!scripts/**/*.py
+!scripts/**/*.ps1
+
+# --- 🚫 But never track virtual environments ---
+scripts/.venv/
+scripts/.venv/**
+
+
+
