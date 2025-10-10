@@ -53,8 +53,14 @@ __temp__/
 !data/**
 
 # --- Evidence (newly included for mentor review) ---
+# First unignore the folder itself in case its parent was ignored earlier
 !evidence/
 !evidence/**
+
+# Ensure we still ignore unwanted checkpoint folders or temp files
+evidence/.ipynb_checkpoints/
+evidence/~$*
+
 
 # --- Logs (retain logs for reproducibility) ---
 !logs/
