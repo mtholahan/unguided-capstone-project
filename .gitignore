@@ -48,20 +48,21 @@ tmp/
 cache/
 __temp__/
 
-# --- Data folders (keep structure only) ---
-data/
-!data/.keep
-!data/README.md
+# --- Data folders (include actual artifacts now) ---
+!data/
+!data/**
+
+# --- Evidence (newly included for mentor review) ---
+!evidence/
+!evidence/**
+
+# --- Logs (retain logs for reproducibility) ---
+!logs/
+!logs/**
 
 # --- Metrics & reports ---
-metrics/
-!metrics/.keep
-!metrics/README.md
-
-# --- Logs ---
-logs/
-!logs/.keep
-!logs/README.md
+!metrics/
+!metrics/**
 
 # --- Notebooks & slides ---
 notebooks/*_output.ipynb
@@ -94,8 +95,8 @@ archive/
 !scripts/**/*.ps1
 
 # --- 🚫 But never track virtual environments ---
+.venv/
 scripts/.venv/
 scripts/.venv/**
-
 
 

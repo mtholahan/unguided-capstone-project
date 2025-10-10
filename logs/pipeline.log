@@ -1,0 +1,314 @@
+2025-10-10 16:40:10,221 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-10 16:40:10,221 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-10 16:40:10,222 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-10 16:40:10,222 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-10 16:40:10,249 - step_01_acquire_discogs - INFO - Initialized logger for step_01_acquire_discogs
+2025-10-10 16:40:10,344 - step_01_acquire_discogs - INFO - Initialized step_01_acquire_discogs [branch=step5b-refactor, commit=54342f8]
+2025-10-10 16:40:10,344 - step_01_acquire_discogs - INFO - Truncating title list from 190 → 50 (config cap).
+2025-10-10 16:40:10,344 - step_01_acquire_discogs - INFO - 🎬 Discogs acquisition initialized — Source=ACTIVE_FILE(50) | 50 titles | 4 workers.
+2025-10-10 16:40:10,359 - step_02_fetch_tmdb - INFO - Initialized logger for step_02_fetch_tmdb
+2025-10-10 16:40:10,450 - step_02_fetch_tmdb - INFO - Initialized step_02_fetch_tmdb [branch=step5b-refactor, commit=54342f8]
+2025-10-10 16:40:10,451 - step_02_fetch_tmdb - INFO - 🎬 TMDB acquisition initialized — Source=ACTIVE | 50 titles (limit=50) | 4 workers (rate=40/s).
+2025-10-10 16:40:10,452 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-10 16:40:10,531 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step5b-refactor, commit=54342f8]
+2025-10-10 16:40:10,531 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 v4.8 with 8 workers
+2025-10-10 16:40:10,578 - step_04_match_discogs_tmdb - INFO - Initialized logger for step_04_match_discogs_tmdb
+2025-10-10 16:40:10,659 - step_04_match_discogs_tmdb - INFO - Initialized step_04_match_discogs_tmdb [branch=step5b-refactor, commit=54342f8]
+2025-10-10 16:40:10,659 - step_04_match_discogs_tmdb - INFO - Initialized Step 04 | Workers=4
+2025-10-10 16:40:10,659 - Pipeline - INFO - 🚩 Running Step01AcquireDiscogs
+2025-10-10 16:40:10,660 - step_01_acquire_discogs - INFO - 🎵 Starting Step 01: Acquire Discogs data [ACTIVE_FILE(50)]
+2025-10-10 16:40:14,623 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 12_Years_a_Slave.json
+2025-10-10 16:40:14,636 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 1917.json
+2025-10-10 16:40:14,661 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → A_Star_Is_Born_2018_.json
+2025-10-10 16:40:14,682 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ad_Astra.json
+2025-10-10 16:40:21,598 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 12_Years_a_Slave.json
+2025-10-10 16:40:21,644 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ad_Astra.json
+2025-10-10 16:40:21,661 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 1917.json
+2025-10-10 16:40:21,668 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → A_Star_Is_Born_2018_.json
+2025-10-10 16:40:28,578 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Am_lie.json
+2025-10-10 16:40:28,619 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aliens.json
+2025-10-10 16:40:28,632 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Alien.json
+2025-10-10 16:40:28,663 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Akira.json
+2025-10-10 16:40:35,506 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Am_lie.json
+2025-10-10 16:40:35,556 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aliens.json
+2025-10-10 16:40:35,593 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Alien.json
+2025-10-10 16:40:35,803 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Akira.json
+2025-10-10 16:40:38,827 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avatar.json
+2025-10-10 16:40:41,850 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avatar.json
+2025-10-10 16:40:42,378 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Apocalypse_Now.json
+2025-10-10 16:40:42,485 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aquaman.json
+2025-10-10 16:40:42,497 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Arrival.json
+2025-10-10 16:40:44,859 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Age_of_Ultron.json
+2025-10-10 16:40:47,885 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Age_of_Ultron.json
+2025-10-10 16:40:49,199 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Apocalypse_Now.json
+2025-10-10 16:40:49,316 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aquaman.json
+2025-10-10 16:40:49,440 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Arrival.json
+2025-10-10 16:40:50,903 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Endgame.json
+2025-10-10 16:40:52,220 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Infinity_War.json
+2025-10-10 16:40:52,461 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future.json
+2025-10-10 16:40:53,921 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Endgame.json
+2025-10-10 16:40:55,239 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Infinity_War.json
+2025-10-10 16:40:55,481 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future.json
+2025-10-10 16:40:55,965 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Baby_Driver.json
+2025-10-10 16:40:56,937 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future_Part_II.json
+2025-10-10 16:40:59,956 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future_Part_II.json
+2025-10-10 16:41:01,922 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_1989_.json
+2025-10-10 16:41:02,162 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Begins.json
+2025-10-10 16:41:02,574 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Baby_Driver.json
+2025-10-10 16:41:06,590 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Returns.json
+2025-10-10 16:41:08,797 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_1989_.json
+2025-10-10 16:41:08,854 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Begins.json
+2025-10-10 16:41:09,240 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Beetlejuice.json
+2025-10-10 16:41:13,265 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Returns.json
+2025-10-10 16:41:15,632 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Birdman.json
+2025-10-10 16:41:15,733 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Hawk_Down.json
+2025-10-10 16:41:15,943 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Beetlejuice.json
+2025-10-10 16:41:18,963 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner.json
+2025-10-10 16:41:19,911 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Panther.json
+2025-10-10 16:41:21,983 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner.json
+2025-10-10 16:41:22,363 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Birdman.json
+2025-10-10 16:41:22,591 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Hawk_Down.json
+2025-10-10 16:41:26,582 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Panther.json
+2025-10-10 16:41:28,636 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner_2049.json
+2025-10-10 16:41:29,063 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Bohemian_Rhapsody.json
+2025-10-10 16:41:29,313 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_First_Avenger.json
+2025-10-10 16:41:33,233 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_Winter_Soldier.json
+2025-10-10 16:41:35,284 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner_2049.json
+2025-10-10 16:41:35,780 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Bohemian_Rhapsody.json
+2025-10-10 16:41:36,011 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_First_Avenger.json
+2025-10-10 16:41:39,916 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_Winter_Soldier.json
+2025-10-10 16:41:41,924 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Casino.json
+2025-10-10 16:41:42,473 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Chicago.json
+2025-10-10 16:41:42,693 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cinema_Paradiso.json
+2025-10-10 16:41:42,937 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Close_Encounters_of_the_Third_Kind.json
+2025-10-10 16:41:45,961 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Close_Encounters_of_the_Third_Kind.json
+2025-10-10 16:41:48,571 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Casino.json
+2025-10-10 16:41:48,979 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Coco.json
+2025-10-10 16:41:49,326 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Chicago.json
+2025-10-10 16:41:49,388 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cinema_Paradiso.json
+2025-10-10 16:41:51,996 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Coco.json
+2025-10-10 16:41:55,196 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Corpse_Bride.json
+2025-10-10 16:41:56,078 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cowboy_Bebop_The_Movie.json
+2025-10-10 16:41:56,120 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Crimson_Peak.json
+2025-10-10 16:41:58,633 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Deadpool.json
+2025-10-10 16:42:01,845 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Corpse_Bride.json
+2025-10-10 16:42:02,826 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cowboy_Bebop_The_Movie.json
+2025-10-10 16:42:02,876 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Crimson_Peak.json
+2025-10-10 16:42:05,282 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Deadpool.json
+2025-10-10 16:42:08,488 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Django_Unchained.json
+2025-10-10 16:42:09,552 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Doctor_Strange.json
+2025-10-10 16:42:09,597 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Drive.json
+2025-10-10 16:42:11,910 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dune.json
+2025-10-10 16:42:15,139 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Django_Unchained.json
+2025-10-10 16:42:16,295 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Doctor_Strange.json
+2025-10-10 16:42:16,323 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Drive.json
+2025-10-10 16:42:18,575 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dune.json
+2025-10-10 16:42:19,311 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → E.T._the_Extra-Terrestrial.json
+2025-10-10 16:42:21,597 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Encanto.json
+2025-10-10 16:42:21,765 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dunkirk.json
+2025-10-10 16:42:22,343 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → E.T._the_Extra-Terrestrial.json
+2025-10-10 16:42:22,961 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Edward_Scissorhands.json
+2025-10-10 16:42:24,617 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Encanto.json
+2025-10-10 16:42:28,564 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dunkirk.json
+2025-10-10 16:42:29,042 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ex_Machina.json
+2025-10-10 16:42:29,606 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Edward_Scissorhands.json
+2025-10-10 16:42:31,294 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fantastic_Mr._Fox.json
+2025-10-10 16:42:35,261 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fight_Club.json
+2025-10-10 16:42:35,676 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ex_Machina.json
+2025-10-10 16:42:37,957 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fantastic_Mr._Fox.json
+2025-10-10 16:42:42,112 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fight_Club.json
+2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - 📈 Saved metrics JSON → discogs_coverage.json
+2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - 📊 Logged metrics for step_01_acquire_discogs: {'titles_total': 50, 'discog_max_titles': 50, 'plain_coverage': 0.76, 'soundtrack_coverage': 1.0, 'duration_sec': 154.46, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE_FILE(50)', 'step_name': 'step_01_acquire_discogs', 'timestamp': '2025-10-10T16:42:45'}
+2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - 🎯 Coverage: 38/50 plain, 50/50 soundtrack | 154.46s total.
+2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - ✅ Step 01 completed successfully.
+2025-10-10 16:42:45,117 - Pipeline - INFO - ✅ Completed Step01AcquireDiscogs in 154.46s
+2025-10-10 16:42:45,117 - Pipeline - INFO - 🚩 Running Step02FetchTMDB
+2025-10-10 16:42:45,117 - step_02_fetch_tmdb - INFO - 🎥 Starting Step 02: Fetch TMDB data [ACTIVE]
+2025-10-10 16:42:48,947 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → A_Star_Is_Born_2018_.json
+2025-10-10 16:42:48,947 - step_02_fetch_tmdb - INFO - 🎬 A Star Is Born (2018): 1 TMDB results fetched.
+2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → 12_Years_a_Slave.json
+2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → 1917.json
+2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 🎬 12 Years a Slave: 1 TMDB results fetched.
+2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 🎬 1917: 20 TMDB results fetched.
+2025-10-10 16:42:49,019 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Ad_Astra.json
+2025-10-10 16:42:49,019 - step_02_fetch_tmdb - INFO - 🎬 Ad Astra: 10 TMDB results fetched.
+2025-10-10 16:42:52,713 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Akira.json
+2025-10-10 16:42:52,713 - step_02_fetch_tmdb - INFO - 🎬 Akira: 20 TMDB results fetched.
+2025-10-10 16:42:52,831 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Aliens.json
+2025-10-10 16:42:52,831 - step_02_fetch_tmdb - INFO - 🎬 Aliens: 20 TMDB results fetched.
+2025-10-10 16:42:52,870 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Am_lie.json
+2025-10-10 16:42:52,870 - step_02_fetch_tmdb - INFO - 🎬 Amélie: 20 TMDB results fetched.
+2025-10-10 16:42:52,902 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Alien.json
+2025-10-10 16:42:52,902 - step_02_fetch_tmdb - INFO - 🎬 Alien: 20 TMDB results fetched.
+2025-10-10 16:42:52,918 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avatar.json
+2025-10-10 16:42:52,918 - step_02_fetch_tmdb - INFO - 🎬 Avatar: 20 TMDB results fetched.
+2025-10-10 16:42:52,951 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avengers_Age_of_Ultron.json
+2025-10-10 16:42:52,951 - step_02_fetch_tmdb - INFO - 🎬 Avengers: Age of Ultron: 1 TMDB results fetched.
+2025-10-10 16:42:52,961 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avengers_Endgame.json
+2025-10-10 16:42:52,961 - step_02_fetch_tmdb - INFO - 🎬 Avengers: Endgame: 1 TMDB results fetched.
+2025-10-10 16:42:53,031 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avengers_Infinity_War.json
+2025-10-10 16:42:53,031 - step_02_fetch_tmdb - INFO - 🎬 Avengers: Infinity War: 2 TMDB results fetched.
+2025-10-10 16:42:56,425 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Apocalypse_Now.json
+2025-10-10 16:42:56,425 - step_02_fetch_tmdb - INFO - 🎬 Apocalypse Now: 6 TMDB results fetched.
+2025-10-10 16:42:56,444 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Back_to_the_Future.json
+2025-10-10 16:42:56,444 - step_02_fetch_tmdb - INFO - 🎬 Back to the Future: 19 TMDB results fetched.
+2025-10-10 16:42:56,465 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Back_to_the_Future_Part_II.json
+2025-10-10 16:42:56,465 - step_02_fetch_tmdb - INFO - 🎬 Back to the Future Part II: 3 TMDB results fetched.
+2025-10-10 16:42:56,596 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Arrival.json
+2025-10-10 16:42:56,596 - step_02_fetch_tmdb - INFO - 🎬 Arrival: 20 TMDB results fetched.
+2025-10-10 16:42:56,642 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Aquaman.json
+2025-10-10 16:42:56,642 - step_02_fetch_tmdb - INFO - 🎬 Aquaman: 10 TMDB results fetched.
+2025-10-10 16:42:56,748 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Baby_Driver.json
+2025-10-10 16:42:56,748 - step_02_fetch_tmdb - INFO - 🎬 Baby Driver: 3 TMDB results fetched.
+2025-10-10 16:43:00,326 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Batman_Begins.json
+2025-10-10 16:43:00,326 - step_02_fetch_tmdb - INFO - 🎬 Batman Begins: 2 TMDB results fetched.
+2025-10-10 16:43:00,400 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Batman_Returns.json
+2025-10-10 16:43:00,400 - step_02_fetch_tmdb - INFO - 🎬 Batman Returns: 4 TMDB results fetched.
+2025-10-10 16:43:00,469 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Beetlejuice.json
+2025-10-10 16:43:00,469 - step_02_fetch_tmdb - INFO - 🎬 Beetlejuice: 4 TMDB results fetched.
+2025-10-10 16:43:00,485 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Blade_Runner.json
+2025-10-10 16:43:00,485 - step_02_fetch_tmdb - INFO - 🎬 Blade Runner: 16 TMDB results fetched.
+2025-10-10 16:43:03,733 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Birdman.json
+2025-10-10 16:43:03,733 - step_02_fetch_tmdb - INFO - 🎬 Birdman: 20 TMDB results fetched.
+2025-10-10 16:43:04,112 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Black_Hawk_Down.json
+2025-10-10 16:43:04,112 - step_02_fetch_tmdb - INFO - 🎬 Black Hawk Down: 6 TMDB results fetched.
+2025-10-10 16:43:04,173 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Black_Panther.json
+2025-10-10 16:43:04,174 - step_02_fetch_tmdb - INFO - 🎬 Black Panther: 20 TMDB results fetched.
+2025-10-10 16:43:04,219 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Blade_Runner_2049.json
+2025-10-10 16:43:04,219 - step_02_fetch_tmdb - INFO - 🎬 Blade Runner 2049: 3 TMDB results fetched.
+2025-10-10 16:43:07,264 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Bohemian_Rhapsody.json
+2025-10-10 16:43:07,264 - step_02_fetch_tmdb - INFO - 🎬 Bohemian Rhapsody: 6 TMDB results fetched.
+2025-10-10 16:43:07,805 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Captain_America_The_First_Avenger.json
+2025-10-10 16:43:07,805 - step_02_fetch_tmdb - INFO - 🎬 Captain America: The First Avenger: 3 TMDB results fetched.
+2025-10-10 16:43:07,857 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Captain_America_The_Winter_Soldier.json
+2025-10-10 16:43:07,857 - step_02_fetch_tmdb - INFO - 🎬 Captain America: The Winter Soldier: 1 TMDB results fetched.
+2025-10-10 16:43:07,873 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Close_Encounters_of_the_Third_Kind.json
+2025-10-10 16:43:07,873 - step_02_fetch_tmdb - INFO - 🎬 Close Encounters of the Third Kind: 5 TMDB results fetched.
+2025-10-10 16:43:07,900 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Casino.json
+2025-10-10 16:43:07,900 - step_02_fetch_tmdb - INFO - 🎬 Casino: 20 TMDB results fetched.
+2025-10-10 16:43:07,953 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Coco.json
+2025-10-10 16:43:07,953 - step_02_fetch_tmdb - INFO - 🎬 Coco: 20 TMDB results fetched.
+2025-10-10 16:43:10,864 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Chicago.json
+2025-10-10 16:43:10,865 - step_02_fetch_tmdb - INFO - 🎬 Chicago: 20 TMDB results fetched.
+2025-10-10 16:43:11,544 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Cinema_Paradiso.json
+2025-10-10 16:43:11,544 - step_02_fetch_tmdb - INFO - 🎬 Cinema Paradiso: 4 TMDB results fetched.
+2025-10-10 16:43:11,615 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Cowboy_Bebop_The_Movie.json
+2025-10-10 16:43:11,615 - step_02_fetch_tmdb - INFO - 🎬 Cowboy Bebop: The Movie: 1 TMDB results fetched.
+2025-10-10 16:43:11,683 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Corpse_Bride.json
+2025-10-10 16:43:11,683 - step_02_fetch_tmdb - INFO - 🎬 Corpse Bride: 3 TMDB results fetched.
+2025-10-10 16:43:14,370 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Crimson_Peak.json
+2025-10-10 16:43:14,370 - step_02_fetch_tmdb - INFO - 🎬 Crimson Peak: 4 TMDB results fetched.
+2025-10-10 16:43:15,271 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Deadpool.json
+2025-10-10 16:43:15,271 - step_02_fetch_tmdb - INFO - 🎬 Deadpool: 9 TMDB results fetched.
+2025-10-10 16:43:15,311 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Django_Unchained.json
+2025-10-10 16:43:15,311 - step_02_fetch_tmdb - INFO - 🎬 Django Unchained: 3 TMDB results fetched.
+2025-10-10 16:43:15,383 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Doctor_Strange.json
+2025-10-10 16:43:15,383 - step_02_fetch_tmdb - INFO - 🎬 Doctor Strange: 17 TMDB results fetched.
+2025-10-10 16:43:15,398 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → E.T._the_Extra-Terrestrial.json
+2025-10-10 16:43:15,398 - step_02_fetch_tmdb - INFO - 🎬 E.T. the Extra-Terrestrial: 4 TMDB results fetched.
+2025-10-10 16:43:17,939 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Drive.json
+2025-10-10 16:43:17,954 - step_02_fetch_tmdb - INFO - 🎬 Drive: 20 TMDB results fetched.
+2025-10-10 16:43:17,970 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Encanto.json
+2025-10-10 16:43:17,970 - step_02_fetch_tmdb - INFO - 🎬 Encanto: 20 TMDB results fetched.
+2025-10-10 16:43:18,958 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Dune.json
+2025-10-10 16:43:18,958 - step_02_fetch_tmdb - INFO - 🎬 Dune: 20 TMDB results fetched.
+2025-10-10 16:43:19,005 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Dunkirk.json
+2025-10-10 16:43:19,005 - step_02_fetch_tmdb - INFO - 🎬 Dunkirk: 12 TMDB results fetched.
+2025-10-10 16:43:19,089 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Edward_Scissorhands.json
+2025-10-10 16:43:19,089 - step_02_fetch_tmdb - INFO - 🎬 Edward Scissorhands: 3 TMDB results fetched.
+2025-10-10 16:43:21,484 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Ex_Machina.json
+2025-10-10 16:43:21,484 - step_02_fetch_tmdb - INFO - 🎬 Ex Machina: 20 TMDB results fetched.
+2025-10-10 16:43:22,572 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Fantastic_Mr._Fox.json
+2025-10-10 16:43:22,572 - step_02_fetch_tmdb - INFO - 🎬 Fantastic Mr. Fox: 1 TMDB results fetched.
+2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Fight_Club.json
+2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 🎬 Fight Club: 20 TMDB results fetched.
+2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 📈 Saved metrics JSON → tmdb_fetch_metrics.json
+2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 📊 Logged metrics for step_02_fetch_tmdb: {'titles_total': 50, 'successful_fetches': 49, 'cached_skipped': 0, 'errors': 0, 'duration_sec': 37.53, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE', 'step_name': 'step_02_fetch_tmdb', 'timestamp': '2025-10-10T16:43:22'}
+2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - ✅ Step 02 completed in 37.53s | 49/50 successes, 0 cached skips, 0 errors.
+2025-10-10 16:43:22,643 - Pipeline - INFO - ✅ Completed Step02FetchTMDB in 37.53s
+2025-10-10 16:43:22,643 - Pipeline - INFO - 🚩 Running Step03PrepareTMDBInput
+2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization
+2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\plain
+2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\soundtrack
+2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (100 titles) | Titles to process=100
+2025-10-10 16:43:23,043 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 1950 rows
+2025-10-10 16:43:24,416 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\discogs_tmdb_candidates_extended.csv
+2025-10-10 16:43:24,417 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'discogs_title_norm', 'tmdb_title_norm', 'discogs_year', 'tmdb_year', 'discogs_genre', 'tmdb_genre', 'discogs_style']
+2025-10-10 16:43:24,419 - step_03_prepare_tmdb_input - INFO - 📈 Saved metrics JSON → tmdb_input_extended_metrics.json
+2025-10-10 16:43:24,420 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step_03_prepare_tmdb_input: {'mode': 'AUTO (100 titles)', 'titles_total': 100, 'pairs_total': 1950, 'avg_pairs_per_title': 19.5, 'duration_sec': 1.77, 'max_workers': 8, 'step_name': 'step_03_prepare_tmdb_input', 'timestamp': '2025-10-10T16:43:24'}
+2025-10-10 16:43:24,420 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 1.77s | Mode=AUTO (100 titles)
+2025-10-10 16:43:24,421 - Pipeline - INFO - ✅ Completed Step03PrepareTMDBInput in 1.78s
+2025-10-10 16:43:24,422 - Pipeline - INFO - 🚩 Running Step04MatchDiscogsTMDB
+2025-10-10 16:43:24,422 - step_04_match_discogs_tmdb - INFO - 🎬 Starting Step 04: Discogs ↔ TMDB fuzzy matching
+2025-10-10 16:43:26,171 - step_04_match_discogs_tmdb - INFO - Loaded 1950 rows from Step 03 input
+2025-10-10 16:43:26,624 - step_04_match_discogs_tmdb - INFO - 📈 Saved metrics JSON → discogs_tmdb_match_metrics.json
+2025-10-10 16:43:26,624 - step_04_match_discogs_tmdb - INFO - 📊 Logged metrics for step_04_match_discogs_tmdb: {'matches_total': 262, 'titles_matched': 35, 'avg_score': np.float64(89.19), 'duration_sec': 2.19, 'fuzz_threshold': 85, 'year_variance': 2, 'step_name': 'step_04_match_discogs_tmdb', 'timestamp': '2025-10-10T16:43:26'}
+2025-10-10 16:43:26,624 - step_04_match_discogs_tmdb - INFO - ✅ Step 04 completed | 35 titles, 262 matches (avg=89.19) in 2.19s
+2025-10-10 16:43:26,624 - Pipeline - INFO - ✅ Completed Step04MatchDiscogsTMDB in 2.20s
+2025-10-10 16:43:26,639 - Pipeline - INFO - 🧾 Pipeline Summary:
+2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step01AcquireDiscogs                154.46s
+2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step02FetchTMDB                      37.53s
+2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step03PrepareTMDBInput                1.78s
+2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step04MatchDiscogsTMDB                2.20s
+2025-10-10 16:43:26,639 - Pipeline - INFO - 🏁 Total Runtime: 196.42s
+2025-10-10 16:43:26,671 - Pipeline - INFO - 📊 Consolidated 4 step metrics → pipeline_metrics.csv
+2025-10-10 16:43:26,671 - Pipeline - INFO - ✅ Pipeline execution completed
+2025-10-10 16:43:26,671 - Pipeline - INFO - ------------------------------------------------------------
+2025-10-10 18:19:34,828 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-10 18:19:34,828 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-10 18:19:34,828 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-10 18:19:34,828 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-10 18:19:34,859 - step_01_acquire_discogs - INFO - Initialized logger for step_01_acquire_discogs
+2025-10-10 18:19:34,937 - step_01_acquire_discogs - INFO - Initialized step_01_acquire_discogs [branch=step5b-refactor, commit=56d39be]
+2025-10-10 18:19:34,937 - step_01_acquire_discogs - INFO - Truncating title list from 190 → 50 (config cap).
+2025-10-10 18:19:34,937 - step_01_acquire_discogs - INFO - 🎬 Discogs acquisition initialized — Source=ACTIVE_FILE(50) | 50 titles | 4 workers.
+2025-10-10 18:19:34,937 - step_02_fetch_tmdb - INFO - Initialized logger for step_02_fetch_tmdb
+2025-10-10 18:19:35,035 - step_02_fetch_tmdb - INFO - Initialized step_02_fetch_tmdb [branch=step5b-refactor, commit=56d39be]
+2025-10-10 18:19:35,035 - step_02_fetch_tmdb - INFO - 🎬 TMDB acquisition initialized — Source=ACTIVE | 50 titles (limit=50) | 4 workers (rate=40/s).
+2025-10-10 18:19:35,038 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-10 18:19:35,108 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step5b-refactor, commit=56d39be]
+2025-10-10 18:19:35,108 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 v4.8 with 8 workers
+2025-10-10 18:19:35,156 - step_04_match_discogs_tmdb - INFO - Initialized logger for step_04_match_discogs_tmdb
+2025-10-10 18:19:35,234 - step_04_match_discogs_tmdb - INFO - Initialized step_04_match_discogs_tmdb [branch=step5b-refactor, commit=56d39be]
+2025-10-10 18:19:35,234 - step_04_match_discogs_tmdb - INFO - Initialized Step 04 | Workers=4
+2025-10-10 18:19:35,234 - Pipeline - INFO - 🚩 Running Step01AcquireDiscogs
+2025-10-10 18:19:35,234 - step_01_acquire_discogs - INFO - 🎵 Starting Step 01: Acquire Discogs data [ACTIVE_FILE(50)]
+2025-10-10 18:19:35,475 - step_01_acquire_discogs - INFO - 📈 Saved metrics JSON → discogs_coverage.json
+2025-10-10 18:19:35,476 - step_01_acquire_discogs - INFO - 📊 Logged metrics for step_01_acquire_discogs: {'titles_total': 50, 'discog_max_titles': 50, 'plain_coverage': 0.0, 'soundtrack_coverage': 0.0, 'duration_sec': 0.24, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE_FILE(50)', 'step_name': 'step_01_acquire_discogs', 'timestamp': '2025-10-10T18:19:35'}
+2025-10-10 18:19:35,476 - step_01_acquire_discogs - INFO - 🎯 Coverage: 0/50 plain, 0/50 soundtrack | 0.24s total.
+2025-10-10 18:19:35,476 - step_01_acquire_discogs - INFO - ✅ Step 01 completed successfully.
+2025-10-10 18:19:35,477 - Pipeline - INFO - ✅ Completed Step01AcquireDiscogs in 0.24s
+2025-10-10 18:19:35,478 - Pipeline - INFO - 🚩 Running Step02FetchTMDB
+2025-10-10 18:19:35,478 - step_02_fetch_tmdb - INFO - 🎥 Starting Step 02: Fetch TMDB data [ACTIVE]
+2025-10-10 18:19:35,500 - step_02_fetch_tmdb - INFO - 📈 Saved metrics JSON → tmdb_fetch_metrics.json
+2025-10-10 18:19:35,500 - step_02_fetch_tmdb - INFO - 📊 Logged metrics for step_02_fetch_tmdb: {'titles_total': 50, 'successful_fetches': 0, 'cached_skipped': 49, 'errors': 0, 'duration_sec': 0.02, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE', 'step_name': 'step_02_fetch_tmdb', 'timestamp': '2025-10-10T18:19:35'}
+2025-10-10 18:19:35,500 - step_02_fetch_tmdb - INFO - ✅ Step 02 completed in 0.02s | 0/50 successes, 49 cached skips, 0 errors.
+2025-10-10 18:19:35,500 - Pipeline - INFO - ✅ Completed Step02FetchTMDB in 0.02s
+2025-10-10 18:19:35,500 - Pipeline - INFO - 🚩 Running Step03PrepareTMDBInput
+2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization
+2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\plain
+2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\soundtrack
+2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (100 titles) | Titles to process=100
+2025-10-10 18:19:35,608 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 1950 rows
+2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\discogs_tmdb_candidates_extended.csv
+2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'discogs_title_norm', 'tmdb_title_norm', 'discogs_year', 'tmdb_year', 'discogs_genre', 'tmdb_genre', 'discogs_style']
+2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📈 Saved metrics JSON → tmdb_input_extended_metrics.json
+2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step_03_prepare_tmdb_input: {'mode': 'AUTO (100 titles)', 'titles_total': 100, 'pairs_total': 1950, 'avg_pairs_per_title': 19.5, 'duration_sec': 0.22, 'max_workers': 8, 'step_name': 'step_03_prepare_tmdb_input', 'timestamp': '2025-10-10T18:19:35'}
+2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 0.22s | Mode=AUTO (100 titles)
+2025-10-10 18:19:35,718 - Pipeline - INFO - ✅ Completed Step03PrepareTMDBInput in 0.22s
+2025-10-10 18:19:35,718 - Pipeline - INFO - 🚩 Running Step04MatchDiscogsTMDB
+2025-10-10 18:19:35,718 - step_04_match_discogs_tmdb - INFO - 🎬 Starting Step 04: Discogs ↔ TMDB fuzzy matching
+2025-10-10 18:19:35,766 - step_04_match_discogs_tmdb - INFO - Loaded 1950 rows from Step 03 input
+2025-10-10 18:19:35,922 - step_04_match_discogs_tmdb - INFO - 📈 Saved metrics JSON → discogs_tmdb_match_metrics.json
+2025-10-10 18:19:35,922 - step_04_match_discogs_tmdb - INFO - 📊 Logged metrics for step_04_match_discogs_tmdb: {'matches_total': 262, 'titles_matched': 35, 'avg_score': np.float64(89.19), 'duration_sec': 0.2, 'fuzz_threshold': 85, 'year_variance': 2, 'step_name': 'step_04_match_discogs_tmdb', 'timestamp': '2025-10-10T18:19:35'}
+2025-10-10 18:19:35,922 - step_04_match_discogs_tmdb - INFO - ✅ Step 04 completed | 35 titles, 262 matches (avg=89.19) in 0.20s
+2025-10-10 18:19:35,922 - Pipeline - INFO - ✅ Completed Step04MatchDiscogsTMDB in 0.20s
+2025-10-10 18:19:35,922 - Pipeline - INFO - 🧾 Pipeline Summary:
+2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step01AcquireDiscogs                  0.24s
+2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step02FetchTMDB                       0.02s
+2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step03PrepareTMDBInput                0.22s
+2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step04MatchDiscogsTMDB                0.20s
+2025-10-10 18:19:35,922 - Pipeline - INFO - 🏁 Total Runtime: 1.09s
+2025-10-10 18:19:35,969 - Pipeline - INFO - 📊 Consolidated 4 step metrics → pipeline_metrics.csv
+2025-10-10 18:19:35,969 - Pipeline - INFO - ✅ Pipeline execution completed
+2025-10-10 18:19:35,969 - Pipeline - INFO - ------------------------------------------------------------
