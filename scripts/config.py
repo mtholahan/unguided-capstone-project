@@ -63,7 +63,6 @@ DEFAULT_MAX_WORKERS = int(os.getenv("DEFAULT_MAX_WORKERS", min(4, CPU_CORES)))
 MAX_THREADS = int(os.getenv("MAX_THREADS", min(8, CPU_CORES * 2)))
 
 
-
 def get_safe_workers(api_name: str) -> int:
     """Return safe thread count per API, capped by CPU cores."""
     mapping = {
@@ -99,6 +98,8 @@ DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 DISCOGS_PER_PAGE = 5             # Number of results per request
 DISCOGS_SLEEP_SEC = 1.5          # Throttle delay between requests
 DISCOGS_MAX_RETRIES = 3          # Retry attempts before giving up
+
+MAX_DISCOG_TITLES = 200          # Adjustable batch size
 
 
 # ===============================================================
@@ -156,6 +157,9 @@ JOIN_KEYS = ["title", "year"]  # Default harmonization join columns
 # ---------------------------------------------------------------
 # Reference title lists for pipeline validation and quick local testing.
 # ===============================================================
+
+USE_GOLDEN_LIST = False     # A toggle to swith to using below hard-coded list (or subset)
+                            # or using real-time pull against Discogs API
 GOLDEN_TITLES = [
     "Star Wars",
     "The Empire Strikes Back",

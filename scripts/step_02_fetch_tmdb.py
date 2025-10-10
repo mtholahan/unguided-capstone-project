@@ -77,7 +77,31 @@ class Step02FetchTMDB(BaseStep):
             results = response.get("results", [])
             if results:
                 # Save raw JSON for harmonization
-                self.atomic_write(cache_file, response)
+                payload = [
+                    {
+                        "query_title": title,
+                        "tmdb_id": r.get("id"),
+                        "original_title": r.get("original_title"),
+                        "release_date": r.get("release_date"),
+                        "vote_average": r.get("vote_average"),
+                        "popularity": r.get("popularity"),
+                    }
+                    for r in response.get("results", [])
+                ]
+                
+                payload = [
+                    {
+                        "query_title": title,
+                        "tmdb_id": r.get("id"),
+                        "original_title": r.get("original_title"),
+                        "release_date": r.get("release_date"),
+                        "vote_average": r.get("vote_average"),
+                        "popularity": r.get("popularity"),
+                    }
+                    for r in response.get("results", [])
+                ]
+                self.atomic_write(cache_file, payload)
+
                 self.logger.info(f"🎬 {title}: {len(results)} results fetched.")
 
             return {"title": title, "results_count": len(results)}
