@@ -81,9 +81,16 @@ slides/~$*
 *.key
 *.pem
 *.crt
+
+# Keep ignoring sensitive JSONs by default,
+# but explicitly allow non-sensitive project configs.
 *.json
+!config.json
+
+# Continue blocking secrets directories
 secrets/
 credentials.json
+
 
 # --- Tests & coverage ---
 .coverage
