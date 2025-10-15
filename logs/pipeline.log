@@ -2315,3 +2315,23 @@ SHARED (190 titles)           190                NaN           NaN          0.96
 2025-10-15 02:54:59,390 - step_04_validate_schema_alignment - INFO - 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 1986, 'discogs_rows': 1138, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data\\validation\\schema_comparison_tmdb.csv', 'discogs_schema_path': 'data\\validation\\schema_comparison_discogs.csv', 'integrity_summary_path': 'data\\validation\\integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-15T02:54:59', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
 2025-10-15 02:54:59,390 - step_04_validate_schema_alignment - INFO - ✅ Step 04 validation complete.
 2025-10-15 02:54:59,391 - step_04_validate_schema_alignment - INFO - Outputs → data\validation
+2025-10-15 03:11:06,221 - step_05_match_and_enrich - INFO - Initialized logger for step_05_match_and_enrich
+2025-10-15 03:11:06,305 - step_05_match_and_enrich - INFO - Initialized step_05_match_and_enrich [branch=step6-dev, commit=5bb0534]
+2025-10-15 03:11:06,306 - step_05_match_and_enrich - INFO - Starting Step 05 | Hybrid TMDB ↔ Discogs matching
+2025-10-15 03:11:06,329 - step_05_match_and_enrich - INFO - Loaded 8,005 candidate rows
+2025-10-15 03:11:06,330 - step_05_match_and_enrich - INFO - Normalizing titles for fuzzy matching...
+2025-10-15 03:11:07,459 - step_05_match_and_enrich - INFO - Saved 7,949 matched rows → C:\Projects\unguided-capstone-project\data\intermediate\tmdb_discogs_matches.csv
+2025-10-15 03:11:07,477 - step_05_match_and_enrich - INFO - 📈 Saved metrics JSON → C:\Projects\unguided-capstone-project\data\metrics\step05_matching_metrics.json
+2025-10-15 03:11:07,478 - step_05_match_and_enrich - INFO - ✅ Step 05 matching complete | Runtime 1.17s
+2025-10-15 03:23:54,150 - step_05_match_and_enrich - INFO - Initialized logger for step_05_match_and_enrich
+2025-10-15 03:23:54,233 - step_05_match_and_enrich - INFO - Initialized step_05_match_and_enrich [branch=step6-dev, commit=5bb0534]
+2025-10-15 03:23:54,234 - step_05_match_and_enrich - INFO - Starting Step 05 | Hybrid TMDB ↔ Discogs matching
+2025-10-15 03:23:54,256 - step_05_match_and_enrich - INFO - Loaded 8,005 candidate rows
+2025-10-15 03:23:54,258 - step_05_match_and_enrich - INFO - Running rescue-pass enrichment...
+2025-10-15 03:23:54,321 - step_05_match_and_enrich - INFO - Loaded TMDB: 1,986 rows from C:\Projects\unguided-capstone-project\data\raw\tmdb_raw
+2025-10-15 03:23:54,400 - step_05_match_and_enrich - INFO - Loaded Discogs: 1,138 rows from C:\Projects\unguided-capstone-project\data\raw\discogs_raw
+2025-10-15 03:23:55,166 - step_05_match_and_enrich - INFO - Re-hydrated IDs | tmdb_ids=64,225 | discogs_ids=64,127
+2025-10-15 03:23:55,166 - step_05_match_and_enrich - INFO - Normalizing titles for fuzzy matching...
+2025-10-15 03:24:03,115 - step_05_match_and_enrich - INFO - Saved 64,182 matched rows → C:\Projects\unguided-capstone-project\data\intermediate\tmdb_discogs_matches.csv
+2025-10-15 03:24:03,118 - step_05_match_and_enrich - INFO - 📈 Saved metrics JSON → C:\Projects\unguided-capstone-project\data\metrics\step05_matching_metrics.json
+2025-10-15 03:24:03,118 - step_05_match_and_enrich - INFO - ✅ Step 05 matching complete | Runtime 8.88s
