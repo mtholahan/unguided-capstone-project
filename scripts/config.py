@@ -17,6 +17,12 @@ import os
 import multiprocessing
 from pathlib import Path
 import pandas as pd
+from dotenv import load_dotenv, find_dotenv
+import logging
+
+# --- Load .env with override to ensure it wins over global/system env ---
+dotenv_path = find_dotenv(usecwd=True)
+load_dotenv(dotenv_path, override=True)
 
 # ===============================================================
 # 🌎 ENVIRONMENT SETTINGS
@@ -58,13 +64,13 @@ LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 API_TIMEOUT = 20                 # seconds
 API_MAX_RETRIES = 3
 RETRY_BACKOFF = 2.0              # seconds between retries
+TMDB_REQUEST_DELAY_SEC = 0.8     # polite pause between TMDB API calls
 
 # ===============================================================
 # 🎞️ DISCOGS SETTINGS
 # ===============================================================
 DISCOGS_API_URL = "https://api.discogs.com/database/search"
-DISCOGS_CONSUMER_KEY = os.getenv("DISCOGS_CONSUMER_KEY", "")
-DISCOGS_CONSUMER_SECRET = os.getenv("DISCOGS_CONSUMER_SECRET", "")
+DISCOGS_TOKEN = os.getenv("DISCOGS_TOKEN", "")
 DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 
 DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
@@ -80,7 +86,7 @@ RATE_LIMIT_SLEEP_SEC = 60   # Cooldown period after Discogs returns HTTP 429 (�
 # ===============================================================
 TMDB_API_URL = "https://api.themoviedb.org/3/search/movie"
 TMDB_API_KEY = os.getenv("TMDB_API_KEY", "")
-TMDB_SLEEP_SEC = 0.8
+TMDB_SLEEP_SEC = TMDB_REQUEST_DELAY_SEC # deprecated alias for backward compatibility
 TMDB_RAW_DIR = RAW_DIR / "tmdb_raw"
 TMDB_RAW_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -202,3 +208,34 @@ if __name__ == "__main__":
     print_mode_summary()
     titles = get_active_title_list()
     print(f"Loaded {len(titles)} titles for processing.")
+
+
+# ===============================================================
+# ✅ TOKEN MISMATCH TEST
+# ===============================================================
+
+# --- Optional: warn if token mismatch between system and .env file ---
+def _warn_if_env_mismatch(var_name: str):
+    """Compare .env value with active env var; log a warning if they differ."""
+    logger = logging.getLogger("config")
+    try:
+        # 1️⃣ what python-dotenv just loaded into process env
+        active_val = os.getenv(var_name)
+        # 2️⃣ what’s explicitly in .env (if present)
+        file_val = None
+        if dotenv_path and Path(dotenv_path).exists():
+            for line in Path(dotenv_path).read_text(encoding="utf-8").splitlines():
+                if line.startswith(f"{var_name}="):
+                    file_val = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    break
+        if active_val and file_val and active_val[:8] != file_val[:8]:
+            logger.warning(
+                f"⚠️ {var_name} mismatch: loaded '{active_val[:8]}…' "
+                f"but .env has '{file_val[:8]}…' — using active value."
+            )
+    except Exception as e:
+        logger.warning(f"⚠️ Unable to verify {var_name} consistency: {e}")
+
+# --- Call once for critical tokens ---
+_warn_if_env_mismatch("DISCOGS_TOKEN")
+_warn_if_env_mismatch("TMDB_API_KEY")

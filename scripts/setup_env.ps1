@@ -1,7 +1,7 @@
 <#
 setup_env.ps1 — Environment Bootstrap v5
 Project: Unguided Capstone (Discogs→TMDB)
-Author: <your name>
+Author: Mark Holahan
 Updated: 2025-10-09
 
 Features:

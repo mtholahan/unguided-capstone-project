@@ -17,21 +17,19 @@ from types import SimpleNamespace
 from typing import List, Dict, Any, Iterable, Optional
 import requests
 
-from config import (
+from scripts.config import (
     TMDB_API_KEY,
     API_TIMEOUT,
     RETRY_BACKOFF,
     LOG_LEVEL,
     MAX_THREADS,
     DATA_DIR,
-    DISCOGS_CONSUMER_KEY,
-    DISCOGS_CONSUMER_SECRET,
     DISCOGS_USER_AGENT,
     DISCOGS_SLEEP_SEC,
 )
 
 try:
-    from config import AZURE_SAS_TOKEN
+    from scripts.config import AZURE_SAS_TOKEN
 except ImportError:
     AZURE_SAS_TOKEN = None
 
@@ -148,6 +146,16 @@ def get_cache_path(url: str, params: dict, cache_dir: Path = DATA_DIR / "cache")
     cache_dir.mkdir(parents=True, exist_ok=True)
     key = f"{url}?{json.dumps(params, sort_keys=True)}".encode("utf-8")
     return cache_dir / f"{hashlib.md5(key).hexdigest()}.json"
+
+
+def safe_filename(name: str, max_len: int = 120) -> str:
+    """Return a cross-platform, filesystem-safe filename."""
+    s = unicodedata.normalize("NFKD", str(name)).encode("ascii", "ignore").decode()
+    s = re.sub(r'[\\/*?:"<>|]+', "_", s)     # illegal chars (Win/macOS/Linux)
+    s = re.sub(r"\s+", " ", s).strip()       # collapse whitespace
+    s = s.replace(" ", "_")                  # spaces → underscores
+    s = s[:max_len] if max_len > 0 else s
+    return s or "file"
 
 
 # ---------------------------------------------------------------------------

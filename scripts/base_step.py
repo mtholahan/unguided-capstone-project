@@ -20,7 +20,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
-from config import (
+from scripts.config import (
     DATA_DIR,
     LOG_DIR,
     LOG_LEVEL,
@@ -89,11 +89,16 @@ class BaseStep:
     # ============================================================
     # 💾 Metrics Handling — CSV
     # ============================================================
-    def write_metrics(self, metrics: dict):
-        """Append metrics to pipeline_metrics.csv with automatic headers."""
+    def write_metrics(self, metrics: dict, name: str | None = None):
+        """
+        Append metrics to pipeline_metrics.csv with automatic headers.
+        Optionally override the step name with `name` for cross-step logging.
+        """
         metrics_file = self.metrics_dir / "pipeline_metrics.csv"
         metrics = metrics.copy()
-        metrics["step_name"] = self.name
+
+        # Use explicit name if provided, else default to self.name
+        metrics["step_name"] = name or getattr(self, "name", "unknown_step")
         metrics["timestamp"] = datetime.now().isoformat(timespec="seconds")
 
         write_header = not metrics_file.exists()
@@ -105,7 +110,8 @@ class BaseStep:
                 writer.writeheader()
             writer.writerow(metrics)
 
-        self.logger.info(f"📊 Logged metrics for {self.name}: {metrics}")
+        self.logger.info(f"📊 Logged metrics for {metrics['step_name']}: {metrics}")
+
 
     # ============================================================
     # 💾 Metrics Handling — JSON (per-step summary)

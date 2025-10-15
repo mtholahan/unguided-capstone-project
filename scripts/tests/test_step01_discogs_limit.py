@@ -10,7 +10,7 @@ Verifies that:
 import io
 import logging
 from unittest.mock import patch, MagicMock
-from step_01_acquire_discogs import Step01AcquireDiscogs
+from OLD_step_01_acquire_discogs import Step01AcquireDiscogs
 from config import DISCOG_MAX_TITLES
 
 
