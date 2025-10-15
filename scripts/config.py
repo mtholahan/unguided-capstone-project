@@ -31,15 +31,17 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
 INTERMEDIATE_DIR = DATA_DIR / "intermediate"
+TMDB_RAW_DIR = RAW_DIR / "tmdb_raw"
+DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 LOG_DIR = ROOT_DIR / "logs"
 METRICS_DIR = DATA_DIR / "metrics"
-CPU_CORES = multiprocessing.cpu_count()
-
-ENV = os.getenv("ENV", "dev")  # "dev", "test", or "prod"
 
 for d in [DATA_DIR, RAW_DIR, INTERMEDIATE_DIR, PROCESSED_DIR, LOG_DIR, METRICS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
+
+CPU_CORES = multiprocessing.cpu_count()
+ENV = os.getenv("ENV", "dev")  # "dev", "test", or "prod"
 
 # ===============================================================
 # 🎛️ PIPELINE MODE CONTROLS

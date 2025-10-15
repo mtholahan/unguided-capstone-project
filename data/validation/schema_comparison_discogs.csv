@@ -1,0 +1,8 @@
+column,dtype,non_null,null_pct,n_unique
+country,object,945,16.96,30
+discogs_id,float64,948,16.7,899
+genre,list,945,16.96,96
+source_file,object,1138,0.0,191
+style,list,945,16.96,277
+title,object,948,16.7,451
+year,object,918,19.33,58
