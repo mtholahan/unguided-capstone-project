@@ -36,8 +36,8 @@ STEPS = [
     "scripts.step_01_acquire_tmdb",
     "scripts.step_02_query_discogs",
     "scripts.step_03_prepare_tmdb_input",
-    #"scripts.step_04_match_discogs_tmdb",
-     # extend when ready
+    "scripts.step_04_validate_schema_alignment",
+    "scripts.step_05_match_and_enrich",
 ]
 
 CHECKPOINT_FILE = Path(DATA_DIR) / "pipeline_checkpoint.json"

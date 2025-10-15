@@ -1,43 +1,30 @@
-"""
-Step 05 – TMDB ↔ Discogs Matching & Enrichment
------------------------------------------------
-Performs deterministic + fuzzy matching between TMDB and Discogs titles.
-Outputs:
-    data/intermediate/tmdb_discogs_matches.csv
-    metrics/step05_matching_metrics.json
-"""
-
 import pandas as pd
 from pathlib import Path
 from rapidfuzz import fuzz
 import logging
 import json
 import time
-
-# 🧩 Project imports
+import matplotlib.pyplot as plt
 from scripts.base_step import BaseStep
-from scripts.config import INTERMEDIATE_DIR, METRICS_DIR, LOG_DIR
+from scripts.config import INTERMEDIATE_DIR, METRICS_DIR
 from scripts.utils import normalize_for_matching_extended as normalize_title
 
 
-class Step05MatchAndEnrich(BaseStep):
-    """Step 05 – Hybrid TMDB↔Discogs Matching."""
+class Step05MatchAndEnrichV2(BaseStep):
+    """Step 05 – Phase 2 Rescue Plan: Enhanced Fuzzy Matching with Year-Bound Logic."""
 
     def __init__(self):
-        super().__init__("step_05_match_and_enrich")
-
+        super().__init__("step_05_match_and_enrich_v2")
         self.candidates_path = INTERMEDIATE_DIR / "tmdb_discogs_candidates_extended.csv"
-        self.output_path = INTERMEDIATE_DIR / "tmdb_discogs_matches.csv"
+        self.output_path = INTERMEDIATE_DIR / "tmdb_discogs_matches_v2.csv"
         self.metrics_path = METRICS_DIR / "step05_matching_metrics.json"
+        self.histogram_path = METRICS_DIR / "step05_score_distribution.png"
 
-    # ------------------------------------------------------------------
+    # --------------------------------------------------------------
     def run(self):
         t0 = time.time()
-        self.logger.info("Starting Step 05 | Hybrid TMDB ↔ Discogs matching")
+        self.logger.info("Starting Step 05 | Phase 2 Rescue Plan")
 
-        # --------------------------------------------------------------
-        # Load candidate pairs
-        # --------------------------------------------------------------
         if not self.candidates_path.exists():
             self.logger.error(f"Missing candidates file: {self.candidates_path}")
             return
@@ -45,76 +32,47 @@ class Step05MatchAndEnrich(BaseStep):
         df = pd.read_csv(self.candidates_path)
         self.logger.info(f"Loaded {len(df):,} candidate rows")
 
-        # ------------------------------------------------------------------
-        # Rescue-pass: ID re-hydration + deeper normalization
-        # ------------------------------------------------------------------
-        from scripts.utils_schema import load_tmdb_fullscan, load_discogs_fullscan
-        from scripts.config import TMDB_RAW_DIR, DISCOGS_RAW_DIR
-
-        self.logger.info("Running rescue-pass enrichment...")
-
-        # 1️⃣ Load raw sources from Step 04
-        tmdb_df = load_tmdb_fullscan(TMDB_RAW_DIR, self.logger)
-        discogs_df = load_discogs_fullscan(DISCOGS_RAW_DIR, self.logger)
-
-        # keep only id + title
-        tmdb_df = tmdb_df[["tmdb_id", "title"]].dropna().drop_duplicates()
-        discogs_df = discogs_df[["discogs_id", "title"]].dropna().drop_duplicates()
-
-        # 2️⃣ Normalize & strip parentheses / OST noise
-        def clean_title(t: str) -> str:
-            if not isinstance(t, str):
-                return ""
-            import re
-            t = normalize_title(t)
-            t = re.sub(r"\(.*?\)", "", t)                     # remove parentheticals
-            for stop in ["ost", "score", "deluxe", "expanded", "edition"]:
-                t = t.replace(stop, "")
-            return re.sub(r"\s+", " ", t).strip()
-
-        tmdb_df["title_clean"] = tmdb_df["title"].map(clean_title)
-        discogs_df["title_clean"] = discogs_df["title"].map(clean_title)
-
-        # 3️⃣ Merge IDs into candidates by normalized title
-        df["tmdb_title_norm"] = df["tmdb_title_norm"].fillna("").map(clean_title)
-        df["discogs_title_norm"] = df["discogs_title_norm"].fillna("").map(clean_title)
-
-        df = df.merge(tmdb_df[["tmdb_id", "title_clean"]],
-                    left_on="tmdb_title_norm", right_on="title_clean", how="left")
-        df = df.merge(discogs_df[["discogs_id", "title_clean"]],
-                    left_on="discogs_title_norm", right_on="title_clean", how="left")
-
-        # Drop helper columns
-        df.drop(columns=["title_clean_x", "title_clean_y"], inplace=True, errors="ignore")
-
-        self.logger.info(f"Re-hydrated IDs | tmdb_ids={df['tmdb_id'].notna().sum():,} | "
-                        f"discogs_ids={df['discogs_id'].notna().sum():,}")
-
-
-        # --------------------------------------------------------------
         # Normalize titles
-        # --------------------------------------------------------------
-        self.logger.info("Normalizing titles for fuzzy matching...")
         df["tmdb_title_norm"] = df["tmdb_title_norm"].fillna("").map(normalize_title)
         df["discogs_title_norm"] = df["discogs_title_norm"].fillna("").map(normalize_title)
 
-        # --------------------------------------------------------------
-        # Score similarity
-        # --------------------------------------------------------------
+        # Normalize release years (if present)
+        for col in ["tmdb_year", "discogs_year"]:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors="coerce")
+            else:
+                df[col] = None
+
         matches = []
+
         for _, row in df.iterrows():
             t1, t2 = row["tmdb_title_norm"], row["discogs_title_norm"]
             if not t1 or not t2:
                 continue
-            score = fuzz.token_sort_ratio(t1, t2)
-            match_type = "deterministic" if score == 100 else "fuzzy"
+
+            year_diff = None
+            if not pd.isna(row.tmdb_year) and not pd.isna(row.discogs_year):
+                year_diff = abs(row.tmdb_year - row.discogs_year)
+
+            # Apply year-bounded matching (±1 year)
+            if year_diff is not None and year_diff > 1:
+                continue
+
+            token_score = fuzz.token_sort_ratio(t1, t2)
+            partial_score = fuzz.partial_ratio(t1, t2)
+            hybrid_score = round(0.7 * token_score + 0.3 * partial_score, 2)
+
             matches.append({
                 "tmdb_id": row.get("tmdb_id"),
                 "discogs_id": row.get("discogs_id"),
-                "tmdb_title": row.get("tmdb_title_norm"),
-                "discogs_title": row.get("discogs_title_norm"),
-                "score": score,
-                "match_type": match_type,
+                "tmdb_title": t1,
+                "discogs_title": t2,
+                "tmdb_year": row.get("tmdb_year"),
+                "discogs_year": row.get("discogs_year"),
+                "token_score": token_score,
+                "partial_score": partial_score,
+                "hybrid_score": hybrid_score,
+                "year_diff": year_diff,
             })
 
         out_df = pd.DataFrame(matches)
@@ -122,26 +80,43 @@ class Step05MatchAndEnrich(BaseStep):
         self.logger.info(f"Saved {len(out_df):,} matched rows → {self.output_path}")
 
         # --------------------------------------------------------------
+        # Histogram Visualization
+        # --------------------------------------------------------------
+        if not out_df.empty:
+            plt.figure(figsize=(8, 5))
+            plt.hist(out_df["hybrid_score"], bins=20, edgecolor='black')
+            plt.title("Fuzzy Match Score Distribution (Hybrid)")
+            plt.xlabel("Hybrid Score")
+            plt.ylabel("Frequency")
+            METRICS_DIR.mkdir(exist_ok=True, parents=True)
+            plt.tight_layout()
+            plt.savefig(self.histogram_path)
+            plt.close()
+            self.logger.info(f"📊 Saved score distribution histogram → {self.histogram_path}")
+
+        # --------------------------------------------------------------
         # Metrics summary
         # --------------------------------------------------------------
         metrics = {
             "total_candidates": len(df),
             "total_matches": len(out_df),
-            "avg_score": round(out_df["score"].mean(), 2) if not out_df.empty else 0.0,
-            "high_confidence": int((out_df["score"] >= 90).sum()),
-            "mid_confidence": int(((out_df["score"] >= 70) & (out_df["score"] < 90)).sum()),
-            "low_confidence": int((out_df["score"] < 70).sum()),
+            "avg_hybrid_score": round(out_df["hybrid_score"].mean(), 2) if not out_df.empty else 0.0,
+            "avg_token_score": round(out_df["token_score"].mean(), 2) if not out_df.empty else 0.0,
+            "avg_partial_score": round(out_df["partial_score"].mean(), 2) if not out_df.empty else 0.0,
+            "high_confidence": int((out_df["hybrid_score"] >= 90).sum()),
+            "mid_confidence": int(((out_df["hybrid_score"] >= 70) & (out_df["hybrid_score"] < 90)).sum()),
+            "low_confidence": int((out_df["hybrid_score"] < 70).sum()),
+            "median_score": round(out_df["hybrid_score"].median(), 2) if not out_df.empty else 0.0,
+            "stddev_score": round(out_df["hybrid_score"].std(), 2) if not out_df.empty else 0.0,
             "step_runtime_sec": round(time.time() - t0, 2),
         }
 
-        METRICS_DIR.mkdir(exist_ok=True, parents=True)
         with open(self.metrics_path, "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=2)
 
         self.logger.info(f"📈 Saved metrics JSON → {self.metrics_path}")
-        self.logger.info(f"✅ Step 05 matching complete | Runtime {metrics['step_runtime_sec']}s")
+        self.logger.info(f"✅ Step 05 Phase 2 complete | Runtime {metrics['step_runtime_sec']}s")
 
 
-# ----------------------------------------------------------------------
 if __name__ == "__main__":
-    Step05MatchAndEnrich().run()
+    Step05MatchAndEnrichV2().run()
