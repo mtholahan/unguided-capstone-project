@@ -183,8 +183,7 @@ def cached_request(
 
     # 🔐 Inject API keys
     if "discogs.com" in url:
-        params.setdefault("key", DISCOGS_CONSUMER_KEY)
-        params.setdefault("secret", DISCOGS_CONSUMER_SECRET)
+        params.setdefault("token", os.getenv("DISCOGS_TOKEN"))
         headers.setdefault("User-Agent", DISCOGS_USER_AGENT or "UnguidedCapstone/1.0")
     elif "themoviedb.org" in url:
         params.setdefault("api_key", TMDB_API_KEY)

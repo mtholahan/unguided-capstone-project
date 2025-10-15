@@ -26,3 +26,19 @@ Dependencies: Valid TMDB API key loaded via setup_env.ps1; Python v3.10+ environ
 - ✅ `config.py` loads with `override=True`
 - 🧩 Internet access to Discogs API (`https://api.discogs.com/database/search`)
 - ⚙️ Tools: `requests`, `python-dotenv`, `logging`
+
+
+
+**01:02 10/15/2025**
+
+Resume from anchor: [**Pipeline_TMBD_to_Discogs_Refactor_Pre_Step04**]
+ Context: TMDB→Discogs pipeline refactor (Sprint A) stabilized through Step 03; all three steps now share a single golden-aware title list and unified metrics flow.
+ Current milestone: Steps 01–03 complete, integrated, and validated under both GOLDEN (subset) and AUTO (full) modes with correct persistence, checkpointing, and rollup metrics.
+ Next action: Implement **Step 04 – Harmonized Data Validation & Schema Alignment**, ensuring normalized column types, consistent ID joins, and integrity checks between TMDB and Discogs outputs before enrichment.
+ Dependencies:
+
+- ✅ Valid `.env` with `DISCOGS_TOKEN` and `TMDB_API_KEY`
+- ✅ Existing outputs: `titles_to_process.json`, `tmdb_raw/`, `discogs_raw/`, `tmdb_discogs_candidates_extended.csv`
+- ⚙️ Tools: `pandas`, `pyarrow`, `python-dotenv`, `logging`
+- 🧩 Branch = `step6-dev`; ensure virtual environment active
+

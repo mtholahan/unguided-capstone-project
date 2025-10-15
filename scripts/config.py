@@ -78,7 +78,7 @@ DISCOGS_RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 DISCOGS_MAX_RETRIES = 3
 DISCOGS_PER_PAGE = 5
-DISCOGS_SLEEP_SEC = 3.0     # routine delay between individual API requests
+DISCOGS_SLEEP_SEC = 2.0     # routine delay between individual API requests
 RATE_LIMIT_SLEEP_SEC = 60   # Cooldown period after Discogs returns HTTP 429 (“Too Many Requests”)
 
 # ===============================================================
@@ -119,7 +119,7 @@ GOLDEN_TITLES = [
     "Star Wars", "The Lord of the Rings", "Harry Potter", "La La Land", "The Lion King", "Frozen"
     "Jaws"
 ]
-GOLDEN_TITLES_TEST = GOLDEN_TITLES[:5]
+GOLDEN_TITLES_TEST = GOLDEN_TITLES[:10]  # first 10 for quick dev testing
 
 # ===============================================================
 # 🎬 TITLE SOURCE RESOLVER

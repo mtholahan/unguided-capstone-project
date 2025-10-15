@@ -1,317 +1,3 @@
-2025-10-10 16:40:10,221 - Pipeline - INFO - Initialized logger for Pipeline
-2025-10-10 16:40:10,221 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
-2025-10-10 16:40:10,222 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
-2025-10-10 16:40:10,222 - Pipeline - INFO - 🔧 Log Level: INFO
-2025-10-10 16:40:10,249 - step_01_acquire_discogs - INFO - Initialized logger for step_01_acquire_discogs
-2025-10-10 16:40:10,344 - step_01_acquire_discogs - INFO - Initialized step_01_acquire_discogs [branch=step5b-refactor, commit=54342f8]
-2025-10-10 16:40:10,344 - step_01_acquire_discogs - INFO - Truncating title list from 190 → 50 (config cap).
-2025-10-10 16:40:10,344 - step_01_acquire_discogs - INFO - 🎬 Discogs acquisition initialized — Source=ACTIVE_FILE(50) | 50 titles | 4 workers.
-2025-10-10 16:40:10,359 - step_02_fetch_tmdb - INFO - Initialized logger for step_02_fetch_tmdb
-2025-10-10 16:40:10,450 - step_02_fetch_tmdb - INFO - Initialized step_02_fetch_tmdb [branch=step5b-refactor, commit=54342f8]
-2025-10-10 16:40:10,451 - step_02_fetch_tmdb - INFO - 🎬 TMDB acquisition initialized — Source=ACTIVE | 50 titles (limit=50) | 4 workers (rate=40/s).
-2025-10-10 16:40:10,452 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
-2025-10-10 16:40:10,531 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step5b-refactor, commit=54342f8]
-2025-10-10 16:40:10,531 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 v4.8 with 8 workers
-2025-10-10 16:40:10,578 - step_04_match_discogs_tmdb - INFO - Initialized logger for step_04_match_discogs_tmdb
-2025-10-10 16:40:10,659 - step_04_match_discogs_tmdb - INFO - Initialized step_04_match_discogs_tmdb [branch=step5b-refactor, commit=54342f8]
-2025-10-10 16:40:10,659 - step_04_match_discogs_tmdb - INFO - Initialized Step 04 | Workers=4
-2025-10-10 16:40:10,659 - Pipeline - INFO - 🚩 Running Step01AcquireDiscogs
-2025-10-10 16:40:10,660 - step_01_acquire_discogs - INFO - 🎵 Starting Step 01: Acquire Discogs data [ACTIVE_FILE(50)]
-2025-10-10 16:40:14,623 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 12_Years_a_Slave.json
-2025-10-10 16:40:14,636 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 1917.json
-2025-10-10 16:40:14,661 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → A_Star_Is_Born_2018_.json
-2025-10-10 16:40:14,682 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ad_Astra.json
-2025-10-10 16:40:21,598 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 12_Years_a_Slave.json
-2025-10-10 16:40:21,644 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ad_Astra.json
-2025-10-10 16:40:21,661 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → 1917.json
-2025-10-10 16:40:21,668 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → A_Star_Is_Born_2018_.json
-2025-10-10 16:40:28,578 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Am_lie.json
-2025-10-10 16:40:28,619 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aliens.json
-2025-10-10 16:40:28,632 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Alien.json
-2025-10-10 16:40:28,663 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Akira.json
-2025-10-10 16:40:35,506 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Am_lie.json
-2025-10-10 16:40:35,556 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aliens.json
-2025-10-10 16:40:35,593 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Alien.json
-2025-10-10 16:40:35,803 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Akira.json
-2025-10-10 16:40:38,827 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avatar.json
-2025-10-10 16:40:41,850 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avatar.json
-2025-10-10 16:40:42,378 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Apocalypse_Now.json
-2025-10-10 16:40:42,485 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aquaman.json
-2025-10-10 16:40:42,497 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Arrival.json
-2025-10-10 16:40:44,859 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Age_of_Ultron.json
-2025-10-10 16:40:47,885 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Age_of_Ultron.json
-2025-10-10 16:40:49,199 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Apocalypse_Now.json
-2025-10-10 16:40:49,316 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Aquaman.json
-2025-10-10 16:40:49,440 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Arrival.json
-2025-10-10 16:40:50,903 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Endgame.json
-2025-10-10 16:40:52,220 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Infinity_War.json
-2025-10-10 16:40:52,461 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future.json
-2025-10-10 16:40:53,921 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Endgame.json
-2025-10-10 16:40:55,239 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Avengers_Infinity_War.json
-2025-10-10 16:40:55,481 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future.json
-2025-10-10 16:40:55,965 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Baby_Driver.json
-2025-10-10 16:40:56,937 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future_Part_II.json
-2025-10-10 16:40:59,956 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Back_to_the_Future_Part_II.json
-2025-10-10 16:41:01,922 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_1989_.json
-2025-10-10 16:41:02,162 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Begins.json
-2025-10-10 16:41:02,574 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Baby_Driver.json
-2025-10-10 16:41:06,590 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Returns.json
-2025-10-10 16:41:08,797 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_1989_.json
-2025-10-10 16:41:08,854 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Begins.json
-2025-10-10 16:41:09,240 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Beetlejuice.json
-2025-10-10 16:41:13,265 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Batman_Returns.json
-2025-10-10 16:41:15,632 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Birdman.json
-2025-10-10 16:41:15,733 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Hawk_Down.json
-2025-10-10 16:41:15,943 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Beetlejuice.json
-2025-10-10 16:41:18,963 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner.json
-2025-10-10 16:41:19,911 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Panther.json
-2025-10-10 16:41:21,983 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner.json
-2025-10-10 16:41:22,363 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Birdman.json
-2025-10-10 16:41:22,591 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Hawk_Down.json
-2025-10-10 16:41:26,582 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Black_Panther.json
-2025-10-10 16:41:28,636 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner_2049.json
-2025-10-10 16:41:29,063 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Bohemian_Rhapsody.json
-2025-10-10 16:41:29,313 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_First_Avenger.json
-2025-10-10 16:41:33,233 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_Winter_Soldier.json
-2025-10-10 16:41:35,284 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Blade_Runner_2049.json
-2025-10-10 16:41:35,780 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Bohemian_Rhapsody.json
-2025-10-10 16:41:36,011 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_First_Avenger.json
-2025-10-10 16:41:39,916 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Captain_America_The_Winter_Soldier.json
-2025-10-10 16:41:41,924 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Casino.json
-2025-10-10 16:41:42,473 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Chicago.json
-2025-10-10 16:41:42,693 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cinema_Paradiso.json
-2025-10-10 16:41:42,937 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Close_Encounters_of_the_Third_Kind.json
-2025-10-10 16:41:45,961 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Close_Encounters_of_the_Third_Kind.json
-2025-10-10 16:41:48,571 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Casino.json
-2025-10-10 16:41:48,979 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Coco.json
-2025-10-10 16:41:49,326 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Chicago.json
-2025-10-10 16:41:49,388 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cinema_Paradiso.json
-2025-10-10 16:41:51,996 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Coco.json
-2025-10-10 16:41:55,196 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Corpse_Bride.json
-2025-10-10 16:41:56,078 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cowboy_Bebop_The_Movie.json
-2025-10-10 16:41:56,120 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Crimson_Peak.json
-2025-10-10 16:41:58,633 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Deadpool.json
-2025-10-10 16:42:01,845 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Corpse_Bride.json
-2025-10-10 16:42:02,826 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Cowboy_Bebop_The_Movie.json
-2025-10-10 16:42:02,876 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Crimson_Peak.json
-2025-10-10 16:42:05,282 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Deadpool.json
-2025-10-10 16:42:08,488 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Django_Unchained.json
-2025-10-10 16:42:09,552 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Doctor_Strange.json
-2025-10-10 16:42:09,597 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Drive.json
-2025-10-10 16:42:11,910 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dune.json
-2025-10-10 16:42:15,139 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Django_Unchained.json
-2025-10-10 16:42:16,295 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Doctor_Strange.json
-2025-10-10 16:42:16,323 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Drive.json
-2025-10-10 16:42:18,575 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dune.json
-2025-10-10 16:42:19,311 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → E.T._the_Extra-Terrestrial.json
-2025-10-10 16:42:21,597 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Encanto.json
-2025-10-10 16:42:21,765 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dunkirk.json
-2025-10-10 16:42:22,343 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → E.T._the_Extra-Terrestrial.json
-2025-10-10 16:42:22,961 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Edward_Scissorhands.json
-2025-10-10 16:42:24,617 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Encanto.json
-2025-10-10 16:42:28,564 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Dunkirk.json
-2025-10-10 16:42:29,042 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ex_Machina.json
-2025-10-10 16:42:29,606 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Edward_Scissorhands.json
-2025-10-10 16:42:31,294 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fantastic_Mr._Fox.json
-2025-10-10 16:42:35,261 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fight_Club.json
-2025-10-10 16:42:35,676 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Ex_Machina.json
-2025-10-10 16:42:37,957 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fantastic_Mr._Fox.json
-2025-10-10 16:42:42,112 - step_01_acquire_discogs - INFO - 💾 Atomic write complete → Fight_Club.json
-2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - 📈 Saved metrics JSON → discogs_coverage.json
-2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - 📊 Logged metrics for step_01_acquire_discogs: {'titles_total': 50, 'discog_max_titles': 50, 'plain_coverage': 0.76, 'soundtrack_coverage': 1.0, 'duration_sec': 154.46, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE_FILE(50)', 'step_name': 'step_01_acquire_discogs', 'timestamp': '2025-10-10T16:42:45'}
-2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - 🎯 Coverage: 38/50 plain, 50/50 soundtrack | 154.46s total.
-2025-10-10 16:42:45,117 - step_01_acquire_discogs - INFO - ✅ Step 01 completed successfully.
-2025-10-10 16:42:45,117 - Pipeline - INFO - ✅ Completed Step01AcquireDiscogs in 154.46s
-2025-10-10 16:42:45,117 - Pipeline - INFO - 🚩 Running Step02FetchTMDB
-2025-10-10 16:42:45,117 - step_02_fetch_tmdb - INFO - 🎥 Starting Step 02: Fetch TMDB data [ACTIVE]
-2025-10-10 16:42:48,947 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → A_Star_Is_Born_2018_.json
-2025-10-10 16:42:48,947 - step_02_fetch_tmdb - INFO - 🎬 A Star Is Born (2018): 1 TMDB results fetched.
-2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → 12_Years_a_Slave.json
-2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → 1917.json
-2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 🎬 12 Years a Slave: 1 TMDB results fetched.
-2025-10-10 16:42:48,997 - step_02_fetch_tmdb - INFO - 🎬 1917: 20 TMDB results fetched.
-2025-10-10 16:42:49,019 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Ad_Astra.json
-2025-10-10 16:42:49,019 - step_02_fetch_tmdb - INFO - 🎬 Ad Astra: 10 TMDB results fetched.
-2025-10-10 16:42:52,713 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Akira.json
-2025-10-10 16:42:52,713 - step_02_fetch_tmdb - INFO - 🎬 Akira: 20 TMDB results fetched.
-2025-10-10 16:42:52,831 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Aliens.json
-2025-10-10 16:42:52,831 - step_02_fetch_tmdb - INFO - 🎬 Aliens: 20 TMDB results fetched.
-2025-10-10 16:42:52,870 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Am_lie.json
-2025-10-10 16:42:52,870 - step_02_fetch_tmdb - INFO - 🎬 Amélie: 20 TMDB results fetched.
-2025-10-10 16:42:52,902 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Alien.json
-2025-10-10 16:42:52,902 - step_02_fetch_tmdb - INFO - 🎬 Alien: 20 TMDB results fetched.
-2025-10-10 16:42:52,918 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avatar.json
-2025-10-10 16:42:52,918 - step_02_fetch_tmdb - INFO - 🎬 Avatar: 20 TMDB results fetched.
-2025-10-10 16:42:52,951 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avengers_Age_of_Ultron.json
-2025-10-10 16:42:52,951 - step_02_fetch_tmdb - INFO - 🎬 Avengers: Age of Ultron: 1 TMDB results fetched.
-2025-10-10 16:42:52,961 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avengers_Endgame.json
-2025-10-10 16:42:52,961 - step_02_fetch_tmdb - INFO - 🎬 Avengers: Endgame: 1 TMDB results fetched.
-2025-10-10 16:42:53,031 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Avengers_Infinity_War.json
-2025-10-10 16:42:53,031 - step_02_fetch_tmdb - INFO - 🎬 Avengers: Infinity War: 2 TMDB results fetched.
-2025-10-10 16:42:56,425 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Apocalypse_Now.json
-2025-10-10 16:42:56,425 - step_02_fetch_tmdb - INFO - 🎬 Apocalypse Now: 6 TMDB results fetched.
-2025-10-10 16:42:56,444 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Back_to_the_Future.json
-2025-10-10 16:42:56,444 - step_02_fetch_tmdb - INFO - 🎬 Back to the Future: 19 TMDB results fetched.
-2025-10-10 16:42:56,465 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Back_to_the_Future_Part_II.json
-2025-10-10 16:42:56,465 - step_02_fetch_tmdb - INFO - 🎬 Back to the Future Part II: 3 TMDB results fetched.
-2025-10-10 16:42:56,596 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Arrival.json
-2025-10-10 16:42:56,596 - step_02_fetch_tmdb - INFO - 🎬 Arrival: 20 TMDB results fetched.
-2025-10-10 16:42:56,642 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Aquaman.json
-2025-10-10 16:42:56,642 - step_02_fetch_tmdb - INFO - 🎬 Aquaman: 10 TMDB results fetched.
-2025-10-10 16:42:56,748 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Baby_Driver.json
-2025-10-10 16:42:56,748 - step_02_fetch_tmdb - INFO - 🎬 Baby Driver: 3 TMDB results fetched.
-2025-10-10 16:43:00,326 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Batman_Begins.json
-2025-10-10 16:43:00,326 - step_02_fetch_tmdb - INFO - 🎬 Batman Begins: 2 TMDB results fetched.
-2025-10-10 16:43:00,400 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Batman_Returns.json
-2025-10-10 16:43:00,400 - step_02_fetch_tmdb - INFO - 🎬 Batman Returns: 4 TMDB results fetched.
-2025-10-10 16:43:00,469 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Beetlejuice.json
-2025-10-10 16:43:00,469 - step_02_fetch_tmdb - INFO - 🎬 Beetlejuice: 4 TMDB results fetched.
-2025-10-10 16:43:00,485 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Blade_Runner.json
-2025-10-10 16:43:00,485 - step_02_fetch_tmdb - INFO - 🎬 Blade Runner: 16 TMDB results fetched.
-2025-10-10 16:43:03,733 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Birdman.json
-2025-10-10 16:43:03,733 - step_02_fetch_tmdb - INFO - 🎬 Birdman: 20 TMDB results fetched.
-2025-10-10 16:43:04,112 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Black_Hawk_Down.json
-2025-10-10 16:43:04,112 - step_02_fetch_tmdb - INFO - 🎬 Black Hawk Down: 6 TMDB results fetched.
-2025-10-10 16:43:04,173 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Black_Panther.json
-2025-10-10 16:43:04,174 - step_02_fetch_tmdb - INFO - 🎬 Black Panther: 20 TMDB results fetched.
-2025-10-10 16:43:04,219 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Blade_Runner_2049.json
-2025-10-10 16:43:04,219 - step_02_fetch_tmdb - INFO - 🎬 Blade Runner 2049: 3 TMDB results fetched.
-2025-10-10 16:43:07,264 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Bohemian_Rhapsody.json
-2025-10-10 16:43:07,264 - step_02_fetch_tmdb - INFO - 🎬 Bohemian Rhapsody: 6 TMDB results fetched.
-2025-10-10 16:43:07,805 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Captain_America_The_First_Avenger.json
-2025-10-10 16:43:07,805 - step_02_fetch_tmdb - INFO - 🎬 Captain America: The First Avenger: 3 TMDB results fetched.
-2025-10-10 16:43:07,857 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Captain_America_The_Winter_Soldier.json
-2025-10-10 16:43:07,857 - step_02_fetch_tmdb - INFO - 🎬 Captain America: The Winter Soldier: 1 TMDB results fetched.
-2025-10-10 16:43:07,873 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Close_Encounters_of_the_Third_Kind.json
-2025-10-10 16:43:07,873 - step_02_fetch_tmdb - INFO - 🎬 Close Encounters of the Third Kind: 5 TMDB results fetched.
-2025-10-10 16:43:07,900 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Casino.json
-2025-10-10 16:43:07,900 - step_02_fetch_tmdb - INFO - 🎬 Casino: 20 TMDB results fetched.
-2025-10-10 16:43:07,953 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Coco.json
-2025-10-10 16:43:07,953 - step_02_fetch_tmdb - INFO - 🎬 Coco: 20 TMDB results fetched.
-2025-10-10 16:43:10,864 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Chicago.json
-2025-10-10 16:43:10,865 - step_02_fetch_tmdb - INFO - 🎬 Chicago: 20 TMDB results fetched.
-2025-10-10 16:43:11,544 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Cinema_Paradiso.json
-2025-10-10 16:43:11,544 - step_02_fetch_tmdb - INFO - 🎬 Cinema Paradiso: 4 TMDB results fetched.
-2025-10-10 16:43:11,615 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Cowboy_Bebop_The_Movie.json
-2025-10-10 16:43:11,615 - step_02_fetch_tmdb - INFO - 🎬 Cowboy Bebop: The Movie: 1 TMDB results fetched.
-2025-10-10 16:43:11,683 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Corpse_Bride.json
-2025-10-10 16:43:11,683 - step_02_fetch_tmdb - INFO - 🎬 Corpse Bride: 3 TMDB results fetched.
-2025-10-10 16:43:14,370 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Crimson_Peak.json
-2025-10-10 16:43:14,370 - step_02_fetch_tmdb - INFO - 🎬 Crimson Peak: 4 TMDB results fetched.
-2025-10-10 16:43:15,271 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Deadpool.json
-2025-10-10 16:43:15,271 - step_02_fetch_tmdb - INFO - 🎬 Deadpool: 9 TMDB results fetched.
-2025-10-10 16:43:15,311 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Django_Unchained.json
-2025-10-10 16:43:15,311 - step_02_fetch_tmdb - INFO - 🎬 Django Unchained: 3 TMDB results fetched.
-2025-10-10 16:43:15,383 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Doctor_Strange.json
-2025-10-10 16:43:15,383 - step_02_fetch_tmdb - INFO - 🎬 Doctor Strange: 17 TMDB results fetched.
-2025-10-10 16:43:15,398 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → E.T._the_Extra-Terrestrial.json
-2025-10-10 16:43:15,398 - step_02_fetch_tmdb - INFO - 🎬 E.T. the Extra-Terrestrial: 4 TMDB results fetched.
-2025-10-10 16:43:17,939 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Drive.json
-2025-10-10 16:43:17,954 - step_02_fetch_tmdb - INFO - 🎬 Drive: 20 TMDB results fetched.
-2025-10-10 16:43:17,970 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Encanto.json
-2025-10-10 16:43:17,970 - step_02_fetch_tmdb - INFO - 🎬 Encanto: 20 TMDB results fetched.
-2025-10-10 16:43:18,958 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Dune.json
-2025-10-10 16:43:18,958 - step_02_fetch_tmdb - INFO - 🎬 Dune: 20 TMDB results fetched.
-2025-10-10 16:43:19,005 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Dunkirk.json
-2025-10-10 16:43:19,005 - step_02_fetch_tmdb - INFO - 🎬 Dunkirk: 12 TMDB results fetched.
-2025-10-10 16:43:19,089 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Edward_Scissorhands.json
-2025-10-10 16:43:19,089 - step_02_fetch_tmdb - INFO - 🎬 Edward Scissorhands: 3 TMDB results fetched.
-2025-10-10 16:43:21,484 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Ex_Machina.json
-2025-10-10 16:43:21,484 - step_02_fetch_tmdb - INFO - 🎬 Ex Machina: 20 TMDB results fetched.
-2025-10-10 16:43:22,572 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Fantastic_Mr._Fox.json
-2025-10-10 16:43:22,572 - step_02_fetch_tmdb - INFO - 🎬 Fantastic Mr. Fox: 1 TMDB results fetched.
-2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 💾 Atomic write complete → Fight_Club.json
-2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 🎬 Fight Club: 20 TMDB results fetched.
-2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 📈 Saved metrics JSON → tmdb_fetch_metrics.json
-2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - 📊 Logged metrics for step_02_fetch_tmdb: {'titles_total': 50, 'successful_fetches': 49, 'cached_skipped': 0, 'errors': 0, 'duration_sec': 37.53, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE', 'step_name': 'step_02_fetch_tmdb', 'timestamp': '2025-10-10T16:43:22'}
-2025-10-10 16:43:22,643 - step_02_fetch_tmdb - INFO - ✅ Step 02 completed in 37.53s | 49/50 successes, 0 cached skips, 0 errors.
-2025-10-10 16:43:22,643 - Pipeline - INFO - ✅ Completed Step02FetchTMDB in 37.53s
-2025-10-10 16:43:22,643 - Pipeline - INFO - 🚩 Running Step03PrepareTMDBInput
-2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization
-2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\plain
-2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\soundtrack
-2025-10-10 16:43:22,643 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (100 titles) | Titles to process=100
-2025-10-10 16:43:23,043 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 1950 rows
-2025-10-10 16:43:24,416 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\discogs_tmdb_candidates_extended.csv
-2025-10-10 16:43:24,417 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'discogs_title_norm', 'tmdb_title_norm', 'discogs_year', 'tmdb_year', 'discogs_genre', 'tmdb_genre', 'discogs_style']
-2025-10-10 16:43:24,419 - step_03_prepare_tmdb_input - INFO - 📈 Saved metrics JSON → tmdb_input_extended_metrics.json
-2025-10-10 16:43:24,420 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step_03_prepare_tmdb_input: {'mode': 'AUTO (100 titles)', 'titles_total': 100, 'pairs_total': 1950, 'avg_pairs_per_title': 19.5, 'duration_sec': 1.77, 'max_workers': 8, 'step_name': 'step_03_prepare_tmdb_input', 'timestamp': '2025-10-10T16:43:24'}
-2025-10-10 16:43:24,420 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 1.77s | Mode=AUTO (100 titles)
-2025-10-10 16:43:24,421 - Pipeline - INFO - ✅ Completed Step03PrepareTMDBInput in 1.78s
-2025-10-10 16:43:24,422 - Pipeline - INFO - 🚩 Running Step04MatchDiscogsTMDB
-2025-10-10 16:43:24,422 - step_04_match_discogs_tmdb - INFO - 🎬 Starting Step 04: Discogs ↔ TMDB fuzzy matching
-2025-10-10 16:43:26,171 - step_04_match_discogs_tmdb - INFO - Loaded 1950 rows from Step 03 input
-2025-10-10 16:43:26,624 - step_04_match_discogs_tmdb - INFO - 📈 Saved metrics JSON → discogs_tmdb_match_metrics.json
-2025-10-10 16:43:26,624 - step_04_match_discogs_tmdb - INFO - 📊 Logged metrics for step_04_match_discogs_tmdb: {'matches_total': 262, 'titles_matched': 35, 'avg_score': np.float64(89.19), 'duration_sec': 2.19, 'fuzz_threshold': 85, 'year_variance': 2, 'step_name': 'step_04_match_discogs_tmdb', 'timestamp': '2025-10-10T16:43:26'}
-2025-10-10 16:43:26,624 - step_04_match_discogs_tmdb - INFO - ✅ Step 04 completed | 35 titles, 262 matches (avg=89.19) in 2.19s
-2025-10-10 16:43:26,624 - Pipeline - INFO - ✅ Completed Step04MatchDiscogsTMDB in 2.20s
-2025-10-10 16:43:26,639 - Pipeline - INFO - 🧾 Pipeline Summary:
-2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step01AcquireDiscogs                154.46s
-2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step02FetchTMDB                      37.53s
-2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step03PrepareTMDBInput                1.78s
-2025-10-10 16:43:26,639 - Pipeline - INFO -    ⏱ Step04MatchDiscogsTMDB                2.20s
-2025-10-10 16:43:26,639 - Pipeline - INFO - 🏁 Total Runtime: 196.42s
-2025-10-10 16:43:26,671 - Pipeline - INFO - 📊 Consolidated 4 step metrics → pipeline_metrics.csv
-2025-10-10 16:43:26,671 - Pipeline - INFO - ✅ Pipeline execution completed
-2025-10-10 16:43:26,671 - Pipeline - INFO - ------------------------------------------------------------
-2025-10-10 18:19:34,828 - Pipeline - INFO - Initialized logger for Pipeline
-2025-10-10 18:19:34,828 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
-2025-10-10 18:19:34,828 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
-2025-10-10 18:19:34,828 - Pipeline - INFO - 🔧 Log Level: INFO
-2025-10-10 18:19:34,859 - step_01_acquire_discogs - INFO - Initialized logger for step_01_acquire_discogs
-2025-10-10 18:19:34,937 - step_01_acquire_discogs - INFO - Initialized step_01_acquire_discogs [branch=step5b-refactor, commit=56d39be]
-2025-10-10 18:19:34,937 - step_01_acquire_discogs - INFO - Truncating title list from 190 → 50 (config cap).
-2025-10-10 18:19:34,937 - step_01_acquire_discogs - INFO - 🎬 Discogs acquisition initialized — Source=ACTIVE_FILE(50) | 50 titles | 4 workers.
-2025-10-10 18:19:34,937 - step_02_fetch_tmdb - INFO - Initialized logger for step_02_fetch_tmdb
-2025-10-10 18:19:35,035 - step_02_fetch_tmdb - INFO - Initialized step_02_fetch_tmdb [branch=step5b-refactor, commit=56d39be]
-2025-10-10 18:19:35,035 - step_02_fetch_tmdb - INFO - 🎬 TMDB acquisition initialized — Source=ACTIVE | 50 titles (limit=50) | 4 workers (rate=40/s).
-2025-10-10 18:19:35,038 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
-2025-10-10 18:19:35,108 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step5b-refactor, commit=56d39be]
-2025-10-10 18:19:35,108 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 v4.8 with 8 workers
-2025-10-10 18:19:35,156 - step_04_match_discogs_tmdb - INFO - Initialized logger for step_04_match_discogs_tmdb
-2025-10-10 18:19:35,234 - step_04_match_discogs_tmdb - INFO - Initialized step_04_match_discogs_tmdb [branch=step5b-refactor, commit=56d39be]
-2025-10-10 18:19:35,234 - step_04_match_discogs_tmdb - INFO - Initialized Step 04 | Workers=4
-2025-10-10 18:19:35,234 - Pipeline - INFO - 🚩 Running Step01AcquireDiscogs
-2025-10-10 18:19:35,234 - step_01_acquire_discogs - INFO - 🎵 Starting Step 01: Acquire Discogs data [ACTIVE_FILE(50)]
-2025-10-10 18:19:35,475 - step_01_acquire_discogs - INFO - 📈 Saved metrics JSON → discogs_coverage.json
-2025-10-10 18:19:35,476 - step_01_acquire_discogs - INFO - 📊 Logged metrics for step_01_acquire_discogs: {'titles_total': 50, 'discog_max_titles': 50, 'plain_coverage': 0.0, 'soundtrack_coverage': 0.0, 'duration_sec': 0.24, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE_FILE(50)', 'step_name': 'step_01_acquire_discogs', 'timestamp': '2025-10-10T18:19:35'}
-2025-10-10 18:19:35,476 - step_01_acquire_discogs - INFO - 🎯 Coverage: 0/50 plain, 0/50 soundtrack | 0.24s total.
-2025-10-10 18:19:35,476 - step_01_acquire_discogs - INFO - ✅ Step 01 completed successfully.
-2025-10-10 18:19:35,477 - Pipeline - INFO - ✅ Completed Step01AcquireDiscogs in 0.24s
-2025-10-10 18:19:35,478 - Pipeline - INFO - 🚩 Running Step02FetchTMDB
-2025-10-10 18:19:35,478 - step_02_fetch_tmdb - INFO - 🎥 Starting Step 02: Fetch TMDB data [ACTIVE]
-2025-10-10 18:19:35,500 - step_02_fetch_tmdb - INFO - 📈 Saved metrics JSON → tmdb_fetch_metrics.json
-2025-10-10 18:19:35,500 - step_02_fetch_tmdb - INFO - 📊 Logged metrics for step_02_fetch_tmdb: {'titles_total': 50, 'successful_fetches': 0, 'cached_skipped': 49, 'errors': 0, 'duration_sec': 0.02, 'max_workers': 4, 'run_local': False, 'source': 'ACTIVE', 'step_name': 'step_02_fetch_tmdb', 'timestamp': '2025-10-10T18:19:35'}
-2025-10-10 18:19:35,500 - step_02_fetch_tmdb - INFO - ✅ Step 02 completed in 0.02s | 0/50 successes, 49 cached skips, 0 errors.
-2025-10-10 18:19:35,500 - Pipeline - INFO - ✅ Completed Step02FetchTMDB in 0.02s
-2025-10-10 18:19:35,500 - Pipeline - INFO - 🚩 Running Step03PrepareTMDBInput
-2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization
-2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\plain
-2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 📂 Found 50 files in C:\Projects\unguided-capstone-project\data\raw\discogs_raw\soundtrack
-2025-10-10 18:19:35,500 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (100 titles) | Titles to process=100
-2025-10-10 18:19:35,608 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 1950 rows
-2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\discogs_tmdb_candidates_extended.csv
-2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'discogs_title_norm', 'tmdb_title_norm', 'discogs_year', 'tmdb_year', 'discogs_genre', 'tmdb_genre', 'discogs_style']
-2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📈 Saved metrics JSON → tmdb_input_extended_metrics.json
-2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step_03_prepare_tmdb_input: {'mode': 'AUTO (100 titles)', 'titles_total': 100, 'pairs_total': 1950, 'avg_pairs_per_title': 19.5, 'duration_sec': 0.22, 'max_workers': 8, 'step_name': 'step_03_prepare_tmdb_input', 'timestamp': '2025-10-10T18:19:35'}
-2025-10-10 18:19:35,718 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 0.22s | Mode=AUTO (100 titles)
-2025-10-10 18:19:35,718 - Pipeline - INFO - ✅ Completed Step03PrepareTMDBInput in 0.22s
-2025-10-10 18:19:35,718 - Pipeline - INFO - 🚩 Running Step04MatchDiscogsTMDB
-2025-10-10 18:19:35,718 - step_04_match_discogs_tmdb - INFO - 🎬 Starting Step 04: Discogs ↔ TMDB fuzzy matching
-2025-10-10 18:19:35,766 - step_04_match_discogs_tmdb - INFO - Loaded 1950 rows from Step 03 input
-2025-10-10 18:19:35,922 - step_04_match_discogs_tmdb - INFO - 📈 Saved metrics JSON → discogs_tmdb_match_metrics.json
-2025-10-10 18:19:35,922 - step_04_match_discogs_tmdb - INFO - 📊 Logged metrics for step_04_match_discogs_tmdb: {'matches_total': 262, 'titles_matched': 35, 'avg_score': np.float64(89.19), 'duration_sec': 0.2, 'fuzz_threshold': 85, 'year_variance': 2, 'step_name': 'step_04_match_discogs_tmdb', 'timestamp': '2025-10-10T18:19:35'}
-2025-10-10 18:19:35,922 - step_04_match_discogs_tmdb - INFO - ✅ Step 04 completed | 35 titles, 262 matches (avg=89.19) in 0.20s
-2025-10-10 18:19:35,922 - Pipeline - INFO - ✅ Completed Step04MatchDiscogsTMDB in 0.20s
-2025-10-10 18:19:35,922 - Pipeline - INFO - 🧾 Pipeline Summary:
-2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step01AcquireDiscogs                  0.24s
-2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step02FetchTMDB                       0.02s
-2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step03PrepareTMDBInput                0.22s
-2025-10-10 18:19:35,922 - Pipeline - INFO -    ⏱ Step04MatchDiscogsTMDB                0.20s
-2025-10-10 18:19:35,922 - Pipeline - INFO - 🏁 Total Runtime: 1.09s
-2025-10-10 18:19:35,969 - Pipeline - INFO - 📊 Consolidated 4 step metrics → pipeline_metrics.csv
-2025-10-10 18:19:35,969 - Pipeline - INFO - ✅ Pipeline execution completed
-2025-10-10 18:19:35,969 - Pipeline - INFO - ------------------------------------------------------------
 2025-10-14 11:33:20,339 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
 2025-10-14 11:33:20,423 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=1a0280c]
 2025-10-14 11:33:20,423 - step_01_acquire_tmdb - INFO - Initialized TMDB acquisition → C:\Projects\unguided-capstone-project\data\raw\tmdb_raw
@@ -1431,3 +1117,1146 @@
 2025-10-14 22:08:31,819 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Reservoir Dogs' (5 filtered hits)
 2025-10-14 22:08:35,548 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Return of the Jedi' (5 filtered hits)
 2025-10-14 22:08:39,200 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Rocketman' (5 filtered hits)
+2025-10-14 22:08:42,842 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Rogue One: A Star Wars Story' (2 filtered hits)
+2025-10-14 22:08:46,497 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Run Lola Run' (5 filtered hits)
+2025-10-14 22:08:50,173 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Saturday Night Fever' (4 filtered hits)
+2025-10-14 22:08:53,850 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Saving Private Ryan' (5 filtered hits)
+2025-10-14 22:08:57,495 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Scarface' (5 filtered hits)
+2025-10-14 22:09:01,184 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Schindler's List' (5 filtered hits)
+2025-10-14 22:09:04,199 - step_02_query_discogs - INFO - Progress: 120/188 titles processed
+2025-10-14 22:09:04,992 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'School of Rock' (4 filtered hits)
+2025-10-14 22:09:08,662 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Se7en' (5 filtered hits)
+2025-10-14 22:09:12,283 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Sing Street' (5 filtered hits)
+2025-10-14 22:09:15,960 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spider-Man: Homecoming' (5 filtered hits)
+2025-10-14 22:09:19,625 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spider-Man: No Way Home' (5 filtered hits)
+2025-10-14 22:09:23,283 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spirited Away' (5 filtered hits)
+2025-10-14 22:09:26,959 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars' (5 filtered hits)
+2025-10-14 22:09:30,858 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: Episode I - The Phantom Menace' (5 filtered hits)
+2025-10-14 22:09:34,568 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: The Force Awakens' (5 filtered hits)
+2025-10-14 22:09:38,225 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Suicide Squad' (5 filtered hits)
+2025-10-14 22:09:41,239 - step_02_query_discogs - INFO - Progress: 130/188 titles processed
+2025-10-14 22:09:41,898 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'TRON: Legacy' (5 filtered hits)
+2025-10-14 22:09:45,597 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Tenet' (5 filtered hits)
+2025-10-14 22:09:49,269 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Amazing Spider-Man' (5 filtered hits)
+2025-10-14 22:09:52,929 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Avengers' (5 filtered hits)
+2025-10-14 22:09:57,428 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Batman' (5 filtered hits)
+2025-10-14 22:10:01,135 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Curious Case of Benjamin Button' (5 filtered hits)
+2025-10-14 22:10:04,876 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight' (5 filtered hits)
+2025-10-14 22:10:08,669 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight Rises' (5 filtered hits)
+2025-10-14 22:10:12,326 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Departed' (5 filtered hits)
+2025-10-14 22:10:15,991 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Empire Strikes Back' (5 filtered hits)
+2025-10-14 22:10:19,005 - step_02_query_discogs - INFO - Progress: 140/188 titles processed
+2025-10-14 22:10:19,673 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Fifth Element' (5 filtered hits)
+2025-10-14 22:10:23,358 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The French Dispatch' (5 filtered hits)
+2025-10-14 22:10:27,047 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Girl with the Dragon Tattoo' (5 filtered hits)
+2025-10-14 22:10:30,938 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Godfather' (5 filtered hits)
+2025-10-14 22:10:34,803 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Godfather Part II' (5 filtered hits)
+2025-10-14 22:10:38,507 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Grand Budapest Hotel' (5 filtered hits)
+2025-10-14 22:10:42,150 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Great Gatsby' (5 filtered hits)
+2025-10-14 22:10:45,793 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Hateful Eight' (3 filtered hits)
+2025-10-14 22:10:49,453 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Intouchables' (2 filtered hits)
+2025-10-14 22:10:53,096 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Irishman' (5 filtered hits)
+2025-10-14 22:10:56,111 - step_02_query_discogs - INFO - Progress: 150/188 titles processed
+2025-10-14 22:10:56,792 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Life Aquatic with Steve Zissou' (5 filtered hits)
+2025-10-14 22:11:00,507 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lion King' (5 filtered hits)
+2025-10-14 22:11:04,213 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Fellowship of the Ring' (5 filtered hits)
+2025-10-14 22:11:08,084 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Return of the King' (5 filtered hits)
+2025-10-14 22:11:11,847 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Two Towers' (5 filtered hits)
+2025-10-14 22:11:15,564 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lost World: Jurassic Park' (5 filtered hits)
+2025-10-14 22:11:19,222 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Martian' (3 filtered hits)
+2025-10-14 22:11:23,032 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Matrix' (5 filtered hits)
+2025-10-14 22:11:26,723 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Nightmare Before Christmas' (5 filtered hits)
+2025-10-14 22:11:30,413 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Phantom of the Opera' (5 filtered hits)
+2025-10-14 22:11:33,429 - step_02_query_discogs - INFO - Progress: 160/188 titles processed
+2025-10-14 22:11:34,106 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Pianist' (5 filtered hits)
+2025-10-14 22:11:37,835 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Prestige' (4 filtered hits)
+2025-10-14 22:11:41,581 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Revenant' (5 filtered hits)
+2025-10-14 22:11:45,430 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Road Warrior' (5 filtered hits)
+2025-10-14 22:11:49,090 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Royal Tenenbaums' (5 filtered hits)
+2025-10-14 22:11:52,764 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Shape of Water' (5 filtered hits)
+2025-10-14 22:11:56,476 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Shawshank Redemption' (5 filtered hits)
+2025-10-14 22:12:00,108 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Social Network' (5 filtered hits)
+2025-10-14 22:12:03,858 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Sound of Music' (5 filtered hits)
+2025-10-14 22:12:07,525 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Thin Red Line' (5 filtered hits)
+2025-10-14 22:12:10,541 - step_02_query_discogs - INFO - Progress: 170/188 titles processed
+2025-10-14 22:12:11,242 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Wolverine' (5 filtered hits)
+2025-10-14 22:12:14,963 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Thor' (5 filtered hits)
+2025-10-14 22:12:18,659 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Thor: Ragnarok' (3 filtered hits)
+2025-10-14 22:12:22,366 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Titanic' (5 filtered hits)
+2025-10-14 22:12:26,041 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Top Gun' (5 filtered hits)
+2025-10-14 22:12:29,716 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Top Gun: Maverick' (5 filtered hits)
+2025-10-14 22:12:33,350 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Tron' (5 filtered hits)
+2025-10-14 22:12:37,034 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Walk the Line' (5 filtered hits)
+2025-10-14 22:12:40,851 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Weathering with You' (1 filtered hits)
+2025-10-14 22:12:44,674 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'West Side Story' (5 filtered hits)
+2025-10-14 22:12:47,689 - step_02_query_discogs - INFO - Progress: 180/188 titles processed
+2025-10-14 22:12:48,348 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Whiplash' (5 filtered hits)
+2025-10-14 22:12:52,155 - step_02_query_discogs - INFO - 🚫 No results for 'Whiplash _redundant intentionally for coverage_'
+2025-10-14 22:12:55,822 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Wonder Woman' (5 filtered hits)
+2025-10-14 22:12:59,456 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'X-Men: Apocalypse' (4 filtered hits)
+2025-10-14 22:13:03,211 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'X2' (5 filtered hits)
+2025-10-14 22:13:06,895 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Your Name.' (5 filtered hits)
+2025-10-14 22:13:10,542 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Zodiac' (5 filtered hits)
+2025-10-14 22:13:16,558 - step_02_query_discogs - INFO - Progress: 188/188 titles processed
+2025-10-14 22:13:16,602 - step_02_query_discogs - INFO - 📊 Logged metrics for step02_query_discogs_metrics: {'titles_total': 191, 'titles_downloaded': 188, 'duration_sec': 694.41, 'success_rate': 98.43, 'step_name': 'step02_query_discogs_metrics', 'timestamp': '2025-10-14T22:13:16'}
+2025-10-14 22:13:16,602 - step_02_query_discogs - INFO - ✅ Completed Step 02 | 188/191 titles processed
+2025-10-14 22:26:45,331 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-14 22:26:45,415 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-14 22:26:45,416 - step_01_acquire_tmdb - INFO - 📄 Loaded 190 titles from data\movie_titles_200.txt
+2025-10-14 22:26:45,416 - step_01_acquire_tmdb - INFO - 🎬 Processing 190 / 190 titles
+2025-10-14 22:26:47,979 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for '12 Years a Slave'
+2025-10-14 22:26:50,490 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for '1917'
+2025-10-14 22:26:52,974 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'A Star Is Born (2018)'
+2025-10-14 22:26:55,471 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ad Astra'
+2025-10-14 22:26:57,970 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Akira'
+2025-10-14 22:27:00,480 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Alien'
+2025-10-14 22:27:03,073 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Aliens'
+2025-10-14 22:27:05,702 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Amélie'
+2025-10-14 22:27:08,249 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Apocalypse Now'
+2025-10-14 22:27:10,847 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Aquaman'
+2025-10-14 22:27:13,391 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Arrival'
+2025-10-14 22:34:12,159 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-14 22:34:12,159 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-14 22:34:12,160 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-14 22:34:12,160 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-14 22:38:09,697 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-14 22:38:09,697 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-14 22:38:09,697 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-14 22:38:09,697 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-14 22:38:09,719 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-14 22:38:09,804 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-14 22:38:09,811 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-14 22:38:09,894 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-14 22:38:09,894 - Pipeline - INFO - 🚩 Running Step01AcquireTMDB
+2025-10-14 22:38:09,895 - step_01_acquire_tmdb - INFO - 📄 Loaded 190 titles from data\movie_titles_200.txt
+2025-10-14 22:38:09,895 - step_01_acquire_tmdb - INFO - 🎬 Processing 190 / 190 titles
+2025-10-14 22:38:12,397 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for '12 Years a Slave'
+2025-10-14 22:38:14,889 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for '1917'
+2025-10-14 22:38:17,417 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'A Star Is Born (2018)'
+2025-10-14 22:38:19,898 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ad Astra'
+2025-10-14 22:38:22,377 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Akira'
+2025-10-14 22:38:24,870 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Alien'
+2025-10-14 22:38:27,393 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Aliens'
+2025-10-14 22:38:29,880 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Amélie'
+2025-10-14 22:38:32,396 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Apocalypse Now'
+2025-10-14 22:38:34,879 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Aquaman'
+2025-10-14 22:38:37,383 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Arrival'
+2025-10-14 22:38:39,885 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avatar'
+2025-10-14 22:38:42,404 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avengers: Age of Ultron'
+2025-10-14 22:38:44,915 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avengers: Endgame'
+2025-10-14 22:38:47,433 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avengers: Infinity War'
+2025-10-14 22:38:49,940 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Baby Driver'
+2025-10-14 22:38:52,462 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Back to the Future'
+2025-10-14 22:38:54,957 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Back to the Future Part II'
+2025-10-14 22:38:57,460 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Batman (1989)'
+2025-10-14 22:38:59,955 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Batman Begins'
+2025-10-14 22:39:02,471 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Batman Returns'
+2025-10-14 22:39:04,962 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Beetlejuice'
+2025-10-14 22:39:07,500 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Birdman'
+2025-10-14 22:39:10,030 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Black Hawk Down'
+2025-10-14 22:39:12,570 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Black Panther'
+2025-10-14 22:39:12,582 - step_01_acquire_tmdb - INFO - Progress: 25/190 titles processed
+2025-10-14 22:39:15,098 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Blade Runner'
+2025-10-14 22:39:17,616 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Blade Runner 2049'
+2025-10-14 22:39:20,114 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Bohemian Rhapsody'
+2025-10-14 22:39:22,625 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Captain America: The First Avenger'
+2025-10-14 22:39:25,206 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Captain America: The Winter Soldier'
+2025-10-14 22:39:27,782 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Casino'
+2025-10-14 22:39:30,277 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Chicago'
+2025-10-14 22:39:32,798 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Cinema Paradiso'
+2025-10-14 22:39:35,336 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Close Encounters of the Third Kind'
+2025-10-14 22:39:37,852 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Coco'
+2025-10-14 22:39:40,509 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Corpse Bride'
+2025-10-14 22:39:43,038 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Cowboy Bebop: The Movie'
+2025-10-14 22:39:45,551 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Crimson Peak'
+2025-10-14 22:39:48,044 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Deadpool'
+2025-10-14 22:39:50,566 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Django Unchained'
+2025-10-14 22:39:53,112 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Doctor Strange'
+2025-10-14 22:39:55,634 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Drive'
+2025-10-14 22:39:58,141 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Dune'
+2025-10-14 22:40:00,651 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Dunkirk'
+2025-10-14 22:40:03,364 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'E.T. the Extra-Terrestrial'
+2025-10-14 22:40:06,024 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Edward Scissorhands'
+2025-10-14 22:40:08,528 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Encanto'
+2025-10-14 22:40:11,024 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ex Machina'
+2025-10-14 22:40:13,538 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Fantastic Mr. Fox'
+2025-10-14 22:40:16,042 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Fight Club'
+2025-10-14 22:40:16,055 - step_01_acquire_tmdb - INFO - Progress: 50/190 titles processed
+2025-10-14 22:40:18,558 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Forrest Gump'
+2025-10-14 22:40:21,060 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Frozen'
+2025-10-14 22:40:23,596 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Full Metal Jacket'
+2025-10-14 22:40:26,168 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ghost in the Shell'
+2025-10-14 22:40:28,701 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Gladiator'
+2025-10-14 22:40:31,223 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Gone Girl'
+2025-10-14 22:40:33,746 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Goodfellas'
+2025-10-14 22:40:36,309 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Gravity'
+2025-10-14 22:40:38,824 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Grease'
+2025-10-14 22:40:41,324 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Guardians of the Galaxy'
+2025-10-14 22:40:43,846 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Guardians of the Galaxy Awesome Mix (for test)'
+2025-10-14 22:40:46,389 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Guardians of the Galaxy Vol. 2'
+2025-10-14 22:40:48,904 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Chamber of Secrets'
+2025-10-14 22:40:51,445 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Goblet of Fire'
+2025-10-14 22:40:54,007 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Prisoner of Azkaban'
+2025-10-14 22:40:56,552 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Sorcerer’s Stone'
+2025-10-14 22:40:59,071 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Heat'
+2025-10-14 22:41:01,585 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Her'
+2025-10-14 22:41:04,087 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Howl’s Moving Castle'
+2025-10-14 22:41:06,583 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Inception'
+2025-10-14 22:41:09,090 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Indiana Jones and the Last Crusade'
+2025-10-14 22:41:11,604 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Indiana Jones and the Raiders of the Lost Ark'
+2025-10-14 22:41:14,111 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Indiana Jones and the Temple of Doom'
+2025-10-14 22:41:16,613 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Inside Llewyn Davis'
+2025-10-14 22:41:19,200 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Insomnia'
+2025-10-14 22:41:19,213 - step_01_acquire_tmdb - INFO - Progress: 75/190 titles processed
+2025-10-14 22:41:21,803 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Interstellar'
+2025-10-14 22:41:24,327 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Interstellar (yes—redundant for consistency)'
+2025-10-14 22:41:26,872 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Iron Man'
+2025-10-14 22:41:29,392 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Isle of Dogs'
+2025-10-14 22:41:31,958 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Jaws'
+2025-10-14 22:41:34,476 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Jurassic Park'
+2025-10-14 22:41:37,013 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Justice League'
+2025-10-14 22:41:39,560 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Kiki’s Delivery Service'
+2025-10-14 22:41:42,087 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Kill Bill: Vol. 1'
+2025-10-14 22:41:44,609 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Kill Bill: Vol. 2'
+2025-10-14 22:41:47,142 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'La La Land'
+2025-10-14 22:41:49,671 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Les Misérables (2012)'
+2025-10-14 22:41:52,200 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Life Is Beautiful'
+2025-10-14 22:41:54,741 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Logan'
+2025-10-14 22:41:57,313 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Mad Max: Fury Road'
+2025-10-14 22:41:59,852 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Man of Steel'
+2025-10-14 22:42:02,392 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Memento'
+2025-10-14 22:42:04,919 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Mission: Impossible'
+2025-10-14 22:42:07,427 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Mission: Impossible – Fallout'
+2025-10-14 22:42:09,973 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Moana'
+2025-10-14 22:42:12,493 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Moonrise Kingdom'
+2025-10-14 22:42:15,029 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Moulin Rouge!'
+2025-10-14 22:42:17,512 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'My Neighbor Totoro'
+2025-10-14 22:42:20,017 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Neon Genesis Evangelion: The End of Evangelion'
+2025-10-14 22:42:22,527 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Once'
+2025-10-14 22:42:22,541 - step_01_acquire_tmdb - INFO - Progress: 100/190 titles processed
+2025-10-14 22:42:25,012 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Once Upon a Time in Hollywood'
+2025-10-14 22:42:27,503 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Oppenheimer'
+2025-10-14 22:42:30,012 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pan’s Labyrinth'
+2025-10-14 22:42:32,503 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: At World’s End'
+2025-10-14 22:42:35,008 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: Dead Man’s Chest'
+2025-10-14 22:42:37,563 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: On Stranger Tides'
+2025-10-14 22:42:40,086 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: The Curse of the Black Pearl'
+2025-10-14 22:42:42,593 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Platoon'
+2025-10-14 22:42:45,167 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Princess Mononoke'
+2025-10-14 22:42:47,680 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Prometheus'
+2025-10-14 22:42:50,184 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pulp Fiction'
+2025-10-14 22:42:52,738 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Purple Rain'
+2025-10-14 22:42:55,228 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ray'
+2025-10-14 22:42:57,728 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Reservoir Dogs'
+2025-10-14 22:43:00,231 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Rocketman'
+2025-10-14 22:43:02,750 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Rogue One: A Star Wars Story'
+2025-10-14 22:43:05,267 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Run Lola Run'
+2025-10-14 22:43:07,797 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Saturday Night Fever'
+2025-10-14 22:43:10,302 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Saving Private Ryan'
+2025-10-14 22:43:12,820 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Scarface'
+2025-10-14 22:43:15,341 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Schindler’s List'
+2025-10-14 22:43:17,871 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'School of Rock'
+2025-10-14 22:43:20,366 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Se7en'
+2025-10-14 22:43:22,860 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Sing Street'
+2025-10-14 22:43:25,357 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Spider-Man: Homecoming'
+2025-10-14 22:43:25,374 - step_01_acquire_tmdb - INFO - Progress: 125/190 titles processed
+2025-10-14 22:43:27,866 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Spider-Man: No Way Home'
+2025-10-14 22:43:30,379 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Spirited Away'
+2025-10-14 22:43:32,869 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: A New Hope'
+2025-10-14 22:43:35,392 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: Return of the Jedi'
+2025-10-14 22:43:37,927 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: The Empire Strikes Back'
+2025-10-14 22:43:40,417 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: The Force Awakens'
+2025-10-14 22:43:42,940 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: The Phantom Menace'
+2025-10-14 22:43:45,446 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Suicide Squad'
+2025-10-14 22:43:47,932 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Tenet'
+2025-10-14 22:43:50,438 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Amazing Spider-Man'
+2025-10-14 22:43:52,939 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Avengers'
+2025-10-14 22:43:55,454 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Batman'
+2025-10-14 22:43:57,951 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Curious Case of Benjamin Button'
+2025-10-14 22:44:00,533 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Dark Knight'
+2025-10-14 22:44:03,056 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Dark Knight Rises'
+2025-10-14 22:44:05,619 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Departed'
+2025-10-14 22:44:08,132 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Fifth Element'
+2025-10-14 22:44:10,646 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The French Dispatch'
+2025-10-14 22:44:13,149 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Girl with the Dragon Tattoo'
+2025-10-14 22:44:15,649 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Godfather'
+2025-10-14 22:44:18,163 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Godfather: Part II'
+2025-10-14 22:44:20,663 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Grand Budapest Hotel'
+2025-10-14 22:44:23,175 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Great Gatsby (2013)'
+2025-10-14 22:44:25,717 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Hateful Eight'
+2025-10-14 22:44:28,223 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Intouchables'
+2025-10-14 22:44:28,238 - step_01_acquire_tmdb - INFO - Progress: 150/190 titles processed
+2025-10-14 22:44:30,771 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Irishman'
+2025-10-14 22:44:33,266 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Life Aquatic with Steve Zissou'
+2025-10-14 22:44:35,796 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lion King'
+2025-10-14 22:44:38,344 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lord of the Rings: The Fellowship of the Ring'
+2025-10-14 22:44:40,837 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lord of the Rings: The Return of the King'
+2025-10-14 22:44:43,370 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lord of the Rings: The Two Towers'
+2025-10-14 22:44:45,890 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lost World: Jurassic Park'
+2025-10-14 22:44:48,429 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Martian'
+2025-10-14 22:44:50,943 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Matrix'
+2025-10-14 22:44:53,437 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Nightmare Before Christmas'
+2025-10-14 22:44:55,943 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Phantom of the Opera (2004)'
+2025-10-14 22:44:58,456 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Pianist'
+2025-10-14 22:45:00,987 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Prestige'
+2025-10-14 22:45:03,519 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Professional (Léon)'
+2025-10-14 22:45:06,024 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Revenant'
+2025-10-14 22:45:08,546 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Road Warrior'
+2025-10-14 22:45:11,040 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Royal Tenenbaums'
+2025-10-14 22:45:13,556 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Shape of Water'
+2025-10-14 22:45:16,068 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Shawshank Redemption'
+2025-10-14 22:45:18,583 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Social Network'
+2025-10-14 22:45:21,079 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Sound of Music'
+2025-10-14 22:45:23,593 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Thin Red Line'
+2025-10-14 22:45:26,119 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Wolverine'
+2025-10-14 22:45:28,626 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Thor'
+2025-10-14 22:45:31,150 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Thor: Ragnarok'
+2025-10-14 22:45:31,163 - step_01_acquire_tmdb - INFO - Progress: 175/190 titles processed
+2025-10-14 22:45:33,666 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Titanic'
+2025-10-14 22:45:36,194 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Top Gun'
+2025-10-14 22:45:38,687 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Top Gun: Maverick'
+2025-10-14 22:45:41,194 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Tron'
+2025-10-14 22:45:43,735 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Tron: Legacy'
+2025-10-14 22:45:46,258 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Walk the Line'
+2025-10-14 22:45:48,783 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Weathering with You'
+2025-10-14 22:45:51,280 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'West Side Story'
+2025-10-14 22:45:53,788 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Whiplash'
+2025-10-14 22:45:56,309 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Whiplash (redundant intentionally for coverage)'
+2025-10-14 22:45:58,801 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Wonder Woman'
+2025-10-14 22:46:01,310 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'X-Men'
+2025-10-14 22:46:03,807 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'X2: X-Men United'
+2025-10-14 22:46:06,319 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Your Name'
+2025-10-14 22:46:08,817 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Zodiac'
+2025-10-14 22:46:08,831 - step_01_acquire_tmdb - INFO - Progress: 190/190 titles processed
+2025-10-14 22:46:08,832 - step_01_acquire_tmdb - INFO - 📊 Logged metrics for step01_acquire_tmdb_metrics: {'titles_total': 190, 'titles_downloaded': 190, 'duration_sec': 478.94, 'success_rate': 100.0, 'step_name': 'step01_acquire_tmdb_metrics', 'timestamp': '2025-10-14T22:46:08'}
+2025-10-14 22:46:08,832 - step_01_acquire_tmdb - INFO - ✅ Completed Step 01 | 100.0% success
+2025-10-14 22:46:08,832 - Pipeline - INFO - ✅ Completed Step01AcquireTMDB in 478.94s
+2025-10-14 22:46:08,833 - Pipeline - INFO - 🚩 Running Step02QueryDiscogs
+2025-10-14 22:46:10,595 - step_02_query_discogs - INFO - 📄 Loaded 191 TMDB titles for Discogs
+2025-10-14 22:46:10,596 - step_02_query_discogs - INFO - 🎧 Processing 191 / 191 titles
+2025-10-14 22:46:13,835 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for '12 Years a Slave' (3 filtered hits)
+2025-10-14 22:46:16,427 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for '1917' (5 filtered hits)
+2025-10-14 22:46:19,084 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'A Star Is Born' (5 filtered hits)
+2025-10-14 22:46:21,696 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ad Astra' (5 filtered hits)
+2025-10-14 22:46:24,300 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Akira' (5 filtered hits)
+2025-10-14 22:46:26,906 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Alien' (5 filtered hits)
+2025-10-14 22:46:29,539 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Aliens' (5 filtered hits)
+2025-10-14 22:46:32,166 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Amélie' (2 filtered hits)
+2025-10-14 22:46:34,797 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Apocalypse Now' (5 filtered hits)
+2025-10-14 22:46:37,408 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Aquaman' (5 filtered hits)
+2025-10-14 22:46:37,419 - step_02_query_discogs - INFO - Progress: 10/191
+2025-10-14 22:46:40,018 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Arrival' (5 filtered hits)
+2025-10-14 22:46:42,655 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avatar' (5 filtered hits)
+2025-10-14 22:46:45,261 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avengers: Age of Ultron' (5 filtered hits)
+2025-10-14 22:46:47,892 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avengers: Endgame' (5 filtered hits)
+2025-10-14 22:46:50,542 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avengers: Infinity War' (5 filtered hits)
+2025-10-14 22:46:53,160 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Baby Driver' (5 filtered hits)
+2025-10-14 22:46:55,779 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Back to the Future' (5 filtered hits)
+2025-10-14 22:46:58,377 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Back to the Future Part II' (5 filtered hits)
+2025-10-14 22:47:01,150 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Batman Begins' (5 filtered hits)
+2025-10-14 22:47:03,751 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Batman Returns' (5 filtered hits)
+2025-10-14 22:47:03,763 - step_02_query_discogs - INFO - Progress: 20/191
+2025-10-14 22:47:06,494 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Batman_(1989)' (5 filtered hits)
+2025-10-14 22:47:09,136 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Beetlejuice' (5 filtered hits)
+2025-10-14 22:47:11,965 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Birdman' (5 filtered hits)
+2025-10-14 22:47:14,566 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Black Hawk Down' (5 filtered hits)
+2025-10-14 22:47:17,174 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Black Panther' (5 filtered hits)
+2025-10-14 22:47:19,834 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Blade Runner' (5 filtered hits)
+2025-10-14 22:47:22,450 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Blade Runner 2049' (5 filtered hits)
+2025-10-14 22:47:25,049 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Bohemian Rhapsody' (5 filtered hits)
+2025-10-14 22:47:27,701 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Captain America: The First Avenger' (1 filtered hits)
+2025-10-14 22:47:30,306 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Captain America: The Winter Soldier' (5 filtered hits)
+2025-10-14 22:47:30,322 - step_02_query_discogs - INFO - Progress: 30/191
+2025-10-14 22:47:33,004 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Casino' (5 filtered hits)
+2025-10-14 22:47:35,616 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Chicago' (5 filtered hits)
+2025-10-14 22:47:38,225 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Cinema Paradiso' (5 filtered hits)
+2025-10-14 22:47:40,896 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Close Encounters of the Third Kind' (5 filtered hits)
+2025-10-14 22:47:43,562 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Coco' (5 filtered hits)
+2025-10-14 22:47:46,164 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Corpse Bride' (5 filtered hits)
+2025-10-14 22:47:48,746 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Cowboy Bebop: The Movie' (1 filtered hits)
+2025-10-14 22:47:51,432 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Crimson Peak' (5 filtered hits)
+2025-10-14 22:47:54,056 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Deadpool' (5 filtered hits)
+2025-10-14 22:47:56,837 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Django Unchained' (5 filtered hits)
+2025-10-14 22:47:56,850 - step_02_query_discogs - INFO - Progress: 40/191
+2025-10-14 22:47:59,460 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Doctor Strange' (5 filtered hits)
+2025-10-14 22:48:02,104 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Drive' (5 filtered hits)
+2025-10-14 22:48:04,719 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Dune' (5 filtered hits)
+2025-10-14 22:48:07,368 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Dunkirk' (5 filtered hits)
+2025-10-14 22:48:10,004 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'E.T. the Extra-Terrestrial' (5 filtered hits)
+2025-10-14 22:48:12,615 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Edward Scissorhands' (5 filtered hits)
+2025-10-14 22:48:15,236 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Encanto' (5 filtered hits)
+2025-10-14 22:48:17,878 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ex Machina' (5 filtered hits)
+2025-10-14 22:48:20,535 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Fantastic Mr. Fox' (4 filtered hits)
+2025-10-14 22:48:23,152 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Fight Club' (5 filtered hits)
+2025-10-14 22:48:23,168 - step_02_query_discogs - INFO - Progress: 50/191
+2025-10-14 22:48:25,808 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Forrest Gump' (5 filtered hits)
+2025-10-14 22:48:28,428 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Frozen' (5 filtered hits)
+2025-10-14 22:48:31,074 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Full Metal Jacket' (5 filtered hits)
+2025-10-14 22:48:33,706 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ghost in the Shell' (5 filtered hits)
+2025-10-14 22:48:36,367 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Gladiator' (5 filtered hits)
+2025-10-14 22:48:39,216 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Gone Girl' (5 filtered hits)
+2025-10-14 22:48:41,883 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'GoodFellas' (5 filtered hits)
+2025-10-14 22:48:44,471 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Gravity' (5 filtered hits)
+2025-10-14 22:48:47,167 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Grease' (5 filtered hits)
+2025-10-14 22:48:49,791 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Guardians of the Galaxy' (5 filtered hits)
+2025-10-14 22:48:49,804 - step_02_query_discogs - INFO - Progress: 60/191
+2025-10-14 22:48:52,432 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Guardians of the Galaxy Vol. 2' (4 filtered hits)
+2025-10-14 22:48:55,241 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Guardians_of_the_Galaxy_Awesome_Mix_(for_test)' (5 filtered hits)
+2025-10-14 22:48:57,910 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Chamber of Secrets' (5 filtered hits)
+2025-10-14 22:49:00,596 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Goblet of Fire' (5 filtered hits)
+2025-10-14 22:49:03,243 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Philosopher's Stone' (5 filtered hits)
+2025-10-14 22:49:05,882 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Prisoner of Azkaban' (5 filtered hits)
+2025-10-14 22:49:08,519 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Heat' (5 filtered hits)
+2025-10-14 22:49:11,163 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Her' (5 filtered hits)
+2025-10-14 22:49:13,792 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Howl's Moving Castle' (5 filtered hits)
+2025-10-14 22:49:16,420 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Inception' (5 filtered hits)
+2025-10-14 22:49:16,434 - step_02_query_discogs - INFO - Progress: 70/191
+2025-10-14 22:49:19,036 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Indiana Jones and the Last Crusade' (5 filtered hits)
+2025-10-14 22:49:21,687 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Indiana Jones and the Temple of Doom' (5 filtered hits)
+2025-10-14 22:49:24,303 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Inside Llewyn Davis' (5 filtered hits)
+2025-10-14 22:49:26,910 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Insomnia' (5 filtered hits)
+2025-10-14 22:49:29,552 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Interstellar' (5 filtered hits)
+2025-10-14 22:49:32,252 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Interstellar_(yesredundant_for_consistency)' (5 filtered hits)
+2025-10-14 22:49:34,898 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Iron Man' (5 filtered hits)
+2025-10-14 22:49:37,525 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Isle of Dogs' (5 filtered hits)
+2025-10-14 22:49:40,135 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Jaws' (5 filtered hits)
+2025-10-14 22:49:42,757 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Jurassic Park' (5 filtered hits)
+2025-10-14 22:49:42,784 - step_02_query_discogs - INFO - Progress: 80/191
+2025-10-14 22:49:45,403 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Justice League' (5 filtered hits)
+2025-10-14 22:49:48,022 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Kiki's Delivery Service' (5 filtered hits)
+2025-10-14 22:49:50,638 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Kill Bill: Vol. 1' (5 filtered hits)
+2025-10-14 22:49:53,259 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Kill Bill: Vol. 2' (5 filtered hits)
+2025-10-14 22:49:55,843 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'La La Land' (5 filtered hits)
+2025-10-14 22:49:58,513 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Les_Miserables_(2012)' (5 filtered hits)
+2025-10-14 22:50:01,148 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Life Is Beautiful' (4 filtered hits)
+2025-10-14 22:50:03,745 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Logan' (5 filtered hits)
+2025-10-14 22:50:06,354 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Léon: The Professional' (5 filtered hits)
+2025-10-14 22:50:08,983 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Mad Max: Fury Road' (4 filtered hits)
+2025-10-14 22:50:08,996 - step_02_query_discogs - INFO - Progress: 90/191
+2025-10-14 22:50:11,577 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Man of Steel' (5 filtered hits)
+2025-10-14 22:50:14,161 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Memento' (5 filtered hits)
+2025-10-14 22:50:16,804 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Mission: Impossible - Fallout' (4 filtered hits)
+2025-10-14 22:50:19,417 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Mission: Impossible - The Final Reckoning' (4 filtered hits)
+2025-10-14 22:50:22,020 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Moana' (5 filtered hits)
+2025-10-14 22:50:24,612 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Moonrise Kingdom' (4 filtered hits)
+2025-10-14 22:50:27,214 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Moulin Rouge!' (4 filtered hits)
+2025-10-14 22:50:29,860 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'My Neighbor Totoro' (4 filtered hits)
+2025-10-14 22:50:32,456 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Neon Genesis Evangelion: The End of Evangelion' (1 filtered hits)
+2025-10-14 22:50:35,046 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Once' (5 filtered hits)
+2025-10-14 22:50:35,060 - step_02_query_discogs - INFO - Progress: 100/191
+2025-10-14 22:50:37,685 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Once Upon a Time... in Hollywood' (5 filtered hits)
+2025-10-14 22:50:40,325 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Oppenheimer' (5 filtered hits)
+2025-10-14 22:50:42,924 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pan's Labyrinth' (5 filtered hits)
+2025-10-14 22:50:45,546 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: At World's End' (5 filtered hits)
+2025-10-14 22:50:48,157 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: Dead Man's Chest' (3 filtered hits)
+2025-10-14 22:50:50,903 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: On Stranger Tides' (1 filtered hits)
+2025-10-14 22:50:53,530 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: The Curse of the Black Pearl' (4 filtered hits)
+2025-10-14 22:50:56,346 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Platoon' (5 filtered hits)
+2025-10-14 22:50:58,967 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Princess Mononoke' (5 filtered hits)
+2025-10-14 22:51:01,557 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Prometheus' (5 filtered hits)
+2025-10-14 22:51:01,570 - step_02_query_discogs - INFO - Progress: 110/191
+2025-10-14 22:51:04,192 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pulp Fiction' (5 filtered hits)
+2025-10-14 22:51:06,878 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Purple Rain' (5 filtered hits)
+2025-10-14 22:51:09,495 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Raiders of the Lost Ark' (5 filtered hits)
+2025-10-14 22:51:12,146 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ray' (5 filtered hits)
+2025-10-14 22:51:14,778 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Reservoir Dogs' (5 filtered hits)
+2025-10-14 22:51:17,375 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Return of the Jedi' (5 filtered hits)
+2025-10-14 22:51:19,985 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Rocketman' (5 filtered hits)
+2025-10-14 22:51:22,603 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Rogue One: A Star Wars Story' (2 filtered hits)
+2025-10-14 22:51:25,243 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Run Lola Run' (5 filtered hits)
+2025-10-14 22:51:27,910 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Saturday Night Fever' (4 filtered hits)
+2025-10-14 22:51:27,925 - step_02_query_discogs - INFO - Progress: 120/191
+2025-10-14 22:51:30,530 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Saving Private Ryan' (5 filtered hits)
+2025-10-14 22:51:33,150 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Scarface' (5 filtered hits)
+2025-10-14 22:51:35,745 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Schindler's List' (5 filtered hits)
+2025-10-14 22:51:38,336 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'School of Rock' (4 filtered hits)
+2025-10-14 22:51:40,997 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Se7en' (5 filtered hits)
+2025-10-14 22:51:43,709 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Sing Street' (5 filtered hits)
+2025-10-14 22:51:46,338 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spider-Man: Homecoming' (5 filtered hits)
+2025-10-14 22:51:48,949 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spider-Man: No Way Home' (5 filtered hits)
+2025-10-14 22:51:51,557 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spirited Away' (5 filtered hits)
+2025-10-14 22:51:54,180 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars' (5 filtered hits)
+2025-10-14 22:51:54,193 - step_02_query_discogs - INFO - Progress: 130/191
+2025-10-14 22:51:56,845 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: Episode I - The Phantom Menace' (5 filtered hits)
+2025-10-14 22:51:59,456 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: The Force Awakens' (5 filtered hits)
+2025-10-14 22:52:02,089 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Suicide Squad' (5 filtered hits)
+2025-10-14 22:52:04,710 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'TRON: Legacy' (5 filtered hits)
+2025-10-14 22:52:07,311 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Tenet' (5 filtered hits)
+2025-10-14 22:52:09,944 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Amazing Spider-Man' (5 filtered hits)
+2025-10-14 22:52:12,557 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Avengers' (5 filtered hits)
+2025-10-14 22:52:15,174 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Batman' (5 filtered hits)
+2025-10-14 22:52:18,000 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Curious Case of Benjamin Button' (5 filtered hits)
+2025-10-14 22:52:20,642 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight' (5 filtered hits)
+2025-10-14 22:52:20,656 - step_02_query_discogs - INFO - Progress: 140/191
+2025-10-14 22:52:23,242 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight Rises' (5 filtered hits)
+2025-10-14 22:52:25,853 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Departed' (5 filtered hits)
+2025-10-14 22:52:28,466 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Empire Strikes Back' (5 filtered hits)
+2025-10-14 22:52:31,070 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Fifth Element' (5 filtered hits)
+2025-10-14 22:52:33,701 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The French Dispatch' (5 filtered hits)
+2025-10-14 22:52:36,335 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Girl with the Dragon Tattoo' (5 filtered hits)
+2025-10-14 22:52:38,972 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Godfather' (5 filtered hits)
+2025-10-14 22:52:41,555 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Godfather Part II' (5 filtered hits)
+2025-10-14 22:52:44,143 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Grand Budapest Hotel' (5 filtered hits)
+2025-10-14 22:52:46,771 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Great Gatsby' (5 filtered hits)
+2025-10-14 22:52:46,785 - step_02_query_discogs - INFO - Progress: 150/191
+2025-10-14 22:52:49,371 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Hateful Eight' (3 filtered hits)
+2025-10-14 22:52:51,964 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Intouchables' (2 filtered hits)
+2025-10-14 22:52:54,555 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Irishman' (5 filtered hits)
+2025-10-14 22:52:57,190 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Life Aquatic with Steve Zissou' (5 filtered hits)
+2025-10-14 22:52:59,801 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lion King' (5 filtered hits)
+2025-10-14 22:53:02,407 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Fellowship of the Ring' (5 filtered hits)
+2025-10-14 22:53:05,052 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Return of the King' (5 filtered hits)
+2025-10-14 22:53:07,666 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Two Towers' (5 filtered hits)
+2025-10-14 22:53:10,286 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lost World: Jurassic Park' (5 filtered hits)
+2025-10-14 22:53:12,887 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Martian' (3 filtered hits)
+2025-10-14 22:53:12,901 - step_02_query_discogs - INFO - Progress: 160/191
+2025-10-14 22:53:15,511 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Matrix' (5 filtered hits)
+2025-10-14 22:53:18,123 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Nightmare Before Christmas' (5 filtered hits)
+2025-10-14 22:53:20,748 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Phantom of the Opera' (5 filtered hits)
+2025-10-14 22:53:23,538 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Pianist' (5 filtered hits)
+2025-10-14 22:53:26,156 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Prestige' (4 filtered hits)
+2025-10-14 22:53:28,743 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Revenant' (5 filtered hits)
+2025-10-14 22:53:31,374 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Road Warrior' (5 filtered hits)
+2025-10-14 22:53:34,034 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Royal Tenenbaums' (5 filtered hits)
+2025-10-14 22:53:36,674 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Shape of Water' (5 filtered hits)
+2025-10-14 22:53:39,306 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Shawshank Redemption' (5 filtered hits)
+2025-10-14 22:53:39,320 - step_02_query_discogs - INFO - Progress: 170/191
+2025-10-14 22:53:41,919 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Social Network' (5 filtered hits)
+2025-10-14 22:53:44,524 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Sound of Music' (5 filtered hits)
+2025-10-14 22:53:47,163 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Thin Red Line' (5 filtered hits)
+2025-10-14 22:53:49,788 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Wolverine' (5 filtered hits)
+2025-10-14 23:31:27,036 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-14 23:31:27,121 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step6-dev, commit=07c402c]
+2025-10-14 23:31:27,122 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 (TMDB→Discogs) [branch=step6-dev]
+2025-10-14 23:31:27,122 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 (TMDB→Discogs Harmonization)
+2025-10-14 23:31:27,124 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (191 titles) | Titles to process=191
+2025-10-14 23:31:27,653 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 7387 rows
+2025-10-14 23:50:52,213 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-14 23:50:52,297 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step6-dev, commit=07c402c]
+2025-10-14 23:50:52,297 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 (TMDB→Discogs) [branch=step6-dev]
+2025-10-14 23:50:52,297 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 (TMDB→Discogs Harmonization)
+2025-10-14 23:50:52,299 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (191 titles) | Titles to process=191
+2025-10-14 23:50:52,547 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 7387 rows
+2025-10-14 23:50:55,787 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\tmdb_discogs_candidates_extended.csv
+2025-10-14 23:50:55,787 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'tmdb_title_norm', 'discogs_title_norm', 'tmdb_year', 'discogs_year', 'tmdb_genre', 'discogs_genre', 'discogs_style']
+2025-10-14 23:50:55,788 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step03_tmdb_discogs_metrics: {'mode': 'AUTO (191 titles)', 'titles_total': 191, 'pairs_total': 7387, 'avg_pairs_per_title': 38.675392670157066, 'duration_sec': 3.49, 'max_workers': 8, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step03_tmdb_discogs_metrics', 'timestamp': '2025-10-14T23:50:55'}
+2025-10-14 23:50:55,788 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 3.49s | Mode=AUTO (191 titles)
+2025-10-15 00:08:12,924 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-15 00:08:13,006 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step6-dev, commit=07c402c]
+2025-10-15 00:08:13,006 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 (TMDB→Discogs) [branch=step6-dev]
+2025-10-15 00:08:13,006 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 (TMDB→Discogs Harmonization)
+2025-10-15 00:08:13,008 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=AUTO (191 titles) | Titles to process=191
+2025-10-15 00:08:13,243 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 7387 rows
+2025-10-15 00:08:13,376 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\tmdb_discogs_candidates_extended.csv
+2025-10-15 00:08:13,376 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'tmdb_title_norm', 'discogs_title_norm', 'tmdb_year', 'discogs_year', 'tmdb_genre', 'discogs_genre', 'discogs_style']
+2025-10-15 00:08:13,378 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step03_tmdb_discogs_metrics: {'mode': 'AUTO (191 titles)', 'titles_total': 191, 'pairs_total': 7387, 'avg_pairs_per_title': 38.675392670157066, 'duration_sec': 0.37, 'max_workers': 8, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step03_tmdb_discogs_metrics', 'timestamp': '2025-10-15T00:08:13', 'step_runtime_sec': 0.37, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:08:13,378 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 0.37s | Mode=AUTO (191 titles)
+2025-10-15 00:20:04,375 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-15 00:20:04,456 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-15 00:20:04,458 - step_01_acquire_tmdb - INFO - 💾 Saved 5 titles → titles_to_process.json for downstream use
+2025-10-15 00:20:04,458 - step_01_acquire_tmdb - INFO - 🎬 Starting Step 01 (GOLDEN) | 5 remaining / 5 total
+2025-10-15 00:20:06,938 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Inception'
+2025-10-15 00:20:09,427 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Interstellar'
+2025-10-15 00:20:11,923 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Dark Knight'
+2025-10-15 00:20:14,409 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Blade Runner'
+2025-10-15 00:20:16,892 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Matrix'
+2025-10-15 00:20:16,977 - step_01_acquire_tmdb - INFO - Progress: 5/5 titles processed
+2025-10-15 00:20:16,979 - step_01_acquire_tmdb - INFO - 📊 Logged metrics for step01_acquire_tmdb_metrics: {'mode': 'GOLDEN', 'titles_total': 5, 'titles_downloaded': 5, 'success_rate': 100.0, 'duration_sec': 12.52, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step01_acquire_tmdb_metrics', 'timestamp': '2025-10-15T00:20:16', 'step_runtime_sec': 12.52, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:20:16,979 - step_01_acquire_tmdb - INFO - ✅ Completed Step 01 (GOLDEN) | 100.0% success in 12.52s
+2025-10-15 00:24:25,219 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:24:25,303 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:30:53,266 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:30:53,350 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:30:53,361 - step_02_query_discogs - INFO - 📄 Loaded 5 titles from titles_to_process.json
+2025-10-15 00:30:53,361 - step_02_query_discogs - INFO - 🎧 Starting Step 02 (SHARED (5 titles)) | 5 remaining / 5 total
+2025-10-15 00:34:03,564 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:34:03,647 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:34:03,648 - step_02_query_discogs - INFO - 📄 Loaded 5 titles from titles_to_process.json
+2025-10-15 00:34:03,649 - step_02_query_discogs - INFO - 🎧 Starting Step 02 (SHARED (5 titles)) | 5 remaining / 5 total
+2025-10-15 00:34:06,376 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Inception' (5 filtered hits)
+2025-10-15 00:34:09,014 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Interstellar' (5 filtered hits)
+2025-10-15 00:34:11,697 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight' (5 filtered hits)
+2025-10-15 00:34:14,363 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Blade Runner' (5 filtered hits)
+2025-10-15 00:34:17,047 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Matrix' (5 filtered hits)
+2025-10-15 00:34:17,051 - step_02_query_discogs - INFO - Progress: 5/5 titles processed
+2025-10-15 00:34:17,054 - step_02_query_discogs - INFO - 📊 Logged metrics for step02_query_discogs_metrics: {'mode': 'SHARED (5 titles)', 'titles_total': 5, 'titles_queried': 5, 'success_rate': 100.0, 'duration_sec': 13.4, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step02_query_discogs_metrics', 'timestamp': '2025-10-15T00:34:17', 'step_runtime_sec': 13.4, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:34:17,055 - step_02_query_discogs - INFO - ✅ Completed Step 02 (SHARED (5 titles)) | 100.0% success in 13.40s
+2025-10-15 00:38:01,613 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-15 00:38:01,613 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-15 00:38:01,613 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-15 00:38:01,613 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-15 00:38:01,634 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-15 00:38:01,719 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-15 00:38:01,726 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:38:01,807 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:38:01,808 - Pipeline - INFO - 🚩 Running Step01AcquireTMDB
+2025-10-15 00:38:01,810 - step_01_acquire_tmdb - INFO - 💾 Saved 5 titles → titles_to_process.json for downstream use
+2025-10-15 00:38:01,810 - step_01_acquire_tmdb - INFO - 🎬 Starting Step 01 (GOLDEN) | 5 remaining / 5 total
+2025-10-15 00:38:04,293 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Inception'
+2025-10-15 00:38:06,808 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Interstellar'
+2025-10-15 00:38:09,304 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Dark Knight'
+2025-10-15 00:38:11,787 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Blade Runner'
+2025-10-15 00:38:14,272 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Matrix'
+2025-10-15 00:38:14,276 - step_01_acquire_tmdb - INFO - Progress: 5/5 titles processed
+2025-10-15 00:38:14,278 - step_01_acquire_tmdb - INFO - 📊 Logged metrics for step01_acquire_tmdb_metrics: {'mode': 'GOLDEN', 'titles_total': 5, 'titles_downloaded': 5, 'success_rate': 100.0, 'duration_sec': 12.47, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step01_acquire_tmdb_metrics', 'timestamp': '2025-10-15T00:38:14', 'step_runtime_sec': 12.47, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:38:14,279 - step_01_acquire_tmdb - INFO - ✅ Completed Step 01 (GOLDEN) | 100.0% success in 12.47s
+2025-10-15 00:38:14,279 - Pipeline - INFO - ✅ Completed Step01AcquireTMDB in 12.47s
+2025-10-15 00:38:14,280 - Pipeline - INFO - 🚩 Running Step02QueryDiscogs
+2025-10-15 00:38:14,282 - step_02_query_discogs - INFO - 📄 Loaded 5 titles from titles_to_process.json
+2025-10-15 00:38:14,282 - step_02_query_discogs - INFO - 🎧 Starting Step 02 (SHARED (5 titles)) | 5 remaining / 5 total
+2025-10-15 00:38:16,878 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Inception' (5 filtered hits)
+2025-10-15 00:38:19,480 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Interstellar' (5 filtered hits)
+2025-10-15 00:38:22,217 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight' (5 filtered hits)
+2025-10-15 00:38:24,835 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Blade Runner' (5 filtered hits)
+2025-10-15 00:38:27,581 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Matrix' (5 filtered hits)
+2025-10-15 00:38:27,585 - step_02_query_discogs - INFO - Progress: 5/5 titles processed
+2025-10-15 00:38:27,588 - step_02_query_discogs - INFO - 📊 Logged metrics for step02_query_discogs_metrics: {'mode': 'SHARED (5 titles)', 'titles_total': 5, 'titles_queried': 5, 'success_rate': 100.0, 'duration_sec': 13.31, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step02_query_discogs_metrics', 'timestamp': '2025-10-15T00:38:27', 'step_runtime_sec': 13.31, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:38:27,588 - step_02_query_discogs - INFO - ✅ Completed Step 02 (SHARED (5 titles)) | 100.0% success in 13.31s
+2025-10-15 00:38:27,588 - Pipeline - INFO - ✅ Completed Step02QueryDiscogs in 13.31s
+2025-10-15 00:38:27,589 - Pipeline - INFO - 🧾 Pipeline Summary:
+2025-10-15 00:38:27,589 - Pipeline - INFO -    ⏱ Step01AcquireTMDB                    12.47s
+2025-10-15 00:38:27,590 - Pipeline - INFO -    ⏱ Step02QueryDiscogs                   13.31s
+2025-10-15 00:38:27,590 - Pipeline - INFO - 🏁 Total Runtime: 25.98s
+2025-10-15 00:47:34,551 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-15 00:47:34,551 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-15 00:47:34,551 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-15 00:47:34,552 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-15 00:47:34,573 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-15 00:47:34,658 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-15 00:47:34,660 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:47:34,741 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:47:34,742 - Pipeline - INFO - 🚩 Running Step01AcquireTMDB
+2025-10-15 00:47:34,752 - step_01_acquire_tmdb - INFO - ⏩ Resuming from checkpoint (5 done)
+2025-10-15 00:47:34,753 - step_01_acquire_tmdb - INFO - 💾 Saved 5 titles → titles_to_process.json for downstream use
+2025-10-15 00:47:34,753 - step_01_acquire_tmdb - INFO - 🎬 Starting Step 01 (GOLDEN) | 0 remaining / 5 total
+2025-10-15 00:47:34,755 - step_01_acquire_tmdb - INFO - 📊 Logged metrics for step01_acquire_tmdb_metrics: {'mode': 'GOLDEN', 'titles_total': 5, 'titles_downloaded': 5, 'success_rate': 100.0, 'duration_sec': 0.01, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step01_acquire_tmdb_metrics', 'timestamp': '2025-10-15T00:47:34', 'step_runtime_sec': 0.01, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:47:34,755 - step_01_acquire_tmdb - INFO - ✅ Completed Step 01 (GOLDEN) | 100.0% success in 0.01s
+2025-10-15 00:47:34,755 - Pipeline - INFO - ✅ Completed Step01AcquireTMDB in 0.01s
+2025-10-15 00:47:34,756 - Pipeline - INFO - 🚩 Running Step02QueryDiscogs
+2025-10-15 00:47:34,758 - step_02_query_discogs - INFO - ⏩ Resuming from checkpoint (5 done)
+2025-10-15 00:47:34,760 - step_02_query_discogs - INFO - 📄 Loaded 5 titles from titles_to_process.json
+2025-10-15 00:47:34,760 - step_02_query_discogs - INFO - 🎧 Starting Step 02 (SHARED (5 titles)) | 0 remaining / 5 total
+2025-10-15 00:47:34,761 - step_02_query_discogs - INFO - 📊 Logged metrics for step02_query_discogs_metrics: {'mode': 'SHARED (5 titles)', 'titles_total': 5, 'titles_queried': 5, 'success_rate': 100.0, 'duration_sec': 0.0, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step02_query_discogs_metrics', 'timestamp': '2025-10-15T00:47:34', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:47:34,762 - step_02_query_discogs - INFO - ✅ Completed Step 02 (SHARED (5 titles)) | 100.0% success in 0.00s
+2025-10-15 00:47:34,762 - Pipeline - INFO - ✅ Completed Step02QueryDiscogs in 0.00s
+2025-10-15 00:47:34,763 - Pipeline - INFO - 🧾 Pipeline Summary:
+2025-10-15 00:47:34,763 - Pipeline - INFO -    ⏱ Step01AcquireTMDB                     0.01s
+2025-10-15 00:47:34,763 - Pipeline - INFO -    ⏱ Step02QueryDiscogs                    0.00s
+2025-10-15 00:47:34,764 - Pipeline - INFO - 🏁 Total Runtime: 0.21s
+2025-10-15 00:47:34,894 - Pipeline - INFO - 📊 Consolidated 2 step metrics → pipeline_metrics.csv
+2025-10-15 00:47:34,895 - Pipeline - INFO - 🧾 Metrics Summary:
+2025-10-15 00:47:34,896 - Pipeline - INFO -    ⏱ step01_acquire_tmdb_metrics      0.01s  (Pipeline:   0.01s)
+2025-10-15 00:47:34,896 - Pipeline - INFO -    ⏱ step02_query_discogs_metrics     0.00s  (Pipeline:   0.01s)
+2025-10-15 00:47:34,896 - Pipeline - INFO - 🏁 Total Pipeline Runtime: 0.01s
+2025-10-15 00:47:34,897 - Pipeline - INFO - ✅ Pipeline execution completed
+2025-10-15 00:47:34,897 - Pipeline - INFO - ------------------------------------------------------------
+2025-10-15 00:47:34,910 - Pipeline - INFO - 
+📋 Final Metrics Summary Table:
+2025-10-15 00:47:34,951 - Pipeline - INFO -              mode  titles_total  titles_downloaded  success_rate  duration_sec    direction    branch                    step_name           timestamp  step_runtime_sec  pipeline_runtime_sec  titles_queried
+           GOLDEN             5                5.0         100.0          0.01 TMDB→Discogs step6-dev  step01_acquire_tmdb_metrics 2025-10-15 00:47:34              0.01                  0.01             NaN
+SHARED (5 titles)             5                NaN         100.0          0.00 TMDB→Discogs step6-dev step02_query_discogs_metrics 2025-10-15 00:47:34              0.00                  0.01             5.0
+2025-10-15 00:54:20,404 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-15 00:54:20,405 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-15 00:54:20,405 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-15 00:54:20,405 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-15 00:54:20,424 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-15 00:54:20,509 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-15 00:54:20,511 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:54:20,593 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:54:20,613 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-15 00:54:20,694 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step6-dev, commit=07c402c]
+2025-10-15 00:54:20,695 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 (TMDB→Discogs) [branch=step6-dev]
+2025-10-15 00:54:20,695 - Pipeline - INFO - 🚩 Running Step01AcquireTMDB
+2025-10-15 00:54:20,696 - step_01_acquire_tmdb - INFO - 💾 Saved 5 titles → titles_to_process.json for downstream use
+2025-10-15 00:54:20,696 - step_01_acquire_tmdb - INFO - 🎬 Starting Step 01 (GOLDEN) | 5 remaining / 5 total
+2025-10-15 00:54:23,313 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Inception'
+2025-10-15 00:54:25,834 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Interstellar'
+2025-10-15 00:54:28,351 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Dark Knight'
+2025-10-15 00:54:30,863 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Blade Runner'
+2025-10-15 00:54:33,364 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Matrix'
+2025-10-15 00:54:33,369 - step_01_acquire_tmdb - INFO - Progress: 5/5 titles processed
+2025-10-15 00:54:33,371 - step_01_acquire_tmdb - INFO - 📊 Logged metrics for step01_acquire_tmdb_metrics: {'mode': 'GOLDEN', 'titles_total': 5, 'titles_downloaded': 5, 'success_rate': 100.0, 'duration_sec': 12.67, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step01_acquire_tmdb_metrics', 'timestamp': '2025-10-15T00:54:33', 'step_runtime_sec': 12.67, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:54:33,371 - step_01_acquire_tmdb - INFO - ✅ Completed Step 01 (GOLDEN) | 100.0% success in 12.67s
+2025-10-15 00:54:33,372 - Pipeline - INFO - ✅ Completed Step01AcquireTMDB in 12.68s
+2025-10-15 00:54:33,372 - Pipeline - INFO - 🚩 Running Step02QueryDiscogs
+2025-10-15 00:54:33,374 - step_02_query_discogs - INFO - 📄 Loaded 5 titles from titles_to_process.json
+2025-10-15 00:54:33,375 - step_02_query_discogs - INFO - 🎧 Starting Step 02 (SHARED (5 titles)) | 5 remaining / 5 total
+2025-10-15 00:54:35,997 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Inception' (5 filtered hits)
+2025-10-15 00:54:38,689 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Interstellar' (5 filtered hits)
+2025-10-15 00:54:41,305 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight' (5 filtered hits)
+2025-10-15 00:54:44,021 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Blade Runner' (5 filtered hits)
+2025-10-15 00:54:46,644 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Matrix' (5 filtered hits)
+2025-10-15 00:54:46,648 - step_02_query_discogs - INFO - Progress: 5/5 titles processed
+2025-10-15 00:54:46,650 - step_02_query_discogs - INFO - 📊 Logged metrics for step02_query_discogs_metrics: {'mode': 'SHARED (5 titles)', 'titles_total': 5, 'titles_queried': 5, 'success_rate': 100.0, 'duration_sec': 13.28, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step02_query_discogs_metrics', 'timestamp': '2025-10-15T00:54:46', 'step_runtime_sec': 13.28, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:54:46,650 - step_02_query_discogs - INFO - ✅ Completed Step 02 (SHARED (5 titles)) | 100.0% success in 13.28s
+2025-10-15 00:54:46,651 - Pipeline - INFO - ✅ Completed Step02QueryDiscogs in 13.28s
+2025-10-15 00:54:46,652 - Pipeline - INFO - 🚩 Running Step03PrepareTMDBInput
+2025-10-15 00:54:46,653 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 (TMDB→Discogs Harmonization)
+2025-10-15 00:54:46,653 - step_03_prepare_tmdb_input - INFO - 📄 Loaded 5 titles from titles_to_process.json
+2025-10-15 00:54:46,654 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=SHARED (5 titles) | Titles to process=5
+2025-10-15 00:54:46,698 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 430 rows
+2025-10-15 00:54:46,785 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\tmdb_discogs_candidates_extended.csv
+2025-10-15 00:54:46,786 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'tmdb_title_norm', 'discogs_title_norm', 'tmdb_year', 'discogs_year', 'tmdb_genre', 'discogs_genre', 'discogs_style']
+2025-10-15 00:54:46,788 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step03_tmdb_discogs_metrics: {'mode': 'SHARED (5 titles)', 'titles_total': 5, 'pairs_total': 430, 'avg_pairs_per_title': 86.0, 'duration_sec': 0.13, 'max_workers': 8, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step03_tmdb_discogs_metrics', 'timestamp': '2025-10-15T00:54:46', 'step_runtime_sec': 0.13, 'pipeline_runtime_sec': 0.0}
+2025-10-15 00:54:46,788 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 0.13s | Mode=SHARED (5 titles)
+2025-10-15 00:54:46,789 - Pipeline - INFO - ✅ Completed Step03PrepareTMDBInput in 0.13s
+2025-10-15 00:54:46,789 - Pipeline - INFO - 🧾 Pipeline Summary:
+2025-10-15 00:54:46,790 - Pipeline - INFO -    ⏱ Step01AcquireTMDB                    12.68s
+2025-10-15 00:54:46,790 - Pipeline - INFO -    ⏱ Step02QueryDiscogs                   13.28s
+2025-10-15 00:54:46,790 - Pipeline - INFO -    ⏱ Step03PrepareTMDBInput                0.13s
+2025-10-15 00:54:46,791 - Pipeline - INFO - 🏁 Total Runtime: 26.38s
+2025-10-15 00:54:46,829 - Pipeline - INFO - 📊 Consolidated 3 step metrics → pipeline_metrics.csv
+2025-10-15 00:54:46,829 - Pipeline - INFO - 🧾 Metrics Summary:
+2025-10-15 00:54:46,829 - Pipeline - INFO -    ⏱ step01_acquire_tmdb_metrics     12.67s  (Pipeline:  12.67s)
+2025-10-15 00:54:46,830 - Pipeline - INFO -    ⏱ step02_query_discogs_metrics    13.28s  (Pipeline:  25.95s)
+2025-10-15 00:54:46,830 - Pipeline - INFO -    ⏱ step03_tmdb_discogs_metrics      0.13s  (Pipeline:  26.08s)
+2025-10-15 00:54:46,831 - Pipeline - INFO - 🏁 Total Pipeline Runtime: 26.08s
+2025-10-15 00:54:46,831 - Pipeline - INFO - ✅ Pipeline execution completed
+2025-10-15 00:54:46,831 - Pipeline - INFO - ------------------------------------------------------------
+2025-10-15 00:54:46,845 - Pipeline - INFO - 
+📋 Final Metrics Summary Table:
+2025-10-15 00:54:46,851 - Pipeline - INFO -              mode  titles_total  titles_downloaded  success_rate  duration_sec    direction    branch                    step_name           timestamp  step_runtime_sec  pipeline_runtime_sec  titles_queried  pairs_total  avg_pairs_per_title  max_workers
+           GOLDEN             5                5.0         100.0         12.67 TMDB→Discogs step6-dev  step01_acquire_tmdb_metrics 2025-10-15 00:54:33             12.67                 12.67             NaN          NaN                  NaN          NaN
+SHARED (5 titles)             5                NaN         100.0         13.28 TMDB→Discogs step6-dev step02_query_discogs_metrics 2025-10-15 00:54:46             13.28                 25.95             5.0          NaN                  NaN          NaN
+SHARED (5 titles)             5                NaN           NaN          0.13 TMDB→Discogs step6-dev  step03_tmdb_discogs_metrics 2025-10-15 00:54:46              0.13                 26.08             NaN        430.0                 86.0          8.0
+2025-10-15 00:57:17,456 - Pipeline - INFO - Initialized logger for Pipeline
+2025-10-15 00:57:17,457 - Pipeline - INFO - 🚀 Starting Discogs → TMDB ETL Pipeline
+2025-10-15 00:57:17,457 - Pipeline - INFO - 📂 Data Directory: C:\Projects\unguided-capstone-project\data
+2025-10-15 00:57:17,457 - Pipeline - INFO - 🔧 Log Level: INFO
+2025-10-15 00:57:17,478 - step_01_acquire_tmdb - INFO - Initialized logger for step_01_acquire_tmdb
+2025-10-15 00:57:17,562 - step_01_acquire_tmdb - INFO - Initialized step_01_acquire_tmdb [branch=step6-dev, commit=07c402c]
+2025-10-15 00:57:17,563 - step_02_query_discogs - INFO - Initialized logger for step_02_query_discogs
+2025-10-15 00:57:17,644 - step_02_query_discogs - INFO - Initialized step_02_query_discogs [branch=step6-dev, commit=07c402c]
+2025-10-15 00:57:17,646 - step_03_prepare_tmdb_input - INFO - Initialized logger for step_03_prepare_tmdb_input
+2025-10-15 00:57:17,727 - step_03_prepare_tmdb_input - INFO - Initialized step_03_prepare_tmdb_input [branch=step6-dev, commit=07c402c]
+2025-10-15 00:57:17,728 - step_03_prepare_tmdb_input - INFO - Initialized Step 03 (TMDB→Discogs) [branch=step6-dev]
+2025-10-15 00:57:17,728 - Pipeline - INFO - 🚩 Running Step01AcquireTMDB
+2025-10-15 00:57:17,730 - step_01_acquire_tmdb - INFO - ⏩ Resuming from checkpoint (5 done)
+2025-10-15 00:57:17,730 - step_01_acquire_tmdb - INFO - 📄 Loaded 190 titles from data\movie_titles_200.txt
+2025-10-15 00:57:17,732 - step_01_acquire_tmdb - INFO - 💾 Saved 190 titles → titles_to_process.json for downstream use
+2025-10-15 00:57:17,732 - step_01_acquire_tmdb - INFO - 🎬 Starting Step 01 (AUTO (190 titles)) | 185 remaining / 190 total
+2025-10-15 00:57:20,256 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for '12 Years a Slave'
+2025-10-15 00:57:22,753 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for '1917'
+2025-10-15 00:57:25,261 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'A Star Is Born (2018)'
+2025-10-15 00:57:27,755 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ad Astra'
+2025-10-15 00:57:30,270 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Akira'
+2025-10-15 00:57:32,758 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Alien'
+2025-10-15 00:57:35,261 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Aliens'
+2025-10-15 00:57:37,778 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Amélie'
+2025-10-15 00:57:40,281 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Apocalypse Now'
+2025-10-15 00:57:42,768 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Aquaman'
+2025-10-15 00:57:45,279 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Arrival'
+2025-10-15 00:57:47,758 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avatar'
+2025-10-15 00:57:50,274 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avengers: Age of Ultron'
+2025-10-15 00:57:52,775 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avengers: Endgame'
+2025-10-15 00:57:55,264 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Avengers: Infinity War'
+2025-10-15 00:57:57,806 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Baby Driver'
+2025-10-15 00:58:00,323 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Back to the Future'
+2025-10-15 00:58:02,897 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Back to the Future Part II'
+2025-10-15 00:58:05,510 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Batman (1989)'
+2025-10-15 00:58:08,027 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Batman Begins'
+2025-10-15 00:58:10,526 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Batman Returns'
+2025-10-15 00:58:13,045 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Beetlejuice'
+2025-10-15 00:58:15,563 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Birdman'
+2025-10-15 00:58:18,078 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Black Hawk Down'
+2025-10-15 00:58:20,589 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Black Panther'
+2025-10-15 00:58:20,601 - step_01_acquire_tmdb - INFO - Progress: 25/185 titles processed
+2025-10-15 00:58:23,075 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Blade Runner 2049'
+2025-10-15 00:58:25,597 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Bohemian Rhapsody'
+2025-10-15 00:58:28,169 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Captain America: The First Avenger'
+2025-10-15 00:58:30,697 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Captain America: The Winter Soldier'
+2025-10-15 00:58:33,191 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Casino'
+2025-10-15 00:58:35,705 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Chicago'
+2025-10-15 00:58:38,213 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Cinema Paradiso'
+2025-10-15 00:58:40,731 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Close Encounters of the Third Kind'
+2025-10-15 00:58:43,240 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Coco'
+2025-10-15 00:58:45,737 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Corpse Bride'
+2025-10-15 00:58:48,249 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Cowboy Bebop: The Movie'
+2025-10-15 00:58:50,759 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Crimson Peak'
+2025-10-15 00:58:53,275 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Deadpool'
+2025-10-15 00:58:55,810 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Django Unchained'
+2025-10-15 00:58:58,321 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Doctor Strange'
+2025-10-15 00:59:00,817 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Drive'
+2025-10-15 00:59:03,414 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Dune'
+2025-10-15 00:59:05,915 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Dunkirk'
+2025-10-15 00:59:08,416 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'E.T. the Extra-Terrestrial'
+2025-10-15 00:59:10,923 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Edward Scissorhands'
+2025-10-15 00:59:13,419 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Encanto'
+2025-10-15 00:59:15,933 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ex Machina'
+2025-10-15 00:59:18,423 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Fantastic Mr. Fox'
+2025-10-15 00:59:20,926 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Fight Club'
+2025-10-15 00:59:23,438 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Forrest Gump'
+2025-10-15 00:59:23,452 - step_01_acquire_tmdb - INFO - Progress: 50/185 titles processed
+2025-10-15 00:59:25,951 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Frozen'
+2025-10-15 00:59:28,473 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Full Metal Jacket'
+2025-10-15 00:59:30,991 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ghost in the Shell'
+2025-10-15 00:59:33,496 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Gladiator'
+2025-10-15 00:59:36,010 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Gone Girl'
+2025-10-15 00:59:38,512 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Goodfellas'
+2025-10-15 00:59:41,011 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Gravity'
+2025-10-15 00:59:43,524 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Grease'
+2025-10-15 00:59:46,032 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Guardians of the Galaxy'
+2025-10-15 00:59:48,555 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Guardians of the Galaxy Awesome Mix (for test)'
+2025-10-15 00:59:51,069 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Guardians of the Galaxy Vol. 2'
+2025-10-15 00:59:53,573 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Chamber of Secrets'
+2025-10-15 00:59:56,068 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Goblet of Fire'
+2025-10-15 00:59:58,577 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Prisoner of Azkaban'
+2025-10-15 01:00:01,069 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Harry Potter and the Sorcerer’s Stone'
+2025-10-15 01:00:03,589 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Heat'
+2025-10-15 01:00:06,084 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Her'
+2025-10-15 01:00:08,566 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Howl’s Moving Castle'
+2025-10-15 01:00:11,056 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Indiana Jones and the Last Crusade'
+2025-10-15 01:00:13,549 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Indiana Jones and the Raiders of the Lost Ark'
+2025-10-15 01:00:16,056 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Indiana Jones and the Temple of Doom'
+2025-10-15 01:00:18,554 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Inside Llewyn Davis'
+2025-10-15 01:00:21,072 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Insomnia'
+2025-10-15 01:00:23,577 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Interstellar (yes—redundant for consistency)'
+2025-10-15 01:00:26,089 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Iron Man'
+2025-10-15 01:00:26,102 - step_01_acquire_tmdb - INFO - Progress: 75/185 titles processed
+2025-10-15 01:00:28,656 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Isle of Dogs'
+2025-10-15 01:00:31,212 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Jaws'
+2025-10-15 01:00:33,697 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Jurassic Park'
+2025-10-15 01:00:36,181 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Justice League'
+2025-10-15 01:00:38,682 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Kiki’s Delivery Service'
+2025-10-15 01:00:41,201 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Kill Bill: Vol. 1'
+2025-10-15 01:00:43,708 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Kill Bill: Vol. 2'
+2025-10-15 01:00:46,193 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'La La Land'
+2025-10-15 01:00:48,684 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Les Misérables (2012)'
+2025-10-15 01:00:51,179 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Life Is Beautiful'
+2025-10-15 01:00:53,659 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Logan'
+2025-10-15 01:00:56,163 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Mad Max: Fury Road'
+2025-10-15 01:00:58,652 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Man of Steel'
+2025-10-15 01:01:01,150 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Memento'
+2025-10-15 01:01:03,652 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Mission: Impossible'
+2025-10-15 01:01:06,171 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Mission: Impossible – Fallout'
+2025-10-15 01:01:08,682 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Moana'
+2025-10-15 01:01:11,168 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Moonrise Kingdom'
+2025-10-15 01:01:13,664 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Moulin Rouge!'
+2025-10-15 01:01:16,147 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'My Neighbor Totoro'
+2025-10-15 01:01:18,641 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Neon Genesis Evangelion: The End of Evangelion'
+2025-10-15 01:01:21,144 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Once'
+2025-10-15 01:01:23,651 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Once Upon a Time in Hollywood'
+2025-10-15 01:01:26,164 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Oppenheimer'
+2025-10-15 01:01:28,659 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pan’s Labyrinth'
+2025-10-15 01:01:28,676 - step_01_acquire_tmdb - INFO - Progress: 100/185 titles processed
+2025-10-15 01:01:31,149 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: At World’s End'
+2025-10-15 01:01:33,663 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: Dead Man’s Chest'
+2025-10-15 01:01:36,163 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: On Stranger Tides'
+2025-10-15 01:01:38,695 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pirates of the Caribbean: The Curse of the Black Pearl'
+2025-10-15 01:01:41,197 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Platoon'
+2025-10-15 01:01:43,696 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Princess Mononoke'
+2025-10-15 01:01:46,194 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Prometheus'
+2025-10-15 01:01:48,709 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Pulp Fiction'
+2025-10-15 01:01:51,212 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Purple Rain'
+2025-10-15 01:01:53,739 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Ray'
+2025-10-15 01:01:56,301 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Reservoir Dogs'
+2025-10-15 01:01:58,884 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Rocketman'
+2025-10-15 01:02:01,395 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Rogue One: A Star Wars Story'
+2025-10-15 01:02:03,906 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Run Lola Run'
+2025-10-15 01:02:06,407 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Saturday Night Fever'
+2025-10-15 01:02:09,000 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Saving Private Ryan'
+2025-10-15 01:02:11,540 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Scarface'
+2025-10-15 01:02:14,056 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Schindler’s List'
+2025-10-15 01:02:16,550 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'School of Rock'
+2025-10-15 01:02:19,065 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Se7en'
+2025-10-15 01:02:21,564 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Sing Street'
+2025-10-15 01:02:24,069 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Spider-Man: Homecoming'
+2025-10-15 01:02:26,564 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Spider-Man: No Way Home'
+2025-10-15 01:02:29,056 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Spirited Away'
+2025-10-15 01:02:31,565 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: A New Hope'
+2025-10-15 01:02:31,579 - step_01_acquire_tmdb - INFO - Progress: 125/185 titles processed
+2025-10-15 01:02:34,079 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: Return of the Jedi'
+2025-10-15 01:02:36,644 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: The Empire Strikes Back'
+2025-10-15 01:02:39,138 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: The Force Awakens'
+2025-10-15 01:02:41,638 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Star Wars: The Phantom Menace'
+2025-10-15 01:02:44,182 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Suicide Squad'
+2025-10-15 01:02:46,727 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Tenet'
+2025-10-15 01:02:49,242 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Amazing Spider-Man'
+2025-10-15 01:02:51,733 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Avengers'
+2025-10-15 01:02:54,236 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Batman'
+2025-10-15 01:02:56,810 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Curious Case of Benjamin Button'
+2025-10-15 01:02:59,358 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Dark Knight Rises'
+2025-10-15 01:03:01,885 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Departed'
+2025-10-15 01:03:04,577 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Fifth Element'
+2025-10-15 01:03:07,133 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The French Dispatch'
+2025-10-15 01:03:09,663 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Girl with the Dragon Tattoo'
+2025-10-15 01:03:12,205 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Godfather'
+2025-10-15 01:03:14,725 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Godfather: Part II'
+2025-10-15 01:03:17,259 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Grand Budapest Hotel'
+2025-10-15 01:03:19,783 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Great Gatsby (2013)'
+2025-10-15 01:03:22,345 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Hateful Eight'
+2025-10-15 01:03:24,878 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Intouchables'
+2025-10-15 01:03:27,415 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Irishman'
+2025-10-15 01:03:29,976 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Life Aquatic with Steve Zissou'
+2025-10-15 01:03:32,568 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lion King'
+2025-10-15 01:03:35,107 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lord of the Rings: The Fellowship of the Ring'
+2025-10-15 01:03:35,122 - step_01_acquire_tmdb - INFO - Progress: 150/185 titles processed
+2025-10-15 01:03:37,641 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lord of the Rings: The Return of the King'
+2025-10-15 01:03:40,158 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lord of the Rings: The Two Towers'
+2025-10-15 01:03:42,656 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Lost World: Jurassic Park'
+2025-10-15 01:03:45,171 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Martian'
+2025-10-15 01:03:47,707 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Nightmare Before Christmas'
+2025-10-15 01:03:50,224 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Phantom of the Opera (2004)'
+2025-10-15 01:03:52,757 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Pianist'
+2025-10-15 01:03:55,289 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Prestige'
+2025-10-15 01:03:57,795 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Professional (Léon)'
+2025-10-15 01:04:00,336 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Revenant'
+2025-10-15 01:04:02,855 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Road Warrior'
+2025-10-15 01:04:05,358 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Royal Tenenbaums'
+2025-10-15 01:04:07,884 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Shape of Water'
+2025-10-15 01:04:10,422 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Shawshank Redemption'
+2025-10-15 01:04:12,966 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Social Network'
+2025-10-15 01:04:15,484 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Sound of Music'
+2025-10-15 01:04:17,976 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Thin Red Line'
+2025-10-15 01:04:20,458 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'The Wolverine'
+2025-10-15 01:04:22,961 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Thor'
+2025-10-15 01:04:25,443 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Thor: Ragnarok'
+2025-10-15 01:04:27,963 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Titanic'
+2025-10-15 01:04:30,505 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Top Gun'
+2025-10-15 01:04:33,033 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Top Gun: Maverick'
+2025-10-15 01:04:35,565 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Tron'
+2025-10-15 01:04:38,165 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Tron: Legacy'
+2025-10-15 01:04:38,169 - step_01_acquire_tmdb - INFO - Progress: 175/185 titles processed
+2025-10-15 01:04:40,679 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Walk the Line'
+2025-10-15 01:04:43,212 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Weathering with You'
+2025-10-15 01:04:45,838 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'West Side Story'
+2025-10-15 01:04:48,354 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Whiplash'
+2025-10-15 01:04:50,864 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Whiplash (redundant intentionally for coverage)'
+2025-10-15 01:04:53,402 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Wonder Woman'
+2025-10-15 01:04:55,932 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'X-Men'
+2025-10-15 01:04:58,486 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'X2: X-Men United'
+2025-10-15 01:05:01,031 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Your Name'
+2025-10-15 01:05:03,540 - step_01_acquire_tmdb - INFO - ✅ Saved TMDB JSON for 'Zodiac'
+2025-10-15 01:05:03,553 - step_01_acquire_tmdb - INFO - Progress: 185/185 titles processed
+2025-10-15 01:05:03,556 - step_01_acquire_tmdb - INFO - 📊 Logged metrics for step01_acquire_tmdb_metrics: {'mode': 'AUTO (190 titles)', 'titles_total': 190, 'titles_downloaded': 190, 'success_rate': 100.0, 'duration_sec': 465.83, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step01_acquire_tmdb_metrics', 'timestamp': '2025-10-15T01:05:03', 'step_runtime_sec': 465.83, 'pipeline_runtime_sec': 0.0}
+2025-10-15 01:05:03,556 - step_01_acquire_tmdb - INFO - ✅ Completed Step 01 (AUTO (190 titles)) | 100.0% success in 465.83s
+2025-10-15 01:05:03,556 - Pipeline - INFO - ✅ Completed Step01AcquireTMDB in 465.83s
+2025-10-15 01:05:03,557 - Pipeline - INFO - 🚩 Running Step02QueryDiscogs
+2025-10-15 01:05:03,568 - step_02_query_discogs - INFO - ⏩ Resuming from checkpoint (5 done)
+2025-10-15 01:05:03,579 - step_02_query_discogs - INFO - 📄 Loaded 190 titles from titles_to_process.json
+2025-10-15 01:05:03,579 - step_02_query_discogs - INFO - 🎧 Starting Step 02 (SHARED (190 titles)) | 185 remaining / 190 total
+2025-10-15 01:05:06,501 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for '12 Years a Slave' (3 filtered hits)
+2025-10-15 01:05:09,142 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for '1917' (5 filtered hits)
+2025-10-15 01:05:12,039 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'A Star Is Born (2018)' (5 filtered hits)
+2025-10-15 01:05:14,681 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ad Astra' (5 filtered hits)
+2025-10-15 01:05:17,362 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Akira' (5 filtered hits)
+2025-10-15 01:05:20,040 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Alien' (5 filtered hits)
+2025-10-15 01:05:22,685 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Aliens' (5 filtered hits)
+2025-10-15 01:05:25,335 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Amélie' (2 filtered hits)
+2025-10-15 01:05:28,206 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Apocalypse Now' (5 filtered hits)
+2025-10-15 01:05:30,896 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Aquaman' (5 filtered hits)
+2025-10-15 01:05:33,578 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Arrival' (5 filtered hits)
+2025-10-15 01:05:36,416 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avatar' (5 filtered hits)
+2025-10-15 01:05:39,070 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avengers: Age of Ultron' (5 filtered hits)
+2025-10-15 01:05:41,738 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avengers: Endgame' (5 filtered hits)
+2025-10-15 01:05:44,419 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Avengers: Infinity War' (5 filtered hits)
+2025-10-15 01:05:47,077 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Baby Driver' (5 filtered hits)
+2025-10-15 01:05:49,961 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Back to the Future' (5 filtered hits)
+2025-10-15 01:05:52,642 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Back to the Future Part II' (5 filtered hits)
+2025-10-15 01:05:55,383 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Batman (1989)' (5 filtered hits)
+2025-10-15 01:05:58,021 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Batman Begins' (5 filtered hits)
+2025-10-15 01:06:00,655 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Batman Returns' (5 filtered hits)
+2025-10-15 01:06:03,318 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Beetlejuice' (5 filtered hits)
+2025-10-15 01:06:06,000 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Birdman' (5 filtered hits)
+2025-10-15 01:06:08,661 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Black Hawk Down' (5 filtered hits)
+2025-10-15 01:06:11,303 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Black Panther' (5 filtered hits)
+2025-10-15 01:06:11,307 - step_02_query_discogs - INFO - Progress: 25/185 titles processed
+2025-10-15 01:06:13,955 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Blade Runner 2049' (5 filtered hits)
+2025-10-15 01:06:16,756 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Bohemian Rhapsody' (5 filtered hits)
+2025-10-15 01:06:19,533 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Captain America: The First Avenger' (1 filtered hits)
+2025-10-15 01:06:22,380 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Captain America: The Winter Soldier' (5 filtered hits)
+2025-10-15 01:06:25,045 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Casino' (5 filtered hits)
+2025-10-15 01:06:27,854 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Chicago' (5 filtered hits)
+2025-10-15 01:06:30,679 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Cinema Paradiso' (5 filtered hits)
+2025-10-15 01:06:33,327 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Close Encounters of the Third Kind' (5 filtered hits)
+2025-10-15 01:06:36,122 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Coco' (5 filtered hits)
+2025-10-15 01:06:38,756 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Corpse Bride' (5 filtered hits)
+2025-10-15 01:06:41,388 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Cowboy Bebop: The Movie' (1 filtered hits)
+2025-10-15 01:06:44,046 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Crimson Peak' (5 filtered hits)
+2025-10-15 01:06:46,707 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Deadpool' (5 filtered hits)
+2025-10-15 01:06:49,364 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Django Unchained' (5 filtered hits)
+2025-10-15 01:06:52,193 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Doctor Strange' (5 filtered hits)
+2025-10-15 01:06:54,859 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Drive' (5 filtered hits)
+2025-10-15 01:06:57,507 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Dune' (5 filtered hits)
+2025-10-15 01:07:00,359 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Dunkirk' (5 filtered hits)
+2025-10-15 01:07:03,016 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'E.T. the Extra-Terrestrial' (5 filtered hits)
+2025-10-15 01:07:05,665 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Edward Scissorhands' (5 filtered hits)
+2025-10-15 01:07:08,305 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Encanto' (5 filtered hits)
+2025-10-15 01:07:10,940 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ex Machina' (5 filtered hits)
+2025-10-15 01:07:13,592 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Fantastic Mr. Fox' (4 filtered hits)
+2025-10-15 01:07:16,247 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Fight Club' (5 filtered hits)
+2025-10-15 01:07:18,888 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Forrest Gump' (5 filtered hits)
+2025-10-15 01:07:18,893 - step_02_query_discogs - INFO - Progress: 50/185 titles processed
+2025-10-15 01:07:21,543 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Frozen' (5 filtered hits)
+2025-10-15 01:07:24,199 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Full Metal Jacket' (5 filtered hits)
+2025-10-15 01:07:26,886 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ghost in the Shell' (5 filtered hits)
+2025-10-15 01:07:29,521 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Gladiator' (5 filtered hits)
+2025-10-15 01:07:32,179 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Gone Girl' (5 filtered hits)
+2025-10-15 01:07:34,895 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Goodfellas' (5 filtered hits)
+2025-10-15 01:07:37,545 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Gravity' (5 filtered hits)
+2025-10-15 01:07:40,229 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Grease' (5 filtered hits)
+2025-10-15 01:07:42,898 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Guardians of the Galaxy' (5 filtered hits)
+2025-10-15 01:07:45,717 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Guardians of the Galaxy Awesome Mix (for test)' (5 filtered hits)
+2025-10-15 01:07:48,370 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Guardians of the Galaxy Vol. 2' (4 filtered hits)
+2025-10-15 01:07:51,027 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Chamber of Secrets' (5 filtered hits)
+2025-10-15 01:07:53,890 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Goblet of Fire' (5 filtered hits)
+2025-10-15 01:07:56,570 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Prisoner of Azkaban' (5 filtered hits)
+2025-10-15 01:07:59,436 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Harry Potter and the Sorcerer’s Stone' (4 filtered hits)
+2025-10-15 01:08:02,102 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Heat' (5 filtered hits)
+2025-10-15 01:08:04,784 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Her' (5 filtered hits)
+2025-10-15 01:08:07,568 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Howl’s Moving Castle' (0 filtered hits)
+2025-10-15 01:08:10,233 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Indiana Jones and the Last Crusade' (5 filtered hits)
+2025-10-15 01:08:12,888 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Indiana Jones and the Raiders of the Lost Ark' (5 filtered hits)
+2025-10-15 01:08:15,579 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Indiana Jones and the Temple of Doom' (5 filtered hits)
+2025-10-15 01:08:18,267 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Inside Llewyn Davis' (5 filtered hits)
+2025-10-15 01:08:20,917 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Insomnia' (5 filtered hits)
+2025-10-15 01:08:20,941 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Interstellar (yes—redundant for consistency)' (5 filtered hits)
+2025-10-15 01:08:23,798 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Iron Man' (5 filtered hits)
+2025-10-15 01:08:23,802 - step_02_query_discogs - INFO - Progress: 75/185 titles processed
+2025-10-15 01:08:26,462 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Isle of Dogs' (5 filtered hits)
+2025-10-15 01:08:29,135 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Jaws' (5 filtered hits)
+2025-10-15 01:08:31,797 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Jurassic Park' (5 filtered hits)
+2025-10-15 01:08:34,624 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Justice League' (5 filtered hits)
+2025-10-15 01:08:37,269 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Kiki’s Delivery Service' (4 filtered hits)
+2025-10-15 01:08:39,928 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Kill Bill: Vol. 1' (5 filtered hits)
+2025-10-15 01:08:42,709 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Kill Bill: Vol. 2' (5 filtered hits)
+2025-10-15 01:08:45,384 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'La La Land' (5 filtered hits)
+2025-10-15 01:08:48,039 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Les Misérables (2012)' (5 filtered hits)
+2025-10-15 01:08:50,930 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Life Is Beautiful' (4 filtered hits)
+2025-10-15 01:08:53,597 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Logan' (5 filtered hits)
+2025-10-15 01:08:56,269 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Mad Max: Fury Road' (4 filtered hits)
+2025-10-15 01:08:59,155 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Man of Steel' (5 filtered hits)
+2025-10-15 01:09:01,801 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Memento' (5 filtered hits)
+2025-10-15 01:09:04,457 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Mission: Impossible' (4 filtered hits)
+2025-10-15 01:09:07,117 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Mission: Impossible – Fallout' (5 filtered hits)
+2025-10-15 01:09:09,773 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Moana' (5 filtered hits)
+2025-10-15 01:09:12,407 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Moonrise Kingdom' (4 filtered hits)
+2025-10-15 01:09:15,090 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Moulin Rouge!' (4 filtered hits)
+2025-10-15 01:09:17,762 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'My Neighbor Totoro' (4 filtered hits)
+2025-10-15 01:09:20,440 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Neon Genesis Evangelion: The End of Evangelion' (1 filtered hits)
+2025-10-15 01:09:23,264 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Once' (5 filtered hits)
+2025-10-15 01:09:26,008 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Once Upon a Time in Hollywood' (5 filtered hits)
+2025-10-15 01:09:28,850 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Oppenheimer' (5 filtered hits)
+2025-10-15 01:09:31,495 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pan’s Labyrinth' (0 filtered hits)
+2025-10-15 01:09:31,499 - step_02_query_discogs - INFO - Progress: 100/185 titles processed
+2025-10-15 01:09:34,172 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: At World’s End' (4 filtered hits)
+2025-10-15 01:09:36,840 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: Dead Man’s Chest' (1 filtered hits)
+2025-10-15 01:09:39,490 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: On Stranger Tides' (1 filtered hits)
+2025-10-15 01:09:42,176 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pirates of the Caribbean: The Curse of the Black Pearl' (4 filtered hits)
+2025-10-15 01:09:44,977 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Platoon' (5 filtered hits)
+2025-10-15 01:09:47,763 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Princess Mononoke' (5 filtered hits)
+2025-10-15 01:09:50,526 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Prometheus' (5 filtered hits)
+2025-10-15 01:09:53,354 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Pulp Fiction' (5 filtered hits)
+2025-10-15 01:09:56,158 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Purple Rain' (5 filtered hits)
+2025-10-15 01:09:58,785 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Ray' (5 filtered hits)
+2025-10-15 01:10:01,467 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Reservoir Dogs' (5 filtered hits)
+2025-10-15 01:10:04,240 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Rocketman' (5 filtered hits)
+2025-10-15 01:10:06,884 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Rogue One: A Star Wars Story' (2 filtered hits)
+2025-10-15 01:10:09,524 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Run Lola Run' (5 filtered hits)
+2025-10-15 01:10:12,202 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Saturday Night Fever' (4 filtered hits)
+2025-10-15 01:10:14,885 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Saving Private Ryan' (5 filtered hits)
+2025-10-15 01:10:17,660 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Scarface' (5 filtered hits)
+2025-10-15 01:10:20,325 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Schindler’s List' (5 filtered hits)
+2025-10-15 01:10:23,002 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'School of Rock' (4 filtered hits)
+2025-10-15 01:10:25,680 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Se7en' (5 filtered hits)
+2025-10-15 01:10:28,546 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Sing Street' (5 filtered hits)
+2025-10-15 01:10:31,203 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spider-Man: Homecoming' (5 filtered hits)
+2025-10-15 01:10:33,841 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spider-Man: No Way Home' (5 filtered hits)
+2025-10-15 01:10:36,644 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Spirited Away' (5 filtered hits)
+2025-10-15 01:10:39,290 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: A New Hope' (5 filtered hits)
+2025-10-15 01:10:39,295 - step_02_query_discogs - INFO - Progress: 125/185 titles processed
+2025-10-15 01:10:41,994 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: Return of the Jedi' (5 filtered hits)
+2025-10-15 01:10:44,649 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: The Empire Strikes Back' (3 filtered hits)
+2025-10-15 01:10:47,296 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: The Force Awakens' (5 filtered hits)
+2025-10-15 01:10:49,942 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Star Wars: The Phantom Menace' (5 filtered hits)
+2025-10-15 01:10:52,587 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Suicide Squad' (5 filtered hits)
+2025-10-15 01:10:55,243 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Tenet' (5 filtered hits)
+2025-10-15 01:10:57,974 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Amazing Spider-Man' (5 filtered hits)
+2025-10-15 01:11:00,629 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Avengers' (5 filtered hits)
+2025-10-15 01:11:03,279 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Batman' (5 filtered hits)
+2025-10-15 01:11:05,933 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Curious Case of Benjamin Button' (5 filtered hits)
+2025-10-15 01:11:08,614 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Dark Knight Rises' (5 filtered hits)
+2025-10-15 01:11:11,294 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Departed' (5 filtered hits)
+2025-10-15 01:11:13,947 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Fifth Element' (5 filtered hits)
+2025-10-15 01:11:16,606 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The French Dispatch' (5 filtered hits)
+2025-10-15 01:11:19,470 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Girl with the Dragon Tattoo' (5 filtered hits)
+2025-10-15 01:11:22,281 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Godfather' (5 filtered hits)
+2025-10-15 01:11:24,939 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Godfather: Part II' (5 filtered hits)
+2025-10-15 01:11:27,792 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Grand Budapest Hotel' (5 filtered hits)
+2025-10-15 01:11:30,573 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Great Gatsby (2013)' (5 filtered hits)
+2025-10-15 01:11:33,404 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Hateful Eight' (3 filtered hits)
+2025-10-15 01:11:36,061 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Intouchables' (2 filtered hits)
+2025-10-15 01:11:38,695 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Irishman' (5 filtered hits)
+2025-10-15 01:11:41,394 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Life Aquatic with Steve Zissou' (5 filtered hits)
+2025-10-15 01:11:44,063 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lion King' (5 filtered hits)
+2025-10-15 01:11:46,881 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Fellowship of the Ring' (5 filtered hits)
+2025-10-15 01:11:46,887 - step_02_query_discogs - INFO - Progress: 150/185 titles processed
+2025-10-15 01:11:49,572 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Return of the King' (5 filtered hits)
+2025-10-15 01:11:52,233 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lord of the Rings: The Two Towers' (5 filtered hits)
+2025-10-15 01:11:54,898 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Lost World: Jurassic Park' (5 filtered hits)
+2025-10-15 01:11:57,804 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Martian' (3 filtered hits)
+2025-10-15 01:12:00,547 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Nightmare Before Christmas' (5 filtered hits)
+2025-10-15 01:12:03,408 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Phantom of the Opera (2004)' (5 filtered hits)
+2025-10-15 01:12:06,056 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Pianist' (5 filtered hits)
+2025-10-15 01:12:08,731 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Prestige' (4 filtered hits)
+2025-10-15 01:12:11,393 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Professional (Léon)' (5 filtered hits)
+2025-10-15 01:12:14,051 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Revenant' (5 filtered hits)
+2025-10-15 01:12:16,694 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Road Warrior' (5 filtered hits)
+2025-10-15 01:12:19,368 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Royal Tenenbaums' (5 filtered hits)
+2025-10-15 01:12:22,207 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Shape of Water' (5 filtered hits)
+2025-10-15 01:12:25,015 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Shawshank Redemption' (5 filtered hits)
+2025-10-15 01:12:27,697 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Social Network' (5 filtered hits)
+2025-10-15 01:12:30,449 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Sound of Music' (5 filtered hits)
+2025-10-15 01:12:33,076 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Thin Red Line' (5 filtered hits)
+2025-10-15 01:12:35,703 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'The Wolverine' (5 filtered hits)
+2025-10-15 01:12:38,384 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Thor' (5 filtered hits)
+2025-10-15 01:12:41,033 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Thor: Ragnarok' (3 filtered hits)
+2025-10-15 01:12:43,765 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Titanic' (5 filtered hits)
+2025-10-15 01:12:46,538 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Top Gun' (5 filtered hits)
+2025-10-15 01:12:49,406 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Top Gun: Maverick' (5 filtered hits)
+2025-10-15 01:12:52,101 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Tron' (5 filtered hits)
+2025-10-15 01:12:54,946 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Tron: Legacy' (5 filtered hits)
+2025-10-15 01:12:54,950 - step_02_query_discogs - INFO - Progress: 175/185 titles processed
+2025-10-15 01:12:57,608 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Walk the Line' (5 filtered hits)
+2025-10-15 01:13:00,303 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Weathering with You' (1 filtered hits)
+2025-10-15 01:13:03,005 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'West Side Story' (5 filtered hits)
+2025-10-15 01:13:05,833 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Whiplash' (5 filtered hits)
+2025-10-15 01:13:05,858 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Whiplash (redundant intentionally for coverage)' (5 filtered hits)
+2025-10-15 01:13:08,531 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Wonder Woman' (5 filtered hits)
+2025-10-15 01:13:11,202 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'X-Men' (5 filtered hits)
+2025-10-15 01:13:13,829 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'X2: X-Men United' (2 filtered hits)
+2025-10-15 01:13:16,498 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Your Name' (5 filtered hits)
+2025-10-15 01:13:19,182 - step_02_query_discogs - INFO - ✅ Saved Discogs JSON for 'Zodiac' (5 filtered hits)
+2025-10-15 01:13:19,187 - step_02_query_discogs - INFO - Progress: 185/185 titles processed
+2025-10-15 01:13:19,189 - step_02_query_discogs - INFO - 📊 Logged metrics for step02_query_discogs_metrics: {'mode': 'SHARED (190 titles)', 'titles_total': 190, 'titles_queried': 190, 'success_rate': 100.0, 'duration_sec': 495.63, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step02_query_discogs_metrics', 'timestamp': '2025-10-15T01:13:19', 'step_runtime_sec': 495.63, 'pipeline_runtime_sec': 0.0}
+2025-10-15 01:13:19,190 - step_02_query_discogs - INFO - ✅ Completed Step 02 (SHARED (190 titles)) | 100.0% success in 495.63s
+2025-10-15 01:13:19,190 - Pipeline - INFO - ✅ Completed Step02QueryDiscogs in 495.63s
+2025-10-15 01:13:19,191 - Pipeline - INFO - 🚩 Running Step03PrepareTMDBInput
+2025-10-15 01:13:19,191 - step_03_prepare_tmdb_input - INFO - 🎬 Starting Step 03 (TMDB→Discogs Harmonization)
+2025-10-15 01:13:19,192 - step_03_prepare_tmdb_input - INFO - 📄 Loaded 190 titles from titles_to_process.json
+2025-10-15 01:13:19,195 - step_03_prepare_tmdb_input - INFO - 🔧 Mode=SHARED (190 titles) | Titles to process=190
+2025-10-15 01:13:20,023 - step_03_prepare_tmdb_input - INFO - 🧩 Candidate pairs collected: 8005 rows
+2025-10-15 01:13:20,151 - step_03_prepare_tmdb_input - INFO - 📁 Saved harmonized data → C:\Projects\unguided-capstone-project\data\intermediate\tmdb_discogs_candidates_extended.csv
+2025-10-15 01:13:20,151 - step_03_prepare_tmdb_input - INFO - 📊 Columns: ['movie_ref', 'tmdb_title_norm', 'discogs_title_norm', 'tmdb_year', 'discogs_year', 'tmdb_genre', 'discogs_genre', 'discogs_style']
+2025-10-15 01:13:20,153 - step_03_prepare_tmdb_input - INFO - 📊 Logged metrics for step03_tmdb_discogs_metrics: {'mode': 'SHARED (190 titles)', 'titles_total': 190, 'pairs_total': 8005, 'avg_pairs_per_title': 42.13157894736842, 'duration_sec': 0.96, 'max_workers': 8, 'direction': 'TMDB→Discogs', 'branch': 'step6-dev', 'step_name': 'step03_tmdb_discogs_metrics', 'timestamp': '2025-10-15T01:13:20', 'step_runtime_sec': 0.96, 'pipeline_runtime_sec': 0.0}
+2025-10-15 01:13:20,153 - step_03_prepare_tmdb_input - INFO - ✅ Step 03 completed in 0.96s | Mode=SHARED (190 titles)
+2025-10-15 01:13:20,156 - Pipeline - INFO - ✅ Completed Step03PrepareTMDBInput in 0.96s
+2025-10-15 01:13:20,157 - Pipeline - INFO - 🧾 Pipeline Summary:
+2025-10-15 01:13:20,157 - Pipeline - INFO -    ⏱ Step01AcquireTMDB                   465.83s
+2025-10-15 01:13:20,157 - Pipeline - INFO -    ⏱ Step02QueryDiscogs                  495.63s
+2025-10-15 01:13:20,158 - Pipeline - INFO -    ⏱ Step03PrepareTMDBInput                0.96s
+2025-10-15 01:13:20,158 - Pipeline - INFO - 🏁 Total Runtime: 962.70s
+2025-10-15 01:13:20,194 - Pipeline - INFO - 📊 Consolidated 3 step metrics → pipeline_metrics.csv
+2025-10-15 01:13:20,195 - Pipeline - INFO - 🧾 Metrics Summary:
+2025-10-15 01:13:20,195 - Pipeline - INFO -    ⏱ step01_acquire_tmdb_metrics    465.83s  (Pipeline: 465.83s)
+2025-10-15 01:13:20,196 - Pipeline - INFO -    ⏱ step02_query_discogs_metrics   495.63s  (Pipeline: 961.46s)
+2025-10-15 01:13:20,196 - Pipeline - INFO -    ⏱ step03_tmdb_discogs_metrics      0.96s  (Pipeline: 962.42s)
+2025-10-15 01:13:20,196 - Pipeline - INFO - 🏁 Total Pipeline Runtime: 962.42s
+2025-10-15 01:13:20,196 - Pipeline - INFO - ✅ Pipeline execution completed
+2025-10-15 01:13:20,197 - Pipeline - INFO - ------------------------------------------------------------
+2025-10-15 01:13:20,211 - Pipeline - INFO - 
+📋 Final Metrics Summary Table:
+2025-10-15 01:13:20,217 - Pipeline - INFO -                mode  titles_total  titles_downloaded  success_rate  duration_sec    direction    branch                    step_name           timestamp  step_runtime_sec  pipeline_runtime_sec  titles_queried  pairs_total  avg_pairs_per_title  max_workers
+  AUTO (190 titles)           190              190.0         100.0        465.83 TMDB→Discogs step6-dev  step01_acquire_tmdb_metrics 2025-10-15 01:05:03            465.83                465.83             NaN          NaN                  NaN          NaN
+SHARED (190 titles)           190                NaN         100.0        495.63 TMDB→Discogs step6-dev step02_query_discogs_metrics 2025-10-15 01:13:19            495.63                961.46           190.0          NaN                  NaN          NaN
+SHARED (190 titles)           190                NaN           NaN          0.96 TMDB→Discogs step6-dev  step03_tmdb_discogs_metrics 2025-10-15 01:13:20              0.96                962.42             NaN       8005.0            42.131579          8.0

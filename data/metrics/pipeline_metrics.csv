@@ -1,7 +1,4 @@
-titles_total,titles_downloaded,duration_sec,success_rate,step_name,timestamp
-190,20,25.7,10.53,step01_acquire_tmdb_metrics,2025-10-14T12:39:12
-190,190,247.2,100.0,step01_acquire_tmdb_metrics,2025-10-14T12:50:45
-190,190,247.26,100.0,step01_acquire_tmdb_metrics,2025-10-14T13:15:57
-190,190,0.0,100.0,step01_acquire_tmdb_metrics,2025-10-14T13:25:41
-190,190,246.02,100.0,step01_acquire_tmdb_metrics,2025-10-14T13:32:36
-3,3,10.95,100.0,step02_query_discogs_metrics,2025-10-14T22:00:16
+mode,titles_total,titles_downloaded,success_rate,duration_sec,direction,branch,step_name,timestamp,step_runtime_sec,pipeline_runtime_sec,titles_queried,pairs_total,avg_pairs_per_title,max_workers
+AUTO (190 titles),190,190.0,100.0,465.83,TMDB→Discogs,step6-dev,step01_acquire_tmdb_metrics,2025-10-15 01:05:03,465.83,465.83,,,,
+SHARED (190 titles),190,,100.0,495.63,TMDB→Discogs,step6-dev,step02_query_discogs_metrics,2025-10-15 01:13:19,495.63,961.46,190.0,,,
+SHARED (190 titles),190,,,0.96,TMDB→Discogs,step6-dev,step03_tmdb_discogs_metrics,2025-10-15 01:13:20,0.96,962.4200000000001,,8005.0,42.13157894736842,8.0
