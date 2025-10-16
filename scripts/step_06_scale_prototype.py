@@ -11,7 +11,7 @@ from pyspark.sql.pandas.functions import pandas_udf
 from pathlib import Path
 from rapidfuzz import fuzz
 import matplotlib.pyplot as plt
-import numpy as np, pandas as pd, json, time, copyreg, os
+import pandas as pd, json, time, copyreg, os
 
 # --- Patch for pandas.core.indexes.base._new_Index ---
 from pandas.core.indexes.base import _new_Index  # type: ignore
