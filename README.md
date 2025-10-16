@@ -68,11 +68,10 @@ Discogs → TMDB
 
 
 
-### Supporting modules:
-
-- **utils.py** – request caching, rate limiting, logging  
-- **base_step.py** – step lifecycle base class  
-- **config.py** – environment and path management  
+**Supporting modules:**
+- `utils.py` – request caching, rate limiting, logging  
+- `base_step.py` – step lifecycle base class  
+- `config.py` – environment and path management  
 
 ---
 
@@ -110,12 +109,12 @@ This project runs on:
 
 ### 1️⃣ Rebuild the Environment
 
-```shell
+```bash
 chmod +x rebuild_venv.sh
 ./rebuild_venv.sh
 ```
 
-Creates a fresh venv at ~/pyspark_venv311, installs all pinned packages,
+Creates (or reuses) a venv at ~/pyspark_venv311, installs all pinned packages,
 and auto-generates requirements_stable.txt.
 
 To activate later:
@@ -124,9 +123,28 @@ To activate later:
 source ~/pyspark_venv311/bin/activate
 ```
 
-2️⃣ Configure VS Code (Optional)
+#### 🧠 Tip:
+
+You can skip reinstalling dependencies (the default behavior) or force a full rebuild if the environment ever becomes unstable:
 
 ```bash
+./rebuild_venv.sh          # Reuse existing venv; refresh requirements_stable.txt only  
+./rebuild_venv.sh --force  # Remove & recreate venv from scratch
+```
+
+
+Use --force whenever:
+
+- You upgrade Python or PySpark versions
+
+- The environment becomes inconsistent
+
+- You’re migrating to a new workstation or Azure VM
+
+
+2️⃣ Configure VS Code (Optional)
+
+```
 Ctrl + Shift + P → Python: Select Interpreter → /home/mark/pyspark_venv311/bin/python
 ```
 
@@ -148,6 +166,14 @@ Outputs:
 
 
 4️⃣ Deploy to Azure (Next Step)
+
+> [!NOTE]
+>
+> Platform note:
+> This project previously used PowerShell setup scripts (setup_env.ps1, set_spark_env.ps1) for Windows-native PySpark.
+> As of Step 6+, all execution occurs under Ubuntu (WSL2) using rebuild_venv.sh, which fully replaces those Windows scripts.
+> You can safely remove or archive any .ps1 environment scripts.
+
 On your Azure Spark cluster or VM:
 
 ```bash
@@ -164,7 +190,7 @@ Ensures identical dependencies between local and cloud environments.
 - If upgrading Spark → 4.x, revisit the Pandas UDF patch inside step_06_scale_prototype.py.
 
 
-🗺️ Environment Diagram (Conceptual)
+## 🗺️ Environment Diagram (Conceptual)
 
 ```
 graph TD
@@ -175,19 +201,17 @@ graph TD
     D --> F[Azure Cluster (spark-submit)]
 ```
 
-1. 🚀 Next Steps
-   Upload data & outputs to Azure Blob Storage.
+## 🚀 Next Steps
 
-2. Execute Step 07 (Deploy Spark Job on Azure).
+1. Upload data & outputs to Azure Blob Storage
+2. Execute Step 07 (Deploy Spark Job on Azure)
 
-3. Perform Step 08–10 statistical analysis and visualization.
+3. Perform Steps 08–10: statistical analysis and visualization
 
-4. Finalize capstone submission with evidence artifacts.
+4. Finalize capstone submission with evidence artifacts
 
 
 © 2025 Mark — Springboard Data Engineering Bootcamp
-
-
 
 
 
