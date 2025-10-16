@@ -1,7 +1,7 @@
-mode,titles_total,titles_downloaded,success_rate,duration_sec,direction,branch,step_name,timestamp,step_runtime_sec,pipeline_runtime_sec,titles_queried,pairs_total,avg_pairs_per_title,max_workers
-AUTO (190 titles),190,190.0,100.0,465.83,TMDB→Discogs,step6-dev,step01_acquire_tmdb_metrics,2025-10-15 01:05:03,465.83,465.83,,,,
-SHARED (190 titles),190,,100.0,495.63,TMDB→Discogs,step6-dev,step02_query_discogs_metrics,2025-10-15 01:13:19,495.63,961.46,190.0,,,
-SHARED (190 titles),190,,,0.96,TMDB→Discogs,step6-dev,step03_tmdb_discogs_metrics,2025-10-15 01:13:20,0.96,962.4200000000001,,8005.0,42.13157894736842,8.0
-0,0,0,0,data\validation\schema_comparison_tmdb.csv,data\validation\schema_comparison_discogs.csv,data\validation\integrity_summary.csv,step_04_validate_schema_alignment,2025-10-15T02:19:35,0.0,0.0
-0,0,0,0,data\validation\schema_comparison_tmdb.csv,data\validation\schema_comparison_discogs.csv,data\validation\integrity_summary.csv,step_04_validate_schema_alignment,2025-10-15T02:29:53,0.0,0.0
-1986,1138,8,7,data\validation\schema_comparison_tmdb.csv,data\validation\schema_comparison_discogs.csv,data\validation\integrity_summary.csv,step_04_validate_schema_alignment,2025-10-15T02:54:59,0.0,0.0
+mode,titles_total,titles_downloaded,success_rate,duration_sec,direction,branch,step_name,timestamp,step_runtime_sec,pipeline_runtime_sec,titles_queried,pairs_total,avg_pairs_per_title,max_workers,summary,total_candidates,total_matches,avg_hybrid_score,avg_token_score,avg_partial_score,high_confidence,mid_confidence,low_confidence,median_score,stddev_score,tmdb_rows,discogs_rows,tmdb_columns,discogs_columns,tmdb_schema_path,discogs_schema_path,integrity_summary_path
+AUTO (190 titles),190.0,190.0,100.0,475.96,TMDB→Discogs,step6-dev,step01_acquire_tmdb_metrics,2025-10-15 14:38:46,475.96,475.96,,,,,,,,,,,,,,,,,,,,,,
+SHARED (190 titles),190.0,,100.0,513.94,TMDB→Discogs,step6-dev,step02_query_discogs_metrics,2025-10-15 14:47:20,513.94,989.9000000000001,190.0,,,,,,,,,,,,,,,,,,,,,
+SHARED (190 titles),190.0,,,2.74,TMDB→Discogs,step6-dev,step03_tmdb_discogs_metrics,2025-10-15 14:47:23,2.74,992.6400000000001,,7965.0,41.921052631578945,8.0,,,,,,,,,,,,,,,,,,
+,,,,,,,step_04_validate_schema_alignment,2025-10-15 14:47:24,0.0,992.6400000000001,,,,,,,,,,,,,,,,1986.0,1138.0,8.0,7.0,data\validation\schema_comparison_tmdb.csv,data\validation\schema_comparison_discogs.csv,data\validation\integrity_summary.csv
+,,,,,,,,,,,,,,,"{'tmdb_rows': 1986, 'discogs_rows': 1138, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data\\validation\\schema_comparison_tmdb.csv', 'discogs_schema_path': 'data\\validation\\schema_comparison_discogs.csv', 'integrity_summary_path': 'data\\validation\\integrity_summary.csv'}",,,,,,,,,,,,,,,,,
+,,,,,,,,,1.84,994.4800000000001,,,,,,7965.0,2064.0,60.85,53.29,78.48,24.0,538.0,1502.0,60.54,14.13,,,,,,,
