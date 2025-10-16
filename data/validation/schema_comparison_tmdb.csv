@@ -1,9 +1,9 @@
 column,dtype,non_null,null_pct,n_unique
 genre_ids,list,1791,9.82,461
-popularity,float64,1791,9.82,1449
+popularity,float64,1791,9.82,1436
 release_date,object,1791,9.82,1439
 source_file,object,1986,0.0,186
 title,object,1796,9.57,1455
 tmdb_id,float64,1796,9.57,1756
-vote_average,float64,1791,9.82,361
-vote_count,float64,1791,9.82,433
+vote_average,float64,1791,9.82,365
+vote_count,float64,1791,9.82,437
