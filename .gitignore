@@ -1,6 +1,6 @@
 # =========================================================
-#  🧩  UNGUIDED CAPSTONE PIPELINE — CLEAN .GITIGNORE (v3)
-#  Updated: 2025-10-10
+# 🧩  UNGUIDED CAPSTONE PIPELINE — CLEAN .GITIGNORE (v4.1)
+# Updated: 2025-10-17
 # =========================================================
 
 # --- OS / Editor ---
@@ -25,18 +25,20 @@ dist/
 venv/
 ENV/
 env/
-*env/
+*env*/
 Scripts/
 bin/
 Lib/
 Include/
 
-# --- Jupyter & transient docs ---
+# --- Jupyter & temp docs ---
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 **/.virtual_documents/
+*.nbconvert.ipynb
+*.ipynb.tmp
 
-# --- Temp / backup / lock files ---
+# --- Temporary / backup / cache ---
 *.bak
 *.tmp
 *~
@@ -44,36 +46,33 @@ Include/
 *.log.tmp
 *.lock
 *.pid
-tmp/
-cache/
+tmp*/
+cache*/
 __temp__/
+__workspace__/
 
-# --- Data folders (include actual artifacts now) ---
-!data/
-!data/**
+# --- Data (keep intentional sample data only) ---
+data/
+!data/README.md
+!data/sample/
+!data/sample/**
 
-# --- Evidence (newly included for mentor review) ---
-# First unignore the folder itself in case its parent was ignored earlier
+# --- Evidence & mentor deliverables ---
 !evidence/
 !evidence/**
-
-# Ensure we still ignore unwanted checkpoint folders or temp files
 evidence/.ipynb_checkpoints/
 evidence/~$*
 
-
-# --- Logs (retain logs for reproducibility) ---
+# --- Logs & metrics (retain these) ---
 !logs/
 !logs/**
-
-# --- Metrics & reports ---
 !metrics/
 !metrics/**
 
-# --- Notebooks & slides ---
-notebooks/*_output.ipynb
-slides/*.tmp
+# --- Slides & notebooks ---
 slides/~$*
+slides/*.tmp
+notebooks/*_output.ipynb
 
 # --- Secrets & credentials ---
 .env
@@ -81,16 +80,20 @@ slides/~$*
 *.key
 *.pem
 *.crt
-
-# Keep ignoring sensitive JSONs by default,
-# but explicitly allow non-sensitive project configs.
-*.json
+*Creds*.txt
+*Token*.txt
+*Secrets*.json
+credentials.json
+secrets/
+# keep explicit safe config
 !config.json
 
-# Continue blocking secrets directories
-secrets/
-credentials.json
-
+# --- Azure / Databricks service dumps ---
+*.dbc
+*.dbc.zip
+*.dbutils.cache
+*.databricks_token
+*.azureprofile
 
 # --- Tests & coverage ---
 .coverage
@@ -98,21 +101,24 @@ htmlcov/
 pytest_cache/
 .tox/
 
-# --- Archive ---
+# --- Archive folders ---
 archive/
 !archive/README.md
 
-# --- ✅ Scripts & code (always include) ---
+# --- Always include code & build configs ---
 !scripts/
 !scripts/**/*.py
 !scripts/**/*.ps1
-# --- Allow build configs ---
 !pyproject.toml
+!requirements*.txt
 
+# --- Project documentation ---
+!README.md
+!docs/
+!docs/**/*.md
+!docs/**/*.pdf
 
-# --- 🚫 But never track virtual environments ---
+# --- Never track local environments ---
 .venv/
 scripts/.venv/
 scripts/.venv/**
-
-
