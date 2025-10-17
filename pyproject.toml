@@ -1,14 +1,44 @@
 # pyproject.toml
 # ---------------------------------------------------------------
-# Central configuration for the Discogs→TMDB Data Pipeline
+# TMDB–Discogs Data Pipeline (Unguided Capstone)
 # ---------------------------------------------------------------
 
 [project]
 name = "unguided-capstone-project"
-version = "0.1.0"
-description = "Discogs→TMDB data pipeline (Springboard Unguided Capstone)"
-authors = [{ name = "Your Name", email = "your.email@example.com" }]
+version = "0.6.0"
+description = "TMDB–Discogs data pipeline (Springboard Unguided Capstone)"
+authors = [{ name = "Mark Holahan", email = "markholahan@pm.me" }]
+readme = "README.md"
 requires-python = ">=3.10"
+
+# ---------------------------------------------------------------
+# Runtime Dependencies
+# ---------------------------------------------------------------
+dependencies = [
+  "pyspark==3.5.2",
+  "pandas==2.0.3",
+  "numpy==1.26.4",
+  "pyarrow==13.0.0",
+  "requests==2.32.5",
+  "azure-core==1.36.0",
+  "azure-storage-blob==12.20.0",
+  "boto3==1.35.0",
+  "matplotlib==3.8.4",
+  "rapidfuzz==3.9.0",
+  "python-dotenv==1.0.1",   # 👈 add this line
+]
+
+
+# ---------------------------------------------------------------
+# Development / QA Dependencies
+# ---------------------------------------------------------------
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "black>=24.4.2",
+  "ruff>=0.3.0",
+  "pylint>=3.2.0"
+]
 
 # ---------------------------------------------------------------
 # Code Quality & Formatting
@@ -19,15 +49,15 @@ target-version = ["py311"]
 
 [tool.ruff]
 line-length = 100
-select = ["E", "F", "I"]          # E=pycodestyle, F=flake8, I=isort
-ignore = ["E501", "W293"]         # ignore long-line and blank-line warnings
+select = ["E", "F", "I"]
+ignore = ["E501", "W293"]
 exclude = ["venv", "__pycache__"]
 
 [tool.pylint.MASTER]
 max-line-length = 100
 disable = [
-  "C0114", "C0115", "C0116",      # docstring warnings
-  "W1203",                        # f-string logging (intentional)
+  "C0114", "C0115", "C0116",
+  "W1203"
 ]
 
 # ---------------------------------------------------------------
@@ -44,3 +74,6 @@ pythonpath = ["scripts"]
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["scripts"]
