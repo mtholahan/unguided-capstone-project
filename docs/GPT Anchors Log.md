@@ -16,6 +16,28 @@ Next action: [one concrete step]
 Dependencies: [keys/env/tools/people]
 ```
 
+**23:33 10/16/2025**
+
+**Resume from anchor:** [UnguidedCapstone_TMDB_Refactor02_Step_06_Databricks]
+
+**Context:**
+ The unguided TMDB–Discogs capstone successfully transitioned from local PySpark to a fully authenticated Azure Databricks + Blob Storage environment using OAuth and Databricks secrets.
+
+**Current milestone:**
+ ✅ Databricks workspace provisioned
+ ✅ Azure Blob OAuth access verified (`abfss://capstone-data@markcapstonestorage...`)
+ ✅ Service principal + secret scope fully operational
+
+**Next action:**
+ → Validate Spark cloud I/O by reading a sample dataset from Blob and writing results to `/output/` via Databricks notebook.
+
+**Dependencies:**
+ Environment: Azure Databricks (Premium, East US)
+ Storage: `markcapstonestorage / capstone-data`
+ Secrets scope: `capstone-secrets` (`client-id`, `client-secret`)
+ Tenant ID: from service principal
+ Cluster: attach one with Auto-Termination ≤ 15 min
+
 
 
 **17:00 10/16/2025**

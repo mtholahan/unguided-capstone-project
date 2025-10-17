@@ -1,4 +1,4 @@
-23:30 10/13/2025
+23:30 10/16/2025
 
 python dirscope.py --root "C:\Projects\unguided-capstone-project" --exclude .cache,.git,.ipynb_checkpoints,.pytest_cache,.ruff_cache,.venv,.virtual_documents,.vscode,venv,data\cache,scripts\__pycache__,scripts\.vs --exclude-names .editorconfig,.env,.gitignore,.gitattributes --depth 3
 
