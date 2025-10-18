@@ -114,8 +114,25 @@ chmod +x rebuild_venv.sh
 ./rebuild_venv.sh
 ```
 
-Creates (or reuses) a venv at ~/pyspark_venv311, installs all pinned packages,
-and auto-generates requirements_stable.txt.
+The `rebuild_venv.sh` utility **creates or reuses** your virtual environment at
+ `~/pyspark_venv311`, installs all **pinned core packages**, and now auto-generates **two synchronized requirement files** for version management:
+
+- **`requirements_stable.txt`** → your **canonical recipe** of direct dependencies (the “human-readable” baseline).
+   It’s automatically refreshed whenever the script installs or upgrades core packages.
+   Use this file for local rebuilds or when teammates need a consistent yet flexible setup.
+
+- **`requirements_locked.txt`** → your **full dependency snapshot** (the “frozen” state).
+   It includes every transitive package and exact version number, ensuring deterministic rebuilds in cloud or CI/CD environments (e.g., Databricks, Azure Pipelines).
+   Use this file when you need **byte-for-byte reproducibility**.
+
+  ### ✅ **In summary**
+
+  | Use Case                                        | File                      | Why                                              |
+  | ----------------------------------------------- | ------------------------- | ------------------------------------------------ |
+  | Local development / exploratory work            | `requirements_stable.txt` | Easier to read and maintain; minimal package set |
+  | Production deployment / CI / Databricks cluster | `requirements_locked.txt` | Guarantees exact same environment, every time    |
+
+
 
 To activate later:
 
