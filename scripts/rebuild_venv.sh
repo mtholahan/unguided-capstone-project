@@ -9,6 +9,7 @@ set -e
 
 VENV_PATH="$HOME/pyspark_venv311"
 REQ_FILE="$(pwd)/requirements_stable.txt"
+LOCK_FILE="$(pwd)/requirements_locked.txt"
 FORCE_REBUILD=false
 
 # Parse optional flags
@@ -54,8 +55,11 @@ else
     numpy==1.26.4 \
     matplotlib==3.8.4 \
     rapidfuzz==3.9.0 \
+    azure-core==1.36.0 \
     azure-storage-blob==12.20.0 \
-    boto3==1.35.0
+    boto3==1.35.0 \
+    python-dotenv==1.0.1 \
+    ipykernel
 
   echo ">>> Verifying installs..."
   python - <<'EOF'
@@ -68,18 +72,25 @@ EOF
 fi
 
 # ------------------------------------------------------
-# 2. Always refresh the stable requirements file
+# 2. Refresh stable requirements (short list)
 # ------------------------------------------------------
 echo ">>> Generating clean requirements_stable.txt ..."
-pip freeze --exclude-editable | grep -E 'pyspark|pandas|pyarrow|numpy|matplotlib|rapidfuzz|azure|boto3' > "$REQ_FILE"
+pip freeze --exclude-editable | grep -E 'pyspark|pandas|pyarrow|numpy|matplotlib|rapidfuzz|azure|boto3|dotenv|ipykernel' > "$REQ_FILE"
 
 # ------------------------------------------------------
-# 3. Wrap up
+# 3. Export full lock file (complete freeze)
+# ------------------------------------------------------
+echo ">>> Generating full requirements_locked.txt ..."
+pip freeze > "$LOCK_FILE"
+
+# ------------------------------------------------------
+# 4. Wrap up
 # ------------------------------------------------------
 echo ""
 echo "✅ Done."
 echo " - Virtual environment: $VENV_PATH"
 echo " - Stable requirements file: $REQ_FILE"
+echo " - Locked snapshot file: $LOCK_FILE"
 echo ""
 echo "To activate later: source $VENV_PATH/bin/activate"
 echo "Use './rebuild_venv.sh --force' to recreate the venv from scratch."
