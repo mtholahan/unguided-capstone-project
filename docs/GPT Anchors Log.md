@@ -10,11 +10,38 @@ Anchors capture context, current milestone, next action, and dependencies for se
 ```
 Anchor this as chat [ANCHOR_NAME] with next action + dependencies. Use this template:
 Resume from anchor: [ANCHOR_NAME]
-Context: [1–2 lines on project/sprint state]
+Context: [2–4 lines on project/sprint state]
 Current milestone: [what’s done]
 Next action: [one concrete step]
 Dependencies: [keys/env/tools/people]
 ```
+
+
+
+**00:47 10/18/2025**
+
+Resume from anchor: [UnguidedCapstone_TMDB_Refactor02_Step_06_Databricks_Almost]
+
+**Context:**
+ The TMDB–Discogs Unguided Capstone has transitioned to a fully integrated, multi-shell development ecosystem (VS Code, Git Bash, Ubuntu) sharing a unified virtual environment (`~/pyspark_venv311`). The Databricks workspace and Azure Blob OAuth connection are verified. Environment management is now automated through `rebuild_venv.sh`, producing synced `requirements_stable.txt` and `requirements_locked.txt`.
+
+**Current milestone:**
+ ✅ Verified end-to-end environment consistency (VS Code ↔ Git Bash ↔ Ubuntu ↔ Databricks)
+ ✅ Clean dependency architecture diagram finalized
+ ✅ `rebuild_venv.sh` integrated with locked requirements generation
+
+**Next action:**
+ → Execute Spark cloud I/O validation on Databricks by reading a small dataset from Azure Blob Storage and writing processed results to `/output/` via Databricks notebook. Confirm end-to-end OAuth access and data persistence.
+
+**Dependencies:**
+
+- Environment: Azure Databricks (Premium, East US)
+- Storage: `markcapstonestorage` / container `capstone-data`
+- Secrets scope: `capstone-secrets` (`client-id`, `client-secret`)
+- Tenant ID: from registered service principal
+- Cluster: auto-termination ≤ 15 min, attached to workspace
+
+
 
 **23:33 10/16/2025**
 

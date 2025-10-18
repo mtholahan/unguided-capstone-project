@@ -122,3 +122,8 @@ archive/
 .venv/
 scripts/.venv/
 scripts/.venv/**
+
+
+# --- local cache ---
+# Ignore any cache folders
+**/.cache/
