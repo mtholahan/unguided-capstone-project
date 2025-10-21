@@ -1,0 +1,113 @@
+<mxfile host="65bd71144e">
+    <diagram id="step7-architecture" name="Step7 Architecture Draft">
+        <mxGraphModel dx="1386" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="col_ingest" value="Ingestion" style="text;align=center;verticalAlign=middle;fontSize=16;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="60" y="40" width="160" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="col_storage" value="Storage" style="text;align=center;verticalAlign=middle;fontSize=16;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="520" y="40" width="160" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="col_processing" value="Processing / Management" style="text;align=center;verticalAlign=middle;fontSize=16;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="960" y="40" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="col_serving" value="Serving &amp; Monitoring" style="text;align=center;verticalAlign=middle;fontSize=16;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1420" y="40" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="tmdb_api" value="TMDB API&#xa;Notes: uses v3/v4 endpoints" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1a73e8;fillColor=#e8f0fe" parent="1" vertex="1">
+                    <mxGeometry x="40" y="120" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="discogs_api" value="Discogs API&#xa;Notes: authenticated requests" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1a73e8;fillColor=#e8f0fe" parent="1" vertex="1">
+                    <mxGeometry x="40" y="220" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="extract_tmdb" value="extract_spark_tmdb.py&#xa;Annotation: Pulls TMDB titles/metadata → writes raw zone parquet" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#0b8043;fillColor=#e6f4ea" parent="1" vertex="1">
+                    <mxGeometry x="270" y="120" width="240" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="extract_discogs" value="extract_spark_discogs.py&#xa;Annotation: Pulls Discogs artist/release data → raw zone parquet" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#0b8043;fillColor=#e6f4ea" parent="1" vertex="1">
+                    <mxGeometry x="270" y="220" width="240" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="blob_account" value="Azure Blob Storage (Data Lake)&#xa;Annotation: container=tmdbdiscogs; tiers: raw/silver/gold" style="shape=process;rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#f1f3f4" parent="1" vertex="1">
+                    <mxGeometry x="600" y="120" width="220" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="zone_raw" value="raw/&#xa;Annotation: landing parquet/json; schema-on-read" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" parent="1" vertex="1">
+                    <mxGeometry x="560" y="350" width="80" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="zone_silver" value="silver/&#xa;Annotation: cleaned &amp; conformed" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" parent="1" vertex="1">
+                    <mxGeometry x="650" y="350" width="80" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="zone_gold" value="gold/&#xa;Annotation: analytics-ready tables" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" parent="1" vertex="1">
+                    <mxGeometry x="740" y="350" width="80" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="databricks" value="Azure Databricks (Spark 3.5 / 14.3 LTS)&#xa;Annotation: runs ETL notebooks/jobs; Git-linked repo; reads raw → writes silver/gold" style="shape=process;rounded=1;whiteSpace=wrap;html=1;strokeColor=#d93025;fillColor=#fdecea" parent="1" vertex="1">
+                    <mxGeometry x="960" y="110" width="300" height="97" as="geometry"/>
+                </mxCell>
+                <mxCell id="adf" value="Azure Data Factory (optional now, planned)&#xa;Annotation: future orchestration (schedule API extracts, trigger notebooks)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#673ab7;fillColor=#ede7f6" parent="1" vertex="1">
+                    <mxGeometry x="960" y="250" width="300" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="keyvault" value="Azure Key Vault&#xa;Annotation: stores API keys, SAS, secrets; accessed via Managed Identity" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1e88e5;fillColor=#e3f2fd" parent="1" vertex="1">
+                    <mxGeometry x="960" y="370" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="arm" value="ARM Templates (export per resource)&#xa;Annotation: storage, databricks, ADF, Log Analytics" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#455a64;fillColor=#eceff1" parent="1" vertex="1">
+                    <mxGeometry x="960" y="470" width="300" height="62" as="geometry"/>
+                </mxCell>
+                <mxCell id="powerbi" value="Power BI (optional)&#xa;Annotation: connects to gold/" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#f57c00;fillColor=#fff3e0" parent="1" vertex="1">
+                    <mxGeometry x="1420" y="150" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="monitor" value="Azure Monitor + Log Analytics&#xa;Annotation: collect job logs, cluster metrics, storage diagnostics" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2e7d32;fillColor=#e8f5e9" parent="1" vertex="1">
+                    <mxGeometry x="1420" y="260" width="220" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge1" style="endArrow=block;" parent="1" source="tmdb_api" target="extract_tmdb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge2" style="endArrow=block;" parent="1" source="discogs_api" target="extract_discogs" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge3" style="endArrow=block;" parent="1" source="extract_tmdb" target="blob_account" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge4" style="endArrow=block;" parent="1" source="extract_discogs" target="blob_account" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge5" style="endArrow=block;dashed=1;" parent="1" source="blob_account" target="zone_raw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge6" style="endArrow=block;" parent="1" source="databricks" target="zone_silver" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="790" y="280"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge7" style="endArrow=block;" parent="1" source="databricks" target="zone_gold" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge8" style="endArrow=block;" parent="1" source="zone_gold" target="powerbi" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge9" style="endArrow=block;dashed=1;" parent="1" source="adf" target="extract_tmdb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge10" style="endArrow=block;dashed=1;" parent="1" source="adf" target="databricks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge11" style="endArrow=block;dashed=1;" parent="1" source="keyvault" target="extract_tmdb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge12" style="endArrow=block;dashed=1;" parent="1" source="keyvault" target="extract_discogs" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge13" style="endArrow=block;dashed=1;" parent="1" source="keyvault" target="databricks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge14" style="endArrow=block;dashed=1;" parent="1" source="databricks" target="monitor" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge15" style="endArrow=block;dashed=1;" parent="1" source="blob_account" target="monitor" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
