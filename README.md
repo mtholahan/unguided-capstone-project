@@ -207,6 +207,46 @@ Ensures identical dependencies between local and cloud environments.
 - If upgrading Spark → 4.x, revisit the Pandas UDF patch inside step_06_scale_prototype.py.
 
 
+
+## 🧾 Step 6 – Scale Your Prototype
+
+### Purpose
+This step scales the prototype ETL pipeline developed in Step 5 to process the full TMDB and Discogs datasets in the cloud using PySpark on Databricks.  
+It leverages Spark’s distributed compute to handle larger volumes efficiently while maintaining the same modular logic and logging framework.
+
+### Prerequisites
+- Active **Databricks cluster (Spark 3.5 or higher)**
+- Environment variables configured:  
+  `TMDB_API_KEY`  and  `DISCOGS_API_KEY`
+- Valid Azure Blob access key set in Spark config  
+- Repo synced to:  
+  `/Workspace/Repos/markholahan@pm.me/unguided-capstone-project`
+
+### Run Instructions
+1. Launch your Databricks cluster and open **Pipeline_Preflight.ipynb**  
+2. Execute all cells sequentially:  
+   - Load environment variables  
+   - Initialize Spark session  
+   - Run `extract_spark_tmdb.py`  
+   - Run `extract_spark_discogs.py`  
+   - Verify Parquet writes to Azure Blob  
+3. Expected Blob paths:  
+   - `/raw/tmdb/`  
+   - `/raw/discogs/`  
+4. Verify successful notebook completion (green checks).
+
+### Expected Output
+- ✅ All cells in Preflight notebook complete successfully  
+- ✅ Parquet files persist to Azure Blob Storage  
+- ✅ No missing credentials or I/O errors  
+
+### Evidence for Mentor Review
+Store screenshots under `/evidence/step6/`:
+- `notebook_run_success.png` – Databricks run showing all green checks  
+- `blob_file_listing.png` – Azure Blob container with `/raw/tmdb/` and `/raw/discogs/` listings  
+
+---
+
 ## 🗺️ Environment Diagram (Conceptual)
 
 ```
