@@ -10,13 +10,172 @@ Anchors capture context, current milestone, next action, and dependencies for se
 ```
 Anchor this as chat [ANCHOR_NAME] with next action + dependencies. Use this template:
 Resume from anchor: [ANCHOR_NAME]
-Context: [2–4 lines on project/sprint state]
+Context: [3–4 lines on project/sprint state]
 Current milestone: [what’s done]
 Next action: [one concrete step]
 Dependencies: [keys/env/tools/people]
 ```
 
 
+
+**19:45 10/20/2025**
+
+Resume from anchor: [ANCHOR_NAUnguidedCapstone_TMDB_Refactor02_Step_06_Submission_De-debug]
+
+Context:
+ We’re stabilizing Step 6 (“Scale Your Prototype”) of the Unguided Capstone after migrating TMDB and Discogs extraction scripts to PySpark for Databricks + ADLS Gen2. Both jobs now run through the cluster, but output validation shows malformed title parsing and incorrect ADLS URIs traced to legacy config logic. Environment, secrets, and managed-identity access are verified.
+
+Current milestone:
+ ✅ Spark runtime confirmed (Databricks 14.3 LTS, Connect off)
+ ✅ Managed Identity + ADLS Gen2 external location verified
+ ✅ Both PySpark scripts execute end-to-end
+ 🚧 Data write and title handling bugs identified in `extract_spark_tmdb.py` and `extract_spark_discogs.py`
+
+Next action:
+ 🔧 Patch both extract scripts to (a) coerce `GOLDEN_TITLES_TEST` into a list of titles instead of characters, and (b) lock `container_uri` and `tmdb_path` to the correct ADLS Gen2 URIs (`markcapstoneadls`). Retest Databricks execution and validate Parquet outputs in `/raw/tmdb/` and `/raw/discogs/`.
+
+Dependencies:
+
+- Repo: `unguided-capstone-project/scripts_spark/`
+- Environment: Databricks cluster `capstone-blob-cluster` (Runtime 14.3 LTS)
+- Storage: `markcapstoneadls` (container `raw`)
+- Secrets: `capstone-secrets` scope (`tmdb_api_key`, `discogs_api_key`)
+- Mentor (Akhil) for final Step 6 notebook review and rubric sign-off
+
+
+
+
+
+**12:04 10/20/2025**
+
+**Resume from anchor:**
+ `[ANCHOR_NAUnguidedCapstone_TMDB_Refactor02_Step_06_Submission_Debug]`
+
+**Context:**
+ Working on Step 6 (“Scale Your Prototype”) of the Unguided Capstone.
+ TMDB extraction runs successfully in Databricks but output verification fails — writes to local DBFS instead of Azure Blob.
+ We’ve built a new cluster (`capstone-blob-cluster`, Spark 3.5.0, Scala 2.12) and validated Azure secret scope `markscope`.
+ Current focus: achieving a working WASBS-based write to the Blob container (`raw@markcapstonestorage.blob.core.windows.net`).
+
+**Current milestone:**
+ ✅  Verified Spark environment on Databricks runtime 14.3 LTS
+ ✅  Confirmed secret retrieval from `markscope`
+ ✅  Validated ABFS + mount configs fail under current cluster policy
+ 🚧  Debugging direct WASBS connector write (SharedKey authentication)
+
+**Next action:**
+ Test direct WASBS write using this working minimal cell:
+
+```
+spark.conf.set(
+    "fs.azure.account.key.markcapstonestorage.blob.core.windows.net",
+    dbutils.secrets.get("markscope","azure-storage-key")
+)
+test_path = "wasbs://raw@markcapstonestorage.blob.core.windows.net/test_write_simple/"
+df = spark.createDataFrame([(1,"ok")], ["id","status"])
+df.write.mode("overwrite").parquet(test_path)
+```
+
+If successful, refactor `extract_spark_tmdb` and `extract_spark_discogs` to write to
+ `wasbs://raw@markcapstonestorage.blob.core.windows.net/tmdb/` and `/discogs/`.
+
+**Dependencies:**
+
+- Azure Storage Account `markcapstonestorage` (container `raw`)
+- Databricks Secret Scope `markscope` (key `azure-storage-key`)
+- Cluster `capstone-blob-cluster` (Runtime 14.3 LTS / Spark 3.5.0)
+- dbutils + PySpark 3.5 environment
+- No external mentor or reviewer yet engaged for this stage
+
+
+
+**00:20 10/19/2025**
+
+### 🧭 **Resume from anchor:**
+
+**[UnguidedCapstone_TMDB_Refactor02_Step_06_Submission_Prep]**
+
+------
+
+**Context:**
+ You’ve successfully scaled both TMDB and Discogs metadata extracts into Spark using Databricks (Step 6 refactor). The pipeline runs cleanly end-to-end, writing Parquet outputs to Azure Blob under `/raw/tmdb/` and `/raw/discogs/`. Environment variables and Blob keys are verified. You’re now preparing the project for mentor submission and review.
+
+------
+
+**Current milestone:**
+ ✅ *Unguided Capstone Step 6 (Scale Your Prototype)* functional completion achieved
+
+- `extract_spark_tmdb.py` and `extract_spark_discogs.py` validated
+- Pipeline Preflight notebook executes cleanly on Databricks cluster
+- Blob persistence confirmed via Parquet files
+- Environment + cluster configuration stable
+
+------
+
+**Next action:**
+ 🧾 **Produce mentor-ready submission assets for Step 6:**
+
+- Add a short **Step 6 section to README.md** (run instructions + prerequisites)
+- Prepare a submission-ready *Pipeline Preflight* notebook (purpose, sequence, and expected outputs) for mentor use
+- Capture 1–2 screenshots (green check notebook run + Blob file listing) → save to `/evidence/step6/`
+
+------
+
+**Dependencies:**
+
+- 🧠 Current Databricks cluster (capstone-cluster, Spark 3.5+)
+- 🗝️ Environment variables: `TMDB_API_KEY`, `DISCOGS_API_KEY`
+- 🔑 Azure Blob key in Spark config
+- 📁 Repo path: `/Workspace/Repos/markholahan@pm.me/unguided-capstone-project`
+- 👤 Mentor Akhil (for final review and rubric confirmation)
+
+
+
+**16:21 10/18/2025**
+
+**Resume from anchor:** [UnguidedCapstone_TMDB_Refactor02_Step_06_Databricks_Working]
+
+**Context:**
+ The TMDB → Spark extraction workflow is now operational in Databricks Repos.
+ Environment fallback for TMDB API key confirmed functional.
+ Azure Blob connection validated via `abfss://` Parquet writes and successful Spark jobs.
+
+**Current milestone:**
+ ✔️ Step 01 (TMDB Spark Extract) fully refactored, executed, and persisted to Blob storage (`/raw/tmdb`).
+
+**Next action:**
+ Proceed to implement **Step 02 (Discogs Spark Extract)** — mirror TMDB Spark pattern using the same `BaseStep` structure, ensuring similar environment key retrieval and Blob output configuration.
+
+**Dependencies:**
+
+- ✅ Active TMDB API key (env var: `TMDB_API_KEY`)
+- ✅ Azure Blob storage access key (via `spark.conf.set`)
+- 🧰 Databricks Repos environment with Spark 3.5+
+- 📁 Shared repo path: `/Workspace/Repos/markholahan@pm.me/unguided-capstone-project`
+
+
+
+**13:29 10/18/2025**
+
+Resume from anchor: [UnguidedCapstone_TMDB_Refactor02_Step_06_Databricks_More_Almost]
+
+Context:
+ The TMDB–Discogs Unguided Capstone is now fully integrated with the Azure Databricks workspace and validated OAuth connection to Blob Storage. The environment sync pipeline (VS Code ↔ Ubuntu ↔ Databricks) remains stable through `rebuild_venv.sh`. GitHub will remain the sole repo for code versioning, avoiding Azure DevOps complexity.
+
+Current milestone:
+ ✅ Verified Databricks workspace access and tested manual Spark session initialization
+ ✅ Confirmed service principal-based OAuth authentication works with Blob container
+ ✅ Locked Python environment (`requirements_locked.txt`) now syncs across shells
+
+Next action:
+ → Connect GitHub repository directly to Databricks workspace and pull the current `unguided-capstone-project` codebase to validate notebook-based Spark I/O (read/write via OAuth).
+
+Dependencies:
+
+- Azure Databricks (Premium, East US) workspace
+- GitHub repo: `unguided-capstone-project`
+- Azure Storage: `markcapstonestorage / capstone-data`
+- OAuth secrets (client-id, client-secret) stored in Databricks scope: `capstone-secre`
 
 **00:47 10/18/2025**
 
