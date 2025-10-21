@@ -505,3 +505,65 @@ SHARED (190 titles)         190.0                NaN           NaN          2.74
                 NaN           NaN                NaN           NaN           NaN          NaN       NaN step_04_validate_schema_alignment 2025-10-15 14:47:24              0.00                992.64             NaN          NaN                  NaN          NaN                                                                                                                                                                                                                                                                                                   NaN               NaN            NaN               NaN              NaN                NaN              NaN             NaN             NaN           NaN           NaN     1986.0        1138.0           8.0              7.0 data\validation\schema_comparison_tmdb.csv data\validation\schema_comparison_discogs.csv data\validation\integrity_summary.csv
                 NaN           NaN                NaN           NaN           NaN          NaN       NaN                               NaN                 NaN               NaN                   NaN             NaN          NaN                  NaN          NaN {'tmdb_rows': 1986, 'discogs_rows': 1138, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data\\validation\\schema_comparison_tmdb.csv', 'discogs_schema_path': 'data\\validation\\schema_comparison_discogs.csv', 'integrity_summary_path': 'data\\validation\\integrity_summary.csv'}               NaN            NaN               NaN              NaN                NaN              NaN             NaN             NaN           NaN           NaN        NaN           NaN           NaN              NaN                                        NaN                                           NaN                                   NaN
                 NaN           NaN                NaN           NaN           NaN          NaN       NaN                               NaN                 NaN              1.84                994.48             NaN          NaN                  NaN          NaN                                                                                                                                                                                                                                                                                                   NaN            7965.0         2064.0             60.85            53.29              78.48             24.0           538.0          1502.0         60.54         14.13        NaN           NaN           NaN              NaN                                        NaN                                           NaN                                   NaN
+2025-10-20 22:21:37,223 - extract_spark_tmdb - INFO - Initialized logger for extract_spark_tmdb
+2025-10-20 22:21:37,825 - extract_spark_tmdb - INFO - Initialized extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-20 22:21:37,826 - extract_spark_tmdb - INFO - ✅ Initialized ExtractSparkTMDB with Spark + Blob access
+2025-10-20 22:21:37,828 - extract_spark_tmdb - INFO - 🎬 Starting Spark TMDB extraction (GOLDEN)
+2025-10-20 22:21:37,828 - extract_spark_tmdb - WARNING - ⚠️ Using dummy TMDB key for local testing.
+2025-10-20 22:21:38,016 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'F' (401)
+2025-10-20 22:21:38,017 - extract_spark_tmdb - WARNING - ⚠️ No data for 'F'
+2025-10-20 22:21:38,511 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'r' (401)
+2025-10-20 22:21:38,512 - extract_spark_tmdb - WARNING - ⚠️ No data for 'r'
+2025-10-20 22:21:39,009 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'o' (401)
+2025-10-20 22:21:39,010 - extract_spark_tmdb - WARNING - ⚠️ No data for 'o'
+2025-10-20 22:21:39,546 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'z' (401)
+2025-10-20 22:21:39,547 - extract_spark_tmdb - WARNING - ⚠️ No data for 'z'
+2025-10-20 22:21:40,046 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'e' (401)
+2025-10-20 22:21:40,049 - extract_spark_tmdb - WARNING - ⚠️ No data for 'e'
+2025-10-20 22:21:40,469 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'n' (401)
+2025-10-20 22:21:40,471 - extract_spark_tmdb - WARNING - ⚠️ No data for 'n'
+2025-10-20 22:21:40,965 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'J' (401)
+2025-10-20 22:21:40,966 - extract_spark_tmdb - WARNING - ⚠️ No data for 'J'
+2025-10-20 22:21:41,463 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'a' (401)
+2025-10-20 22:21:41,464 - extract_spark_tmdb - WARNING - ⚠️ No data for 'a'
+2025-10-20 22:21:41,970 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'w' (401)
+2025-10-20 22:21:41,972 - extract_spark_tmdb - WARNING - ⚠️ No data for 'w'
+2025-10-20 22:21:42,374 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 's' (401)
+2025-10-20 22:21:42,375 - extract_spark_tmdb - WARNING - ⚠️ No data for 's'
+2025-10-20 22:21:50,155 - extract_spark_tmdb - INFO - 💾 Wrote 1 TMDB JSON records to abfss://raw@markcapstoneadls.dfs.core.windows.net/tmdb/
+2025-10-20 22:21:51,749 - extract_spark_tmdb - INFO - 📊 Logged metrics for extract_spark_tmdb_metrics: {'titles_total': 10, 'records_written': 1, 'duration_sec': 12.33, 'mode': 'GOLDEN', 'branch': 'step6-dev', 'step_name': 'extract_spark_tmdb_metrics', 'timestamp': '2025-10-20T22:21:50', 'step_runtime_sec': 12.33, 'pipeline_runtime_sec': 0.0}
+2025-10-20 22:21:51,750 - extract_spark_tmdb - INFO - ✅ Completed Spark TMDB extraction in 12.3s
+2025-10-20 22:21:51,755 - extract_spark_discogs - INFO - Initialized logger for extract_spark_discogs
+2025-10-20 22:21:51,890 - extract_spark_discogs - INFO - Initialized extract_spark_discogs [branch=unknown, commit=unknown]
+2025-10-20 22:21:51,891 - extract_spark_discogs - INFO - ✅ Initialized ExtractSparkDiscogs with Spark + Blob access
+2025-10-20 22:21:51,892 - extract_spark_discogs - WARNING - ⚠️ Using dummy Discogs key for local testing.
+2025-10-20 22:29:07,730 - py4j.clientserver - INFO - Received command c on object id p0
+2025-10-20 22:29:08,009 - extract_spark_tmdb - INFO - Initialized logger for extract_spark_tmdb
+2025-10-20 22:29:09,384 - extract_spark_tmdb - INFO - Initialized extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-20 22:29:09,385 - extract_spark_tmdb - INFO - ✅ Initialized ExtractSparkTMDB with Spark + Blob access
+2025-10-20 22:29:09,386 - extract_spark_tmdb - INFO - 🎬 Starting Spark TMDB extraction (GOLDEN)
+2025-10-20 22:29:09,387 - extract_spark_tmdb - WARNING - ⚠️ Using dummy TMDB key for local testing.
+2025-10-20 22:29:09,548 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'F' (401)
+2025-10-20 22:29:09,549 - extract_spark_tmdb - WARNING - ⚠️ No data for 'F'
+2025-10-20 22:29:09,968 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'r' (401)
+2025-10-20 22:29:09,969 - extract_spark_tmdb - WARNING - ⚠️ No data for 'r'
+2025-10-20 22:29:10,458 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'o' (401)
+2025-10-20 22:29:10,459 - extract_spark_tmdb - WARNING - ⚠️ No data for 'o'
+2025-10-20 22:29:10,878 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'z' (401)
+2025-10-20 22:29:10,879 - extract_spark_tmdb - WARNING - ⚠️ No data for 'z'
+2025-10-20 22:29:11,374 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'e' (401)
+2025-10-20 22:29:11,375 - extract_spark_tmdb - WARNING - ⚠️ No data for 'e'
+2025-10-20 22:29:11,803 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'n' (401)
+2025-10-20 22:29:11,809 - extract_spark_tmdb - WARNING - ⚠️ No data for 'n'
+2025-10-20 22:29:12,285 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'J' (401)
+2025-10-20 22:29:12,286 - extract_spark_tmdb - WARNING - ⚠️ No data for 'J'
+2025-10-20 22:29:12,768 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'a' (401)
+2025-10-20 22:29:12,769 - extract_spark_tmdb - WARNING - ⚠️ No data for 'a'
+2025-10-20 22:29:13,186 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 'w' (401)
+2025-10-20 22:29:13,187 - extract_spark_tmdb - WARNING - ⚠️ No data for 'w'
+2025-10-20 22:29:13,606 - extract_spark_tmdb - WARNING - ⚠️ TMDB fetch failed for 's' (401)
+2025-10-20 22:29:13,608 - extract_spark_tmdb - WARNING - ⚠️ No data for 's'
+2025-10-20 22:29:16,538 - extract_spark_tmdb - INFO - 💾 Wrote 1 TMDB JSON records to abfss://raw@markcapstoneadls.dfs.core.windows.net/raw/tmdb/
+2025-10-20 22:29:17,606 - extract_spark_tmdb - INFO - 📊 Logged metrics for extract_spark_tmdb_metrics: {'titles_total': 10, 'records_written': 1, 'duration_sec': 7.16, 'mode': 'GOLDEN', 'branch': 'step6-dev', 'step_name': 'extract_spark_tmdb_metrics', 'timestamp': '2025-10-20T22:29:16', 'step_runtime_sec': 7.16, 'pipeline_runtime_sec': 0.0}
+2025-10-20 22:29:17,609 - extract_spark_tmdb - INFO - ✅ Completed Spark TMDB extraction in 7.2s
+2025-10-20 22:29:17,612 - extract_spark_discogs - INFO - Initialized logger for extract_spark_discogs
