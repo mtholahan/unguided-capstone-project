@@ -20,7 +20,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
-from config import (
+from scripts.config import (
     DATA_DIR,
     LOG_DIR,
     LOG_LEVEL,
@@ -86,26 +86,77 @@ class BaseStep:
 
         self.logger.info(f"Initialized {name} [branch={branch}, commit={commit}]")
 
+
     # ============================================================
-    # 💾 Metrics Handling — CSV
+    # 💾 Metrics Handling — CSV + JSON with Runtime Rollup
     # ============================================================
-    def write_metrics(self, metrics: dict):
-        """Append metrics to pipeline_metrics.csv with automatic headers."""
-        metrics_file = self.metrics_dir / "pipeline_metrics.csv"
+    def write_metrics(self, metrics: dict, name: str | None = None):
+        """
+        Persist step metrics in two forms:
+        1️⃣ Append to consolidated pipeline_metrics.csv
+        2️⃣ Write individual JSON snapshot for the step
+
+        Adds:
+            • step_runtime_sec  → duration of this step (if provided)
+            • pipeline_runtime_sec → cumulative runtime across steps in session
+
+        Args:
+            metrics (dict): Dictionary of metrics to log
+            name (str | None): Optional override for the step name
+        """
+        import csv, json, time
+        from datetime import datetime
+        from pathlib import Path
+        from scripts.config import DATA_DIR
+
+        # --- Ensure metrics directory exists ---
+        metrics_dir = getattr(self, "metrics_dir", None) or (Path(DATA_DIR) / "metrics")
+        metrics_dir.mkdir(parents=True, exist_ok=True)
+
+        # --- Track timing info ---
+        now = time.time()
+        if not hasattr(self, "_pipeline_start"):
+            # First call in this session
+            self._pipeline_start = now
+            self._last_step_time = now
+            pipeline_runtime = 0.0
+        else:
+            pipeline_runtime = round(now - self._pipeline_start, 2)
+
+        step_runtime = (
+            metrics.get("duration_sec")
+            if "duration_sec" in metrics
+            else round(now - getattr(self, "_last_step_time", now), 2)
+        )
+        self._last_step_time = now
+
+        # --- Augment metrics with metadata ---
         metrics = metrics.copy()
-        metrics["step_name"] = self.name
+        metrics["step_name"] = name or getattr(self, "name", "unknown_step")
         metrics["timestamp"] = datetime.now().isoformat(timespec="seconds")
+        metrics["step_runtime_sec"] = step_runtime
+        metrics["pipeline_runtime_sec"] = pipeline_runtime
 
+        # --- 1️⃣ Append to pipeline_metrics.csv ---
+        metrics_file = metrics_dir / "pipeline_metrics.csv"
         write_header = not metrics_file.exists()
-        fieldnames = metrics.keys()
-
         with open(metrics_file, "a", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=metrics.keys())
             if write_header:
                 writer.writeheader()
             writer.writerow(metrics)
 
-        self.logger.info(f"📊 Logged metrics for {self.name}: {metrics}")
+        # --- 2️⃣ Write individual JSON snapshot ---
+        json_file = metrics_dir / f"{metrics['step_name']}.json"
+        json_file.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        # --- Log summary ---
+        self.logger.info(f"📊 Logged metrics for {metrics['step_name']}: {metrics}")
+        self.logger.debug(
+            f"🪶 Metrics written to: {metrics_file.name}, {json_file.name} | "
+            f"Step runtime={step_runtime:.2f}s | Pipeline runtime={pipeline_runtime:.2f}s"
+        )
+
 
     # ============================================================
     # 💾 Metrics Handling — JSON (per-step summary)

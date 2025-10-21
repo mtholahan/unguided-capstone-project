@@ -17,21 +17,19 @@ from types import SimpleNamespace
 from typing import List, Dict, Any, Iterable, Optional
 import requests
 
-from config import (
+from scripts.config import (
     TMDB_API_KEY,
     API_TIMEOUT,
     RETRY_BACKOFF,
     LOG_LEVEL,
     MAX_THREADS,
     DATA_DIR,
-    DISCOGS_CONSUMER_KEY,
-    DISCOGS_CONSUMER_SECRET,
     DISCOGS_USER_AGENT,
     DISCOGS_SLEEP_SEC,
 )
 
 try:
-    from config import AZURE_SAS_TOKEN
+    from scripts.config import AZURE_SAS_TOKEN
 except ImportError:
     AZURE_SAS_TOKEN = None
 
@@ -65,54 +63,87 @@ class RateLimiter:
     def __exit__(self, exc_type, exc_val, exc_tb):
         return False
 
-
 # ---------------------------------------------------------------------------
 # 🎞 Title Normalization
 # ---------------------------------------------------------------------------
+# ------------------------------------------------------------
+# Title Normalization (Refactored v2)
+# ------------------------------------------------------------
+import re, unicodedata
+
 def normalize_title_for_matching(text: str) -> str:
+    """Normalize movie/album titles for cross-dataset fuzzy matching."""
     if not isinstance(text, str):
         return ""
-    text = unicodedata.normalize("NFKD", text.lower().strip())
+
+    # Unicode cleanup + lowercasing
+    text = unicodedata.normalize("NFKD", text).lower().strip()
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
-    text = re.sub(r"[\(\[\{].*?[\)\]\}]", " ", text)
+
+    # Strip brackets, parentheses, etc.
+    text = re.sub(r"[\[\(].*?[\]\)]", " ", text)
+
+    # Normalize acronyms (e.g., O.S.T. → ost)
+    text = re.sub(r"\bO\.S\.T\b", "ost", text, flags=re.I)
+
+    # Remove redundant soundtrack/edition phrases
     noise = [
         r"original motion picture soundtrack", r"original soundtrack",
         r"motion picture soundtrack", r"complete motion picture score",
-        r"deluxe edition", r"expanded edition", r"\bost\b",
-        r"\bsoundtrack\b", r"\bscore\b",
+        r"music from", r"songs from", r"score from",
+        r"deluxe edition", r"expanded edition", r"bost\b",
+        r"\bsoundtrack\b", r"\bscore\b"
     ]
     for pat in noise:
         text = re.sub(pat, " ", text, flags=re.I)
+
+    # Remove non-alphanumeric characters
     text = re.sub(r"[^a-z0-9\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
+
     return " ".join(t for t in text.split() if len(t) > 1)
 
 
 def normalize_for_matching_extended(text: str) -> str:
+    """Extended normalization with numeral, article, and structural cleanup."""
+    if not isinstance(text, str):
+        return ""
+
     ROMAN_MAP = {
         " i ": " 1 ", " ii ": " 2 ", " iii ": " 3 ", " iv ": " 4 ",
         " v ": " 5 ", " vi ": " 6 ", " vii ": " 7 ", " viii ": " 8 ",
         " ix ": " 9 ", " x ": " 10 ",
     }
     ARTICLES = {"the", "a", "an"}
-    base = normalize_title_for_matching(text)
-    if not base:
+
+    # Base normalization
+    s = normalize_title_for_matching(text)
+    if not s:
         return ""
-    s = f" {base} "
+
+    # Convert roman numerals
     for k, v in ROMAN_MAP.items():
         s = s.replace(k, v)
+
+    # Drop leading articles
     toks = s.strip().split()
     while toks and toks[0] in ARTICLES:
         toks = toks[1:]
     s = " ".join(toks)
-    s = re.sub(r"\b(part|episode|chapter|vol|volume)\s+\d+\b", " ", s)
+
+    # Remove part/episode/volume patterns
+    s = re.sub(r"\b(part|episode|chapter|vol|volume)\s*\d+\b", " ", s)
+
+    # Safety: scale down extreme short titles (e.g. "Up", "Her")
+    if len(s) < 3:
+        s = f"{s} title"
+
     return re.sub(r"\s+", " ", s).strip()
 
 
 def clean_title(text: str) -> str:
     if not isinstance(text, str): return ""
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9\s]", "", text.lower())).strip()
-
 
 # ---------------------------------------------------------------------------
 # 🧩 Progress Bar
@@ -150,6 +181,16 @@ def get_cache_path(url: str, params: dict, cache_dir: Path = DATA_DIR / "cache")
     return cache_dir / f"{hashlib.md5(key).hexdigest()}.json"
 
 
+def safe_filename(name: str, max_len: int = 120) -> str:
+    """Return a cross-platform, filesystem-safe filename."""
+    s = unicodedata.normalize("NFKD", str(name)).encode("ascii", "ignore").decode()
+    s = re.sub(r'[\\/*?:"<>|]+', "_", s)     # illegal chars (Win/macOS/Linux)
+    s = re.sub(r"\s+", " ", s).strip()       # collapse whitespace
+    s = s.replace(" ", "_")                  # spaces → underscores
+    s = s[:max_len] if max_len > 0 else s
+    return s or "file"
+
+
 # ---------------------------------------------------------------------------
 # 🌐 Safe Request + Cache Wrapper
 # ---------------------------------------------------------------------------
@@ -175,8 +216,7 @@ def cached_request(
 
     # 🔐 Inject API keys
     if "discogs.com" in url:
-        params.setdefault("key", DISCOGS_CONSUMER_KEY)
-        params.setdefault("secret", DISCOGS_CONSUMER_SECRET)
+        params.setdefault("token", os.getenv("DISCOGS_TOKEN"))
         headers.setdefault("User-Agent", DISCOGS_USER_AGENT or "UnguidedCapstone/1.0")
     elif "themoviedb.org" in url:
         params.setdefault("api_key", TMDB_API_KEY)
