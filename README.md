@@ -223,7 +223,7 @@ It leverages Spark’s distributed compute to handle larger volumes efficiently 
   `/Workspace/Repos/markholahan@pm.me/unguided-capstone-project`
 
 ### Run Instructions
-1. Launch your Databricks cluster and open **Pipeline_Preflight.ipynb**  
+1. Launch your Databricks cluster and open **Unguided Capstone – Step 6 Databricks with ADLS Integration.ipynb**  
 2. Execute all cells sequentially:  
    - Load environment variables  
    - Initialize Spark session  
@@ -235,15 +235,12 @@ It leverages Spark’s distributed compute to handle larger volumes efficiently 
    - `/raw/discogs/`  
 4. Verify successful notebook completion (green checks).
 
-### Expected Output
+### Validation Checklist
 - ✅ All cells in Preflight notebook complete successfully  
 - ✅ Parquet files persist to Azure Blob Storage  
 - ✅ No missing credentials or I/O errors  
 
-### Evidence for Mentor Review
-Store screenshots under `/evidence/step6/`:
-- `notebook_run_success.png` – Databricks run showing all green checks  
-- `blob_file_listing.png` – Azure Blob container with `/raw/tmdb/` and `/raw/discogs/` listings  
+
 
 ---
 
