@@ -28,30 +28,27 @@ class ExtractSparkDiscogs(BaseStep):
         self.spark = spark
         self.api_url = "https://api.discogs.com/database/search"
         self.container_uri = (
-            "abfss://capstone-data@markcapstonestorage.dfs.core.windows.net/raw/discogs/"
+            "abfss://raw@markcapstoneadls.dfs.core.windows.net/raw/discogs/"
         )
         self.rate_limit = 2  # ~2 requests per second
         self.logger.info("✅ Initialized ExtractSparkDiscogs with Spark + Blob access")
 
     # ------------------------------------------------------------------
     def _get_api_key(self):
-        """Retrieve Discogs API key via Databricks secret scope or environment."""
+        """Retrieve Discogs API key from Databricks secret scope or environment."""
         try:
-            import dbruntime.dbutils as dbutils_runtime
-            if hasattr(dbutils_runtime, "secrets"):
-                key = dbutils_runtime.secrets.get(
-                    scope="capstone-secrets", key="discogs_api_key"
-                )
-                self.logger.info("🔐 Retrieved Discogs API key from Databricks secret scope.")
-                return key
+            from pyspark.dbutils import DBUtils
+            dbutils = DBUtils(self.spark)
+            key = dbutils.secrets.get("markscope", "discogs-api-key")
+            self.logger.info("🔐 Retrieved Discogs API key from Databricks secret scope.")
         except Exception as e:
-            self.logger.info(f"⚠️ Databricks secret scope unavailable: {e}")
+            self.logger.warning(f"⚠️ Could not load Discogs secret from scope: {e}")
+            key = os.getenv("DISCOGS_API_KEY", "DUMMY_KEY_FOR_LOCAL_TESTS")
+            if key == "DUMMY_KEY_FOR_LOCAL_TESTS":
+                self.logger.warning("⚠️ Using dummy Discogs key for local testing.")
+            else:
+                self.logger.info("✅ Using DISCOGS_API_KEY from environment variable.")
 
-        key = os.getenv("DISCOGS_API_KEY", "DUMMY_KEY_FOR_LOCAL_TESTS")
-        if key == "DUMMY_KEY_FOR_LOCAL_TESTS":
-            self.logger.warning("⚠️ Using dummy Discogs key for local testing.")
-        else:
-            self.logger.info("✅ Using DISCOGS_API_KEY from environment variable.")
         return key
 
     # ------------------------------------------------------------------
@@ -89,11 +86,20 @@ class ExtractSparkDiscogs(BaseStep):
         start_time = time.time()
         api_key = self._get_api_key()
 
-        # --- Load TMDB titles from previous step ---
-        tmdb_path = "abfss://capstone-data@markcapstonestorage.dfs.core.windows.net/raw/tmdb/"
-        df_tmdb = self.spark.read.parquet(tmdb_path)
-        titles = [row.title for row in df_tmdb.select("title").distinct().collect()]
-        self.logger.info(f"🎧 Loaded {len(titles)} TMDB titles from {tmdb_path}")
+        # --- Load TMDB titles from previous step (correct ADLS location) ---
+        base_uri = "abfss://raw@markcapstoneadls.dfs.core.windows.net/"
+        tmdb_path = f"{base_uri}tmdb/"
+
+        try:
+            tmdb_df = self.spark.read.parquet(tmdb_path)
+            titles = [row.title for row in tmdb_df.select("title").distinct().collect()]
+            self.logger.info(f"✅ Loaded {len(titles)} TMDB titles from ADLS for Discogs lookup.")
+        except Exception as e:
+            self.logger.warning(f"⚠️ Could not read TMDB data from {tmdb_path}: {e}")
+            titles = ["Inception", "Interstellar", "The Matrix"]  # fallback
+
+        # --- Update output container URI ---
+        self.container_uri = f"{base_uri}discogs/"
 
         results = []
         for i, title in enumerate(titles, start=1):

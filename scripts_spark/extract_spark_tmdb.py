@@ -15,6 +15,7 @@ from pyspark.sql.functions import lit
 import requests, json, time, os, sys
 from pathlib import Path
 from datetime import datetime
+import re
 
 # --- Local project imports ---
 from scripts.base_step import BaseStep
@@ -30,35 +31,30 @@ class ExtractSparkTMDB(BaseStep):
         self.spark = spark
         self.tmdb_api_key = None
         self.container_uri = (
-            "abfss://capstone-data@markcapstonestorage.dfs.core.windows.net/raw/tmdb/"
+            "abfss://raw@markcapstoneadls.dfs.core.windows.net/raw/tmdb/"
         )
         self.rate_limit = 3  # ~3 requests per second
         self.logger.info("✅ Initialized ExtractSparkTMDB with Spark + Blob access")
 
     # ------------------------------------------------------------------
     def _get_api_key(self):
-        """Retrieve TMDB API key via Databricks secret scope or fallback to environment."""
+        """Retrieve TMDB API key from Databricks secret scope or fallback to environment."""
         if self.tmdb_api_key:
             return self.tmdb_api_key
 
-        # 1️⃣ Try to get from Databricks secret scope (if configured)
         try:
-            import dbruntime.dbutils as dbutils_runtime
-            if hasattr(dbutils_runtime, "secrets"):
-                self.tmdb_api_key = dbutils_runtime.secrets.get(
-                    scope="capstone-secrets", key="tmdb_api_key"
-                )
-                self.logger.info("🔐 Retrieved TMDB API key from Databricks scope.")
-                return self.tmdb_api_key
+            from pyspark.dbutils import DBUtils
+            dbutils = DBUtils(self.spark)
+            self.tmdb_api_key = dbutils.secrets.get("markscope", "tmdb-api-key")
+            self.logger.info("🔐 Retrieved TMDB API key from Databricks secret scope.")
         except Exception as e:
-            self.logger.info(f"⚠️ Databricks secret scope unavailable: {e}")
+            self.logger.warning(f"⚠️ Could not load TMDB secret from scope: {e}")
+            self.tmdb_api_key = os.getenv("TMDB_API_KEY", "DUMMY_KEY_FOR_LOCAL_TESTS")
+            if self.tmdb_api_key == "DUMMY_KEY_FOR_LOCAL_TESTS":
+                self.logger.warning("⚠️ Using dummy TMDB key for local testing.")
+            else:
+                self.logger.info("✅ Using TMDB_API_KEY from environment variable.")
 
-        # 2️⃣ Fallback: environment variable
-        self.tmdb_api_key = os.getenv("TMDB_API_KEY", "DUMMY_KEY_FOR_LOCAL_TESTS")
-        if self.tmdb_api_key == "DUMMY_KEY_FOR_LOCAL_TESTS":
-            self.logger.warning("⚠️ Using dummy TMDB key for local testing.")
-        else:
-            self.logger.info("✅ Using TMDB_API_KEY from environment variable.")
         return self.tmdb_api_key
 
     # ------------------------------------------------------------------
@@ -89,14 +85,21 @@ class ExtractSparkTMDB(BaseStep):
         """Main Spark entrypoint."""
         start_time = time.time()
 
-        # --- Determine titles ---
         if USE_GOLDEN_LIST:
-            titles = GOLDEN_TITLES_TEST
-            mode = "GOLDEN"
+            if isinstance(GOLDEN_TITLES_TEST, str):
+                # Split on commas OR semicolons OR multiple spaces
+                raw_titles = re.split(r'[,;]+|\s{2,}', GOLDEN_TITLES_TEST)
+                titles = [t.strip() for t in raw_titles if t.strip()]
+            else:
+                titles = list(GOLDEN_TITLES_TEST)
+            mode = f"GOLDEN ({len(titles)} titles)"
         else:
-            # Hardcoded short list for test mode
             titles = ["Inception", "Interstellar", "The Matrix"]
             mode = f"TEST ({len(titles)} titles)"
+
+        # --- Define Azure container paths ---
+        base_uri = "abfss://raw@markcapstoneadls.dfs.core.windows.net/"
+        self.container_uri = f"{base_uri}tmdb/"
 
         self.logger.info(f"🎬 Starting Spark TMDB extraction ({mode})")
 
