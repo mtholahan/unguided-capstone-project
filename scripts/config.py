@@ -46,7 +46,7 @@ ENV = os.getenv("ENV", "dev")  # "dev", "test", or "prod"
 # ===============================================================
 # 🎛️ PIPELINE MODE CONTROLS
 # ===============================================================
-USE_GOLDEN_LIST = False          # True → use curated GOLDEN_TITLES
+USE_GOLDEN_LIST = True          # True → use curated GOLDEN_TITLES
 TITLE_LIST_PATH = DATA_DIR / "movie_titles_200.txt"  # Full active title list
 
 RUN_LOCAL = False                # True → offline mode; skip API calls
@@ -118,8 +118,8 @@ GOLDEN_TITLES = [
     "Inception", "Interstellar", "The Dark Knight", "Blade Runner", "The Matrix",
     "Pulp Fiction", "Forrest Gump", "The Godfather", "The Shawshank Redemption", "Fight Club",
     "Back to the Future", "Gladiator", "Titanic", "Avatar", "Jurassic Park",
-    "Star Wars", "The Lord of the Rings", "Harry Potter", "La La Land", "The Lion King", "Frozen"
-    "Jaws"
+    "Star Wars", "The Lord of the Rings", "Harry Potter", "La La Land", "The Lion King", 
+    "Frozen", "Jaws"
 ]
 GOLDEN_TITLES_TEST = GOLDEN_TITLES[:10]  # first 10 for quick dev testing
 
