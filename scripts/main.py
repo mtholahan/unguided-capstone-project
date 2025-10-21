@@ -21,8 +21,8 @@ from pathlib import Path
 from importlib import import_module
 from dotenv import load_dotenv
 
-from base_step import setup_logger
-from config import LOG_LEVEL, DATA_DIR, LOG_DIR
+from scripts.base_step import setup_logger
+from scripts.config import LOG_LEVEL, DATA_DIR, LOG_DIR
 
 # ================================================================
 # Environment Initialization
@@ -33,11 +33,11 @@ load_dotenv()
 # Pipeline Configuration
 # ================================================================
 STEPS = [
-    "step_01_acquire_discogs",
-    "step_02_fetch_tmdb",
-    "step_03_prepare_tmdb_input",
-    "step_04_match_discogs_tmdb",
-     # extend when ready
+    "scripts.step_01_acquire_tmdb",
+    "scripts.step_02_query_discogs",
+    "scripts.step_03_prepare_tmdb_input",
+    "scripts.step_04_validate_schema_alignment",
+    "scripts.step_05_match_and_enrich",
 ]
 
 CHECKPOINT_FILE = Path(DATA_DIR) / "pipeline_checkpoint.json"
@@ -76,25 +76,77 @@ def save_checkpoint(step_name: str, success: bool = True):
     CHECKPOINT_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+# ================================================================
+# 📊 Rollup: Consolidate and Analyze Step Metrics
+# ================================================================
 def rollup_metrics(logger, step_times: dict):
-    """Aggregate JSON metrics from each step into a single CSV summary."""
+    """
+    Aggregate per-step metrics JSONs into a unified CSV summary
+    and compute cumulative runtime totals.
+
+    - Reads all JSON metrics in data/metrics/
+    - Adds 'duration_sec', 'step_runtime_sec', and 'pipeline_runtime_sec' fields
+    - Produces consolidated pipeline_metrics.csv (overwrite safe)
+    - Logs summary statistics to the main pipeline logger
+    """
+    import json
+    import pandas as pd
+    from pathlib import Path
+    from scripts.config import DATA_DIR
+
+    metrics_dir = Path(DATA_DIR) / "metrics"
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+    metrics_files = list(metrics_dir.glob("*.json"))
+
+    if not metrics_files:
+        logger.warning("⚠️ No metrics JSONs found to roll up.")
+        return
+
     rows = []
-    for file in METRICS_DIR.glob("*.json"):
+    for file in metrics_files:
         try:
-            with open(file, "r", encoding="utf-8") as fh:
-                data = json.load(fh)
+            data = json.loads(file.read_text(encoding="utf-8"))
             if isinstance(data, dict):
-                data["step"] = file.stem
-                data["duration_sec"] = step_times.get(data["step"], None)
+                # Inject step runtime if missing
+                step_name = data.get("step_name", file.stem)
+                duration = step_times.get(step_name, data.get("duration_sec"))
+                data["duration_sec"] = duration
+                data.setdefault("step_runtime_sec", duration)
                 rows.append(data)
         except Exception as e:
             logger.warning(f"⚠️ Skipping metrics file {file.name}: {e}")
 
-    if rows:
-        df = pd.DataFrame(rows)
-        out_csv = METRICS_DIR / "pipeline_metrics.csv"
-        df.to_csv(out_csv, index=False)
-        logger.info(f"📊 Consolidated {len(df)} step metrics → {out_csv.name}")
+    if not rows:
+        logger.warning("⚠️ No valid metrics data parsed.")
+        return
+
+    df = pd.DataFrame(rows)
+
+    # --- Ensure sorted order by timestamp ---
+    if "timestamp" in df.columns:
+        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+        df = df.sort_values("timestamp")
+
+    # --- Compute cumulative runtime ---
+    if "step_runtime_sec" in df.columns:
+        df["pipeline_runtime_sec"] = df["step_runtime_sec"].cumsum()
+
+    # --- Output to CSV ---
+    out_csv = metrics_dir / "pipeline_metrics.csv"
+    df.to_csv(out_csv, index=False)
+    logger.info(f"📊 Consolidated {len(df)} step metrics → {out_csv.name}")
+
+    # --- Summary logging ---
+    total_runtime = df["pipeline_runtime_sec"].max() if "pipeline_runtime_sec" in df else None
+    logger.info("🧾 Metrics Summary:")
+    for _, row in df.iterrows():
+        logger.info(
+            f"   ⏱ {row.get('step_name', 'unknown_step'):<30} "
+            f"{row.get('duration_sec', 0):>6.2f}s  "
+            f"(Pipeline: {row.get('pipeline_runtime_sec', 0):>6.2f}s)"
+        )
+    if total_runtime:
+        logger.info(f"🏁 Total Pipeline Runtime: {total_runtime:.2f}s")
 
 
 # ================================================================
@@ -157,6 +209,15 @@ def main(resume_from: str | None = None):
     logger.info("✅ Pipeline execution completed")
     logger.info("-" * 60)
 
+    # --- Inline summary replay ---
+    try:
+        metrics_path = Path(DATA_DIR) / "metrics" / "pipeline_metrics.csv"
+        if metrics_path.exists():
+            df = pd.read_csv(metrics_path)
+            logger.info("\n📋 Final Metrics Summary Table:")
+            logger.info(df.to_string(index=False))
+    except Exception as e:
+        logger.warning(f"⚠️ Could not print summary table: {e}")
 
 # ================================================================
 # CLI Entrypoint

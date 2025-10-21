@@ -1,71 +1,43 @@
 """
-Step 03 – Prepare TMDB Input
----------------------------------
+Step 03 – Prepare TMDB→Discogs Input
+------------------------------------
 Purpose:
-    Harmonize Discogs and TMDB raw data into a unified candidate
-    dataset for fuzzy matching. This step consolidates both sources,
-    normalizes text fields, and generates candidate title pairs for
-    Step 04 (Discogs↔TMDB fuzzy matching).
+    Harmonize TMDB and Discogs raw data into unified candidate
+    datasets for fuzzy matching (Step 04). TMDB is the driver source.
 
-Modes of Operation:
-    1️⃣  USE_GOLDEN_LIST = True
-        • Uses the in-code GOLDEN_TITLES_TEST subset.
-        • Processes limited data for reproducible mentor review runs.
+Highlights:
+    • TMDB → Discogs directional refactor (step6-dev)
+    • Reads TMDB JSONs (Step 01) and Discogs JSONs (Step 02)
+    • Applies text normalization and candidate pair generation
+    • Parallelized execution with checkpoint-safe completion
+    • Outputs CSV + Parquet candidate tables and metrics JSON
 
-    2️⃣  USE_GOLDEN_LIST = False
-        • Dynamically infers titles from existing Discogs raw files.
-        • Processes all cached JSONs in `data/raw/discogs_raw/plain`
-          and `.../soundtrack` directories.
-
-Automation Highlights:
-    • Parallelized candidate generation via ThreadPoolExecutor.
-    • Applies normalization (lowercase, punctuation stripping,
-      keyword filtering) for cross-source alignment.
-    • Exports both CSV and Parquet versions of the unified candidate
-      table for downstream consumption.
-    • Fully parameterized—no manual path edits required.
-
-Deliverables:
-    • `data/intermediate/discogs_tmdb_candidates_extended.csv`
-    • Matching Parquet file and metrics JSON
-    • `tmdb_input_extended_metrics.json` summarizing counts, averages,
-      and runtime.
-
-Dependencies:
-    • Steps 01 and 02 must have produced Discogs and TMDB JSON files.
-    • Relies on helper utilities in `utils.py` for normalization logic.
-
-Author:
-    Mark Holahan
-Version:
-    v5.0 – Oct 2025 (refactored for dual-mode title resolution)
+Outputs:
+    data/intermediate/tmdb_discogs_candidates_extended.csv
+    data/intermediate/tmdb_discogs_candidates_extended.parquet
+    data/metrics/step03_tmdb_discogs_metrics.json
 """
 
-
-from base_step import BaseStep
 import json
 import re
 import time
 import concurrent.futures
-from pathlib import Path
 import pandas as pd
-import os
-from utils import normalize_for_matching_extended
-from config import (
+from pathlib import Path
+from scripts.base_step import BaseStep
+from scripts.utils import normalize_for_matching_extended, safe_filename
+from scripts.config import (
     DATA_DIR,
-    DISCOGS_RAW_DIR,
     TMDB_RAW_DIR,
+    DISCOGS_RAW_DIR,
     INTERMEDIATE_DIR,
     USE_GOLDEN_LIST,
     GOLDEN_TITLES_TEST,
     DEFAULT_MAX_WORKERS,
 )
 
-# --- Ensure paths resolve from project root ---
-os.chdir(Path(__file__).resolve().parents[1])
-
 # ===============================================================
-# 🔤 Helpers
+# 🔤 Helper constants & functions
 # ===============================================================
 FILM_OST_KEYWORDS = [
     "soundtrack", "score", "stage & screen", "original motion picture", "ost", "motion picture"
@@ -74,12 +46,8 @@ EXCLUDE_TERMS = ["tv", "series", "game", "anime", "broadway", "musical", "soap",
 YEAR_PATTERN = re.compile(r"(19|20)\d{2}")
 
 
-def safe_filename(name: str) -> str:
-    """Return a filesystem-safe version of a string (Windows-compatible)."""
-    return re.sub(r"[^A-Za-z0-9_\-\.]+", "_", name)
-
-
-def infer_year_from_text(text: str):
+def infer_year_from_text(text: str | None):
+    """Extract a 4-digit year from a title or text blob."""
     if not text:
         return None
     match = YEAR_PATTERN.search(str(text))
@@ -87,6 +55,7 @@ def infer_year_from_text(text: str):
 
 
 def is_film_soundtrack(title: str, genres: list | None, styles: list | None) -> bool:
+    """Return True if a Discogs record likely represents a film soundtrack."""
     blob = " ".join([title] + (genres or []) + (styles or [])).lower()
     if any(term in blob for term in EXCLUDE_TERMS):
         return False
@@ -94,99 +63,91 @@ def is_film_soundtrack(title: str, genres: list | None, styles: list | None) -> 
 
 
 # ===============================================================
-# 🎬 Step 03 – Extended Harmonization
+# 🎬 Step 03 – TMDB→Discogs Harmonization
 # ===============================================================
 class Step03PrepareTMDBInput(BaseStep):
-    """Harmonize Discogs + TMDB data into unified candidate table."""
+    """Harmonize TMDB + Discogs data into unified candidate table."""
 
     def __init__(self):
         super().__init__("step_03_prepare_tmdb_input")
-        self.discogs_raw_dir = Path(DISCOGS_RAW_DIR)
         self.tmdb_raw_dir = Path(TMDB_RAW_DIR)
-        self.output_csv = Path(INTERMEDIATE_DIR) / "discogs_tmdb_candidates_extended.csv"
+        self.discogs_raw_dir = Path(DISCOGS_RAW_DIR)
+        self.output_csv = Path(INTERMEDIATE_DIR) / "tmdb_discogs_candidates_extended.csv"
         self.output_parquet = self.output_csv.with_suffix(".parquet")
         self.max_workers = DEFAULT_MAX_WORKERS
-        self.logger.info(f"Initialized Step 03 v4.8 with {self.max_workers} workers")
+        self.logger.info(f"Initialized Step 03 (TMDB→Discogs) [branch=step6-dev]")
 
-    # -----------------------------------------------------------
-    # 🔄 Build candidate pairs
     # -----------------------------------------------------------
     def build_candidates_for_title(self, title: str) -> list[dict]:
+        """Generate candidate TMDB–Discogs record pairs for one movie title."""
         try:
-            # ---------------------- Discogs ----------------------
-            discogs_path = self.discogs_raw_dir / "plain" / f"{safe_filename(title)}.json"
-            if not discogs_path.exists():
-                return []
+            tmdb_path = self.tmdb_raw_dir / f"{safe_filename(title)}.json"
+            discogs_path = self.discogs_raw_dir / f"{safe_filename(title)}.json"
+            pairs = []
 
-            discogs_json = json.loads(discogs_path.read_text(encoding="utf-8"))
-            discogs_results = discogs_json.get("results", [])
-            discogs_records = []
-            for r in discogs_results:
-                if not is_film_soundtrack(r.get("title", ""), r.get("genre"), r.get("style")):
-                    continue
-                discogs_records.append({
+            # --- TMDB Records ---
+            if not tmdb_path.exists():
+                return []
+            tmdb_json = json.loads(tmdb_path.read_text(encoding="utf-8"))
+            tmdb_results = tmdb_json.get("results", []) if isinstance(tmdb_json, dict) else tmdb_json
+
+            tmdb_records = []
+            for r in tmdb_results:
+                tmdb_records.append({
                     "movie_ref": title,
-                    "source": "discogs",
-                    "title_raw": r.get("title"),
-                    "title_norm": normalize_for_matching_extended(r.get("title")),
-                    "year": r.get("year") or infer_year_from_text(r.get("title")),
-                    "genre": ", ".join(r.get("genre", [])),
-                    "style": ", ".join(r.get("style", [])),
+                    "title_raw": r.get("title") or r.get("original_title"),
+                    "title_norm": normalize_for_matching_extended(
+                        r.get("title") or r.get("original_title") or title
+                    ),
+                    "year": (
+                        r.get("release_date")[:4]
+                        if r.get("release_date")
+                        else infer_year_from_text(r.get("title"))
+                    ),
+                    "genre": ", ".join(map(str, r.get("genre_ids", []))),
                 })
 
-            # ---------------------- TMDB --------------------------
-            tmdb_path = self.tmdb_raw_dir / f"{safe_filename(title)}.json"
-            tmdb_records = []
-            if tmdb_path.exists():
-                tmdb_json = json.loads(tmdb_path.read_text(encoding="utf-8"))
-                results = (
-                    tmdb_json.get("results", [])
-                    if isinstance(tmdb_json, dict)
-                    else tmdb_json
-                )
-                for r in results:
-                    tmdb_records.append({
-                        "movie_ref": title,
-                        "source": "tmdb",
-                        "title_raw": r.get("title") or r.get("original_title"),
-                        "title_norm": normalize_for_matching_extended(
-                            r.get("title") or r.get("original_title")
-                        ),
-                        "year": (
-                            r.get("release_date")[:4]
-                            if r.get("release_date")
-                            else infer_year_from_text(r.get("title"))
-                        ),
-                        "genre": ", ".join(map(str, r.get("genre_ids", []))),
-                        "style": "",
+            # --- Discogs Records ---
+            discogs_records = []
+            if discogs_path.exists():
+                discogs_json = json.loads(discogs_path.read_text(encoding="utf-8"))
+                results = discogs_json.get("results", [])
+                for d in results:
+                    if not is_film_soundtrack(d.get("title", ""), d.get("genre"), d.get("style")):
+                        continue
+                    discogs_records.append({
+                        "title_raw": d.get("title"),
+                        "title_norm": normalize_for_matching_extended(d.get("title")),
+                        "year": d.get("year") or infer_year_from_text(d.get("title")),
+                        "genre": ", ".join(d.get("genre", [])),
+                        "style": ", ".join(d.get("style", [])),
                     })
 
-            # ---------------------- Pair generation ----------------
-            pairs = []
-            if discogs_records and tmdb_records:
-                for d in discogs_records:
-                    for t in tmdb_records:
+            # --- Build candidate pairs ---
+            if tmdb_records and discogs_records:
+                for t in tmdb_records:
+                    for d in discogs_records:
                         pairs.append({
                             "movie_ref": title,
-                            "discogs_title_norm": d["title_norm"],
                             "tmdb_title_norm": t["title_norm"],
-                            "discogs_year": d["year"],
+                            "discogs_title_norm": d["title_norm"],
                             "tmdb_year": t["year"],
-                            "discogs_genre": d["genre"],
+                            "discogs_year": d["year"],
                             "tmdb_genre": t["genre"],
+                            "discogs_genre": d["genre"],
                             "discogs_style": d["style"],
                         })
-            elif discogs_records:
-                for d in discogs_records:
+            elif tmdb_records:
+                for t in tmdb_records:
                     pairs.append({
                         "movie_ref": title,
-                        "discogs_title_norm": d["title_norm"],
-                        "tmdb_title_norm": None,
-                        "discogs_year": d["year"],
-                        "tmdb_year": None,
-                        "discogs_genre": d["genre"],
-                        "tmdb_genre": None,
-                        "discogs_style": d["style"],
+                        "tmdb_title_norm": t["title_norm"],
+                        "discogs_title_norm": None,
+                        "tmdb_year": t["year"],
+                        "discogs_year": None,
+                        "tmdb_genre": t["genre"],
+                        "discogs_genre": None,
+                        "discogs_style": None,
                     })
             return pairs
 
@@ -195,32 +156,40 @@ class Step03PrepareTMDBInput(BaseStep):
             return []
 
     # -----------------------------------------------------------
-    # 🚀 Run
     # -----------------------------------------------------------
     def run(self):
-        self.logger.info("🎬 Starting Step 03 v4.8: Discogs→TMDB harmonization")
+        """
+        Step 03 – Harmonize TMDB → Discogs candidate inputs.
+        Reads the shared title list saved by Step 01 (GOLDEN or AUTO mode).
+        """
+        self.logger.info("🎬 Starting Step 03 (TMDB→Discogs Harmonization)")
         t0 = time.time()
         all_pairs = []
 
-        # --- Determine which titles to process -----------------
-        if USE_GOLDEN_LIST:
-            titles_to_process = GOLDEN_TITLES_TEST
-            mode = "GOLDEN"
+        # --- Load shared title list from Step 01 ---
+        titles_path = Path(INTERMEDIATE_DIR) / "titles_to_process.json"
+        if titles_path.exists():
+            titles_to_process = json.loads(titles_path.read_text(encoding="utf-8"))
+            mode = f"SHARED ({len(titles_to_process)} titles)"
+            self.logger.info(f"📄 Loaded {len(titles_to_process)} titles from {titles_path.name}")
         else:
-            discogs_files = []
-            for subdir in ["plain", "soundtrack"]:
-                path = self.discogs_raw_dir / subdir
-                if path.exists():
-                    count = len(list(path.glob("*.json")))
-                    self.logger.info(f"📂 Found {count} files in {path}")
-                    discogs_files.extend(path.glob("*.json"))
-
-            titles_to_process = [f.stem.replace("_", " ") for f in discogs_files]
+            tmdb_files = list(self.tmdb_raw_dir.glob("*.json"))
+            titles_to_process = [f.stem.replace("_", " ") for f in tmdb_files]
             mode = f"AUTO ({len(titles_to_process)} titles)"
+            self.logger.warning("⚠️ No shared title list found; reverting to AUTO mode")
+
+        # --- Optional integrity check against Discogs files ---
+        discogs_files = [f.stem for f in self.discogs_raw_dir.glob("*.json")]
+        missing = [t for t in titles_to_process if safe_filename(t) not in discogs_files]
+        if missing:
+            self.logger.warning(
+                f"⚠️ {len(missing)} titles missing Discogs JSONs — check Step 02 completeness"
+            )
 
         self.logger.info(f"🔧 Mode={mode} | Titles to process={len(titles_to_process)}")
 
-        # --- Parallel execution -------------------------------
+        # --- Parallelized candidate build ---
+        import concurrent.futures
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_map = {
                 executor.submit(self.build_candidates_for_title, title): title
@@ -235,19 +204,26 @@ class Step03PrepareTMDBInput(BaseStep):
                 except Exception as e:
                     self.logger.error(f"{title}: thread failed → {e}")
 
-        # --- Aggregate results --------------------------------
+        # --- Aggregate and save ---
+        import pandas as pd
         df = pd.DataFrame(all_pairs)
         self.logger.info(f"🧩 Candidate pairs collected: {len(df)} rows")
 
         if df.empty:
             self.logger.warning("⚠️ No candidate pairs generated — check TMDB/Discogs alignment.")
         else:
+            # Normalize types for Parquet compatibility
+            for col in ["tmdb_year", "discogs_year", "tmdb_genre", "discogs_genre", "discogs_style"]:
+                if col in df.columns:
+                    df[col] = df[col].astype(str).fillna("")
+            df = df.fillna("")
+
             df.to_csv(self.output_csv, index=False)
             df.to_parquet(self.output_parquet, index=False)
             self.logger.info(f"📁 Saved harmonized data → {self.output_csv}")
             self.logger.info(f"📊 Columns: {list(df.columns)}")
 
-        # --- Metrics & summary --------------------------------
+        # --- Metrics ---
         duration = round(time.time() - t0, 2)
         metrics = {
             "mode": mode,
@@ -256,9 +232,11 @@ class Step03PrepareTMDBInput(BaseStep):
             "avg_pairs_per_title": (len(df) / len(titles_to_process)) if titles_to_process else 0,
             "duration_sec": duration,
             "max_workers": self.max_workers,
+            "direction": "TMDB→Discogs",
+            "branch": "step6-dev",
         }
-        self.save_metrics("tmdb_input_extended_metrics.json", {"summary": metrics})
-        self.write_metrics(metrics)
+
+        self.write_metrics(metrics, name="step03_tmdb_discogs_metrics")
         self.logger.info(f"✅ Step 03 completed in {duration:.2f}s | Mode={mode}")
 
 

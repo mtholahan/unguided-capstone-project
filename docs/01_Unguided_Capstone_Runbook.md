@@ -3,7 +3,7 @@
 From Terminal with **PowerShell** 
 
 ```bash
-cd C:\Projects\unguided-capstone-project
+cd C:\Projects\unguided-capstone-project\scripts
 # Load environment variables and venv
 .\setup_env.ps1
 ```
