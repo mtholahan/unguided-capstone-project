@@ -1,376 +1,232 @@
-# 🗭 Mentor Submission & Cleanup Workflow (Unified Guide)
+# 🐭 Mentor Submission & Cleanup Workflow (Dual-Mode Edition)
 
-*Last updated: October 8, 2025*
+*Last updated: October 21, 2025*
 
 ------
 
 ## 🌟 Purpose
 
-This document defines how mentor submissions (to Akhil) are handled using **Git branches** — along with the **cleanup protocol** that ensures each submission is lean, reproducible, and free of transient artifacts.
+This document defines a unified Git branching and submission workflow for both **mentor-active** and **mentor-decoupled (paused)** states during the Springboard Data Engineering Boot Camp.
 
 The goal:
 
-- Maintain reproducible **“snapshot” submissions** for review
-- Keep development unblocked
-- Guarantee branch hygiene and professional DevOps practices
+- Maintain reproducible, review-ready branches for mentor submission
+- Allow uninterrupted progress during pauses
+- Preserve clean, traceable DevOps hygiene
 
 ------
 
-## 🧩 Overview
+## 🔄 Operating Modes
 
-Each **capstone milestone (Steps 5–10)** gets its own **dedicated branch** for mentor review.
+### **1. Mentor-Active Mode (Normal)**
 
-- You: submit from a clean branch (e.g. `step5-submission`)
-- Akhil: reviews the branch without interference from ongoing work
-- You: continue forward development safely on the next branch (`step6-dev`)
-- Once approved, tag and merge the feedback branch into `main`
+You are paired with your mentor (Akhil). Each milestone step has a dedicated submission branch reviewed by your mentor. You proceed sequentially: dev → submission → feedback → approved.
+
+Example flow:
+
+```
+main
+ └─ step6-approved-candidate
+      └─ step7-dev
+           └─ step7-submission
+```
+
+- `main` always reflects the last mentor-approved step.
+- You move forward only after Akhil reviews and approves the previous step.
+
+### **2. Mentor-Decoupled Mode (Paused)**
+
+You are in an **independent work phase** (e.g., boot camp pause). Mentor review is unavailable, but progress must continue.
+
+**Guiding principle:** work forward in an isolated chain of step branches, preserving the approved baseline.
+
+```
+step6-approved-candidate (locked anchor)
+ └─ step7-dev
+      └─ step7-submission
+           └─ step8-dev
+                └─ step8-submission
+```
+
+**Key rules:**
+
+- Tag the last mentor-approved step as the immutable anchor.
+- Branch each step off the most recent `*-submission` branch.
+- Do **not** rebase or merge into `main` until mentor recoupling.
+
+When mentorship resumes:
+
+1. Merge each approved submission branch back into `main` sequentially.
+2. Delete decoupled branches after reconciliation.
 
 ------
 
-## 🦻 Full Lifecycle Workflow
+## 🔍 Quick Reference: Branch Types
 
-### **A) Step-by-Step Submission**
+| Branch Type                | Purpose                                 | Merge Target           |
+| -------------------------- | --------------------------------------- | ---------------------- |
+| `stepX-dev`                | Working branch for development          | `stepX-submission`     |
+| `stepX-submission`         | Frozen candidate for mentor review      | `main` (once approved) |
+| `stepX-feedback`           | Temporary branch for fixes after review | `main`                 |
+| `stepX-approved-candidate` | Final mentor-approved state             | `main`                 |
+| `stepX-final-anchor`       | Tag for decoupled sprints               | *none* (immutable)     |
 
-#### 1️⃣ Prepare Submission
+------
 
-Ensure your current code runs cleanly and logs are verified.
+## 🚛 Mentor-Active Submission Lifecycle
+
+### **1️⃣ Prepare Submission**
 
 ```bash
 git checkout main
 git pull
-git checkout -b step5-submission
+git checkout -b step7-submission
 git add .
-git commit -m "Step 5 submission: Local ETL Prototype (Steps 00–06)"
-git push origin step5-submission
+git commit -m "Step 7 submission: Deployment Architecture"
+git push origin step7-submission
 ```
 
-#### 📤 Notify Akhil:
-
-> **Subject:** Step 5 Submission – Local ETL Prototype
->  **Branch:** step5-submission
->  **Includes:** Steps 00–06 under /Scripts
->  **Logs:** /logs/, **Outputs:** /outputs/
->  Continuing new work on step6-dev while awaiting feedback.
+Notify Akhil with the branch name and summary.
 
 ------
 
-### **B) Forward-Development Branch**
+### **2️⃣ Forward Development Branch**
 
-After pushing your submission, immediately create a new development branch.
+Immediately continue forward progress:
 
 ```bash
 git checkout main
 git pull
-git checkout -b step6-dev
+git checkout -b step8-dev
 ```
 
-💡 **Rule:** `main` always represents the last *approved* version.
+**Rule:** main = last approved code.
 
 ------
 
-### **C) Handling Mentor Feedback**
+### **3️⃣ Mentor Feedback Handling**
 
-If Akhil requests revisions:
+If feedback is received:
 
 ```bash
-git checkout step5-submission
-git checkout -b step5-feedback
-
+git checkout step7-submission
+git checkout -b step7-feedback
 # apply fixes
-git add .
-git commit -m "Addressed Akhil's feedback on Step 5"
-git push origin step5-feedback
+git add . && git commit -m "Addressed feedback for Step 7"
+git push origin step7-feedback
 ```
 
-Notify Akhil:
-
-> “Updates applied — please review step5-feedback branch.”
-
-Once approved:
+After approval:
 
 ```bash
 git checkout main
-git merge step5-feedback
-git tag step5-approved-2025-10-08
+git merge step7-feedback
+git tag step7-approved-2025-11-03
 git push origin main --tags
 ```
 
 ------
 
-## ⚙️ Integrated Pre-Submission Cleanup Workflow
+## 🚴️‍♂️ Mentor-Decoupled (Paused) Workflow
 
-Before creating any submission branch, **run this cleanup sequence** to ensure your repo is free of transient files and detritus.
-
-------
-
-### 🧹 **Step-by-Step Cleanup Plan**
-
-#### 1️⃣ Check Repository Status
+### **A) Lock the last approved anchor**
 
 ```bash
-git status --short
+git checkout step6-approved-candidate
+git tag step6-final-anchor
+git push origin step6-final-anchor
 ```
 
-- Identify deleted, modified, or untracked files.
-- Verify changes in `scripts/`, `docs/`, and `logs/` are intentional.
-
-------
-
-#### 2️⃣ Handle Deleted or Modified Docs
-
-If something was accidentally deleted:
+### **B) Create the next step’s dev branch**
 
 ```bash
-git restore docs/
+git checkout -b step7-dev step6-approved-candidate
 ```
 
-If deletion is intentional cleanup:
+### **C) When Step 7 is ready for submission**
 
 ```bash
-git rm docs/<file>.md
+git checkout -b step7-submission step7-dev
+git push origin step7-submission
 ```
 
-------
-
-#### 3️⃣ Remove Transient and Untracked Files
-
-Common offenders:
-
-```
-audit_reports/*.csv
-audit_reports/*.json
-scripts/scripts.zip
-outputs/*.parquet
-```
-
-Delete them safely:
+### **D) Continue to Step 8 directly**
 
 ```bash
-del scripts\audit_reports\*.csv
-del scripts\audit_reports\*.json
-del scripts\scripts.zip
+git checkout -b step8-dev step7-submission
 ```
 
-Then confirm:
+Repeat until pause ends.
 
-```bash
-git status
-```
+### **E) When mentorship resumes (post-pause)**
 
-Only relevant `.py` or `.md` files should remain.
-
-------
-
-#### 4️⃣ Validate `.gitignore`
-
-```bash
-type .gitignore
-```
-
-Ensure it excludes:
-
-- `/audit_reports/*`
-- `/outputs/*`
-- `.tmp`, `.bak`, `debug_*.log`
-
-And **includes:**
-
-- `/logs/pipeline.log` (mentor requirement)
-
-------
-
-#### 5️⃣ Stage and Commit Cleanup
-
-```bash
-git add .gitignore
-git add scripts/base_step.py
-git commit -m "Repo cleanup: remove transient artifacts and restore essential docs"
-```
-
-------
-
-#### 6️⃣ Final Sanity Check
-
-```bash
-git status
-```
-
-Expected:
-
-```
-On branch step5-refactor
-nothing to commit, working tree clean
-```
-
-------
-
-#### 7️⃣ Merge Once Clean
-
-Example:
+Merge back into main sequentially:
 
 ```bash
 git checkout main
-git pull
-git merge --no-ff step5-refactor -m "Merge stable Step 5 refactor branch"
-git push origin main
+git merge step6-approved-candidate
+git merge step7-submission
+git merge step8-submission
 ```
+
+Tag each one upon approval.
 
 ------
 
-### ✅ End-of-Step Submission Checklist
+## 🧹 Pre-Submission Cleanup Checklist
 
-☑ Local run successful (`python main.py`)
- ☑ Logs + outputs verified
- ☑ Repo cleaned of temp artifacts
- ☑ Commit & push submission branch
- ☑ Message Akhil with branch name
- ☑ Update `docs/CHANGELOG.md`
- ☑ Branch forward for next step
+1. Validate `git status` (no temp files)
+2. Verify `.gitignore` excludes `/outputs/`, `/audit_reports/`, `.tmp`, `.bak`
+3. Ensure logs exist under `/logs/pipeline.log`
+4. Run local test: `python main.py`
+5. Push submission branch cleanly
 
 ------
 
-## 🧱 Branch Map Reference
+## 🔢 Bash Automation Template (Optional)
 
-| Step | Submission Branch | Feedback Branch | Next Dev Branch | Tag Upon Approval          |
-| ---- | ----------------- | --------------- | --------------- | -------------------------- |
-| 5    | step5-submission  | step5-feedback  | step6-dev       | step5-approved-2025-10-08  |
-| 6    | step6-submission  | step6-feedback  | step7-dev       | step6-approved-YYYY-MM-DD  |
-| 7    | step7-submission  | step7-feedback  | step8-dev       | step7-approved-YYYY-MM-DD  |
-| 8    | step8-submission  | step8-feedback  | step9-dev       | step8-approved-YYYY-MM-DD  |
-| 9    | step9-submission  | step9-feedback  | step10-dev      | step9-approved-YYYY-MM-DD  |
-| 10   | step10-submission | step10-feedback | *(end)*         | step10-approved-YYYY-MM-DD |
-
-------
-
-## Appendix A: Handling Mentor Feedback Drift
-
-### 🧩 Scenario Overview
-
-You’ve been developing happily on `step6-dev`, and your Step 5 submission is under review. While Akhil reviews, you continue work. Then he requests feedback changes, creating two diverging timelines:
-
-- `step6-dev` = forward development
-- `step5-feedback` = mentor revisions
-
-You now need to merge Akhil’s fixes without losing your Step 6 progress.
-
-------
-
-### ⚙️ ASCII Visual Model
-
-```
-                (main)
-                  |
-   A --- B --- C --- D                ← main (Step 5 submission base)
-                 \
-                  \--- E --- F --- G  ← step6-dev (you build Step 6 here)
-```
-
-After feedback starts:
-
-```
-                 D
-                 |\
-                 | \--- E --- F --- G       ← step6-dev (still active)
-                 \
-                  H --- I                   ← step5-feedback (mentor fixes)
-```
-
-Once Akhil approves, you merge feedback:
-
-```
-(main)  A --- B --- C --- D --- H --- I
-```
-
-Then rebase development:
-
-```
-            A --- B --- C --- D --- H --- I --- E' --- F' --- G'
-                                             ↑
-                                             step6-dev (rebased)
-```
-
-------
-
-### 🪜 Step-by-Step: “Freeze, Patch, Rebase”
-
-1️⃣ **Freeze Development**
- Checkpoint your dev branch before switching to feedback work:
+The following script automates the decoupled branch chain pattern. **Review before using** — it will tag anchors and create the next step’s branches.
 
 ```bash
-git checkout step6-dev
-git add .
-git commit -m "Checkpoint before feedback reconciliation"
-git push origin step6-dev
-```
+#!/bin/bash
+# decoupled_branch_chain.sh
+# Automates step-based branching during mentor pauses
 
-2️⃣ **Patch Feedback Branch**
- Work on Akhil’s fixes in `step5-feedback`, commit, and push.
+set -e
 
-```bash
-git checkout step5-feedback
-git add .
-git commit -m "Addressed mentor feedback (Step 5)"
-git push origin step5-feedback
-```
+ANCHOR=${1:-step6-approved-candidate}
+NEXT_STEP=${2:-step7}
 
-3️⃣ **Merge Feedback into Main**
- After approval:
+if [ -z "$ANCHOR" ] || [ -z "$NEXT_STEP" ]; then
+  echo "Usage: ./decoupled_branch_chain.sh <anchor-branch> <next-step-number>"
+  exit 1
+fi
 
-```bash
-git checkout main
-git pull
-git merge step5-feedback
-git tag step5-approved-YYYY-MM-DD
-git push origin main --tags
-```
+# Tag the anchor
+TAG_NAME="${ANCHOR}-final-anchor"
+git checkout $ANCHOR
+git tag $TAG_NAME
+git push origin $TAG_NAME
 
-4️⃣ **Rebase Dev Branch**
- Replay your Step 6 commits on top of the updated main:
+# Create dev branch
+git checkout -b step${NEXT_STEP}-dev $ANCHOR
+git push origin step${NEXT_STEP}-dev
 
-```bash
-git checkout step6-dev
-git rebase main
-```
+echo "\n✅ Created step${NEXT_STEP}-dev from $ANCHOR and tagged $TAG_NAME"
 
-5️⃣ **Resolve Conflicts**
- If Git raises conflicts, resolve them calmly and continue:
-
-```bash
-git add .
-git rebase --continue
-git push origin step6-dev --force-with-lease
+echo "\nNext: work on step${NEXT_STEP}-dev, then create step${NEXT_STEP}-submission when ready."
 ```
 
 ------
 
-### 🧠 Mental Model
+## 🔒 End-State Summary
 
-- `main` = “canon universe” (mentor-approved timeline)
-- `step5-feedback` = “patch universe” (temporary)
-- `step6-dev` = “parallel universe rebased onto canon”
-
-Your goal: keep `main` as the single source of truth — always rebase dev branches onto it, never the other way around.
-
-------
-
-### 🪶 Analogy
-
-Think of it like a **data pipeline patch cycle**:
-
-1. Freeze ETL job (`checkpoint` commit)
-2. Patch schema (`feedback` branch)
-3. Deploy schema (`merge to main`)
-4. Rerun ETL job on new schema (`rebase dev onto main`)
-
-------
-
-✅ **End State:**
-
-- `main` = mentor-approved Step 5
-- `step6-dev` = rebased and current
-- `step5-feedback` = merged and can be deleted
+| State      | Mentor Role                     | Branch Flow                               | Merge Policy                 |
+| ---------- | ------------------------------- | ----------------------------------------- | ---------------------------- |
+| **Active** | Approves each step sequentially | `dev → submission → feedback → main`      | Merge upon approval          |
+| **Paused** | None (self-directed)            | `submission → next dev → next submission` | Hold merges until recoupling |
 
 ------
 
 🔑 **Maintained by:** GPT-5 (Springboard Data Bootcamp Coach)
- **Next Review:** after Step 6 submission prep
+ **Next Review:** Post-pause, November 2025
