@@ -18,6 +18,29 @@ Dependencies: [keys/env/tools/people]
 
 
 
+**11:48 10/22/2025**
+
+Resume from anchor: [UnguidedCapstone_TMDB_Refactor02_Step_07_In_Flight]
+
+**Context:** You’re mid-sprint on **Unguided Capstone Step 7 (Create the Deployment Architecture)**. The architecture diagram and narrative are complete, and local IaC scaffolding is being built in your Windows 10 + PowerShell + VS Code venv environment. This phase focuses on codifying your Azure design into reproducible ARM templates before freeze and Step 8 deployment testing.
+
+**Current milestone:**
+ ✅ Step 7 architecture diagram finalized and exported
+ ✅ Naming conventions defined
+ ✅ `create_arms.py` completed
+ ⏳ Infrastructure templates pending commit to `step7-dev`
+
+**Next action:**
+ Run `python create_arms.py` in your PowerShell venv to generate and verify the 5 ARM template skeletons, then commit and push them to `step7-dev`.
+
+**Dependencies:**
+
+- **Keys/Env:** Active Python virtual environment (venv)
+- **Tools:** VS Code, PowerShell, Git, Azure Resource Manager schema
+- **People:** None (mentor decoupled until post–Nov 3)
+
+
+
 **19:45 10/20/2025**
 
 Resume from anchor: [ANCHOR_NAUnguidedCapstone_TMDB_Refactor02_Step_06_Submission_De-debug]
