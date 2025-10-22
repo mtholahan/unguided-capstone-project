@@ -63,11 +63,12 @@ This step translates the functional ETL pipeline into a **cloud-deployable archi
 
 ### 🧱 Active Deliverables
 
-| File                                                     | Purpose                                                      |
-| -------------------------------------------------------- | ------------------------------------------------------------ |
-| `/architecture/diagrams/step7_architecture_draft.drawio` | Finalized architecture diagram (annotated, color-coded)      |
-| `/docs/step07_architecture.md`                           | Narrative describing component roles and design rationale    |
-| `/infrastructure/`                                       | Infrastructure-as-Code (ARM JSON templates + naming conventions) |
+| File                                                       | Purpose                                                      |
+| ---------------------------------------------------------- | ------------------------------------------------------------ |
+| `/architecture/diagrams/Step7_Architecture_Diagram.drawio` | Finalized architecture diagram (annotated, color-coded)      |
+| `/doc/Step7_Architecture_Diagram.png`                      | A high-resolution PNG export of draw.io diagram              |
+| `/docs/step07_architecture.md`                             | Narrative describing component roles and design rationale    |
+| `/infrastructure/`                                         | Infrastructure-as-Code (ARM JSON templates + naming conventions) |
 
 ### 🧰 Current Development Environment
 
