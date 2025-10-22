@@ -125,7 +125,6 @@ Each component is represented in both the diagram and corresponding ARM template
 | -------------------------------------- | ------------------------------------------------------------ |
 | `docs/step07_architecture.md`          | 3–4 sentence summary and rationale of architectural choices. |
 | `infrastructure/naming_conventions.md` | Standardized resource naming guide across Azure assets.      |
-| `infrastructure/create_arms.py`        | Python utility for generating ARM JSON scaffolding.          |
 
 ------
 
@@ -155,25 +154,102 @@ Step 7 occurs entirely in **Local (Windows)** mode.  Steps 8–11 will reintrodu
 ```
 project-root/
 ├── architecture/
-│   └── diagrams/step7_architecture_draft.drawio
+│ ├── diagrams/
+│ │ ├── step7_architecture_draft.drawio
+│ │ └── step7_architecture_draft.png
+│ └── notes_architecture_decisions.md
+│
+├── archive/ # Legacy / retired scripts
+│ ├── OLD_step_01_acquire_discogs.py
+│ ├── OLD_step_02_fetch_tmdb.py
+│ └── step_04_legacy_match_discogs_tmdb.py
+│
+├── data/
+│ ├── intermediate/ # Local transformation outputs
+│ ├── metrics/ # Validation metrics & visuals
+│ └── validation/ # Schema comparison CSVs
+│
 ├── docs/
-│   ├── step07_architecture.md
-│   └── step08_testing_environment.md (planned)
+│ ├── 01_Unguided_Capstone_Runbook.md
+│ ├── 02_Mentor Submission & Cleanup Workflow.md
+│ ├── GPT Anchors Log.md
+│ ├── README_TODO.md
+│ └── step07_architecture.md
+│
+├── evidence/
+│ └── Azure main.bicep Orchestrator What-If Output.png
+│
 ├── infrastructure/
-│   ├── storage_template.json
-│   ├── databricks_template.json
-│   ├── keyvault_template.json
-│   ├── adf_template.json
-│   ├── monitoring_template.json
-│   ├── naming_conventions.md
-│   └── create_arms.py
-└── src/
-    ├── extract_spark_tmdb.py
-    ├── extract_spark_discogs.py
-    └── utils/
+│ ├── databricks.bicep
+│ ├── functionapp.bicep
+│ ├── keyvault.bicep
+│ ├── main.bicep
+│ ├── monitoring.bicep
+│ ├── storage_account.bicep
+│ ├── vnet.bicep
+│ ├── naming_conventions.md
+│ └── storage_account.json # legacy ARM stub (pre-Bicep)
+│
+├── logs/
+│ ├── cleanup.log
+│ ├── pipeline.log
+│ └── validation/validation.log
+│
+├── notebooks/
+│ ├── ScratchPad.py.ipynb
+│ └── Unguided Capstone – Step 6 Databricks with ADLS Integration.ipynb
+│
+├── scripts/
+│ ├── step_01_acquire_tmdb.py
+│ ├── step_02_query_discogs.py
+│ ├── step_03_prepare_tmdb_input.py
+│ ├── step_04_validate_schema_alignment.py
+│ ├── step_05_match_and_enrich.py
+│ ├── step_06_scale_prototype.py
+│ ├── QA/ # Quality-assurance utilities
+│ └── utils.py, utils_schema.py
+│
+├── scripts_spark/ # Spark extract prototypes
+│ ├── extract_spark_tmdb.py
+│ └── extract_spark_discogs.py
+│
+├── slides/
+│ ├── Step_6_Slide_Deck_Updated.pptx
+│ └── Unguided Capstone Remaining Slides.md
+│
+├── config.json
+├── pyproject.toml
+├── requirements.txt
+└── README.md
 ```
 
-------
+
+
+---
+
+## 📑 Evidence for Step 7 Validation
+
+To confirm the infrastructure-as-code design is valid yet cost-neutral, all Bicep templates were verified using **Azure CLI “what-if” simulations**.  
+These previews confirmed Azure recognizes each resource definition, dependency, and parameter without performing live provisioning.
+
+**Validation Summary**
+
+| Template                     | Validation Command                                           | Result      |
+| ---------------------------- | ------------------------------------------------------------ | ----------- |
+| `storage_account.bicep`      | `az deployment group what-if --template-file infrastructure/storage_account.bicep` | ✅ Passed    |
+| `vnet.bicep`                 | `az deployment group what-if --template-file infrastructure/vnet.bicep` | ✅ Passed    |
+| `keyvault.bicep`             | `az deployment group what-if --template-file infrastructure/keyvault.bicep` | ✅ Passed    |
+| `databricks.bicep`           | `az deployment group what-if --template-file infrastructure/databricks.bicep` | ✅ Passed    |
+| `functionapp.bicep`          | `az deployment group what-if --template-file infrastructure/functionapp.bicep` | ✅ Passed    |
+| `monitoring.bicep`           | `az deployment group what-if --template-file infrastructure/monitoring.bicep` | ✅ Passed    |
+| `main.bicep` (orchestration) | `az deployment group what-if --template-file infrastructure/main.bicep` | ✅ All Green |
+
+> <img src="assets/Azure main.bicep Orchestrator What-If Output.png" alt="Azure main.bicep Orchestrator What-If Output" style="zoom:80%;" />
+
+**Interpretation:**  
+All six modules and the main orchestration layer are schema-compliant and ready for controlled deployment in Step 8. No Azure resources were actually provisioned; hence, no costs incurred.
+
+---
 
 ## 🧾 License & Credits
 
