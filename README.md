@@ -1,274 +1,200 @@
-# 🎬 Unguided Capstone – Discogs → TMDB ETL Prototype
-### Springboard Data Engineering Bootcamp · Steps 5–6 Milestones  
-*(Refactored October 2025 — Local Spark Baseline + Stable Environment)*
+------
 
----
+------
 
-## 🧭 Project Overview
+## **Project:** Unguided Capstone – TMDB + Discogs Data Pipeline  **Version:** 1.7.0 (Step 7: Deployment Architecture)  **Status:** 🟩 Active  **Branch:** `step7-dev`  **Sprint Window:** Oct 17 – Oct 31, 2025  **Mentor:** Akhil (Recoupling post-pause)
 
-This repository contains the **prototype + scaling ETL pipeline** developed for the unguided capstone.  
-The pipeline bridges **music metadata (Discogs)** and **film metadata (TMDb)** to explore:
+# Unguided Capstone Project – TMDB + Discogs Data Engineering Pipeline
 
-> **Does soundtrack genre impact a film’s popularity or rating?**
+*Springboard Data Engineering Bootcamp – Unguided Capstone*
 
-Step 5 established a functional local ETL;  
-Step 6 scales the matching logic to **Apache Spark** using a stable PySpark–Pandas stack verified on Ubuntu WSL 2 and ready for Azure deployment.
+------
 
----
+## 🎯 Project Overview
 
-## 🧩 Mid-Stream Pivot: *MusicBrainz → Discogs*
+This unguided capstone project unifies two open data ecosystems — **The Movie Database (TMDB)** and **Discogs** — to design and deploy a scalable data pipeline capable of ingesting, transforming, and serving structured entertainment metadata for analytics.
 
-| Issue with MusicBrainz                     | Discogs Advantage                   |
-| ------------------------------------------ | ----------------------------------- |
-| Sparse or inconsistent soundtrack tagging  | Explicit *genre* and *style* fields |
-| Limited linkage between releases ↔ artists | Robust JSON API with stable IDs     |
-| Weak genre normalization                   | Broad taxonomy useful for analytics |
+The pipeline demonstrates end-to-end data engineering competency across extraction, transformation, orchestration, and cloud deployment, integrating both **PySpark-based ETL** and **Azure-native infrastructure**.
 
-**Decision:** pivot to Discogs to improve genre coverage, speed, and data quality for downstream correlation.
+------
 
----
+## 🧩 Problem Statement
 
-## 🏗️ Repository Structure
+Entertainment metadata is highly fragmented across sources. TMDB specializes in film data; Discogs curates music metadata. Analytical scenarios (e.g., soundtrack correlation or cross-domain artist appearances) require unified datasets. This project builds a reproducible, cloud-scalable pipeline to integrate, process, and expose TMDB and Discogs data for such analysis.
 
-```
-unguided-capstone-project/
-├── data/
-│ ├── raw/ # API pulls
-│ ├── cache/ # cached JSON
-│ ├── intermediate/ # harmonized candidate pairs
-│ ├── processed/ # cleaned, matched data
-│ ├── metrics/ # run-level metrics
-│ └── tmdb_enriched/
-├── logs/ # pipeline + Spark logs
-├── scripts/ # step_XX_*.py modules
-├── docs/ # readme, changelog, notes
-├── evidence/ # screenshots, validation
-├── slides/ # presentation deck
-├── rebuild_venv.sh # reproducible environment script
-├── requirements_stable.txt
-└── tmp/ # transient artifacts (git-ignored)
-```
+------
 
+## ⚙️ Technical Objectives
 
+- Design modular extractors for both TMDB and Discogs APIs.
+- Implement a PySpark-based transformation pipeline for schema harmonization.
+- Develop scalable orchestration patterns using Databricks and Azure components.
+- Introduce Infrastructure-as-Code (IaC) to define deployment topology.
+- Validate end-to-end reproducibility through testing and version control.
 
----
+------
 
-## ⚙️ Pipeline Architecture
+## 🏗️ Architecture Summary
 
-```
-Discogs → TMDB
-│
-├── step_01_acquire_discogs.py
-├── step_02_fetch_tmdb.py
-├── step_03_prepare_tmdb_input.py
-├── step_04_match_discogs_tmdb.py
-├── step_05_prototype_pipeline.py
-└── step_06_scale_prototype.py ← PySpark scaling + metrics
-```
+### Phase 1–6: Data Pipeline Development (Completed)
 
+**Core stack:** Python · PySpark · Databricks · Azure Blob Storage · Key Vault
 
+| Step | Focus                                 | Deliverable                                              |
+| ---- | ------------------------------------- | -------------------------------------------------------- |
+| 1    | Define problem, scope, and objectives | Project charter & dataset exploration                    |
+| 2    | API Exploration & Ingestion           | Raw extract scripts for TMDB + Discogs APIs              |
+| 3    | Data Modeling & Cleaning              | Schema mapping + transformation prototypes               |
+| 4    | Pipeline Refinement                   | ETL orchestration inside Databricks notebooks            |
+| 5    | Prototyping                           | Functional multi-source ETL pipeline in Databricks       |
+| 6    | Scaling Prototype                     | Optimized cluster config, checkpointing, and job control |
 
-**Supporting modules:**
-- `utils.py` – request caching, rate limiting, logging  
-- `base_step.py` – step lifecycle base class  
-- `config.py` – environment and path management  
+**Step 6 Outcome:**
 
----
+> The unified ETL pipeline operates fully in Databricks using Spark 3.5 / Runtime 14.3 LTS, writing to raw and silver zones in Azure Blob Storage.  Step 6 was approved by mentor (10/21/25) and serves as the canonical code baseline for cloud deployment design.
 
-## 🔑 Key Design Features
+------
 
-- ✅ OAuth Discogs API access  
-- ✅ Modular ETL orchestration (`main.py`)  
-- ✅ Thread-safe caching & logging  
-- ✅ Spark UDF for hybrid fuzzy matching (RapidFuzz + year logic)  
-- ✅ Automatic metrics + plots (JSON + PNG)  
-- ✅ Fully reproducible environment via `rebuild_venv.sh`
+## ☁️ Step 7 – Create the Deployment Architecture *(Current Stage)*
 
----
+### 🎯 Purpose
 
-## 📊 Validation Snapshot (Step 5)
+This step translates the functional ETL pipeline into a **cloud-deployable architecture**, complete with infrastructure definitions and supporting documentation.  It bridges design and execution — demonstrating how each data engineering component maps to Azure resources.
 
-| Metric                     | Result                     |
-| -------------------------- | -------------------------- |
-| Titles processed           | 200                        |
-| Matched pairs (score ≥ 85) | **262 / 262 (100 %)**      |
-| Avg match score            | 90.0                       |
-| Year alignment Δ           | ≤ 1 year for 92 %          |
-| Runtime                    | ≈ 3 min (local, 8 threads) |
+### 🧱 Active Deliverables
 
----
+| File                                                     | Purpose                                                      |
+| -------------------------------------------------------- | ------------------------------------------------------------ |
+| `/architecture/diagrams/step7_architecture_draft.drawio` | Finalized architecture diagram (annotated, color-coded)      |
+| `/docs/step07_architecture.md`                           | Narrative describing component roles and design rationale    |
+| `/infrastructure/`                                       | Infrastructure-as-Code (ARM JSON templates + naming conventions) |
 
-## ⚙️ Environment Setup (Stable Baseline for Step 6 → Azure)
+### 🧰 Current Development Environment
 
-This project runs on:
-- **Python 3.11**
-- **PySpark 3.5.2**
-- **Pandas 2.0.3**
-- **NumPy 1.26.4**
-- **Ubuntu WSL 2 or native Linux**
+- **Host:** Windows 10 Home (local development)
+- **Environment:** PowerShell with active Python virtual environment (venv)
+- **IDE:** Visual Studio Code (launched from within venv)
+- **Version Control:** Git (branch: `step7-dev`)
+- **Cloud Context:** Azure Resource Manager (template-level only, no live deployments yet)
 
-### 1️⃣ Rebuild the Environment
+*Note:* Earlier pipeline work (Steps 4–6) occurred in **Azure Databricks** within the cloud workspace. Step 7 returns to a **local development environment** to construct and validate the infrastructure scaffolding before testing deployments in Step 8.
 
-```bash
-chmod +x rebuild_venv.sh
-./rebuild_venv.sh
-```
+### 🧩 Development Workflow
 
-The `rebuild_venv.sh` utility **creates or reuses** your virtual environment at
- `~/pyspark_venv311`, installs all **pinned core packages**, and now auto-generates **two synchronized requirement files** for version management:
+1. Activate Python venv in PowerShell and launch VS Code
 
-- **`requirements_stable.txt`** → your **canonical recipe** of direct dependencies (the “human-readable” baseline).
-   It’s automatically refreshed whenever the script installs or upgrades core packages.
-   Use this file for local rebuilds or when teammates need a consistent yet flexible setup.
+   ```powershell
+   .venv\Scripts\Activate; code .
+   ```
 
-- **`requirements_locked.txt`** → your **full dependency snapshot** (the “frozen” state).
-   It includes every transitive package and exact version number, ensuring deterministic rebuilds in cloud or CI/CD environments (e.g., Databricks, Azure Pipelines).
-   Use this file when you need **byte-for-byte reproducibility**.
+   
 
-  ### ✅ **In summary**
+3. Run the IaC script generator:
 
-  | Use Case                                        | File                      | Why                                              |
-  | ----------------------------------------------- | ------------------------- | ------------------------------------------------ |
-  | Local development / exploratory work            | `requirements_stable.txt` | Easier to read and maintain; minimal package set |
-  | Production deployment / CI / Databricks cluster | `requirements_locked.txt` | Guarantees exact same environment, every time    |
+   ```powershell
+   python create_arms.py
+   ```
 
+4. Validate creation of `/infrastructure/` templates.
 
+5. Commit and push to `step7-dev` branch:
 
-To activate later:
+   ```powershell
+   git add infrastructure/
+   git commit -m "Step 7: add IaC scaffolding (ARM skeletons)"
+   git push origin step7-dev
+   ```
 
-```bash
-source ~/pyspark_venv311/bin/activate
-```
+### 🧭 Diagram Overview
 
-#### 🧠 Tip:
+The Step 7 architecture defines a modular, cloud-scalable layout:
 
-You can skip reinstalling dependencies (the default behavior) or force a full rebuild if the environment ever becomes unstable:
+- **Ingestion:** TMDB and Discogs API extractors.
+- **Storage:** Azure Blob Storage (raw/silver/gold zones).
+- **Processing:** Azure Databricks workspace executing ETL notebooks.
+- **Security:** Azure Key Vault for API keys and credentials (via Managed Identity).
+- **Orchestration:** Azure Data Factory (future trigger and control plane).
+- **Monitoring:** Azure Monitor + Log Analytics.
+- **Serving:** Power BI for analytics and visualization.
 
-```bash
-./rebuild_venv.sh          # Reuse existing venv; refresh requirements_stable.txt only  
-./rebuild_venv.sh --force  # Remove & recreate venv from scratch
-```
+Each component is represented in both the diagram and corresponding ARM template skeleton.
 
+### 🧾 Supporting Documents
 
-Use --force whenever:
+| File                                   | Description                                                  |
+| -------------------------------------- | ------------------------------------------------------------ |
+| `docs/step07_architecture.md`          | 3–4 sentence summary and rationale of architectural choices. |
+| `infrastructure/naming_conventions.md` | Standardized resource naming guide across Azure assets.      |
+| `infrastructure/create_arms.py`        | Python utility for generating ARM JSON scaffolding.          |
 
-- You upgrade Python or PySpark versions
+------
 
-- The environment becomes inconsistent
+## 🧠 Development Modes Recap
 
-- You’re migrating to a new workstation or Azure VM
+| Mode                 | Description                  | Typical Usage                                      |
+| -------------------- | ---------------------------- | -------------------------------------------------- |
+| **Local (Windows)**  | VS Code in PowerShell venv   | For IaC creation, doc editing, and version control |
+| **Local (Ubuntu)**   | VS Code + Python venv in WSL | For Spark job prototyping (alternate dev path)     |
+| **Databricks Cloud** | Notebook-based Spark jobs    | For pipeline execution, scaling, and testing       |
 
+Step 7 occurs entirely in **Local (Windows)** mode.  Steps 8–11 will reintroduce the **Databricks Cloud** and Azure-native tools for testing and final deployment.
 
-2️⃣ Configure VS Code (Optional)
+------
+
+## 🚀 Next Step – Step 8: Deploy Code for Testing *(Upcoming)*
+
+- Deploy ARM templates from `/infrastructure/` to create a dedicated test resource group.
+- Validate Databricks job linkage and Key Vault access policies.
+- Execute sample pipeline run against test data.
+- Document testing environment in `docs/step08_testing_environment.md`.
+
+------
+
+## 📘 Repository Structure
 
 ```
-Ctrl + Shift + P → Python: Select Interpreter → /home/mark/pyspark_venv311/bin/python
+project-root/
+├── architecture/
+│   └── diagrams/step7_architecture_draft.drawio
+├── docs/
+│   ├── step07_architecture.md
+│   └── step08_testing_environment.md (planned)
+├── infrastructure/
+│   ├── storage_template.json
+│   ├── databricks_template.json
+│   ├── keyvault_template.json
+│   ├── adf_template.json
+│   ├── monitoring_template.json
+│   ├── naming_conventions.md
+│   └── create_arms.py
+└── src/
+    ├── extract_spark_tmdb.py
+    ├── extract_spark_discogs.py
+    └── utils/
 ```
 
-3️⃣ Run the Spark Step Locally
+------
 
-```bash
-cd /mnt/c/Projects/unguided-capstone-project
-source ~/pyspark_venv311/bin/activate
-python scripts/step_06_scale_prototype.py
-```
+## 🧾 License & Credits
 
-Outputs:
+This project is authored by **M. Holahan** as part of the **Springboard Data Engineering Bootcamp** capstone series.  External APIs used include [TMDB](https://developer.themoviedb.org/) and [Discogs](https://www.discogs.com/developers/).
 
-- data/intermediate/tmdb_discogs_matches_spark.csv
+Mentor: Akhil — Step 6 approved on 2025-10-21.
+ Current sprint: *Paused phase – Step 7 (Architecture & IaC Buildout)* through November 3, 2025.
 
-- data/metrics/step06_spark_metrics.json
+------
 
-- data/metrics/step06_spark_score_distribution.png
+**Status:** 🟩 Active (Step 7 – Deployment Architecture)
 
+**Branch:** `step7-dev`
+ **Next Milestone:** Step 7 submission freeze → Step 8 testing deployment setup.
 
-4️⃣ Deploy to Azure (Next Step)
+------
 
-> [!NOTE]
->
-> Platform note:
-> This project previously used PowerShell setup scripts (setup_env.ps1, set_spark_env.ps1) for Windows-native PySpark.
-> As of Step 6+, all execution occurs under Ubuntu (WSL2) using rebuild_venv.sh, which fully replaces those Windows scripts.
-> You can safely remove or archive any .ps1 environment scripts.
+### 📄 Repository Metadata
 
-On your Azure Spark cluster or VM:
-
-```bash
-pip install -r requirements_stable.txt
-spark-submit scripts/step_06_scale_prototype.py
-```
-
-Ensures identical dependencies between local and cloud environments.
-
-- 💡 Notes
-  ❗ Avoid pip freeze > requirements.txt — it captures dev-tools and may upgrade core libs.
-- The pinned versions above are the last known good combo avoiding Pandas _new_Index serialization issues.
-
-- If upgrading Spark → 4.x, revisit the Pandas UDF patch inside step_06_scale_prototype.py.
-
-
-
-## 🧾 Step 6 – Scale Your Prototype
-
-### Purpose
-This step scales the prototype ETL pipeline developed in Step 5 to process the full TMDB and Discogs datasets in the cloud using PySpark on Databricks.  
-It leverages Spark’s distributed compute to handle larger volumes efficiently while maintaining the same modular logic and logging framework.
-
-### Prerequisites
-- Active **Databricks cluster (Spark 3.5 or higher)**
-- Environment variables configured:  
-  `TMDB_API_KEY`  and  `DISCOGS_API_KEY`
-- Valid Azure Blob access key set in Spark config  
-- Repo synced to:  
-  `/Workspace/Repos/markholahan@pm.me/unguided-capstone-project`
-
-### Run Instructions
-1. Launch your Databricks cluster and open **Pipeline_Preflight.ipynb**  
-2. Execute all cells sequentially:  
-   - Load environment variables  
-   - Initialize Spark session  
-   - Run `extract_spark_tmdb.py`  
-   - Run `extract_spark_discogs.py`  
-   - Verify Parquet writes to Azure Blob  
-3. Expected Blob paths:  
-   - `/raw/tmdb/`  
-   - `/raw/discogs/`  
-4. Verify successful notebook completion (green checks).
-
-### Expected Output
-- ✅ All cells in Preflight notebook complete successfully  
-- ✅ Parquet files persist to Azure Blob Storage  
-- ✅ No missing credentials or I/O errors  
-
-### Evidence for Mentor Review
-Store screenshots under `/evidence/step6/`:
-- `notebook_run_success.png` – Databricks run showing all green checks  
-- `blob_file_listing.png` – Azure Blob container with `/raw/tmdb/` and `/raw/discogs/` listings  
-
----
-
-## 🗺️ Environment Diagram (Conceptual)
-
-```
-graph TD
-    A[rebuild_venv.sh] --> B[pyspark_venv311]
-    B --> C[VS Code Interpreter]
-    B --> D[requirements_stable.txt]
-    C --> E[Local Spark Job]
-    D --> F[Azure Cluster (spark-submit)]
-```
-
-## 🚀 Next Steps
-
-1. Upload data & outputs to Azure Blob Storage
-2. Execute Step 07 (Deploy Spark Job on Azure)
-
-3. Perform Steps 08–10: statistical analysis and visualization
-
-4. Finalize capstone submission with evidence artifacts
-
-
-© 2025 Mark — Springboard Data Engineering Bootcamp
-
-
-
+- **Last Updated:** October 23, 2025
+- **Active Branch:** `step7-dev`
+- **Next Milestone:** Step 7 submission freeze → Step 8 testing deployment setup
+- **Primary Author:** M. Holahan
+- **Repository URL:** [GitHub – mtholahan/unguided-capstone-project](https://github.com/mtholahan/unguided-capstone-project)
