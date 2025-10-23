@@ -1,55 +1,73 @@
-// main.bicep – orchestrates the full Step 7 architecture
-param location string = 'eastus'
-param storageAccountName string = 'ungcapstor01'
+@description('Azure region for deployment')
+param location string = resourceGroup().location
 
-module storage 'storage_account.bicep' = {
-  name: 'storage'
-  params: {
-    storageAccountName: storageAccountName
-    location: location
-  }
-}
-
+// Virtual Network
 module vnet 'vnet.bicep' = {
-  name: 'vnet'
+  name: 'vnetDeployment'
   params: {
-    vnetName: 'ungcapvnet01'
     location: location
+    vnetName: 'ungcap-vnet'
   }
 }
 
+// Storage Account
+module storage 'storage_account.bicep' = {
+  name: 'storageDeployment'
+  dependsOn: [
+    vnet
+  ]
+  params: {
+    location: location
+    storageAccountName: 'ungcapstorage01'
+  }
+}
+
+// Key Vault
 module keyvault 'keyvault.bicep' = {
-  name: 'keyvault'
+  name: 'keyvaultDeployment'
+  dependsOn: [
+    storage
+  ]
   params: {
-    keyVaultName: 'ungcapkv01'
     location: location
+    keyVaultName: 'ungcap-kv'
   }
 }
 
-module databricks 'databricks.bicep' = {
-  name: 'databricks'
-  params: {
-    databricksName: 'ungcapdbw01'
-    location: location
-  }
-  dependsOn: [vnet]
-}
-
-module functionapp 'functionapp.bicep' = {
-  name: 'functionapp'
-  params: {
-    functionAppName: 'ungcapfunc01'
-    storageAccountName: storageAccountName
-    location: location
-  }
-  dependsOn: [storage]
-}
-
+// Monitoring
 module monitoring 'monitoring.bicep' = {
-  name: 'monitoring'
+  name: 'monitoringDeployment'
+  dependsOn: [
+    keyvault
+  ]
   params: {
-    workspaceName: 'ungcaplog01'
+    location: location
+	workspaceName: 'ungcap-logws'
+  }
+}
+
+// Databricks
+module databricks 'databricks.bicep' = {
+  name: 'databricksDeployment'
+  dependsOn: [
+    monitoring
+  ]
+  params: {
+    workspaceName: 'ungcap-dbws'
+    managedResourceGroupName: 'rg-unguidedcapstone-managed'
+    skuName: 'standard'
     location: location
   }
-  dependsOn: [storage]
+}
+
+// Function App
+module functionapp 'functionapp.bicep' = {
+  name: 'functionAppDeployment'
+  dependsOn: [
+    databricks
+  ]
+  params: {
+    location: location
+    appServicePlanName: 'ungcap-func-plan'
+  }
 }
