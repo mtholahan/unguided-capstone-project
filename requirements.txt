@@ -1,6 +1,0 @@
-python-dotenv
-requests
-pandas
-tqdm
-pyarrow
-fastparquet
