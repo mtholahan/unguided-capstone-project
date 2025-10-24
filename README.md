@@ -77,11 +77,71 @@ This phase proves functional parity between local and cloud runs, implements pyt
 ### 💻 Environment Setup Guide
 
 #### **1️⃣ Local PySpark (Development / Testing – $0)**
-**Purpose: Fast iteration and pytest coverage before cloud deployment.**  
+**Purpose: Fast iteration and pytest coverage before cloud deployment.** 
+
+#If necessary, rebuild your venv
+
+#### 🧩 Option 1 — Normal run (reuse existing venv)
+
+Use this **most of the time**:
+
+```bash
+# Make sure you're NOT inside any venv first
+deactivate 2>/dev/null || true
+
+# Run the script
+bash scripts/rebuild_venv.sh
+```
+
+✅ Outcome:
+
+- Detects `~/pyspark_venv311`
+- Activates it automatically
+- Skips rebuild (just verifies packages and refreshes `requirements_*.txt`)
+
+------
+
+#### ⚠️ Option 2 — Force rebuild (when dependencies break)
+
+Use this **only when your venv is corrupted** or Spark version changes:
+
+```
+deactivate 2>/dev/null || true
+bash scripts/rebuild_venv.sh --force
+```
+
+⚙️ What happens:
+
+- Deletes `~/pyspark_venv311`
+- Recreates from scratch with pinned dependencies
+- Reinstalls all packages and regenerates both requirements files
+
+##### 💡 Pro Tip
+
+If you run this frequently, make it executable once:
+
+```
+chmod +x scripts/rebuild_venv.sh
+```
+
+Then you can just call:
+
+```
+./scripts/rebuild_venv.sh
+```
+
+
 
 ```bash
 # Activate venv
 source ~/pyspark_venv311/bin/activate
+```
+
+
+
+```bash
+# Anchor in the Windows project folder
+cd /mnt/c/Projects/unguided-capstone-project/scripts   
 ```
 
 
@@ -106,6 +166,13 @@ pytest -q --cov=scripts_spark --cov-report=term-missing
 ```
 
 Outputs: Parquet files → data/intermediate/ and coverage report in console.
+
+```bash
+# Launch VS Code
+code .
+```
+
+
 
 #### 2️⃣ Azure Databricks (Validation / Integration – $$)
 
@@ -188,5 +255,4 @@ project-root/
 - Primary Author: M. Holahan
 
 - Last Updated: Oct 23 2025
-
 
