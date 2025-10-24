@@ -42,7 +42,7 @@ module monitoring 'monitoring.bicep' = {
   ]
   params: {
     location: location
-	workspaceName: 'ungcap-logws'
+	  workspaceName: 'ungcap-logws'
   }
 }
 
