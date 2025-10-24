@@ -1,28 +1,61 @@
 # =========================================================
-#  🧩  GITATTRIBUTES — UNGUIDED CAPSTONE PROJECT (v2)
-#  Updated: 2025-10-10
+# 🧩  GITATTRIBUTES — UNGUIDED CAPSTONE PROJECT (Step 8+)
+# Platform: Ubuntu (WSL native)
+# Updated: 2025-10-24
 # =========================================================
 
-# --- Standardize line endings across platforms ---
-* text=auto
+# --- Default behavior: normalize text files to LF ---
+* text=auto eol=lf
 
-# --- Ensure JSON and config files use LF endings (cross-platform consistency) ---
-*.json text eol=lf
-*.yml  text eol=lf
-*.yaml text eol=lf
-*.ini  text eol=lf
-*.cfg  text eol=lf
+# --- Core Python & configuration files ---
+*.py     text eol=lf
+*.ipynb  text eol=lf
+*.json   text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.ini    text eol=lf
+*.cfg    text eol=lf
+*.env    text eol=lf
 
-# --- Treat PDFs and other binary files correctly ---
-*.pdf binary
-*.png binary
-*.jpg binary
-*.jpeg binary
-*.gif binary
-*.zip binary
+# --- Shell & batch scripts ---
+*.sh     text eol=lf
+*.bat    text eol=crlf
 
-# --- Improve Git merge/diff for Jupyter Notebooks ---
-*.ipynb merge=union
+# --- Documentation / text formats ---
+*.md     text eol=lf
+*.txt    text eol=lf
+*.rst    text eol=lf
 
-# --- Optional SQL diff configuration ---
-*.sql diff=sql
+# --- Data & binary assets (never modify or diff) ---
+*.csv    text eol=lf
+*.parquet binary
+*.zip    binary
+*.tar    binary
+*.gz     binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.pdf    binary
+*.docx   binary
+*.xlsx   binary
+
+# --- SQL & Spark SQL scripts ---
+*.sql    text eol=lf
+*.spark  text eol=lf
+
+# --- Improve merge behavior for notebooks (keeps both sides' cells) ---
+*.ipynb  merge=union
+
+# --- Ignore diff noise for large JSON / Parquet schemas ---
+*.json   diff=none
+*.parquet diff=none
+
+# --- Local system / metadata (optional) ---
+*.log    text eol=lf
+*.lock   text eol=lf
+
+# --- Notes ---
+# 1. This file ensures all text files have LF line endings on Ubuntu/Databricks.
+# 2. Binary formats (images, Parquet, ZIP) remain untouched.
+# 3. Batch (.bat) files remain CRLF for Windows compatibility.
