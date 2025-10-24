@@ -1,0 +1,77 @@
+# =========================================================
+# 🧩  UNGUIDED CAPSTONE PIPELINE — PYPROJECT.TOML (v4.1)
+# Updated: 2025-10-17
+# =========================================================
+
+[project]
+name = "unguided-capstone-project"
+version = "0.6.1"
+description = "TMDB–Discogs data engineering pipeline scaled with Azure Databricks"
+readme = "README.md"
+authors = [{ name = "Mark Holahan", email = "markholahan@pm.me" }]
+requires-python = ">=3.10"
+keywords = ["pyspark", "azure", "databricks", "data-engineering", "etl"]
+
+# ---------------------------------------------------------
+# ✅  Runtime dependencies  (keep lightweight for Databricks)
+# ---------------------------------------------------------
+dependencies = [
+  "pyspark==3.5.2",
+  "pandas==2.0.3",
+  "numpy==1.26.4",
+  "pyarrow==13.0.0",
+  "requests==2.32.3",
+  "azure-core==1.36.0",
+  "azure-storage-blob==12.20.0",
+  "boto3==1.35.0",
+  "rapidfuzz==3.9.0",
+  "python-dotenv==1.0.1",
+  "matplotlib==3.8.4"
+]
+
+
+# ---------------------------------------------------------
+# 🧪  Development / QA dependencies
+# ---------------------------------------------------------
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2.0",
+  "black>=24.4.2",
+  "ruff>=0.3.0",
+  "pylint>=3.2.0"
+]
+
+# ---------------------------------------------------------
+# ⚙️  Tool configuration
+# ---------------------------------------------------------
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I"]
+ignore = ["E501", "W293"]
+exclude = ["venv", "__pycache__", "data"]
+
+[tool.pylint.MASTER]
+max-line-length = 100
+disable = ["C0114", "C0115", "C0116", "W1203"]
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["scripts/tests"]
+pythonpath = ["scripts"]
+
+# ---------------------------------------------------------
+# 🏗️  Build system configuration
+# ---------------------------------------------------------
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------
+# 📦  Package discovery — all code lives under scripts/
+# ---------------------------------------------------------
+[tool.setuptools.packages.find]
+where = ["scripts"]

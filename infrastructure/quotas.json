@@ -1,0 +1,819 @@
+[
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/*",
+    "name": "*",
+    "properties": {
+      "isQuotaApplicable": false,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "Total Regional VMs",
+        "value": "*"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/F1",
+    "name": "F1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "F1 VMs",
+        "value": "F1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/D1",
+    "name": "D1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "D1 VMs",
+        "value": "D1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/B1",
+    "name": "B1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "B1 VMs",
+        "value": "B1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/B2",
+    "name": "B2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "B2 VMs",
+        "value": "B2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/B3",
+    "name": "B3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "B3 VMs",
+        "value": "B3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/S1",
+    "name": "S1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "S1 VMs",
+        "value": "S1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/S2",
+    "name": "S2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "S2 VMs",
+        "value": "S2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/S3",
+    "name": "S3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "S3 VMs",
+        "value": "S3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P1",
+    "name": "P1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P1 VMs",
+        "value": "P1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P2",
+    "name": "P2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P2 VMs",
+        "value": "P2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P3",
+    "name": "P3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P3 VMs",
+        "value": "P3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/Y1",
+    "name": "Y1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "Y1 VMs",
+        "value": "Y1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/I1v2",
+    "name": "I1v2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "I1v2 VMs",
+        "value": "I1v2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/I2v2",
+    "name": "I2v2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "I2v2 VMs",
+        "value": "I2v2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/I3v2",
+    "name": "I3v2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "I3v2 VMs",
+        "value": "I3v2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P1v2",
+    "name": "P1v2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P1v2 VMs",
+        "value": "P1v2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P2v2",
+    "name": "P2v2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P2v2 VMs",
+        "value": "P2v2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P3v2",
+    "name": "P3v2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P3v2 VMs",
+        "value": "P3v2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P0v3",
+    "name": "P0v3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P0v3 VMs",
+        "value": "P0v3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P1v3",
+    "name": "P1v3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P1v3 VMs",
+        "value": "P1v3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P2v3",
+    "name": "P2v3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P2v3 VMs",
+        "value": "P2v3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P3v3",
+    "name": "P3v3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P3v3 VMs",
+        "value": "P3v3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/EP1",
+    "name": "EP1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "EP1 VMs",
+        "value": "EP1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/EP2",
+    "name": "EP2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "EP2 VMs",
+        "value": "EP2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/EP3",
+    "name": "EP3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "EP3 VMs",
+        "value": "EP3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/WS1",
+    "name": "WS1",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "WS1 VMs",
+        "value": "WS1"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/WS2",
+    "name": "WS2",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "WS2 VMs",
+        "value": "WS2"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/WS3",
+    "name": "WS3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "WS3 VMs",
+        "value": "WS3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P1mv3",
+    "name": "P1mv3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P1mv3 VMs",
+        "value": "P1mv3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P2mv3",
+    "name": "P2mv3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P2mv3 VMs",
+        "value": "P2mv3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P3mv3",
+    "name": "P3mv3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P3mv3 VMs",
+        "value": "P3mv3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P4mv3",
+    "name": "P4mv3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P4mv3 VMs",
+        "value": "P4mv3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P5mv3",
+    "name": "P5mv3",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 1
+      },
+      "name": {
+        "localizedValue": "P5mv3 VMs",
+        "value": "P5mv3"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P0v4",
+    "name": "P0v4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P0v4 VMs",
+        "value": "P0v4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P1v4",
+    "name": "P1v4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P1v4 VMs",
+        "value": "P1v4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P2v4",
+    "name": "P2v4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P2v4 VMs",
+        "value": "P2v4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P3v4",
+    "name": "P3v4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P3v4 VMs",
+        "value": "P3v4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P1mv4",
+    "name": "P1mv4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P1mv4 VMs",
+        "value": "P1mv4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P2mv4",
+    "name": "P2mv4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P2mv4 VMs",
+        "value": "P2mv4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P3mv4",
+    "name": "P3mv4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P3mv4 VMs",
+        "value": "P3mv4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P4mv4",
+    "name": "P4mv4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P4mv4 VMs",
+        "value": "P4mv4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  },
+  {
+    "id": "/subscriptions/b98064ea-b137-4390-8051-3ab8dea4fb5f/providers/Microsoft.Web/locations/eastus/providers/Microsoft.Quota/quotas/P5mv4",
+    "name": "P5mv4",
+    "properties": {
+      "isQuotaApplicable": true,
+      "limit": {
+        "limitObjectType": "LimitValue",
+        "limitType": "Independent",
+        "value": 30
+      },
+      "name": {
+        "localizedValue": "P5mv4 VMs",
+        "value": "P5mv4"
+      },
+      "properties": {},
+      "unit": "Instances"
+    },
+    "type": "Microsoft.Quota/Quotas"
+  }
+]

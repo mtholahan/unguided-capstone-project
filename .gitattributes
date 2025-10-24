@@ -1,0 +1,28 @@
+# =========================================================
+#  🧩  GITATTRIBUTES — UNGUIDED CAPSTONE PROJECT (v2)
+#  Updated: 2025-10-10
+# =========================================================
+
+# --- Standardize line endings across platforms ---
+* text=auto
+
+# --- Ensure JSON and config files use LF endings (cross-platform consistency) ---
+*.json text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.ini  text eol=lf
+*.cfg  text eol=lf
+
+# --- Treat PDFs and other binary files correctly ---
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+
+# --- Improve Git merge/diff for Jupyter Notebooks ---
+*.ipynb merge=union
+
+# --- Optional SQL diff configuration ---
+*.sql diff=sql
