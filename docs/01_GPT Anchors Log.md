@@ -18,6 +18,105 @@ Dependencies: [keys/env/tools/people]
 
 
 
+**16:00 10/23/2025**
+
+Resume from anchor: [UnguidedCapstone_TMDB_Refactor02_Step_08_Recalibrated]
+
+Context: Step 8 now represents the stabilization and hardening phase of the TMDB Refactor project. 
+All IaC deployments (Bicep templates for networking, storage, Key Vault, Databricks, Function App, monitoring) are complete and validated in Azure. 
+The project shifts from environment readiness to full pipeline integration, refactoring remaining Python scripts into Spark modules where feasible, and preparing for test coverage. 
+This phase finalizes the architecture before scaling in Step 9.
+
+Current milestone: 
+- Infrastructure deployed and verified in Azure.  
+- Two ingestion scripts successfully migrated to PySpark.  
+
+Next action: 
+Complete the remaining PySpark refactors for steps 03–06, ensuring consistent module interfaces for orchestration. 
+Then, build and validate the initial pytest suite to confirm data flow and component integrity in Databricks.
+
+Dependencies: 
+- Azure Databricks workspace access and active cluster  
+- Local or cloud-based pytest environment  
+- Updated environment variables and config paths  
+- Reference to Step 8 rubric for test metrics and deliverables  
+- Git branch: `step8-dev`
+
+
+
+**02:59 10/23/2025**
+
+**Resume from anchor:** [UnguidedCapstone_TMDB_Refactor02_Step_08_Set-up_IaC]
+
+**Context:** The IaC (Infrastructure as Code) layer for the Unguided Capstone TMDB Refactor project has been successfully built and validated using Bicep. Encoding, syntax, and structural issues have been resolved, and all `.bicep` modules compile cleanly into JSON ARM templates.
+
+**Current milestone:** Bicep templates for networking, storage, key vault, monitoring, Databricks, and Function App modules are complete and verified through successful `az bicep build`.
+
+**Next action:** Create the Azure resource group (`rg-unguidedcapstone`) and run the full deployment using:
+
+```
+az group create --name rg-unguidedcapstone --location eastus
+az deployment group create --resource-group rg-unguidedcapstone --template-file .\main.bicep --parameters location='eastus'
+```
+
+**Dependencies:**
+
+- Azure CLI (authenticated and on correct subscription)
+- Existing Bicep files in `C:\Projects\unguided-capstone-project\infrastructure`
+- Network permissions for resource provisioning in `eastus`
+- Optional: verification access to Azure Portal to confirm deployed resources
+
+
+
+
+
+**22:18 10/22/2025**
+
+Resume from anchor: [**UnguidedCapstone_TMDB_Refactor02_Step_08_Transition**]
+
+------
+
+### **Context:**
+
+You’ve successfully submitted **Unguided Step 7 (Create Deployment Architecture)** to Akhil for review, completing the IaC scaffolding (Bicep + ARM templates) and architecture documentation under the [Pause-Window Sprint (Oct 17–31)]. Step 8 now begins the **deployment testing** phase — taking your designed cloud architecture live in Azure to validate interoperability, data flow, and pipeline automation. This step is indeed the most open-ended, emphasizing applied debugging, resource orchestration, and production-grade validation.
+
+------
+
+### **Current Milestone:**
+
+✅ Step 7 submitted (architecture + templates + naming conventions)
+✅ Azure CLI + Bicep installed and verified
+✅ VS Code environment and PowerShell venv ready
+ ⏳ Step 8 setup pending — deployment validation environment not yet created
+
+------
+
+### **Next Action:**
+
+Create a **dedicated resource group** in Azure for Step 8 deployment tests, mirroring your architecture’s target environment.
+
+```
+az group create --name rg-unguidedcapstone-test --location eastus
+```
+
+Then verify access with:
+
+```
+az group show --name rg-unguidedcapstone-test
+```
+
+This becomes your deployment sandbox for all Step 8 builds and rollbacks.
+
+------
+
+### **Dependencies:**
+
+- **Keys/Env:** Active Azure CLI session (`az account show` valid)
+- **Tools:** VS Code (extensions synced), Azure CLI, Bicep, PowerShell 7 (venv active)
+- **People:** Akhil (optional reviewer, mentor decoupled until Nov 3)
+
+
+
 **11:48 10/22/2025**
 
 Resume from anchor: [UnguidedCapstone_TMDB_Refactor02_Step_07_In_Flight]
