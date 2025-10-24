@@ -1,34 +1,55 @@
 # =========================================================
-# 🧩  EDITORCONFIG — UNGUIDED CAPSTONE PROJECT (v1)
-# Updated: 2025-10-10
+# .editorconfig — Unguided Capstone Project (Step 8+)
+# Platform: Ubuntu / WSL2 / Databricks
+# Enforces consistent LF endings, UTF-8, and 4-space indentation.
 # =========================================================
 
+# Root flag
 root = true
 
 # --- Global defaults ---
 [*]
 charset = utf-8
-indent_style = space
-indent_size = 4
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
 
-# --- Markdown & docs ---
-[*.md]
-trim_trailing_whitespace = false
+# --- Python ---
+[*.py]
+max_line_length = 100
+indent_size = 4
 
-# --- Jupyter Notebooks metadata ---
+# --- Jupyter Notebooks ---
 [*.ipynb]
 indent_size = 2
+trim_trailing_whitespace = false
 
-# --- JSON, YAML, and config files ---
-[*.{json,yml,yaml,ini,cfg}]
+# --- Shell scripts ---
+[*.sh]
+indent_style = space
 indent_size = 2
-quote_type = double
 end_of_line = lf
 
-# --- Python scripts ---
-[*.py]
-indent_size = 4
-max_line_length = 88
+# --- YAML / JSON ---
+[*.{yml,yaml,json}]
+indent_style = space
+indent_size = 2
+	
+# --- Markdown / Docs ---
+[*.{md,txt,rst}]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+# --- Windows batch files ---
+[*.bat]
+end_of_line = crlf
+indent_style = tab
+
+# --- Git & Config files ---
+[*.{ini,cfg,env}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
