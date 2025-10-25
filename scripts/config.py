@@ -68,11 +68,12 @@ API_MAX_RETRIES = 3
 RETRY_BACKOFF = 2.0              # seconds between retries
 TMDB_REQUEST_DELAY_SEC = 0.8     # polite pause between TMDB API calls
 
-# ===============================================================
-# 🎞️ DISCOGS SETTINGS
-# ===============================================================
+# ============================================================
+# DISCOGS SETTINGS
+# ============================================================
 DISCOGS_API_URL = "https://api.discogs.com/database/search"
-DISCOGS_TOKEN = os.getenv("DISCOGS_TOKEN", "")
+DISCOGS_CONSUMER_KEY = os.getenv("DISCOGS_CONSUMER_KEY", "")
+DISCOGS_CONSUMER_SECRET = os.getenv("DISCOGS_CONSUMER_SECRET", "")
 DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 
 DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
@@ -118,7 +119,7 @@ GOLDEN_TITLES = [
     "Inception", "Interstellar", "The Dark Knight", "Blade Runner", "The Matrix",
     "Pulp Fiction", "Forrest Gump", "The Godfather", "The Shawshank Redemption", "Fight Club",
     "Back to the Future", "Gladiator", "Titanic", "Avatar", "Jurassic Park",
-    "Star Wars", "The Lord of the Rings", "Harry Potter", "La La Land", "The Lion King", 
+    "Star Wars", "The Lord of the Rings", "Harry Potter", "La La Land", "The Lion King",
     "Frozen", "Jaws"
 ]
 GOLDEN_TITLES_TEST = GOLDEN_TITLES[:10]  # first 10 for quick dev testing

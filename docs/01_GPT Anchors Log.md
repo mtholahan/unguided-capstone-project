@@ -18,7 +18,55 @@ Dependencies: [keys/env/tools/people]
 
 
 
-**00:27 10/24/2025**
+**23:28 10/24/2025**
+
+Resume from anchor: [Unguided_Capstone_TMDB_Refactor02_Step_08_Ubuntu_Build-out]
+Context:
+The TMDB–Discogs Extract stage has been fully validated under Ubuntu using Spark local mode. 
+Environment parity between `.env`, `config.py`, and PySpark scripts is stable. 
+Discogs authentication is now working with Consumer Key/Secret, and data extraction outputs are confirmed clean.
+
+Current milestone:
+✔ 01_spark_extract_tmdb.py validated end-to-end  
+✔ 02_spark_query_discogs.py executed successfully with proper API responses  
+✔ Environment verification and config synchronization complete  
+
+Next action:
+Run and validate `03_spark_prepare_tmdb_input.py` locally to confirm schema consistency and output formatting prior to integration testing with Steps 04–05.
+
+Dependencies:
+- Active venv: `~/pyspark_venv311`
+- Ubuntu VS Code workspace with LF + Black enforcement  
+- `.env` containing TMDB + Discogs keys (validated)  
+- Branch: `step8-dev`
+- Reference rubric: **Capstone Step 8 – Stabilization & Hardening**
+
+
+
+**14:44 10/24/2025**
+
+**Resume from anchor:** [Unguided_Capstone_TMDB_Refactor02_Step_08_Ubuntu_Relo]
+
+**Context:**
+ The TMDB Refactor project has been successfully migrated from Windows to Ubuntu for hybrid Spark development. The local PySpark environment (`pyspark_venv311`) is stable, the repo has been normalized for Linux line endings and clean Git tracking, and VS Code now mirrors Databricks formatting and environment parity.
+
+**Current milestone:**
+
+- Extract Spark TMDB pipeline validated end-to-end in **LOCAL_MODE**
+- Git repo restored and clean on branch `step8-dev`
+- VS Code configured for Ubuntu + Databricks compatibility
+- Development environment standardized and reproducible
+
+**Next action:**
+ Begin **unit testing of individual Spark scripts** (`extract_spark_tmdb.py`, `extract_spark_discogs.py`, and `prepare_spark_tmdb_input.py`) to confirm schema consistency, data validity, and path logic under local mode.
+
+**Dependencies:**
+
+- Active PySpark venv: `~/pyspark_venv311`
+- Access to Azure Storage credentials in `.env`
+- Ubuntu VS Code workspace with Black + LF enforcement
+- Branch: `step8-dev`
+- Reference rubric: *Capstone Step 8 – Stabilization & Hardening*
 
 
 
