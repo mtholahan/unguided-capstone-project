@@ -18,6 +18,61 @@ Dependencies: [keys/env/tools/people]
 
 
 
+
+
+| Phase   | Focus                                                        | Effort  | Target Completion       |
+| ------- | ------------------------------------------------------------ | ------- | ----------------------- |
+| **8.1** | Azure VM validation + Blob Storage handshake                 | 3–4 hrs | 🕐 *AM, Day 1*           |
+| **8.2** | Develop + validate `deploy_to_azure_test.sh` (auto-deploy, run, teardown) | 4–5 hrs | *Midday, Day 1*         |
+| **8.3** | Build robust PyTest suite (Steps 01–05, schema + I/O + edge cases) | 6–7 hrs | *PM, Day 1 → AM, Day 2* |
+| **8.4** | Execute Azure test runs (collect runtime + coverage metrics) | 3–4 hrs | *Midday, Day 2*         |
+| **8.5** | Refactor code based on test findings + rerun                 | 3–4 hrs | *PM, Day 2*             |
+| **8.6** | Documentation + slide deck updates (test suite, coverage %, architecture deltas) | 2–3 hrs | *AM, Day 3*             |
+
+### 🧭 Target
+
+> **Step 8 completion:** *Evening of Oct 27 (Monday)*
+>  Ready to roll into Step 9 (Production Deployment) by Oct 28.
+
+------
+
+### ⚙️ Morning Kickoff (for [Unguided_Capstone_Step_08_Azure_Bound])
+
+1. 🔐 Validate `az login` and VM SSH connectivity
+2. 🧱 Confirm Blob container access from VM
+3. 🚀 Run dry test: pull GitHub repo → `spark-submit main.py`
+4. 🔄 Begin authoring `deploy_to_azure_test.sh`
+5. 🧩 Prep test scaffolding directory: `tests/unit/`
+
+
+
+
+
+**01:25 10/25/2025**
+
+Resume from anchor: [Unguided_Capstone_Step_08_Azure_Bound]
+Context:
+The local TMDB–Discogs PySpark pipeline is fully validated (Steps 01–05). 
+Azure resources have been successfully deployed via main.bicep, and the unguided-capstone-project GitHub repo is integrated into the Azure footprint. 
+We’re now shifting from local validation to cloud-based test deployment and robust test suite creation under Step 8.
+
+Current milestone:
+✔ Functional pipeline runs end-to-end locally
+✔ Azure infrastructure provisioned (compute + storage)
+✔ GitHub–Azure integration confirmed
+
+Next action:
+Deploy the functional pipeline to the Azure VM for testing via a frugal automation script (`deploy_to_azure_test.sh`) that executes the pipeline, runs PyTests, uploads results to Blob Storage, and deallocates the VM afterward.
+
+Dependencies:
+- Active Azure resource group + deployment outputs (VM name, IP, storage account)
+- GitHub access tokens / SSH key for repo sync
+- Azure CLI authenticated locally (`az login`)
+- `unguided-capstone-project` repo cloned on Azure VM
+- `.env` including TMDB + Discogs keys and Azure storage credentials
+
+
+
 **23:28 10/24/2025**
 
 Resume from anchor: [Unguided_Capstone_TMDB_Refactor02_Step_08_Ubuntu_Build-out]

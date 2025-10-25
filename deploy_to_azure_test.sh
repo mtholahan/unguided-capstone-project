@@ -47,7 +47,13 @@ echo "🌐 VM IP: $VM_IP"
 
 # ---- DEPLOY CODE ----
 echo "📦 Syncing GitHub repo..."
-ssh -o StrictHostKeyChecking=no azureuser@$VM_IP "rm -rf $WORK_DIR && git clone $REPO_URL $WORK_DIR"
+ssh azureuser@$VM_IP << 'EOF'
+  rm -rf unguided-capstone-project
+  git clone --branch step8-dev https://github.com/markholahan/unguided-capstone-project.git
+  cd unguided-capstone-project
+  echo "🌿 Checked out branch: $(git rev-parse --abbrev-ref HEAD)"
+EOF
+
 
 # ---- RUN PIPELINE ----
 echo "⚙️ Executing Spark pipeline..."
