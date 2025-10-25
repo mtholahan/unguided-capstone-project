@@ -54,6 +54,8 @@ source "$VENV_PATH/bin/activate"
 echo "📦 Installing core PySpark + data libraries..."
 pip install --upgrade pip setuptools wheel
 pip install pyspark==3.5.2 pandas requests rapidfuzz tqdm pyarrow
+pip install --upgrade pyarrow fastparquet
+
 
 # -------------------------------------------------------
 # Azure + Environment Management
