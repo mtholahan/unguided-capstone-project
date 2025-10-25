@@ -1,8 +1,0 @@
-2025-10-24 23:59:50,587 - step_05_match_and_enrich_v2 - INFO - Initialized logger for step_05_match_and_enrich_v2
-2025-10-24 23:59:50,592 - step_05_match_and_enrich_v2 - INFO - Initialized step_05_match_and_enrich_v2 [branch=step8-dev, commit=35e60d3]
-2025-10-24 23:59:50,592 - step_05_match_and_enrich_v2 - INFO - Starting Step 05 | Phase 2 Rescue Plan
-2025-10-24 23:59:50,597 - step_05_match_and_enrich_v2 - INFO - Loaded 356 candidate rows
-2025-10-24 23:59:50,645 - step_05_match_and_enrich_v2 - INFO - Saved 48 matched rows → /home/mark/Projects/unguided-capstone-project/data/intermediate/tmdb_discogs_matches_v2.csv
-2025-10-24 23:59:50,936 - step_05_match_and_enrich_v2 - INFO - 📊 Saved score distribution histogram → /home/mark/Projects/unguided-capstone-project/data/metrics/step05_score_distribution.png
-2025-10-24 23:59:50,938 - step_05_match_and_enrich_v2 - INFO - 📈 Saved metrics JSON → /home/mark/Projects/unguided-capstone-project/data/metrics/step05_matching_metrics.json
-2025-10-24 23:59:50,938 - step_05_match_and_enrich_v2 - INFO - ✅ Step 05 Phase 2 complete | Runtime 0.35s

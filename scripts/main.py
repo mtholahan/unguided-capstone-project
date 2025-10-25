@@ -13,6 +13,8 @@ Version: v5  (Oct 2025)
 """
 
 import json
+import os
+import sys
 import time
 import traceback
 import pandas as pd
@@ -20,6 +22,12 @@ from datetime import datetime
 from pathlib import Path
 from importlib import import_module
 from pyspark.sql import SparkSession
+
+# 🧭 Fix path before importing scripts
+project_root = Path(__file__).resolve().parents[1]
+os.chdir(project_root)
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 from scripts.base_step import setup_logger
 from scripts.config import LOG_LEVEL, DATA_DIR, LOG_DIR
@@ -47,13 +55,11 @@ print("✅ Spark session active.\n")
 # ================================================================
 STEPS = [
     # --- Spark refactored modules ---
-    "scripts_spark.extract_spark_tmdb",
-    "scripts_spark.extract_spark_discogs",
-    "scripts_spark.prepare_spark_tmdb_input",
-
-    # --- Legacy Python steps (still valid) ---
-    #"scripts.step_04_validate_schema_alignment",
-    #"scripts.step_05_match_and_enrich",
+    "scripts_spark.01_spark_extract_tmdb",
+    "scripts_spark.02_spark_query_discogs",
+    "scripts_spark.03_spark_prepare_tmdb_input",
+    "scripts_spark.04_spark_validate_schema_alignment",
+    "scripts_spark.05_spark_match_and_enrich",
 ]
 
 CHECKPOINT_FILE = Path(DATA_DIR) / "pipeline_checkpoint.json"
