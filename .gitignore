@@ -131,3 +131,6 @@ archive/
 .replit
 .editorconfig.bak
 .gitattributes.bak
+logs/
+*.log
+*.Zone.Identifier
