@@ -80,7 +80,8 @@ pip install pytest pytest-cov flake8 black
 # Optional: Visualization / Reporting
 #   (safe to skip in production clusters)
 # -------------------------------------------------------
-# pip install matplotlib seaborn notebook jupyterlab
+pip install matplotlib 
+# seaborn notebook jupyterlab
 
 # -------------------------------------------------------
 # Freeze environments
