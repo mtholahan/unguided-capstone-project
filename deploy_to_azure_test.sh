@@ -1,111 +1,141 @@
 #!/usr/bin/env bash
-# ===========================================
-# Step 8 – Deploy TMDB–Discogs Pipeline to Azure VM for Testing
-# ===========================================
+# ==========================================================
+# Azure Test Deployment Script — Unguided Capstone (Step 8)
+# Supports: --fast flag to skip dependency installation
+# Includes: .env sync + remote variable export
+# ==========================================================
 
-set -e
+set -euo pipefail
 
-# ---- LOAD ENVIRONMENT ----
-if [ -f ".env" ]; then
-  echo "📦 Loading environment variables from .env..."
-  export $(grep -v '^#' .env | xargs)
-else
-  echo "⚠️ .env file not found! Ensure AZURE_APP_ID, AZURE_APP_SECRET, and AZURE_TENANT_ID are set."
+FAST_MODE=false
+if [[ "${1:-}" == "--fast" ]]; then
+  FAST_MODE=true
+  echo "⚡ Running in FAST mode — skipping dependency installation."
 fi
 
-# ---- AUTHENTICATE (Service Principal on Local Machine) ----
-echo "🔐 Authenticating to Azure using Service Principal..."
+echo "📦 Loading environment variables..."
+source .env
+
+# ---- Guard Clauses ----
+: "${AZURE_APP_ID:?Missing AZURE_APP_ID in .env}"
+: "${AZURE_APP_SECRET:?Missing AZURE_APP_SECRET in .env}"
+: "${AZURE_TENANT_ID:?Missing AZURE_TENANT_ID in .env}"
+: "${AZURE_RESOURCE_GROUP:?Missing AZURE_RESOURCE_GROUP in .env}"
+: "${AZURE_VM_NAME:?Missing AZURE_VM_NAME in .env}"
+
+echo "🔐 Logging in to Azure..."
 az login --service-principal \
   -u "$AZURE_APP_ID" \
   -p "$AZURE_APP_SECRET" \
   --tenant "$AZURE_TENANT_ID" >/dev/null
 
-# ---- CONFIG ----
-RESOURCE_GROUP="rg-unguidedcapstone-test"
-VM_NAME="ungcapvm01"
-STORAGE_ACCOUNT="ungcapstor01"
-CONTAINER_NAME="testresults"
-REPO_URL="https://github.com/mtholahan/unguided-capstone-project.git"
-WORK_DIR="/home/azureuser/unguided-capstone-project"
-RESULTS_DIR="$WORK_DIR/test_results"
-BLOB_PATH="https://${STORAGE_ACCOUNT}.blob.core.windows.net/${CONTAINER_NAME}"
-
-# ---- VM PREP ----
 echo "🧠 Checking VM status..."
-VM_STATE=$(az vm get-instance-view -g $RESOURCE_GROUP -n $VM_NAME --query "instanceView.statuses[1].code" -o tsv)
+VM_STATE=$(az vm get-instance-view \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_VM_NAME" \
+  --query "instanceView.statuses[1].code" -o tsv)
+
 if [[ "$VM_STATE" != "PowerState/running" ]]; then
-  echo "🚀 Starting VM..."
-  az vm start -g $RESOURCE_GROUP -n $VM_NAME >/dev/null
+  echo "▶️ Starting VM..."
+  az vm start --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_VM_NAME" >/dev/null
 else
   echo "✅ VM already running."
 fi
-VM_IP=$(az vm show -d -g $RESOURCE_GROUP -n $VM_NAME --query publicIps -o tsv)
+
+VM_IP=$(az vm show -d \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_VM_NAME" \
+  --query publicIps -o tsv)
+
 echo "🌐 VM IP: $VM_IP"
 
-# ---- DEPLOY CODE & RUN PIPELINE REMOTELY ----
-ssh azureuser@$VM_IP bash <<'EOF'
+# ------------------------------------------------------------
+# Push .env to VM so Spark and pytest see it
+# ------------------------------------------------------------
+echo "📤 Copying .env to VM..."
+scp -o StrictHostKeyChecking=no .env azureuser@"$VM_IP":/home/azureuser/.env >/dev/null
+
+echo "⚙️ Running pipeline on VM..."
+
+# ------------------------------------------------------------
+# Remote execution block
+# ------------------------------------------------------------
+ssh -o StrictHostKeyChecking=no azureuser@"$VM_IP" <<EOF
 set -e
-echo "📦 Syncing GitHub repo..."
+echo "💡 Remote session started on \$(hostname)"
+source ~/.bashrc || true
+
+# Load environment variables from synced .env
+if [ -f ~/.env ]; then
+  export \$(grep -v '^#' ~/.env | xargs)
+  echo "✅ Environment variables loaded from .env"
+fi
+
+cd /home/azureuser
 rm -rf unguided-capstone-project
-git clone --branch step8-dev git@github.com:mtholahan/unguided-capstone-project.git
+git clone --branch step8-dev https://github.com/mtholahan/unguided-capstone-project.git
 cd unguided-capstone-project
-echo "🌿 Branch: $(git rev-parse --abbrev-ref HEAD)"
 
-echo "⚙️ Running Spark pipeline..."
 mkdir -p test_results
-if command -v spark-submit &>/dev/null; then
-  spark-submit main.py > test_results/pipeline_run.log 2>&1
+
+if [ "$FAST_MODE" = false ]; then
+  echo "📦 Installing dependencies..."
+  sudo apt-get update -qq
+  sudo apt-get install -y python3-pip >/dev/null
+  pip3 install --quiet --upgrade pip
+  if [ -f requirements_stable.txt ]; then
+      pip3 install --quiet -r requirements_stable.txt
+  elif [ -f requirements_locked.txt ]; then
+      pip3 install --quiet -r requirements_locked.txt
+  else
+      pip3 install --quiet pandas pyspark pytest
+  fi
+  pip3 install --quiet rapidfuzz || echo "rapidfuzz already satisfied"
 else
-  echo "⚠️ spark-submit not found." > test_results/pipeline_run.log
+  echo "⚡ Skipping dependency installation (FAST mode)."
 fi
 
-echo "🧪 Running PyTest..."
-if [ -d "tests" ]; then
-  pytest -v --maxfail=1 --disable-warnings > test_results/pytest_report.log 2>&1
+echo "🔍 Verifying environment modules..."
+python3 scripts/verify_env.py || exit 1
+
+echo "🚀 Running Spark job..."
+if command -v spark-submit >/dev/null 2>&1; then
+    spark-submit --master local[2] scripts/main.py > test_results/pipeline_run.log 2>&1 \
+      || echo "Spark job failed (non-zero exit code)" >> test_results/pipeline_run.log
 else
-  echo "⚠️ No tests directory." > test_results/pytest_report.log
+    echo "spark-submit not found in PATH" > test_results/pipeline_run.log
 fi
 
-echo "📤 Compressing results..."
-tar -czf /tmp/test_results.tgz -C test_results .
+echo "🧪 Running pytest..."
+pytest -v > test_results/pytest_report.log 2>&1 || true
+
+tar -czf /home/azureuser/test_results.tgz -C test_results .
+echo "📦 test_results.tgz created."
 EOF
 
-# ---- RETRIEVE RESULTS TO LOCAL TEMP FOLDER ----
-LOCAL_RESULTS="$HOME/test_results"
-mkdir -p "$LOCAL_RESULTS"
-echo "⬇️ Copying test artifacts from VM..."
-scp azureuser@$VM_IP:/tmp/test_results.tgz "$LOCAL_RESULTS/"
-tar -xzf "$LOCAL_RESULTS/test_results.tgz" -C "$LOCAL_RESULTS"
-rm "$LOCAL_RESULTS/test_results.tgz"
+# ------------------------------------------------------------
+# Retrieve and show summary
+# ------------------------------------------------------------
+echo "⬇️ Copying results back..."
+mkdir -p ~/test_results
+scp -o StrictHostKeyChecking=no azureuser@"$VM_IP":/home/azureuser/test_results.tgz ~/test_results/ >/dev/null
+tar -xzf ~/test_results/test_results.tgz -C ~/test_results
 
-# ---- UPLOAD TO BLOB STORAGE (LOCAL SP AUTH) ----
-echo "☁️ Uploading test results via Service Principal..."
+echo ""
+echo "✅ Results available locally in ~/test_results"
+echo "📜 --- pipeline_run.log (last 20 lines) ---"
+tail -20 ~/test_results/pipeline_run.log 2>/dev/null || echo "No pipeline_run.log found"
+echo ""
+echo "📜 --- pytest_report.log (last 20 lines) ---"
+tail -20 ~/test_results/pytest_report.log 2>/dev/null || echo "No pytest_report.log found"
 
-# 🔑  Get an account key (fast, synchronous)
-ACCOUNT_KEY=$(az storage account keys list \
-  --account-name "$STORAGE_ACCOUNT" \
-  --resource-group "$RESOURCE_GROUP" \
-  --query "[0].value" -o tsv)
+echo ""
+echo "🧩 Log summary complete."
+echo "🧠 Tip: Use '--fast' for redeploys once VM dependencies are set up."
 
-# Create the container if it doesn't exist
-az storage container create \
-  --name "$CONTAINER_NAME" \
-  --account-name "$STORAGE_ACCOUNT" \
-  --account-key "$ACCOUNT_KEY" \
-  --public-access off >/dev/null
-
-# Upload results using the key (never token-based)
-az storage blob upload-batch \
-  --destination "$CONTAINER_NAME" \
-  --account-name "$STORAGE_ACCOUNT" \
-  --account-key "$ACCOUNT_KEY" \
-  --source "$LOCAL_RESULTS" \
-  --overwrite >/dev/null
-
-
-echo "✅ Upload complete → $BLOB_PATH"
-
-# ---- TEARDOWN ----
-echo "💤 Deallocating VM..."
-az vm deallocate -g $RESOURCE_GROUP -n $VM_NAME >/dev/null
-echo "🎯 Deployment & test cycle complete."
+# ------------------------------------------------------------
+# Optional: Stop VM after completion (disabled for testing)
+# ------------------------------------------------------------
+# echo "🛑 Stopping VM to avoid Azure charges..."
+# az vm deallocate --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_VM_NAME"
+# echo "☁️ VM successfully stopped."
