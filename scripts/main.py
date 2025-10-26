@@ -55,11 +55,11 @@ print("✅ Spark session active.\n")
 # ================================================================
 STEPS = [
     # --- Spark refactored modules ---
-    "scripts_spark.01_spark_extract_tmdb",
-    "scripts_spark.02_spark_query_discogs",
-    "scripts_spark.03_spark_prepare_tmdb_input",
-    "scripts_spark.04_spark_validate_schema_alignment",
-    "scripts_spark.05_spark_match_and_enrich",
+    "scripts_spark.spark_extract_tmdb",
+    "scripts_spark.spark_query_discogs",
+    "scripts_spark.spark_prepare_tmdb_input",
+    "scripts_spark.spark_validate_schema_alignment",
+    "scripts_spark.spark_match_and_enrich",
 ]
 
 CHECKPOINT_FILE = Path(DATA_DIR) / "pipeline_checkpoint.json"
