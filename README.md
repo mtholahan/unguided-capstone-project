@@ -155,7 +155,7 @@ python -c "from pyspark.sql import SparkSession; print(SparkSession.builder.mast
 
 ```bash
 # Install dependencies (if needed)
-pip install -p pyspark pytest pytest-cov rapidfuzz
+pip install pyspark pytest pytest-cov rapidfuzz
 ```
 
 
