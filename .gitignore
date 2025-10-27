@@ -54,11 +54,13 @@ __temp__/
 __workspace__/
 **/.cache/
 
-# --- Data (exclude raw/intermediate; keep samples) ---
-data/
+# --- Data (exclude raw/intermediate; keep critical seed files) ---
+data/*
 !data/README.md
 !data/sample/
 !data/sample/**
+!data/movie_titles_200.txt
+
 
 # --- Logs & metrics (retain structured logs) ---
 !logs/
