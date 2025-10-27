@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
-# ==========================================================
+# =============================================================================
 # Azure Test Deployment Script — Unguided Capstone (Step 8)
-# Supports: --fast flag to skip dependency installation
-# Includes: .env sync + remote variable export
-# ==========================================================
+# =============================================================================
+# Safe Bash setup: strict mode with resilience against unbound vars
+# -e  → exit on error
+# -u  → treat unset vars as error (except special cases handled below)
+# -o pipefail → fail if any command in a pipeline fails
+# =============================================================================
 
 set -euo pipefail
+
+# --- Safety: predeclare vars that may be set later ---------------------------
+exit_code=0
+
+# --- Helper: fail gracefully with a message ---------------------------------
+trap 'echo "❌ Error on line $LINENO. Exit code: $?"; exit 1' ERR
 
 FAST_MODE=false
 if [[ "${1:-}" == "--fast" ]]; then
@@ -74,6 +83,7 @@ fi
 cd /home/azureuser
 rm -rf unguided-capstone-project
 git clone --branch step8-dev https://github.com/mtholahan/unguided-capstone-project.git
+
 cd unguided-capstone-project
 
 mkdir -p test_results
@@ -98,12 +108,21 @@ fi
 echo "🔍 Verifying environment modules..."
 python3 scripts/verify_env.py || exit 1
 
-echo "🚀 Running Spark job..."
+echo "🚀 Running Spark job (live logs enabled)..."
+
 if command -v spark-submit >/dev/null 2>&1; then
-    spark-submit --master local[2] scripts/main.py > test_results/pipeline_run.log 2>&1 \
-      || echo "Spark job failed (non-zero exit code)" >> test_results/pipeline_run.log
+    mkdir -p test_results
+    # Run Spark with unbuffered, real-time logging
+    spark-submit --master local[2] scripts/main.py 2>&1 | tee test_results/pipeline_run.log
+    # capture the Spark exit code safely (even if nounset is on)
+    exit_code=${PIPESTATUS[0]:-1}
+    if [ "$exit_code" -ne 0 ]; then
+        echo "❌ Spark job failed (exit code $exit_code)" | tee -a test_results/pipeline_run.log
+    else
+        echo "✅ Spark job completed successfully" | tee -a test_results/pipeline_run.log
+    fi
 else
-    echo "spark-submit not found in PATH" > test_results/pipeline_run.log
+    echo "❌ spark-submit not found in PATH" | tee test_results/pipeline_run.log
 fi
 
 echo "🧪 Running integration test suite with coverage..."
