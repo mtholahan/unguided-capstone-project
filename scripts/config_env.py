@@ -17,6 +17,30 @@ REQUIRED_VARS = [
     "AZURE_STORAGE_CONTAINER",
 ]
 
+def ensure_local_env_defaults():
+    """
+    Injects default Azure-like environment variables if not present.
+    This prevents verify_env.py and local Spark sessions from failing
+    when running outside of Azure or CI.
+    """
+    defaults = {
+        "AZURE_STORAGE_ACCOUNT": "localstorage",
+        "AZURE_STORAGE_KEY": "localkey",
+        "AZURE_STORAGE_CONTAINER": "localcontainer",
+        "LOCAL_MODE": "true",
+    }
+
+    injected = []
+    for key, value in defaults.items():
+        if not os.getenv(key):
+            os.environ[key] = value
+            injected.append(key)
+
+    if injected:
+        print(f"⚙️ Injected local defaults for: {', '.join(injected)}")
+    else:
+        print("🌐 All required Azure environment variables already set.")
+
 
 def load_and_validate_env():
     """Load .env and verify required keys."""

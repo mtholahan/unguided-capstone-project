@@ -1,17 +1,10 @@
 """
-main.py — Discogs → TMDB Unified Pipeline Orchestrator (v5)
+main.py — TMDB → Discogs Unified Pipeline Orchestrator
 ------------------------------------------------------------
-Step 8: Deploy for Testing
-
-Orchestrates Spark-based pipeline steps with checkpointing,
-logging, and metrics roll-up.  Integrates .env and Azure
-configuration through scripts.config_env.
-
-Author:  Mark Holahan
-Mentor:  Akhil
-Version: v5  (Oct 2025)
+Environment-aware, pytest-friendly, and Azure-ready.
 """
 
+import argparse
 import json
 import os
 import sys
@@ -23,20 +16,58 @@ from pathlib import Path
 from importlib import import_module
 from pyspark.sql import SparkSession
 
-# 🧭 Fix path before importing scripts
-project_root = Path(__file__).resolve().parents[1]
-os.chdir(project_root)
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+# --- Safe path bootstrap so imports like `from scripts...` work
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+os.chdir(PROJECT_ROOT)
 
 from scripts.base_step import setup_logger
-from scripts.config import LOG_LEVEL, DATA_DIR, LOG_DIR
-from scripts.config_env import configure_spark_from_env, load_and_validate_env
+from scripts.config import LOG_LEVEL, LOG_DIR
+from scripts.config_env import (
+    configure_spark_from_env,
+    load_and_validate_env,
+    ensure_local_env_defaults,
+)
+
+# ================================================================
+# 🧩 CLI Argument Parsing
+# ================================================================
+parser = argparse.ArgumentParser(description="Unguided Capstone Unified Pipeline")
+parser.add_argument("--resume", type=str, help="Resume pipeline from step name", default=None)
+parser.add_argument("--output-dir", type=str, help="Optional override for output directory", default=None)
+args = parser.parse_args()
+
+# ================================================================
+# Environment Setup
+# ================================================================
+# ✅ Determine output dirs dynamically (pytest-aware)
+if args.output_dir:
+    output_dir = Path(args.output_dir).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    os.environ["PIPELINE_OUTPUT_DIR"] = str(output_dir)
+    print(f"📦 Output directory overridden → {output_dir}")
+else:
+    output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    os.environ["PIPELINE_OUTPUT_DIR"] = str(output_dir)
+
+metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+metrics_dir.mkdir(parents=True, exist_ok=True)
+os.environ["PIPELINE_METRICS_DIR"] = str(metrics_dir)
+
+if os.getenv("DEBUG_ENV_SNAPSHOT") == "1":
+    print("\n=== DEBUG ENVIRONMENT SNAPSHOT ===")
+    for key in ["PIPELINE_OUTPUT_DIR", "PIPELINE_METRICS_DIR", "PWD"]:
+        print(f"{key} = {os.getenv(key)}")
+    print(f"cwd = {os.getcwd()}")
+    print("===============================\n")
 
 # ================================================================
 # Environment & Spark Initialization
 # ================================================================
 print("🔧 Loading environment configuration...")
+ensure_local_env_defaults()
 env = load_and_validate_env()
 
 print("🚀 Initializing Spark session...")
@@ -48,44 +79,37 @@ spark = (
     .getOrCreate()
 )
 configure_spark_from_env(spark)
+spark.sparkContext.setLogLevel("ERROR")
 print("✅ Spark session active.\n")
 
 # ================================================================
 # Pipeline Configuration
 # ================================================================
 STEPS = [
-    # --- Spark refactored modules ---
     "scripts_spark.spark_extract_tmdb",
-    "scripts_spark.spark_query_discogs",
+    "scripts_spark.spark_extract_discogs",
     "scripts_spark.spark_prepare_tmdb_input",
     "scripts_spark.spark_validate_schema_alignment",
     "scripts_spark.spark_match_and_enrich",
 ]
 
-CHECKPOINT_FILE = Path(DATA_DIR) / "pipeline_checkpoint.json"
-METRICS_DIR = Path(DATA_DIR) / "metrics"
-METRICS_DIR.mkdir(parents=True, exist_ok=True)
+CHECKPOINT_FILE = output_dir / "pipeline_checkpoint.json"
 
 # ================================================================
 # Utility Functions
 # ================================================================
 def build_steps():
-    """
-    Dynamically import each step module and instantiate its BaseStep subclass.
-    Pass SparkSession if constructor accepts it.
-    """
+    """Dynamically import each step module and instantiate its Step class."""
     step_objs = []
     for mod_name in STEPS:
         module = import_module(mod_name)
         step_class = next(
-            (getattr(module, c) for c in dir(module)
-             if c.lower().startswith("step")), None
+            (getattr(module, c) for c in dir(module) if c.lower().startswith("step")),
+            None,
         )
         if not step_class:
             print(f"⚠️ No Step class found in {mod_name}")
             continue
-
-        # Inspect constructor args to decide whether to pass Spark
         try:
             obj = step_class(spark)
         except TypeError:
@@ -95,7 +119,6 @@ def build_steps():
 
 
 def save_checkpoint(step_name: str, success: bool = True):
-    """Write a checkpoint after each step."""
     payload = {
         "last_step": step_name,
         "timestamp": datetime.now().isoformat(),
@@ -104,15 +127,8 @@ def save_checkpoint(step_name: str, success: bool = True):
     CHECKPOINT_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-# ================================================================
-# Metrics Roll-Up (unchanged)
-# ================================================================
 def rollup_metrics(logger, step_times: dict):
-    import json
-    from pathlib import Path
-    from scripts.config import DATA_DIR
-
-    metrics_dir = Path(DATA_DIR) / "metrics"
+    """Aggregate per-step metrics JSONs into one CSV."""
     metrics_files = list(metrics_dir.glob("*.json"))
     if not metrics_files:
         logger.warning("⚠️ No metrics JSONs found to roll up.")
@@ -129,7 +145,7 @@ def rollup_metrics(logger, step_times: dict):
                 data.setdefault("step_runtime_sec", dur)
                 rows.append(data)
         except Exception as e:
-            logger.warning(f"⚠️ Skipping metrics file {file.name}: {e}")
+            logger.warning(f"⚠️ Skipping {file.name}: {e}")
 
     if not rows:
         return
@@ -152,9 +168,7 @@ def main(resume_from: str | None = None):
     logger = setup_logger("Pipeline", log_dir=LOG_DIR)
     start_pipeline = time.time()
 
-    logger.info("🚀 Starting Spark-enabled Discogs → TMDB pipeline")
-    logger.info(f"🔧 Environment branch: {env.get('BRANCH', 'unknown')}")
-    logger.info(f"📂 Data directory: {DATA_DIR}")
+    logger.info("🚀 Starting TMDB → Discogs pipeline")
     logger.info(f"🔈 Log level: {LOG_LEVEL}")
 
     steps = build_steps()
@@ -199,15 +213,15 @@ def main(resume_from: str | None = None):
     rollup_metrics(logger, step_times)
     logger.info("✅ Pipeline execution completed\n" + "-" * 60)
 
-    spark.stop()
-    logger.info("🧹 Spark session stopped.")
+    try:
+        spark.stop()
+        logger.info("🧹 Spark session stopped.")
+    except Exception:
+        logger.warning("⚠️ Spark shutdown failed.")
+
 
 # ================================================================
 # CLI Entrypoint
 # ================================================================
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description="Run the Discogs→TMDB Spark pipeline")
-    parser.add_argument("--resume", type=str, help="Resume from specified step name")
-    args = parser.parse_args()
     main(resume_from=args.resume)

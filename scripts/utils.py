@@ -157,13 +157,36 @@ def make_progress_bar(iterable=None, desc=None, total=None, leave=True, **kw):
 # ---------------------------------------------------------------------------
 # 💾 File Helpers
 # ---------------------------------------------------------------------------
+
 def save_json(data: dict, path: Path):
+    """
+    Save JSON atomically to the pipeline's configured output directory.
+    If the given `path` is relative, it will be written inside PIPELINE_OUTPUT_DIR.
+    """
+    # Resolve the base output directory (env override or default)
+    base_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
+
+    # Ensure path is fully qualified
+    path = Path(path)
+    if not path.is_absolute():
+        path = base_dir / path
+
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
+
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+
     os.replace(tmp, path)
-    logger.debug(f"💾 Saved cache: {path.name} ({len(json.dumps(data)):,} bytes)")
+
+    # Optional: safe debug logger (if logger is globally available)
+    try:
+        from scripts.base_step import setup_logger
+        logger = setup_logger()
+        logger.debug(f"💾 Saved JSON: {path} ({len(json.dumps(data)):,} bytes)")
+    except Exception:
+        print(f"💾 Saved JSON: {path}")
+
 
 
 def read_json(path: Path) -> Optional[dict]:

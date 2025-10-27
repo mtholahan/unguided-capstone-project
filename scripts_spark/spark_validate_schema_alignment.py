@@ -1,70 +1,14 @@
 """
-Environment Verification Header
-Added for consistent .env loading and mode detection across steps.
+🎯 Step 04 – Schema Validation & Alignment
+Unguided Capstone Project | Unified Environment-Aware Pattern
 """
-from __future__ import annotations
-import os, sys
-from pathlib import Path
 
-# 🧭 Fix path before importing scripts
-project_root = Path(__file__).resolve().parents[1]
-os.chdir(project_root)
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
-# ----------------------------------------------------------------------
-# 🧭 Environment verification (runs before imports that depend on scripts/)
-# ----------------------------------------------------------------------
-from scripts.config_env import load_and_validate_env
-
-# Load .env and populate environment variables
-load_and_validate_env()
-
-tmdb_key = os.getenv("TMDB_API_KEY")
-local_mode = os.getenv("LOCAL_MODE", "false").lower() == "true"
-
-if tmdb_key:
-    key_status = "✅ TMDB key detected"
-    key_suffix = f"(len={len(tmdb_key)})"
-else:
-    key_status = "🚫 TMDB key NOT found"
-    key_suffix = ""
-
-mode_status = "🌐 ONLINE mode" if not local_mode else "⚙️ OFFLINE mode"
-
-print(
-    f"\n{'='*60}\n"
-    f"🔧 Environment Loaded\n"
-    f"{key_status} {key_suffix}\n"
-    f"{mode_status}\n"
-    f"Project Root: {os.getcwd()}\n"
-    f"{'='*60}\n"
-)
-
-"""
-Step 04 – Harmonized Data Validation & Schema Alignment (Full Scan, Lean Version)
-------------------------------------------------------------------
-Purpose:
-    Validate and align schemas for TMDB (movies) and Discogs (soundtracks)
-    across all raw JSON files prior to enrichment/matching.
-
-This version delegates common helper functions to scripts/utils_schema.py
-for readability and maintainability.
-"""
-import sys
-from typing import Any, Dict
-
+import os
+import time
 import pandas as pd
-
-# Repo-relative imports (ensure VS Code root = project folder)
+from pathlib import Path
 from scripts.base_step import BaseStep
-from scripts.config import (
-    INTERMEDIATE_DIR,
-    METRICS_DIR,
-    LOG_DIR,
-    TMDB_RAW_DIR,
-    DISCOGS_RAW_DIR,
-)
+from scripts.config_env import load_and_validate_env
 from scripts.utils_schema import (
     setup_file_logger,
     ensure_dirs,
@@ -73,56 +17,78 @@ from scripts.utils_schema import (
     infer_schema,
     build_integrity_summary,
 )
+from scripts.config import TMDB_RAW_DIR, DISCOGS_RAW_DIR
 
-# ---------------------------
-# Defaults
-# ---------------------------
-CANDIDATES_FILE_DEFAULT = Path(INTERMEDIATE_DIR) / "tmdb_discogs_candidates_extended.csv"
-VALIDATION_DIR = Path("data/validation")
-VALIDATION_LOG_DIR = Path(LOG_DIR) / "validation"
-TMDB_RAW_DIR_DEFAULT = TMDB_RAW_DIR
-DISCOGS_RAW_DIR_DEFAULT = DISCOGS_RAW_DIR
 
+# ===============================================================
+# 🎯 Core Class
+# ===============================================================
 class Step04ValidateSchemaAlignment(BaseStep):
+    """Validate and align TMDB vs Discogs schemas before enrichment."""
+
     def __init__(
         self,
+        spark=None,
         tmdb_raw_dir: Path | None = None,
         discogs_raw_dir: Path | None = None,
         candidates_file: Path | None = None,
     ):
-        super().__init__("step_04_validate_schema_alignment")
-        self.tmdb_raw_dir = Path(tmdb_raw_dir) if tmdb_raw_dir else TMDB_RAW_DIR_DEFAULT
-        self.discogs_raw_dir = Path(discogs_raw_dir) if discogs_raw_dir else DISCOGS_RAW_DIR_DEFAULT
-        self.candidates_file = Path(candidates_file) if candidates_file else CANDIDATES_FILE_DEFAULT
+        super().__init__(name="step_04_validate_schema_alignment")
+        self.spark = spark
 
-        ensure_dirs([VALIDATION_DIR, VALIDATION_LOG_DIR, METRICS_DIR])
-        setup_file_logger(self.logger, VALIDATION_LOG_DIR / "validation.log")
-        self.logger.info(
-            f"Initialized Step 04 | TMDB={self.tmdb_raw_dir} | DISCOGS={self.discogs_raw_dir}"
+        # ✅ Environment-aware directories
+        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
+        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+        self.validation_dir = Path(os.getenv("PIPELINE_VALIDATION_DIR", "data/validation")).resolve()
+        self.validation_log_dir = self.validation_dir / "logs"
+        ensure_dirs([self.output_dir, self.metrics_dir, self.validation_dir, self.validation_log_dir])
+
+        # ✅ Input sources (env override or fallback to defaults)
+        self.tmdb_raw_dir = Path(tmdb_raw_dir) if tmdb_raw_dir else Path(os.getenv("TMDB_RAW_DIR", TMDB_RAW_DIR))
+        self.discogs_raw_dir = Path(discogs_raw_dir) if discogs_raw_dir else Path(os.getenv("DISCOGS_RAW_DIR", DISCOGS_RAW_DIR))
+        self.candidates_file = (
+            Path(candidates_file)
+            if candidates_file
+            else self.output_dir / "tmdb_discogs_candidates_extended.csv"
         )
 
-    def run(self) -> None:
+        # ✅ Load .env
+        load_and_validate_env()
+        setup_file_logger(self.logger, self.validation_log_dir / "validation.log")
+
+    # ---------------------------------------------------------------
+    def run(self):
+        """Validate and align schemas."""
+        self.logger.info(f"🚀 Starting Step 04 | Schema Validation & Alignment")
+        self.logger.info(f"🕒 Run timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+        self.logger.info(f"📁 TMDB source: {self.tmdb_raw_dir}")
+        self.logger.info(f"📁 Discogs source: {self.discogs_raw_dir}")
+
+        # --- Load datasets ---
         tmdb_df = load_tmdb_fullscan(self.tmdb_raw_dir, self.logger)
         discogs_df = load_discogs_fullscan(self.discogs_raw_dir, self.logger)
+        self.logger.info(f"📊 TMDB rows={len(tmdb_df)}, cols={tmdb_df.shape[1]}")
+        self.logger.info(f"📊 Discogs rows={len(discogs_df)}, cols={discogs_df.shape[1]}")
 
-        self.logger.info(f"TMDB DF shape: {tmdb_df.shape}")
-        self.logger.info(f"Discogs DF shape: {discogs_df.shape}")
-
+        # --- Infer schemas ---
         tmdb_schema = infer_schema(tmdb_df)
         discogs_schema = infer_schema(discogs_df)
 
+        # --- Integrity summary ---
         integrity_df = build_integrity_summary(
             tmdb_df, discogs_df, self.candidates_file, self.logger
         )
 
-        tmdb_out = VALIDATION_DIR / "schema_comparison_tmdb.csv"
-        discogs_out = VALIDATION_DIR / "schema_comparison_discogs.csv"
-        integ_out = VALIDATION_DIR / "integrity_summary.csv"
+        # --- Write outputs ---
+        tmdb_out = self.output_dir / "schema_comparison_tmdb.csv"
+        discogs_out = self.output_dir / "schema_comparison_discogs.csv"
+        integ_out = self.output_dir / "integrity_summary.csv"
 
         tmdb_schema.to_csv(tmdb_out, index=False)
         discogs_schema.to_csv(discogs_out, index=False)
         integrity_df.to_csv(integ_out, index=False)
 
+        # --- Metrics ---
         metrics = {
             "tmdb_rows": len(tmdb_df),
             "discogs_rows": len(discogs_df),
@@ -131,13 +97,16 @@ class Step04ValidateSchemaAlignment(BaseStep):
             "tmdb_schema_path": str(tmdb_out),
             "discogs_schema_path": str(discogs_out),
             "integrity_summary_path": str(integ_out),
+            "duration_sec": round(time.time() - time.mktime(time.localtime()), 2),
         }
-        self.save_metrics("step04_schema_validation_metrics.json", {"summary": metrics})
-        self.write_metrics(metrics)
 
+        self.write_metrics(metrics, name="step04_schema_validation_metrics")
         self.logger.info("✅ Step 04 validation complete.")
-        self.logger.info(f"Outputs → {VALIDATION_DIR}")
+        self.logger.info(f"📂 Outputs written to: {self.output_dir}")
 
 
+# ===============================================================
+# Entrypoint
+# ===============================================================
 if __name__ == "__main__":
-    Step04ValidateSchemaAlignment().run()
+    Step04ValidateSchemaAlignment(None).run()

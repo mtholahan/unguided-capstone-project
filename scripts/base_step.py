@@ -66,10 +66,20 @@ class BaseStep:
     def __init__(self, name: str):
         self.name = name
         self.logger = setup_logger(name)
+
+        # Define directories first
         self.data_dir = Path(DATA_DIR)
         self.log_dir = Path(LOG_DIR)
         self.metrics_dir = self.data_dir / "metrics"
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
+
+        # Environment-aware output directory
+        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        # ✅ Now safe to log, since dirs exist
+        self.logger.debug(f"[DEBUG] PIPELINE_OUTPUT_DIR={os.getenv('PIPELINE_OUTPUT_DIR')}")
+        self.logger.debug(f"[DEBUG] metrics_dir={self.metrics_dir}")
 
         # Git metadata for reproducibility
         try:

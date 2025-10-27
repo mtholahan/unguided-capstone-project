@@ -1,93 +1,93 @@
 """
-Environment Verification Header
-Added for consistent .env loading and mode detection across steps.
+🎬 Step 05 – Match and Enrich (Phase 2)
+Enhanced fuzzy matching between TMDB and Discogs datasets.
+Unguided Capstone Project | Unified Environment-Aware Version
 """
 
-import os, sys
-from pathlib import Path
-
-# 🧭 Fix path before importing scripts
-project_root = Path(__file__).resolve().parents[1]
-os.chdir(project_root)
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
-# ----------------------------------------------------------------------
-# 🧭 Environment verification (runs before imports that depend on scripts/)
-# ----------------------------------------------------------------------
-from scripts.config_env import load_and_validate_env
-
-# Load .env and populate environment variables
-load_and_validate_env()
-
-tmdb_key = os.getenv("TMDB_API_KEY")
-local_mode = os.getenv("LOCAL_MODE", "false").lower() == "true"
-
-if tmdb_key:
-    key_status = "✅ TMDB key detected"
-    key_suffix = f"(len={len(tmdb_key)})"
-else:
-    key_status = "🚫 TMDB key NOT found"
-    key_suffix = ""
-
-mode_status = "🌐 ONLINE mode" if not local_mode else "⚙️ OFFLINE mode"
-
-print(
-    f"\n{'='*60}\n"
-    f"🔧 Environment Loaded\n"
-    f"{key_status} {key_suffix}\n"
-    f"{mode_status}\n"
-    f"Project Root: {os.getcwd()}\n"
-    f"{'='*60}\n"
-)
-
+import os
+import time
 import pandas as pd
+import matplotlib.pyplot as plt
 from pathlib import Path
 from rapidfuzz import fuzz
-import logging
-import json
-import time
-import matplotlib.pyplot as plt
 from scripts.base_step import BaseStep
-from scripts.config import INTERMEDIATE_DIR, METRICS_DIR
+from scripts.config_env import load_and_validate_env
 from scripts.utils import normalize_for_matching_extended as normalize_title
 
 
+# ===============================================================
+# 🎯 Core Class
+# ===============================================================
 class Step05MatchAndEnrichV2(BaseStep):
-    """Step 05 – Phase 2 Rescue Plan: Enhanced Fuzzy Matching with Year-Bound Logic."""
+    """Enhanced fuzzy matching with year-bounded logic."""
 
-    def __init__(self):
-        super().__init__("step_05_match_and_enrich_v2")
-        self.candidates_path = INTERMEDIATE_DIR / "tmdb_discogs_candidates_extended.csv"
-        self.output_path = INTERMEDIATE_DIR / "tmdb_discogs_matches_v2.csv"
-        self.metrics_path = METRICS_DIR / "step05_matching_metrics.json"
-        self.histogram_path = METRICS_DIR / "step05_score_distribution.png"
+    def __init__(self, spark=None):
+        super().__init__(name="step_05_match_and_enrich")
+        self.spark = spark
 
-    # --------------------------------------------------------------
+        # ✅ Environment-aware directories
+        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
+        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.metrics_dir.mkdir(parents=True, exist_ok=True)
+
+        # ✅ Input / output files
+        self.candidates_path = self.output_dir / "tmdb_discogs_candidates_extended.csv"
+        self.output_path = self.output_dir / "tmdb_discogs_matches_v2.csv"
+        self.metrics_path = self.metrics_dir / "step05_matching_metrics.json"
+        self.histogram_path = self.metrics_dir / "step05_score_distribution.png"
+
+        # ✅ Validate environment once per step
+        load_and_validate_env()
+
+    # -----------------------------------------------------------
+    def _compute_hybrid_score(self, t1: str, t2: str) -> tuple[float, float, float]:
+        """Blend token_sort and partial_ratio for robust fuzzy match."""
+        token_score = fuzz.token_sort_ratio(t1, t2)
+        partial_score = fuzz.partial_ratio(t1, t2)
+        hybrid = round(0.7 * token_score + 0.3 * partial_score, 2)
+        return hybrid, token_score, partial_score
+
+    # -----------------------------------------------------------
+    def _save_histogram(self, df: pd.DataFrame):
+        """Save histogram of match score distribution."""
+        if df.empty:
+            self.logger.warning("⚠️ No data available for histogram plotting.")
+            return
+        plt.figure(figsize=(8, 5))
+        plt.hist(df["hybrid_score"], bins=20, edgecolor="black")
+        plt.title("Fuzzy Match Score Distribution (Hybrid)")
+        plt.xlabel("Hybrid Score")
+        plt.ylabel("Frequency")
+        plt.tight_layout()
+        plt.savefig(self.histogram_path)
+        plt.close()
+        self.logger.info(f"📊 Histogram saved → {self.histogram_path}")
+
+    # -----------------------------------------------------------
     def run(self):
+        """Perform fuzzy matching between TMDB and Discogs titles."""
         t0 = time.time()
-        self.logger.info("Starting Step 05 | Phase 2 Rescue Plan")
+        self.logger.info("🚀 Starting Step 05 | Enhanced Fuzzy Matching")
+        self.logger.info(f"🕒 Run timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
 
+        # --- Input validation ---
         if not self.candidates_path.exists():
-            self.logger.error(f"Missing candidates file: {self.candidates_path}")
+            self.logger.error(f"❌ Missing candidates file: {self.candidates_path}")
+            return
+        df = pd.read_csv(self.candidates_path)
+        if df.empty:
+            self.logger.warning("⚠️ Candidate file is empty; skipping match computation.")
             return
 
-        df = pd.read_csv(self.candidates_path)
-        self.logger.info(f"Loaded {len(df):,} candidate rows")
-
-        # Normalize titles
+        # --- Normalize and prepare ---
         df["tmdb_title_norm"] = df["tmdb_title_norm"].fillna("").map(normalize_title)
         df["discogs_title_norm"] = df["discogs_title_norm"].fillna("").map(normalize_title)
-
-        # Normalize release years (if present)
         for col in ["tmdb_year", "discogs_year"]:
-            if col in df.columns:
-                df[col] = pd.to_numeric(df[col], errors="coerce")
-            else:
-                df[col] = None
+            df[col] = pd.to_numeric(df.get(col), errors="coerce")
 
+        # --- Compute matches ---
         matches = []
-
         for _, row in df.iterrows():
             t1, t2 = row["tmdb_title_norm"], row["discogs_title_norm"]
             if not t1 or not t2:
@@ -96,18 +96,11 @@ class Step05MatchAndEnrichV2(BaseStep):
             year_diff = None
             if not pd.isna(row.tmdb_year) and not pd.isna(row.discogs_year):
                 year_diff = abs(row.tmdb_year - row.discogs_year)
+                if year_diff > 1:
+                    continue
 
-            # Apply year-bounded matching (±1 year)
-            if year_diff is not None and year_diff > 1:
-                continue
-
-            token_score = fuzz.token_sort_ratio(t1, t2)
-            partial_score = fuzz.partial_ratio(t1, t2)
-            hybrid_score = round(0.7 * token_score + 0.3 * partial_score, 2)
-
+            hybrid_score, token_score, partial_score = self._compute_hybrid_score(t1, t2)
             matches.append({
-                "tmdb_id": row.get("tmdb_id"),
-                "discogs_id": row.get("discogs_id"),
                 "tmdb_title": t1,
                 "discogs_title": t2,
                 "tmdb_year": row.get("tmdb_year"),
@@ -118,48 +111,31 @@ class Step05MatchAndEnrichV2(BaseStep):
                 "year_diff": year_diff,
             })
 
+        # --- Save results ---
         out_df = pd.DataFrame(matches)
         out_df.to_csv(self.output_path, index=False)
-        self.logger.info(f"Saved {len(out_df):,} matched rows → {self.output_path}")
+        self.logger.info(f"💾 Saved {len(out_df):,} matched rows → {self.output_path}")
 
-        # --------------------------------------------------------------
-        # Histogram Visualization
-        # --------------------------------------------------------------
-        if not out_df.empty:
-            plt.figure(figsize=(8, 5))
-            plt.hist(out_df["hybrid_score"], bins=20, edgecolor='black')
-            plt.title("Fuzzy Match Score Distribution (Hybrid)")
-            plt.xlabel("Hybrid Score")
-            plt.ylabel("Frequency")
-            METRICS_DIR.mkdir(exist_ok=True, parents=True)
-            plt.tight_layout()
-            plt.savefig(self.histogram_path)
-            plt.close()
-            self.logger.info(f"📊 Saved score distribution histogram → {self.histogram_path}")
+        self._save_histogram(out_df)
 
-        # --------------------------------------------------------------
-        # Metrics summary
-        # --------------------------------------------------------------
+        # --- Metrics ---
         metrics = {
             "total_candidates": len(df),
             "total_matches": len(out_df),
             "avg_hybrid_score": round(out_df["hybrid_score"].mean(), 2) if not out_df.empty else 0.0,
-            "avg_token_score": round(out_df["token_score"].mean(), 2) if not out_df.empty else 0.0,
-            "avg_partial_score": round(out_df["partial_score"].mean(), 2) if not out_df.empty else 0.0,
-            "high_confidence": int((out_df["hybrid_score"] >= 90).sum()),
-            "mid_confidence": int(((out_df["hybrid_score"] >= 70) & (out_df["hybrid_score"] < 90)).sum()),
-            "low_confidence": int((out_df["hybrid_score"] < 70).sum()),
             "median_score": round(out_df["hybrid_score"].median(), 2) if not out_df.empty else 0.0,
             "stddev_score": round(out_df["hybrid_score"].std(), 2) if not out_df.empty else 0.0,
-            "step_runtime_sec": round(time.time() - t0, 2),
+            "runtime_sec": round(time.time() - t0, 2),
         }
 
-        with open(self.metrics_path, "w", encoding="utf-8") as f:
-            json.dump(metrics, f, indent=2)
+        self.write_metrics(metrics, name="step05_match_metrics")
+        self.logger.info(f"✅ Step 05 completed successfully in {metrics['runtime_sec']}s")
+        self.logger.info(f"📂 Outputs: {self.output_dir}")
+        self.logger.info(f"📊 Metrics: {self.metrics_dir}")
 
-        self.logger.info(f"📈 Saved metrics JSON → {self.metrics_path}")
-        self.logger.info(f"✅ Step 05 Phase 2 complete | Runtime {metrics['step_runtime_sec']}s")
 
-
+# ===============================================================
+# Entrypoint
+# ===============================================================
 if __name__ == "__main__":
-    Step05MatchAndEnrichV2().run()
+    Step05MatchAndEnrichV2(None).run()

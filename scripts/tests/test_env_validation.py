@@ -1,3 +1,4 @@
+# scripts/tests/test_env_validation.py
 import subprocess
 import sys
 import pytest
@@ -10,5 +11,5 @@ def test_env_validation_runs_successfully():
     )
     print(result.stdout)
     assert result.returncode == 0, f"verify_env failed: {result.stderr}"
-    # optional sanity check for known keywords
-    assert "Python" in result.stdout or "packages" in result.stdout
+    # ✅ Adjusted success text check
+    assert "Environment verified" in result.stdout or "✅" in result.stdout
