@@ -106,8 +106,23 @@ else
     echo "spark-submit not found in PATH" > test_results/pipeline_run.log
 fi
 
-echo "🧪 Running pytest..."
-pytest -v > test_results/pytest_report.log 2>&1 || true
+echo "🧪 Running integration test suite with coverage..."
+pytest -m integration \
+    --disable-warnings \
+    --maxfail=1 \
+    --tb=short \
+    --cov=scripts \
+    --cov=scripts_spark \
+    --cov-report=term-missing \
+    --cov-report=html:test_results/htmlcov \
+    -s > test_results/pytest_report.log 2>&1 || true
+
+echo "📊 Copying integration test artifacts..."
+cp -r reports/htmlcov test_results/htmlcov 2>/dev/null || true
+find /home/azureuser/unguided-capstone-project -name 'pipeline_test_report.json' \
+    -exec cp {} test_results/ \; 2>/dev/null || true
+
+echo "🧩 Integration test JSON + coverage report packaged for Step 8 deliverable."
 
 tar -czf /home/azureuser/test_results.tgz -C test_results .
 echo "📦 test_results.tgz created."
