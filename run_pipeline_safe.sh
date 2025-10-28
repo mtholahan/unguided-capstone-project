@@ -3,7 +3,7 @@ set -e
 source ~/.bashrc
 
 # --- Pre-flight validation ---
-bash "$HOME/unguided-capstone-project/check_env.sh" || {
+bash "$(dirname "$0")/check_env.sh" || {
   echo "❌ Environment validation failed. Aborting run."
   exit 1
 }
