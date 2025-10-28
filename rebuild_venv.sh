@@ -80,6 +80,12 @@ pip install pytest pytest-cov flake8 black
 # Visualization + analysis
 pip install matplotlib seaborn
 
+# Rebuild requirements after install
+pip freeze > requirements_locked.txt
+pipreqs . --force --savepath requirements_stable.txt
+echo "📦 Dependency inventories refreshed (stable & locked)"
+
+
 # -------------------------------------------------------
 # Freeze environment
 # -------------------------------------------------------
