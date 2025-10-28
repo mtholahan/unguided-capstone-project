@@ -48,7 +48,7 @@ sync:
 	@git pull --quiet
 	@bash rebuild_venv.sh
 	@bash rebuild_venv.sh --export
-	@ssh $(SSH_FLAGS) $(VM_USER)@$(VM_IP) "bash ~/rebuild_venv.sh --force"
+	@ssh $(SSH_FLAGS) $(VM_USER)@$(VM_IP) "cd ~/unguided-capstone-project && git pull --quiet && bash rebuild_venv.sh --force"
 	@bash check_env.sh
 	@bash run_pipeline_safe.sh
 	@echo "✅ Sync cycle completed successfully — environment parity verified."

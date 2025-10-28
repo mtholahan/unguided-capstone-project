@@ -8,6 +8,7 @@
 # =====================================================================
 
 set -euo pipefail
+source "$HOME/pyspark_venv311/bin/activate"
 echo "🔍 Running Capstone environment check..."
 
 # -------------------------------------------------------
