@@ -136,3 +136,9 @@ archive/
 logs/
 *.log
 *.Zone.Identifier
+
+# Ignore metrics and local outputs
+data/metrics/*.json
+data/metrics/*.csv
+data/intermediate/
+logs/
