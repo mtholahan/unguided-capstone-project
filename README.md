@@ -1,5 +1,5 @@
 # Unguided Capstone – TMDB + Discogs Data Pipeline  
-**Version 1.8.0  |  Step 8 – Deploy for Testing  |  Status:** 🟩 Active  |  Branch:** `step8-dev`**
+**Version 2.0.0  |  Step 8 – Deploy for Testing  |  Status:** 🟩 Active  |  Branch: `step8-dev`  
 
 **Mentor:** Akhil  
 **Sprint Window:** Oct 17 – Oct 31 2025  
@@ -7,261 +7,158 @@
 ---
 
 ## 🎯 Project Overview
-This unguided capstone integrates two open entertainment datasets — **The Movie Database (TMDB)** and **Discogs** — into a unified, scalable analytics pipeline.  
-The goal is to demonstrate production-grade **data engineering** across ingestion, transformation, orchestration, and testing using **PySpark** and **Azure Databricks**.
+This capstone unifies **The Movie Database (TMDB)** and **Discogs** datasets into a production-grade analytics pipeline.  
+It demonstrates the full data engineering lifecycle — ingestion, transformation, orchestration, and testing — using **PySpark 3.5.x** and **Azure Databricks**.
 
-By Step 8, the project transitions from *architecture design* (Step 7) to *operational validation* — deploying refactored Spark modules in Azure and confirming correctness through automated testing.
-
----
-
-## 🧩 Problem Statement
-Entertainment metadata lives in silos: TMDB tracks films, Discogs catalogs music.  
-Cross-domain analytics (e.g., *film–soundtrack linkage*) require merging both ecosystems.  
-This pipeline builds a reproducible, cloud-scale workflow to ingest, transform, and align these datasets for analytical exploration.
+By Step 8, the project achieves operational stability: local and cloud environments mirror each other exactly, and the entire Spark pipeline can be rebuilt, tested, and deployed deterministically.
 
 ---
 
 ## ⚙️ Technical Objectives
-- Maintain modular extractors for TMDB and Discogs APIs.  
-- Refactor legacy Python (steps 03–05) to **PySpark 3.5.x** for distributed execution.  
-- Integrate **pytest + coverage** to validate data flow and transformation logic.  
-- Deploy and execute on **Azure Databricks Runtime 14.3 LTS (Spark 3.5.0)**.  
-- Persist results to **Azure Data Lake Storage Gen2** via **ABFSS URIs**.  
-- Confirm end-to-end reproducibility and test pass rates in both local and cloud environments.
+- Maintain modular ETL design with refactored Spark modules  
+- Integrate **pytest + coverage** for transformation validation  
+- Deploy to **Azure Databricks Runtime 14.3 LTS** and confirm reproducibility  
+- Automate environment synchronization between **Local ↔ VM ↔ Git**  
+- Track every rebuild and validation event in `sync_log.md`  
 
 ---
 
-## 🏗️ Phase Recap (1–7 Completed)
-| Step | Focus                                 | Outcome                                 |
-| ---- | ------------------------------------- | --------------------------------------- |
-| 1    | Project definition & data exploration | Problem charter, API survey             |
-| 2    | API extraction (TMDB & Discogs)       | Working extract scripts                 |
-| 3    | Data preparation                      | Schema mapping prototype                |
-| 4    | Validation                            | Cross-schema alignment checks           |
-| 5    | Matching & Enrichment                 | Fuzzy-matching prototype                |
-| 6    | Scaling Prototype                     | Spark 3.5 baseline + Databricks cluster |
-| 7    | Deployment Architecture               | Azure Bicep IaC validated (`what-if`)   |
+## 🧱 Infrastructure Summary
 
-**Step 7 Outcome:**  
-All Azure components (networking, Key Vault, Storage, Databricks, Function App, Monitoring) deployed via Bicep and verified cost-neutral through CLI what-if tests.
+| Layer | Tooling | Purpose |
+|-------|----------|----------|
+| Compute | Azure VM + Databricks | Local Spark development and cloud validation |
+| Storage | Azure Data Lake (ABFSS) | Raw + processed datasets |
+| IaC | Bicep templates | Declarative, reproducible infrastructure |
+| Tracking | sync_log.md | Chronological record of environment syncs |
+| Testing | pytest + coverage | Automated data validation and coverage analysis |
 
 ---
 
-## 🚀 Step 8 – Deploy Your Code for Testing (Active Phase)
+## 🚀 Operational Runbook
 
-### 🎯 Purpose
-Stabilize and validate the Spark-refactored pipeline inside Azure.  
-This phase proves functional parity between local and cloud runs, implements pytest coverage, and finalizes module interfaces for orchestration.
-
-### 🧱 Deliverables
-- Refactored Spark modules:  
-  `prepare_spark_tmdb_input.py`, `validate_spark_schema.py`, `match_spark_enrich.py`  
-- Automated test suite (`pytest + pytest-cov`) covering Steps 01–05.  
-- Integration execution on Databricks workspace (`capstone-blob-cluster`).  
-- Coverage & metrics reports (exported to /metrics/).  
-- Updated slide deck with testing summary.
-
-### 🧩 Environment Summary
-| Component            | Specification                                              |
-| -------------------- | ---------------------------------------------------------- |
-| Databricks Workspace | Deployed via `databricks.bicep`                            |
-| Cluster Name         | `capstone-blob-cluster`                                    |
-| Runtime              | 14.3 LTS – Apache Spark 3.5.0 / Scala 2.12                 |
-| Node Type            | Standard_D4ps_v6 (16 GB RAM, 4 Cores, Single Node)         |
-| Termination Policy   | Auto-terminate after 30 min idle                           |
-| Storage Access       | `abfss://raw@markcapstoneadls.dfs.core.windows.net/`       |
-| Local Parity         | Ubuntu + `pyspark_venv311` (PySpark 3.5.2, Python 3.11.14) |
-
----
-
-### 💻 Environment Setup Guide
-
-#### **1️⃣ Local PySpark (Development / Testing – $0)**
-**Purpose: Fast iteration and pytest coverage before cloud deployment.** 
-
-#If necessary, rebuild your venv
-
-#### 🧩 Option 1 — Normal run (reuse existing venv)
-
-Use this **most of the time**:
-
+### 1️⃣ **Activate the Environment**
 ```bash
-# Make sure you're NOT inside any venv first
-deactivate 2>/dev/null || true
-
-# Run the script
-bash scripts/rebuild_venv.sh
-```
-
-✅ Outcome:
-
-- Detects `~/pyspark_venv311`
-- Activates it automatically
-- Skips rebuild (just verifies packages and refreshes `requirements_*.txt`)
-
-------
-
-#### ⚠️ Option 2 — Force rebuild (when dependencies break)
-
-Use this **only when your venv is corrupted** or Spark version changes:
-
-```
-deactivate 2>/dev/null || true
-bash scripts/rebuild_venv.sh --force
-```
-
-⚙️ What happens:
-
-- Deletes `~/pyspark_venv311`
-- Recreates from scratch with pinned dependencies
-- Reinstalls all packages and regenerates both requirements files
-
-##### 💡 Pro Tip
-
-If you run this frequently, make it executable once:
-
-```
-chmod +x scripts/rebuild_venv.sh
-```
-
-Then you can just call:
-
-```
-./scripts/rebuild_venv.sh
-```
-
-
-
-```
-# Anchor in the Windows project folder
-cd /mnt/c/Projects/unguided-capstone-project/scripts 
-```
-
-
-
-```bash
-# Activate venv
 source ~/pyspark_venv311/bin/activate
 ```
 
+---
 
-
+### 2️⃣ **Anchor → Execute → Validate**
+Run the complete environment synchronization and pipeline execution loop:
 ```bash
-# Verify Spark
-python -c "from pyspark.sql import SparkSession; print(SparkSession.builder.master('local[2]').getOrCreate())"
+make sync
 ```
 
+This sequence:
+1. Pulls latest Git changes  
+2. Rebuilds your local venv  
+3. Exports requirements to Azure VM  
+4. Rebuilds VM venv remotely  
+5. Validates both environments  
+6. Executes the Spark pipeline safely  
 
+✅ **Result:** Full local/VM parity confirmed, and a timestamped entry is logged in `sync_log.md`.
 
+---
+
+### 3️⃣ **Dry Run (Validation Only)**
 ```bash
-# Install dependencies (if needed)
-pip install pyspark pytest pytest-cov rapidfuzz
+make dryrun
 ```
+Verifies all configurations, dependencies, and environment variables without executing Spark.
 
+---
 
-
-### Running Python Scripts Separately
-
-```python
-# Takes this form
-python -m scripts_spark.prepare_spark_tmdb_input
-```
-
-
-
+### 4️⃣ **Clean Workspace**
 ```bash
-# Run unit tests with coverage
-pytest -q --cov=scripts_spark --cov-report=term-missing
+make clean
 ```
+Removes cache files, logs, and any outdated virtual environments.
 
-Outputs: Parquet files → data/intermediate/ and coverage report in console.
+---
 
+### 5️⃣ **Review Sync History**
 ```bash
-# Launch VS Code
-code .
+make log
 ```
+Displays the latest entries in your environment sync log for audit and traceability.
 
 
 
-#### 2️⃣ Azure Databricks (Validation / Integration – $$)
-
-**Purpose: Execute identical modules under production-grade Spark cluster.**
-
-- Start cluster `capstone-blob-cluster` (Runtime 14.3 LTS).
-
-- In Databricks Repos → Sync branch step8-dev.
-
-- Open notebook and run:
+> 📘 **Need help running or debugging the pipeline?**  
+> Check out the [Azure Pipeline Run Diagnostics Guide](docs/pipeline_run_diagnostics.md)
 
 
-```python
-from scripts_spark.prepare_spark_tmdb_input import run_step
-from pyspark.sql import SparkSession
 
-spark = SparkSession.builder.getOrCreate()
-config = {"input_root": "abfss://raw@markcapstoneadls.dfs.core.windows.net/"}
-df = run_step(spark, config)
-df.show(5)
-```
+---
 
-- Validate ADLS writes and pytest results within cluster.
+## 🧩 Key Auxiliary Scripts
 
-- Shut down cluster after testing to avoid idle billing.
+| Script | Purpose | Relation |
+|--------|----------|----------|
+| `rebuild_venv.sh` | Rebuilds or refreshes the local virtual environment; exports requirements to VM | Core of rebuild process; invoked by `make sync` |
+| `check_env.sh` | Verifies Spark, Python, and Azure configuration before any run | Used by `rebuild_venv.sh` and `run_pipeline_safe.sh` |
+| `run_pipeline_safe.sh` | Safely launches the Spark pipeline after pre-flight checks | Depends on `check_env.sh` |
+| `Makefile` | Central automation hub for rebuild, export, sync, test, and clean | Controls full workflow |
+| `.env` | Defines environment variables for Spark and Azure | Loaded by all scripts |
+| `requirements_stable.txt` | Canonical dependency list for reproducible rebuilds | Synced between local and VM |
+| `sync_log.md` | Chronological log of environment syncs and validation events | Auto-updated after each rebuild |
 
+🟩 **Safe to delete:** `deploy_to_azure_test.sh` — its functionality is fully replaced by `make sync`.
 
-### 🧪 Testing & Validation Workflow
+---
 
-1. Execute local pytest to verify module interfaces.
-2. Deploy and re-run tests in Databricks (coverage ≥ 80 %).
-
-3. Inspect metrics JSON under /data/metrics/ for record counts and durations.
-
-4. Update slide deck with coverage and test results screenshots.
-
-
-Sample pytest command:
-
-```python
+## 🧪 Testing & Validation Workflow
+```bash
 pytest -q --disable-warnings --maxfail=1 --cov=scripts_spark --cov-report=term-missing
 ```
+Outputs:
+- Console coverage summary  
+- `/data/metrics/` JSON with record counts and durations  
 
-### 📂 Repository Structure (Updated)
+🎯 **Target Coverage:** ≥ 80%
+
+---
+
+## 📂 Repository Structure
 
 ```
-project-root/
-├── scripts/ # Legacy Python steps (01–06)
-├── scripts_spark/ # Refactored Spark modules (03–05)
-│   ├── extract_spark_tmdb.py
-│   ├── extract_spark_discogs.py
-│   ├── prepare_spark_tmdb_input.py
-│   ├── validate_spark_schema.py
-│   └── match_spark_enrich.py
-├── data/ (intermediate · metrics)
-├── infrastructure/ (Bicep templates)
-├── tests/ (pytest suites)
-├── slides/ (Step 8 Testing Deck)
+unguided-capstone-project/
+├── scripts/                 # Legacy steps 01–06
+├── scripts_spark/           # Refactored Spark modules (03–05)
+├── data/                    # Intermediate + metrics data
+├── infrastructure/          # Bicep templates
+├── tests/                   # pytest suites
+├── logs/                    # Run logs
+├── sync_log.md              # Environment sync history
+├── Makefile                 # Unified automation commands
+├── rebuild_venv.sh          # Environment rebuild utility
+├── run_pipeline_safe.sh     # Spark pipeline launcher
+├── check_env.sh             # Pre-flight diagnostic tool
 └── README.md
 ```
 
-### 🧭 Development Modes Recap
+---
 
-| Mode                       | Description                     | Usage                              |
-| -------------------------- | ------------------------------- | ---------------------------------- |
-| **Local (Ubuntu PySpark)** | VS Code + `pyspark_venv311`     | Development + pytest               |
-| **Azure Databricks**       | Cluster `capstone-blob-cluster` | Integration + validation           |
-| **Azure IaC Layer**        | Bicep templates                 | Infrastructure already provisioned |
+## 🧭 Development Modes
 
-### 🧾 Status & Metadata
+| Mode | Description | Usage |
+|------|--------------|--------|
+| **Local (Ubuntu + PySpark)** | Fast iteration and pytest validation | Development + coverage |
+| **Azure VM** | Mirrors local environment for production-like validation | End-to-end testing |
+| **Azure Databricks** | Scaled Spark validation | Integration + performance testing |
 
-- Current Step: 8 – Deploy for Testing
+---
 
-- Mentor: Akhil
+## ✅ Status & Metadata
+- **Current Step:** 8 – Deploy for Testing  
+- **Next Step:** 9 – Scale Your Prototype  
+- **Mentor:** Akhil  
+- **Active Branch:** step8-dev  
+- **Primary Author:** M. Holahan  
+- **Last Updated:** Oct 28, 2025  
 
-- Active Branch: step8-dev
+---
 
-- Next Milestone: Step 9 – Scale Your Prototype (Performance Optimization)
-
-- Primary Author: M. Holahan
-
-- Last Updated: Oct 23 2025
-
+_This README marks the stabilization of the Unguided Capstone’s operational environment. All infrastructure, dependencies, and orchestration systems are now deterministic, documented, and reproducible._

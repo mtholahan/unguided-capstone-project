@@ -1,6 +1,6 @@
 # GPT Anchors Log
 
-A living record of handoff anchors between ChatGPT sessions.  
+A living record of handoff anchors between ChatGPT sessions.
 Anchors capture context, current milestone, next action, and dependencies for seamless continuity across chats.
 
 ---
@@ -15,6 +15,301 @@ Current milestone: [what’s done]
 Next action: [one concrete step]
 Dependencies: [keys/env/tools/people]
 ```
+
+
+
+**15:49 10/28/2025**
+
+✅ Anchor **[Unguided_Capstone_Step_08_Test_Suite_Can_See_Daylight]** loaded successfully.
+
+**Context:**
+ The pipeline is now fully synchronized between local and Azure VM environments. Spark 3.5.3 executes cleanly, environment parity scripts (`rebuild_venv.sh`, `check_env.sh`, `Makefile`) are stable, and all auxiliary infrastructure is validated. Documentation (`README_refactored.md`) and operational controls are finalized.
+
+**Current milestone:**
+ ✅ Environment reproducibility achieved
+ ✅ Pipeline runs end-to-end on both environments
+ ✅ Testing and validation framework (pytest + coverage) integrated
+ ✅ Documentation and automation consolidated
+
+**Next action:**
+ Run the full pytest suite on the Azure VM (`pytest --maxfail=1 --disable-warnings --cov=scripts_spark --cov-report=term-missing`) and capture coverage metrics in `/data/metrics/coverage_summary.json`. Verify parity with local test results.
+
+**Dependencies:**
+
+- SSH key: `~/.ssh/ungcapvm01-key.pem`
+- Azure VM: `ungcapvm01 (172.190.228.102)` active
+- Tools: `pytest`, `coverage`, `python-dotenv`, `pyspark`
+- Environment: `pyspark_venv311` virtualenv in `/home/azureuser/unguided-capstone-project/`
+
+
+
+**01:27 10/28/2025**
+Anchor this as chat [Unguided_Capstone_Step_08_Test_Suite_Debug_Sisyphus_Was_a_Weenie] with next action + dependencies. Use this template:
+Resume from anchor: [ANCHOR_NAME]
+Context: [3–4 lines on project/sprint state]
+Current milestone: [what’s done]
+Next action: [one concrete step]
+Dependencies: [keys/env/tools/people]
+
+
+**02:01 10/27/2025**
+
+Resume from anchor: [Unguided_Capstone_Step_08_Test_Suite_Debug_Sisyphus_Was_a_Weenie]
+Context: The Azure VM now executes the full Spark pipeline with the correct environment. SPARK_HOME is fixed (/opt/spark), and Spark 3.5.3 launches cleanly. Logging is anchored to absolute paths, and the system-level environment parity playbook has been drafted to prevent future drift. The pipeline currently halts on a missing Python dependency (rapidfuzz) within the VM environment.
+
+Current milestone:
+✅ Environment synchronization achieved across local and VM contexts
+✅ Spark initialization verified via /opt/spark
+✅ Absolute-path logging confirmed functional
+✅ Root cause of historical “no such file” and PATH drift fully resolved
+
+Next action:
+Rebuild and synchronize the VM’s virtual environment to include all Python modules from requirements_stable.txt (e.g., rapidfuzz, pyspark, python-dotenv), then rerun run_pipeline_safe.sh to confirm complete end-to-end pipeline execution without module errors.
+
+Dependencies:
+
+SSH key: ~/.ssh/ungcapvm01-key.pem
+
+Azure VM: ungcapvm01 (172.190.228.102) active
+
+Files: requirements_stable.txt, .env, run_pipeline_safe.sh (refactored)
+
+Tools: pip, tar, spark-submit, pytest
+
+Environment: pyspark_venv311 virtualenv in /home/azureuser/unguided-capstone-project/
+
+
+
+**Resume from anchor:** [Unguided_Capstone_Step_08_Test_Suite_Debug_Finale]
+
+**Context:** The Azure VM (`ungcapvm01`) is fully configured, connected via SSH, and executing the Spark-based pipeline from the `step8-dev` branch. Live log streaming is functional both locally and remotely. The `.env` and `movie_titles_200.txt` files are properly deployed. Step 02 (Discogs pull) is currently in progress.
+
+**Current milestone:**
+ ✅ Azure test environment deployed and verified
+ ✅ Spark pipeline executing remotely under test conditions
+ ✅ Real-time log streaming confirmed
+ ✅ Unit test and coverage framework integrated with remote deploy script
+
+**Next action:**
+ Wait for the pipeline to complete all steps and `pytest` to finish execution, then retrieve and review `~/test_results/pipeline_run.log` and `pytest_report.log` for pass/fail metrics and coverage percentage.
+
+**Dependencies:**
+
+- Azure VM (`ungcapvm01`, IP: `172.190.228.102`) active and accessible
+- SSH private key: `~/.ssh/ungcapvm01-key.pem`
+- Environment file: `.env` synced and valid
+- Dataset: `data/movie_titles_200.txt` committed in repo
+- Python virtual environment: `pyspark_venv311`
+- Tools: `pytest`, `spark-submit`, `scp`, `tar`
+
+
+
+**23:00 10/26/2025**
+
+**Resume from anchor:** [Unguided_Capstone_Step_08_Test_Suite_Debug_II]
+
+**Context:**
+ The unified pipeline test suite for the Unguided Capstone is now running fully end-to-end.
+ Base class (`BaseStep`) initialization has been stabilized — `metrics_dir` and `output_dir` are now properly resolved and logged.
+ The pipeline successfully passes environment validation and begins executing Spark-based steps.
+ We’re now moving from structural errors (missing attributes, imports) to step-level debugging and output validation.
+
+**Current milestone:**
+ ✅ `BaseStep` constructor fixed and verified.
+ ✅ Step 01 (`Step01AcquireTMDB`) now initializes successfully.
+ ⚙️ Pipeline test (`test_pipeline_success.py`) executes and fails at a later stage — expected during incremental validation.
+
+**Next action:**
+ Run the single-test diagnostic again to capture the current failure context:
+
+```
+pytest -s scripts/tests/test_pipeline_success.py
+```
+
+Then share the **last 25–30 lines of STDOUT and STDERR** (starting from the first red “Traceback”) here.
+ This will isolate the next breaking step (likely Step 02 or Step 03) and guide the minimal fix needed for forward progress.
+
+**Dependencies:**
+
+- Environment variables: `PIPELINE_OUTPUT_DIR`, `PIPELINE_METRICS_DIR`, `TMDB_API_KEY`
+- Tools: `pytest`, `pyspark_venv311`, configured `config.py` and updated `BaseStep`
+- Person: Mark (for test execution + log capture)
+
+
+
+
+
+**20:47 10/26/2025**
+
+**Resume from anchor:** [Unguided_Capstone_Step_08_Test_Suite_Debug]
+ **Context:** You’ve stabilized all Step 8 test scaffolding — pytest executes cleanly for environment and match/enrich scripts. However, the full pipeline test still fails artifact detection, suggesting an environment propagation or path override mismatch. The debug phase now targets the `PIPELINE_OUTPUT_DIR` flow and file write behavior.
+ **Current milestone:** All tests run end-to-end; two of three pass. `test_pipeline_completes_and_outputs` still fails due to missing (or misplaced) output artifacts.
+ **Next action:** Run a **single verbose test** to capture the live logs and environment state:
+
+```
+pytest -s scripts/tests/test_pipeline_success.py
+```
+
+Then paste the last ~30 lines of console output (STDOUT + STDERR) here for analysis.
+ **Dependencies:**
+
+- Active `pyspark_venv311` virtual environment
+- Updated `scripts/main.py` with the debug snapshot block
+- Local repo branch `step8-dev`
+- Access to `/tmp/pytest-of-mark/` directories for artifact verification
+
+
+
+**14:40 10/26/2025**
+
+## 🧭 **Anchor Update**
+
+**Resume from anchor:** `[Unguided_Capstone_Step_08_Test_Suite_Init]`
+ **Context:** Your Azure pipeline now executes end-to-end successfully. It produces reliable local logs, verified environment parity, and Spark tasks complete cleanly.
+ **Current milestone:** Stable Step 8 deployment with reproducible environment and log retrieval.
+ **Next action:** Build a unit + integration test suite to validate correctness, edge-case behavior, and pipeline stability.
+ **Dependencies:** Local repo (`step8-dev` branch), pytest integration, existing logs for baseline comparison.
+
+------
+
+## 🧩 **Test Suite Objectives (per rubric)**
+
+From Step 8 PDF :
+
+- ✅ All code used in the pipeline must have **unit tests**.
+- ✅ Produce a **report** with:
+  - Number of passed/failed tests
+  - Code coverage %
+- ✅ Add test overview + results snapshot to your **slide deck**.
+
+------
+
+## 🧱 **Recommended Folder Layout**
+
+```
+unguided-capstone-project/
+└── scripts/tests/
+    ├── test_env_validation.py
+    ├── test_pipeline_success.py
+    ├── test_step05_match_and_enrich.py
+    └── conftest.py
+```
+
+------
+
+## 🧪 **Tiered Testing Plan**
+
+| Tier                  | Scope                                      | Example                                                      | Tool                  |
+| --------------------- | ------------------------------------------ | ------------------------------------------------------------ | --------------------- |
+| **Unit tests**        | Validate small functions in each module    | Verify helper functions in `scripts_spark/05_spark_match_and_enrich.py` (e.g. string matching logic) | `pytest`              |
+| **Integration tests** | Validate that the pipeline runs end-to-end | Confirm pipeline completes without exception and produces metrics file | `pytest + subprocess` |
+| **System smoke test** | Validate environment on Azure VM           | Reuse your `verify_env.py` for a single test case            | `pytest`              |
+
+------
+
+## 🧩 **Next Micro-Goal**
+
+Start with **3 foundation tests**:
+
+| File                              | Test Focus                                                   |
+| --------------------------------- | ------------------------------------------------------------ |
+| `test_env_validation.py`          | Calls `verify_env.py` to ensure all dependencies + env vars present |
+| `test_pipeline_success.py`        | Runs your main pipeline entry (`main.py`) and asserts it exits 0 + output file exists |
+| `test_step05_match_and_enrich.py` | Imports key function(s) from Step 05 and checks sample behavior |
+
+Once those work locally, we’ll add **pytest-cov** and generate your coverage report for the deliverable.
+
+------
+
+Would you like me to generate clean starter code for those three test files (each ≤ 40 lines, fully runnable under pytest) so you can drop them straight into `scripts/tests/` and begin iterating tomorrow?
+
+
+
+
+
+
+
+
+
+**01:58 10/26/2025**
+
+**Resume from anchor:** [Unguided_Capstone_Step_08_Azure_Eternal_Damnation]
+
+**Context:** Working Azure VM-based deployment pipeline for the unguided capstone project is still unstable. The simplified `deploy_to_azure_test.sh` failed immediately after SSH invocation, likely due to missing or mis-evaluated environment variables or shell expansion behavior. Spark and pytest both verified on VM manually; pipeline automation remains the blocker.
+
+**Current milestone:**
+ Repo successfully clones on VM, Spark runs manually, blob uploads verified. Deploy script nearly functional but not executing commands as intended via SSH heredoc.
+
+**Next action:**
+ Debug SSH command invocation — confirm that inline remote commands execute and paths expand properly on the VM (i.e., ensure `bash -i` heredoc context is correct). Simplify to a minimal echo test before adding Spark and pytest steps back.
+
+**Dependencies:**
+
+- Azure CLI logged in with Service Principal credentials (`SP_APP_ID`, `SP_PASSWORD`, `SP_TENANT_ID`)
+- Working VM access (public IP + SSH key)
+- GitHub repo: `unguided-capstone-project`
+- Spark preinstalled and callable via `spark-submit` on VM
+- Local Ubuntu dev environment (Mark-ASUS
+
+
+
+
+
+
+
+
+
+
+
+**18:02 10/25/2025**
+
+### **Resume from anchor:**
+
+**[Unguided_Capstone_Step_08_Azure_Eternal_Debug]**
+
+------
+
+### **Context:**
+
+We’re mid-sprint on the *Step 8 — Azure Deployment Integration* phase of the Unguided Capstone Project.
+ After migrating the repo clone from `step6-submission` to `step8-dev`, we rebuilt Azure authentication with a **Service Principal + Managed Identity** model.
+ The latest `deploy_to_azure_test.sh` successfully authenticated, launched the VM, ran tests, and reached the **Managed Identity upload step**, but a serious runtime error appeared during the upload (hung for ~8 minutes before failing).
+
+------
+
+### **Current milestone:**
+
+- ✅ Service Principal (`vm-deploy-automation`) created and granted *User Access Administrator*.
+- ✅ VM (`ungcapvm01`) identity configured with *Storage Blob Data Contributor* access.
+- ✅ SSH + GitHub integration functional (via deploy key).
+- ✅ Repo correctly cloned (`step8-dev`) to VM during deploy.
+- ⚠️ Upload phase fails intermittently — long runtime, no completion, possible token or storage data-plane delay.
+
+------
+
+### **Next action:**
+
+🔧 Diagnose and patch the **Managed Identity upload timeout** in `deploy_to_azure_test.sh` — verify AAD token validity, confirm container access at data-plane, and test CLI upload manually (`az storage blob upload-batch --auth-mode login --overwrite`).
+ Once validated, re-run the full deployment pipeline to confirm end-to-end success.
+
+------
+
+### **Dependencies:**
+
+- Keys: `.env` with Service Principal credentials
+- Environment: `ungcapvm01`, `ungcapstor01`, `rg-unguidedcapstone-test`
+- Tools: Azure CLI (`2.78.0+`), Python 3.11 venv, bash deploy script
+- People: Mark Holahan (Owner/Admin), [Assistant] (support/debug continuity)
+
+------
+
+🕐 **Next session goal:** isolate the long-running upload bug → confirm permissions → achieve clean “✅ Upload successful” deploy log.
+
+(Ready to resume upon return from gym — just say “Resume from anchor [Unguided_Capstone_Step_08_Azure_Eternal_Debug]”).
+
+
+
+
 
 
 
@@ -52,8 +347,8 @@ Dependencies: [keys/env/tools/people]
 
 Resume from anchor: [Unguided_Capstone_Step_08_Azure_Bound]
 Context:
-The local TMDB–Discogs PySpark pipeline is fully validated (Steps 01–05). 
-Azure resources have been successfully deployed via main.bicep, and the unguided-capstone-project GitHub repo is integrated into the Azure footprint. 
+The local TMDB–Discogs PySpark pipeline is fully validated (Steps 01–05).
+Azure resources have been successfully deployed via main.bicep, and the unguided-capstone-project GitHub repo is integrated into the Azure footprint.
 We’re now shifting from local validation to cloud-based test deployment and robust test suite creation under Step 8.
 
 Current milestone:
@@ -77,22 +372,22 @@ Dependencies:
 
 Resume from anchor: [Unguided_Capstone_TMDB_Refactor02_Step_08_Ubuntu_Build-out]
 Context:
-The TMDB–Discogs Extract stage has been fully validated under Ubuntu using Spark local mode. 
-Environment parity between `.env`, `config.py`, and PySpark scripts is stable. 
+The TMDB–Discogs Extract stage has been fully validated under Ubuntu using Spark local mode.
+Environment parity between `.env`, `config.py`, and PySpark scripts is stable.
 Discogs authentication is now working with Consumer Key/Secret, and data extraction outputs are confirmed clean.
 
 Current milestone:
-✔ 01_spark_extract_tmdb.py validated end-to-end  
-✔ 02_spark_query_discogs.py executed successfully with proper API responses  
-✔ Environment verification and config synchronization complete  
+✔ 01_spark_extract_tmdb.py validated end-to-end
+✔ 02_spark_query_discogs.py executed successfully with proper API responses
+✔ Environment verification and config synchronization complete
 
 Next action:
 Run and validate `03_spark_prepare_tmdb_input.py` locally to confirm schema consistency and output formatting prior to integration testing with Steps 04–05.
 
 Dependencies:
 - Active venv: `~/pyspark_venv311`
-- Ubuntu VS Code workspace with LF + Black enforcement  
-- `.env` containing TMDB + Discogs keys (validated)  
+- Ubuntu VS Code workspace with LF + Black enforcement
+- `.env` containing TMDB + Discogs keys (validated)
 - Branch: `step8-dev`
 - Reference rubric: **Capstone Step 8 – Stabilization & Hardening**
 
@@ -129,24 +424,24 @@ Dependencies:
 
 Resume from anchor: [UnguidedCapstone_TMDB_Refactor02_Step_08_Recalibrated]
 
-Context: Step 8 now represents the stabilization and hardening phase of the TMDB Refactor project. 
-All IaC deployments (Bicep templates for networking, storage, Key Vault, Databricks, Function App, monitoring) are complete and validated in Azure. 
-The project shifts from environment readiness to full pipeline integration, refactoring remaining Python scripts into Spark modules where feasible, and preparing for test coverage. 
+Context: Step 8 now represents the stabilization and hardening phase of the TMDB Refactor project.
+All IaC deployments (Bicep templates for networking, storage, Key Vault, Databricks, Function App, monitoring) are complete and validated in Azure.
+The project shifts from environment readiness to full pipeline integration, refactoring remaining Python scripts into Spark modules where feasible, and preparing for test coverage.
 This phase finalizes the architecture before scaling in Step 9.
 
-Current milestone: 
-- Infrastructure deployed and verified in Azure.  
-- Two ingestion scripts successfully migrated to PySpark.  
+Current milestone:
+- Infrastructure deployed and verified in Azure.
+- Two ingestion scripts successfully migrated to PySpark.
 
-Next action: 
-Complete the remaining PySpark refactors for steps 03–06, ensuring consistent module interfaces for orchestration. 
+Next action:
+Complete the remaining PySpark refactors for steps 03–06, ensuring consistent module interfaces for orchestration.
 Then, build and validate the initial pytest suite to confirm data flow and component integrity in Databricks.
 
-Dependencies: 
-- Azure Databricks workspace access and active cluster  
-- Local or cloud-based pytest environment  
-- Updated environment variables and config paths  
-- Reference to Step 8 rubric for test metrics and deliverables  
+Dependencies:
+- Azure Databricks workspace access and active cluster
+- Local or cloud-based pytest environment
+- Updated environment variables and config paths
+- Reference to Step 8 rubric for test metrics and deliverables
 - Git branch: `step8-dev`
 
 
@@ -599,6 +894,6 @@ Resume from anchor: [**Pipeline_TMBD_to_Discogs_Refactor_Pre_Step04**]
 Resume from anchor: PACKAGE_IMPORT_FIX_V1
 Context: Unguided Capstone – TMDB→Discogs directional refactor (Sprint A).
 Current milestone: All intra-package imports normalized using `from scripts.<module>` syntax; package runs clean via `python -m scripts.step_01_acquire_tmdb`.
-Next action: Run TMDB acquisition step to verify JSON output in `data/raw/tmdb_raw/`. 
+Next action: Run TMDB acquisition step to verify JSON output in `data/raw/tmdb_raw/`.
 If successful, proceed to scaffold Step 2 (`step_02_query_discogs.py`) using TMDB titles as input.
 Dependencies: Valid TMDB API key loaded via setup_env.ps1; Python v3.10+ environment.
