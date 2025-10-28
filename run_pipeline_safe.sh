@@ -2,6 +2,12 @@
 set -e
 source ~/.bashrc
 
+# --- Pre-flight validation ---
+bash "$HOME/unguided-capstone-project/check_env.sh" || {
+  echo "❌ Environment validation failed. Aborting run."
+  exit 1
+}
+
 # --- Setup Spark PATH safely ---
 export SPARK_HOME="$HOME/spark-3.5.3-bin-hadoop3"
 export PATH="$SPARK_HOME/bin:$PATH"
@@ -18,6 +24,12 @@ mkdir -p "$PIPELINE_OUTPUT_DIR" "$PIPELINE_METRICS_DIR" "$PIPELINE_ROOT/logs"
 cd "$PIPELINE_ROOT"
 LOGFILE="$PIPELINE_ROOT/logs/pipeline_run_$(date +%Y%m%d_%H%M%S).log"
 echo "🚀 Running pipeline with Spark at $(date)" | tee -a "$LOGFILE"
+
+# --- Ensure Spark and Python are visible ---
+export SPARK_HOME=${SPARK_HOME:-$PIPELINE_ROOT/spark-3.5.3-bin-hadoop3}
+export PATH="$SPARK_HOME/bin:$PATH"
+export PYSPARK_PYTHON=${PYSPARK_PYTHON:-$PIPELINE_ROOT/pyspark_venv311/bin/python}
+export PYSPARK_DRIVER_PYTHON=$PYSPARK_PYTHON
 
 spark-submit --version >> "$LOGFILE" 2>&1
 spark-submit --master local[4] pipeline_main.py >> "$LOGFILE" 2>&1

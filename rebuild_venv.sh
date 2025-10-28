@@ -139,5 +139,29 @@ if [[ "$EXPORT_VM" == true ]]; then
   echo "✅ requirements_stable.txt and requirements_locked.txt exported successfully."
 fi
 
+# -------------------------------------------------------
+# Post-rebuild verification (optional DRY closure)
+# -------------------------------------------------------
+CHECK_SCRIPT="$PROJECT_ROOT/check_env.sh"
+SYNC_LOG="$PROJECT_ROOT/sync_log.md"
+
+if [[ -x "$CHECK_SCRIPT" ]]; then
+  echo ""
+  echo "🔎 Running post-rebuild environment check..."
+  if bash "$CHECK_SCRIPT"; then
+    echo "✅ Environment validation succeeded."
+    # Append to sync log
+    echo "| $(date -u '+%Y-%m-%d %H:%M:%S') | $(hostname) | post-rebuild check_env | ✅ passed |" >> "$SYNC_LOG"
+  else
+    echo "❌ Environment validation failed after rebuild."
+    echo "| $(date -u '+%Y-%m-%d %H:%M:%S') | $(hostname) | post-rebuild check_env | ❌ failed |" >> "$SYNC_LOG"
+    exit 1
+  fi
+else
+  echo "⚠️  check_env.sh not found or not executable — skipping post-rebuild check."
+  echo "| $(date -u '+%Y-%m-%d %H:%M:%S') | $(hostname) | post-rebuild check_env | ⚠️ skipped |" >> "$SYNC_LOG"
+fi
+
+
 echo ""
 echo "👉 To activate locally: source $VENV_PATH/bin/activate"
