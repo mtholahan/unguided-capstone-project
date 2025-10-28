@@ -1,0 +1,8 @@
+tmdb_rows,discogs_rows,tmdb_columns,discogs_columns,tmdb_schema_path,discogs_schema_path,integrity_summary_path,duration_sec,step_name,timestamp,step_runtime_sec,pipeline_runtime_sec,mode,titles_total,titles_queried,success_rate,direction,titles_downloaded,total_candidates,total_matches,avg_hybrid_score,avg_token_score,avg_partial_score,high_confidence,mid_confidence,low_confidence,median_score,stddev_score,pairs_total,avg_pairs_per_title,max_workers,runtime_sec
+146.0,60.0,8.0,7.0,data/validation/schema_comparison_tmdb.csv,data/validation/schema_comparison_discogs.csv,data/validation/integrity_summary.csv,,step_04_validate_schema_alignment,2025-10-26 19:08:40,0.0,0.0,,,,,,,,,,,,,,,,,,,,
+,,,,,,,56.93,step01_acquire_tmdb_metrics,2025-10-26 23:14:17,56.93,56.93,,190.0,,100.0,TMDB→Discogs,190.0,,,,,,,,,,,,,,
+,,,,,,,413.42,step02_query_discogs_metrics,2025-10-26 23:21:11,413.42,470.35,SHARED (190 titles),190.0,188.0,98.95,TMDB→Discogs,,,,,,,,,,,,,,,
+146.0,60.0,8.0,7.0,/home/mark/Projects/unguided-capstone-project/data/intermediate/schema_comparison_tmdb.csv,/home/mark/Projects/unguided-capstone-project/data/intermediate/schema_comparison_discogs.csv,/home/mark/Projects/unguided-capstone-project/data/intermediate/integrity_summary.csv,0.28,step04_schema_validation_metrics,2025-10-26 23:21:12,0.28,470.63,,,,,,,,,,,,,,,,,,,,
+,,,,,,,0.73,step03_tmdb_discogs_metrics,2025-10-26 23:21:12,0.73,471.36,SHARED (190 titles),190.0,,,TMDB→Discogs,,,,,,,,,,,,356.0,1.8736842105263158,8.0,
+,,,,,,,,step05_match_metrics,2025-10-26 23:21:13,0.0,471.36,,,,,,,356.0,48.0,57.23,,,,,,54.78,10.97,,,,0.8
+,,,,,,,,,,0.24,471.6,,,,,,,356.0,48.0,57.23,50.65,72.57,0.0,6.0,42.0,54.78,10.97,,,,

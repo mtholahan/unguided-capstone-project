@@ -1,0 +1,12 @@
+{
+  "mode": "SHARED (190 titles)",
+  "titles_total": 190,
+  "titles_queried": 188,
+  "success_rate": 98.95,
+  "duration_sec": 413.42,
+  "direction": "TMDB→Discogs",
+  "step_name": "step02_query_discogs_metrics",
+  "timestamp": "2025-10-26T23:21:11",
+  "step_runtime_sec": 413.42,
+  "pipeline_runtime_sec": 0.0
+}

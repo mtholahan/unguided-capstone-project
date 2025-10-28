@@ -1,0 +1,11 @@
+{
+  "titles_total": 190,
+  "titles_downloaded": 190,
+  "success_rate": 100.0,
+  "duration_sec": 56.93,
+  "direction": "TMDB→Discogs",
+  "step_name": "step01_acquire_tmdb_metrics",
+  "timestamp": "2025-10-26T23:14:17",
+  "step_runtime_sec": 56.93,
+  "pipeline_runtime_sec": 0.0
+}

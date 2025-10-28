@@ -69,3 +69,63 @@
 2025-10-25 00:44:56,323 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-25T00:44:56', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
 2025-10-25 00:44:56,323 | INFO | ✅ Step 04 validation complete.
 2025-10-25 00:44:56,323 | INFO | Outputs → data/validation
+2025-10-26 16:14:58,838 | INFO | Initialized Step 04 | TMDB=/home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw | DISCOGS=/home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 16:15:00,481 | INFO | Loaded TMDB: 146 rows from /home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw
+2025-10-26 16:15:00,484 | INFO | Loaded Discogs: 60 rows from /home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 16:15:00,484 | INFO | TMDB DF shape: (146, 8)
+2025-10-26 16:15:00,484 | INFO | Discogs DF shape: (60, 7)
+2025-10-26 16:15:00,547 | INFO | Loaded candidates: 356
+2025-10-26 16:15:00,569 | INFO | 📈 Saved metrics JSON → step04_schema_validation_metrics.json
+2025-10-26 16:15:00,569 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-26T16:15:00', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-26 16:15:00,569 | INFO | ✅ Step 04 validation complete.
+2025-10-26 16:15:00,569 | INFO | Outputs → data/validation
+2025-10-26 16:15:35,082 | INFO | Initialized Step 04 | TMDB=/home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw | DISCOGS=/home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 16:15:35,537 | INFO | Loaded TMDB: 146 rows from /home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw
+2025-10-26 16:15:35,539 | INFO | Loaded Discogs: 60 rows from /home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 16:15:35,539 | INFO | TMDB DF shape: (146, 8)
+2025-10-26 16:15:35,539 | INFO | Discogs DF shape: (60, 7)
+2025-10-26 16:15:35,551 | INFO | Loaded candidates: 356
+2025-10-26 16:15:35,555 | INFO | 📈 Saved metrics JSON → step04_schema_validation_metrics.json
+2025-10-26 16:15:35,555 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-26T16:15:35', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-26 16:15:35,556 | INFO | ✅ Step 04 validation complete.
+2025-10-26 16:15:35,556 | INFO | Outputs → data/validation
+2025-10-26 16:16:32,705 | INFO | Initialized Step 04 | TMDB=/home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw | DISCOGS=/home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 16:16:33,138 | INFO | Loaded TMDB: 146 rows from /home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw
+2025-10-26 16:16:33,140 | INFO | Loaded Discogs: 60 rows from /home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 16:16:33,140 | INFO | TMDB DF shape: (146, 8)
+2025-10-26 16:16:33,141 | INFO | Discogs DF shape: (60, 7)
+2025-10-26 16:16:33,151 | INFO | Loaded candidates: 356
+2025-10-26 16:16:33,155 | INFO | 📈 Saved metrics JSON → step04_schema_validation_metrics.json
+2025-10-26 16:16:33,155 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-26T16:16:33', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-26 16:16:33,155 | INFO | ✅ Step 04 validation complete.
+2025-10-26 16:16:33,155 | INFO | Outputs → data/validation
+2025-10-26 18:12:28,098 | INFO | Initialized Step 04 | TMDB=/home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw | DISCOGS=/home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 18:12:29,157 | INFO | Loaded TMDB: 146 rows from /home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw
+2025-10-26 18:12:29,159 | INFO | Loaded Discogs: 60 rows from /home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 18:12:29,160 | INFO | TMDB DF shape: (146, 8)
+2025-10-26 18:12:29,160 | INFO | Discogs DF shape: (60, 7)
+2025-10-26 18:12:29,222 | INFO | Loaded candidates: 356
+2025-10-26 18:12:29,243 | INFO | 📈 Saved metrics JSON → step04_schema_validation_metrics.json
+2025-10-26 18:12:29,244 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-26T18:12:29', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-26 18:12:29,244 | INFO | ✅ Step 04 validation complete.
+2025-10-26 18:12:29,244 | INFO | Outputs → data/validation
+2025-10-26 18:12:40,248 | INFO | Initialized Step 04 | TMDB=/home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw | DISCOGS=/home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 18:12:40,671 | INFO | Loaded TMDB: 146 rows from /home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw
+2025-10-26 18:12:40,674 | INFO | Loaded Discogs: 60 rows from /home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 18:12:40,674 | INFO | TMDB DF shape: (146, 8)
+2025-10-26 18:12:40,674 | INFO | Discogs DF shape: (60, 7)
+2025-10-26 18:12:40,686 | INFO | Loaded candidates: 356
+2025-10-26 18:12:40,690 | INFO | 📈 Saved metrics JSON → step04_schema_validation_metrics.json
+2025-10-26 18:12:40,690 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-26T18:12:40', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-26 18:12:40,690 | INFO | ✅ Step 04 validation complete.
+2025-10-26 18:12:40,690 | INFO | Outputs → data/validation
+2025-10-26 19:08:39,703 | INFO | Initialized Step 04 | TMDB=/home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw | DISCOGS=/home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 19:08:40,848 | INFO | Loaded TMDB: 146 rows from /home/mark/Projects/unguided-capstone-project/data/raw/tmdb_raw
+2025-10-26 19:08:40,851 | INFO | Loaded Discogs: 60 rows from /home/mark/Projects/unguided-capstone-project/data/raw/discogs_raw
+2025-10-26 19:08:40,851 | INFO | TMDB DF shape: (146, 8)
+2025-10-26 19:08:40,851 | INFO | Discogs DF shape: (60, 7)
+2025-10-26 19:08:40,933 | INFO | Loaded candidates: 356
+2025-10-26 19:08:40,938 | INFO | 📈 Saved metrics JSON → step04_schema_validation_metrics.json
+2025-10-26 19:08:40,938 | INFO | 📊 Logged metrics for step_04_validate_schema_alignment: {'tmdb_rows': 146, 'discogs_rows': 60, 'tmdb_columns': 8, 'discogs_columns': 7, 'tmdb_schema_path': 'data/validation/schema_comparison_tmdb.csv', 'discogs_schema_path': 'data/validation/schema_comparison_discogs.csv', 'integrity_summary_path': 'data/validation/integrity_summary.csv', 'step_name': 'step_04_validate_schema_alignment', 'timestamp': '2025-10-26T19:08:40', 'step_runtime_sec': 0.0, 'pipeline_runtime_sec': 0.0}
+2025-10-26 19:08:40,938 | INFO | ✅ Step 04 validation complete.
+2025-10-26 19:08:40,939 | INFO | Outputs → data/validation
