@@ -79,7 +79,7 @@ pip install pipreqs >/dev/null 2>&1 || {
 if command -v pipreqs >/dev/null 2>&1; then
   echo "📋 Generating dependency inventories..."
   pip freeze > "$REQ_LOCKED"
-  pipreqs . --force --savepath "$REQ_STABLE"
+  pipreqs . --force --savepath "$REQ_STABLE" --ignore pyspark_venv311 --no-follow-links
   echo "📦 Dependency inventories refreshed (stable & locked)."
 else
   echo "⚠️  pipreqs not found; skipping inventory generation."
