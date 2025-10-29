@@ -152,3 +152,25 @@ fi
 echo "✅ Deployment + validation complete."
 echo "🧾 Log updated at ${LOG_FILE}"
 # =========================================================
+
+# --- Optional Post-Deploy QuickOps ---
+echo ""
+read -p "🧭 Launch VM QuickOps session for live validation? [y/N]: " RUN_OPS
+if [[ "$RUN_OPS" =~ ^[Yy]$ ]]; then
+  echo "🪄 Starting VM QuickOps..."
+  bash scripts/vm_quickops.sh --auto-test
+  STATUS=$?
+else
+  echo "⚙️ Skipping QuickOps session."
+  STATUS=0
+fi
+
+# --- Logging outcome ---
+if [ $STATUS -eq 0 ]; then
+  echo "| $(date -u '+%Y-%m-%d %H:%M') | VM ($VM_HOST) | quickops | ✅ completed successfully |" >> "${LOG_FILE}"
+else
+  echo "| $(date -u '+%Y-%m-%d %H:%M') | VM ($VM_HOST) | quickops | ⚠️ encountered issues |" >> "${LOG_FILE}"
+fi
+
+echo ""
+echo "📘 Log updated at ${LOG_FILE}"
