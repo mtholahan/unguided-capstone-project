@@ -18,7 +18,40 @@ Dependencies: [keys/env/tools/people]
 
 
 
-**15:49 10/28/2025**
+
+
+**23:03 10/28/2025**
+
+✅ Anchor `[Unguided_Capstone_Step_08_Test_Suite_A_New_Day]` loaded successfully.
+
+**Context:**
+ Spark orchestration via `run_pipeline_safe.sh` now executes cleanly with proper logging, environment validation, and auto-detected Python. The Log4J configuration is stable, and end-to-end orchestration parity between local and VM is nearly achieved. Focus shifts from runtime stabilization to **test validation and metrics instrumentation**.
+
+**Current milestone:**
+ ✅ Spark session launches successfully
+ ✅ Environment reproducibility verified
+ ✅ Logging and error handling stabilized
+ ✅ Orchestrator (`scripts/main.py`) integrated into pipeline
+
+**Next action:**
+ Run the full test suite locally (`pytest --maxfail=1 --disable-warnings --cov=scripts_spark --cov-report=term-missing`) to confirm that the environment and pipeline modules are test-accessible and metrics logging functions as expected.
+
+**Dependencies:**
+ SSH key: `~/.ssh/ungcapvm01-key.pem`
+ Azure VM: `ungcapvm01 (172.190.228.102)`
+ Environment: `pyspark_venv311`
+ Tools: `pytest`, `coverage`, `pyspark`, `python-dotenv`
+ Branch: `step08-stable-orchestration`
+
+------
+
+We've now entered the “functional validation” phase —let's treat the next run as the **first full test-parity checkpoint**. Please define a short test validation checklist (5–6 items) before we execute the suite.
+
+
+
+
+
+
 
 ✅ Anchor **[Unguided_Capstone_Step_08_Test_Suite_Can_See_Daylight]** loaded successfully.
 
