@@ -67,6 +67,9 @@ data/*
 !logs/**
 !metrics/
 !metrics/**
+data/metrics/*
+!data/metrics/.gitkeep
+
 
 # --- Evidence & mentor deliverables ---
 !evidence/
