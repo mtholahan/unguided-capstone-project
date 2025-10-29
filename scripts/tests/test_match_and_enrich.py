@@ -1,6 +1,8 @@
+import json
 import pytest
 from pathlib import Path
 from scripts_spark.spark_match_and_enrich import Step05MatchAndEnrichV2
+
 
 @pytest.fixture
 def mock_candidates(tmp_path):
@@ -16,29 +18,36 @@ def mock_candidates(tmp_path):
     df.to_csv(path, index=False)
     return path
 
+
 def test_match_and_enrich_runs_successfully(monkeypatch, tmp_path, mock_candidates):
     """Runs Step05MatchAndEnrichV2 end-to-end on mock data."""
     step = Step05MatchAndEnrichV2()
 
-    # Redirect all file outputs to tmp_path
+    # Dynamically resolve metrics directory
+    project_root = Path(__file__).resolve().parents[2]
+    metrics_dir = project_root / "data" / "metrics"
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+
+    # Redirect all file outputs to tmp_path (isolated test space)
     step.candidates_path = mock_candidates
     step.output_path = tmp_path / "output.csv"
     step.metrics_path = tmp_path / "metrics.json"
     step.histogram_path = tmp_path / "histogram.png"
 
-    # Execute
+    # Execute the step
     step.run()
 
-    # Assertions
-    assert step.output_path.exists(), "Expected output CSV not created."
-    assert step.metrics_path.exists(), "Expected metrics JSON not created."
+    # Assertions - ensure artifacts were created
+    assert step.output_path.exists(), f"Expected output CSV not created at {step.output_path}"
+    assert step.metrics_path.exists(), f"Expected metrics JSON not created at {step.metrics_path}"
 
-    import json
+    # Load metrics
     with open(step.metrics_path, "r", encoding="utf-8") as f:
         metrics = json.load(f)
 
-    # Basic metrics integrity check
-    assert "total_candidates" in metrics
-    assert metrics["total_candidates"] == 3
-    assert metrics["total_matches"] <= 3
-    assert metrics["step_runtime_sec"] > 0
+    # Verify expected keys and reasonable values
+    assert "total_candidates" in metrics, "Missing total_candidates key in metrics."
+    assert metrics["total_candidates"] == 3, "Unexpected total_candidates count."
+    assert "total_matches" in metrics, "Missing total_matches key in metrics."
+    assert metrics["total_matches"] <= 3, "Total matches should not exceed candidate count."
+    assert "step_runtime_sec" in metrics and metrics["step_runtime_sec"] > 0, "Invalid runtime metric."
