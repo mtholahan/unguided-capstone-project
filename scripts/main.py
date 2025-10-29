@@ -63,6 +63,19 @@ if os.getenv("DEBUG_ENV_SNAPSHOT") == "1":
     print(f"cwd = {os.getcwd()}")
     print("===============================\n")
 
+
+# WSL-safe Spark environment patch
+os.environ["SPARK_HOME"] = "/home/mark/spark"
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-17-openjdk-amd64"
+
+# Clean up PATH: keep only Linux directories
+clean_path = ":".join(p for p in os.environ["PATH"].split(":") if not p.startswith("/mnt/"))
+os.environ["PATH"] = f"/usr/bin:/bin:/usr/local/bin:{clean_path}"
+
+print("✅ PATH cleaned for Spark launch:")
+print(os.environ["PATH"])
+
+
 # ================================================================
 # Environment & Spark Initialization
 # ================================================================
@@ -76,10 +89,12 @@ spark = (
     .appName("UnguidedCapstone_Pipeline_Step8")
     .config("spark.sql.execution.arrow.pyspark.enabled", "false")
     .config("spark.sql.shuffle.partitions", "4")
+    .config("spark.executorEnv.SHELL", "/bin/bash")
     .getOrCreate()
 )
 configure_spark_from_env(spark)
 spark.sparkContext.setLogLevel("ERROR")
+
 print("✅ Spark session active.\n")
 
 # ================================================================

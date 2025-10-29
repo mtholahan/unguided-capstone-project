@@ -8,6 +8,7 @@ and injects Azure credentials into Spark configuration.
 
 import os
 from dotenv import load_dotenv
+import socket
 from pyspark.sql import SparkSession
 
 
@@ -51,13 +52,20 @@ def load_and_validate_env():
     return {k: os.getenv(k) for k in REQUIRED_VARS}
 
 
+import socket
+
 def configure_spark_from_env(spark: SparkSession):
     """Inject Azure Storage credentials into Spark session."""
     env = load_and_validate_env()
-    account = env["AZURE_STORAGE_ACCOUNT"]
-    key = env["AZURE_STORAGE_KEY"]
-    spark.conf.set(f"fs.azure.account.key.{account}.dfs.core.windows.net", key)
-    print(f"✅ Spark configured for Azure account: {account}")
+    account = env.get("AZURE_STORAGE_ACCOUNT")
+    key = env.get("AZURE_STORAGE_KEY")
+
+    # 🛡️ Only configure when running on VM with real credentials
+    if account and key and key != "your_storage_key_here":
+        spark.conf.set(f"fs.azure.account.key.{account}.dfs.core.windows.net", key)
+        print(f"✅ Spark configured for Azure account: {account}")
+    else:
+        print("⚠️ Skipping Azure Spark config (no valid credentials).")
 
 
 def show_env_summary():
