@@ -52,7 +52,7 @@ else:
     output_dir.mkdir(parents=True, exist_ok=True)
     os.environ["PIPELINE_OUTPUT_DIR"] = str(output_dir)
 
-metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+metrics_dir = Path(__file__).resolve().parents[2] / "data" / "metrics"
 metrics_dir.mkdir(parents=True, exist_ok=True)
 os.environ["PIPELINE_METRICS_DIR"] = str(metrics_dir)
 
