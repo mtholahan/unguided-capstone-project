@@ -93,14 +93,32 @@ fi
 if [ -f "$PROJECT_DIR/scripts/tests/test_env_validation.py" ]; then
   echo "✅ Found test at scripts/tests/test_env_validation.py"
   cd "$PROJECT_DIR/scripts"
-  if pytest -q tests/test_env_validation.py; then
-    STATUS_TESTS="✅"
+
+  # 🟢 Load environment variables from .env if present
+  if [ -f "$PROJECT_DIR/.env" ]; then
+    echo "📦 Loading .env variables..."
+    export $(grep -v '^#' "$PROJECT_DIR/.env" | xargs)
   else
-    STATUS_TESTS="❌"
+    echo "⚠️ No .env file found in $PROJECT_DIR"
   fi
+
+if "$HOME/pyspark_venv311/bin/pytest" -q tests/test_env_validation.py; then
+  STATUS_TESTS="✅"
+else
+  STATUS_TESTS="❌"
+fi
+
 elif [ -f "$PROJECT_DIR/tests/test_env_validation.py" ]; then
   echo "✅ Found test at tests/test_env_validation.py"
   cd "$PROJECT_DIR"
+
+  if [ -f "$PROJECT_DIR/.env" ]; then
+    echo "📦 Loading .env variables..."
+    export $(grep -v '^#' "$PROJECT_DIR/.env" | xargs)
+  else
+    echo "⚠️ No .env file found in $PROJECT_DIR"
+  fi
+
   if pytest -q tests/test_env_validation.py; then
     STATUS_TESTS="✅"
   else
@@ -110,6 +128,7 @@ else
   echo "❌ No test_env_validation.py found."
   STATUS_TESTS="❌"
 fi
+
 
 # --- Summary Block ---
 echo ""
