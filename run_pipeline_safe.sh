@@ -1,37 +1,85 @@
-#!/bin/bash
-set -e
-source ~/.bashrc
+#!/usr/bin/env bash
+# =====================================================================
+# run_pipeline_safe.sh — Unified pipeline launcher (Definitive Version)
+# ---------------------------------------------------------------------
+# Ensures the environment is validated, Spark is configured,
+# logs are captured, and the orchestrator runs safely end-to-end.
+# =====================================================================
+
+set -euo pipefail
+
+# --- Source environment variables ---
+if [ -f ~/.bashrc ]; then
+  source ~/.bashrc
+fi
 
 # --- Pre-flight validation ---
-bash "$(dirname "$0")/check_env.sh" || {
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+bash "$SCRIPT_DIR/check_env.sh" || {
   echo "❌ Environment validation failed. Aborting run."
   exit 1
 }
 
-# --- Setup Spark PATH safely ---
-export SPARK_HOME="$HOME/spark-3.5.3-bin-hadoop3"
+# --- Root and Spark setup ---
+export PIPELINE_ROOT="$HOME/Projects/unguided-capstone-project"
+export SPARK_HOME="${SPARK_HOME:-$HOME/spark}"
 export PATH="$SPARK_HOME/bin:$PATH"
 
-# --- Core pipeline paths ---
-export PIPELINE_ROOT="$HOME/unguided-capstone-project"
+# --- Directories (define early to avoid undefined vars) ---
+export LOG_DIR="$PIPELINE_ROOT/logs"
 export PIPELINE_OUTPUT_DIR="$PIPELINE_ROOT/data/intermediate"
 export PIPELINE_METRICS_DIR="$PIPELINE_ROOT/data/metrics"
+mkdir -p "$LOG_DIR" "$PIPELINE_OUTPUT_DIR" "$PIPELINE_METRICS_DIR"
 
-# --- Ensure directories exist ---
-mkdir -p "$PIPELINE_OUTPUT_DIR" "$PIPELINE_METRICS_DIR" "$PIPELINE_ROOT/logs"
+# --- Logging setup ---
+LOGFILE="$LOG_DIR/pipeline_run_$(date +%Y%m%d_%H%M%S).log"
+touch "$LOGFILE"
 
-# --- Run the pipeline ---
-cd "$PIPELINE_ROOT"
-LOGFILE="$PIPELINE_ROOT/logs/pipeline_run_$(date +%Y%m%d_%H%M%S).log"
+# --- Python setup ---
+PYTHON_PATH="$(which python3 || which python || true)"
+if [[ -z "$PYTHON_PATH" ]]; then
+  echo "❌ No Python interpreter found. Aborting run." | tee -a "$LOGFILE"
+  exit 1
+fi
+export PYSPARK_PYTHON="$PYTHON_PATH"
+export PYSPARK_DRIVER_PYTHON="$PYTHON_PATH"
+
+# --- Log initial configuration ---
+echo "🐍 Using Python interpreter: $PYTHON_PATH" | tee -a "$LOGFILE"
 echo "🚀 Running pipeline with Spark at $(date)" | tee -a "$LOGFILE"
+echo "🧩 Using Spark at: $SPARK_HOME" | tee -a "$LOGFILE"
+echo "📄 Logfile: $LOGFILE" | tee -a "$LOGFILE"
 
-# --- Ensure Spark and Python are visible ---
-export SPARK_HOME=${SPARK_HOME:-$PIPELINE_ROOT/spark-3.5.3-bin-hadoop3}
-export PATH="$SPARK_HOME/bin:$PATH"
-export PYSPARK_PYTHON=${PYSPARK_PYTHON:-$PIPELINE_ROOT/pyspark_venv311/bin/python}
-export PYSPARK_DRIVER_PYTHON=$PYSPARK_PYTHON
+# --- Move to project root ---
+cd "$PIPELINE_ROOT"
 
-spark-submit --version >> "$LOGFILE" 2>&1
-spark-submit --master local[4] pipeline_main.py >> "$LOGFILE" 2>&1
+# --- Sanity check: confirm orchestrator exists ---
+PIPELINE_ENTRY="$PIPELINE_ROOT/scripts/main.py"
+if [[ ! -f "$PIPELINE_ENTRY" ]]; then
+  echo "❌ Orchestrator not found at $PIPELINE_ENTRY" | tee -a "$LOGFILE"
+  exit 1
+fi
 
-echo "✅ Pipeline finished at $(date)" | tee -a "$LOGFILE"
+start_time=$(date +%s)
+
+# --- Run the orchestrator with live output and logging ---
+{
+  "$SPARK_HOME/bin/spark-submit" \
+    --master local[*] \
+    --conf "spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$PIPELINE_ROOT/conf/log4j.properties" \
+    "$PIPELINE_ENTRY"
+} 2>&1 | tee -a "$LOGFILE"
+
+
+# --- Completion timing ---
+end_time=$(date +%s)
+elapsed=$(( end_time - ${start_time:-0} ))
+
+if (( elapsed < 5 )); then
+  echo "⚠️  Warning: Pipeline completed in ${elapsed}s — check for premature exit or skipped steps." | tee -a "$LOGFILE"
+else
+  echo "✅ Pipeline finished successfully in ${elapsed}s at $(date)" | tee -a "$LOGFILE"
+fi
+
+echo "📊 Output metrics (if generated): $PIPELINE_METRICS_DIR" | tee -a "$LOGFILE"
+
