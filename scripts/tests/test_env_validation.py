@@ -1,29 +1,23 @@
-"""
-Step 8 — Environment Validation Test (Refactored)
--------------------------------------------------
-Confirms that verify_env.py executes successfully and confirms
-key environment markers (Python, Spark, PATH integrity).
-"""
-
 import subprocess
 import sys
+import os
 from pathlib import Path
-import pytest
 
-
-@pytest.mark.smoke
 def test_env_validation_runs_successfully():
-    """Runs verify_env.py and asserts exit code 0 + confirmation text."""
+    """Runs verify_env.py and asserts environment variables are valid."""
     project_root = Path(__file__).resolve().parents[2]
-    verify_script = project_root / "scripts" / "verify_env.py"
+    env_path = project_root / ".env"
+
+    # Ensure .env exists before test
+    assert env_path.exists(), f".env file not found at {env_path}"
 
     result = subprocess.run(
-        [sys.executable, str(verify_script)],
+        [sys.executable, "scripts/verify_env.py"],
+        cwd=project_root,
         capture_output=True,
         text=True
     )
 
     print(result.stdout)
-    assert result.returncode == 0, f"verify_env failed:\n{result.stderr}"
-    assert any(k in result.stdout for k in ["Environment verified", "✅", "All checks passed"]), \
-        "Expected environment success marker not found."
+    assert result.returncode == 0, f"verify_env failed: {result.stderr}"
+    assert "Environment verified" in result.stdout or "✅" in result.stdout

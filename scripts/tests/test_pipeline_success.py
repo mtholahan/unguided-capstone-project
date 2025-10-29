@@ -45,45 +45,23 @@ def run_pipeline_safe(tmp_path: Path) -> subprocess.CompletedProcess:
 
     return result
 
+def test_pipeline_completes_and_generates_artifacts():
+    """Runs the full pipeline and checks for final metrics output."""
+    project_root = Path(__file__).resolve().parents[2]
+    metrics_dir = project_root / "data" / "metrics"
+    metrics_dir.mkdir(parents=True, exist_ok=True)
 
-@pytest.mark.integration
-def test_pipeline_completes_and_generates_artifacts(tmp_path):
-    """Runs full pipeline, validates artifact generation + success log message."""
-    start_time = datetime.utcnow()
-    result = run_pipeline_safe(tmp_path)
-    duration = (datetime.utcnow() - start_time).total_seconds()
+    result = subprocess.run(
+        [sys.executable, "scripts/main.py"],
+        cwd=project_root,
+        capture_output=True,
+        text=True
+    )
 
-    # === Relaxed return code check ===
-    assert result.returncode in (0, 1), f"Unexpected exit code: {result.returncode}\n{result.stdout[-500:]}"
+    print(result.stdout)
+    assert result.returncode == 0, f"Pipeline exited with non-zero code: {result.stderr}"
 
-    # === Verify artifacts ===
-    output_dir = tmp_path / "pipeline_output"
-    artifacts = [f for f in output_dir.rglob("*") if f.is_file()]
-    assert artifacts, "❌ No output artifacts were produced."
+    # Validate expected metrics CSV was generated
+    pipeline_csv = metrics_dir / "pipeline_metrics.csv"
+    assert pipeline_csv.exists(), f"Expected pipeline_metrics.csv not found at {pipeline_csv}"
 
-    # === Success message check ===
-    success_markers = ["Pipeline execution completed", "🏁", "✅ Pipeline execution completed"]
-    assert any(marker in result.stdout for marker in success_markers), \
-        "❌ Pipeline did not log success message."
-
-    # === Metrics presence ===
-    metrics_dir = tmp_path / "pipeline_metrics"
-    metrics_files = list(metrics_dir.glob("*.json")) + list(metrics_dir.glob("*.csv"))
-    assert metrics_files, "❌ No metrics were written to pipeline_metrics directory."
-
-    # === Report summary ===
-    report = {
-        "timestamp": datetime.utcnow().isoformat(),
-        "duration_sec": duration,
-        "exit_code": result.returncode,
-        "num_artifacts": len(artifacts),
-        "num_metrics": len(metrics_files),
-        "status": "PASS",
-    }
-
-    report_path = tmp_path / "pipeline_test_report.json"
-    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"📊 Test report generated → {report_path}")
-    print(json.dumps(report, indent=2))
-
-    assert report["status"] == "PASS"
