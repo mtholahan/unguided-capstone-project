@@ -54,6 +54,11 @@ FORCE_CACHE_ONLY = RUN_LOCAL
 SAVE_RAW_JSON = True
 ALLOW_API_FETCH = not RUN_LOCAL
 
+# --- Sanity check print ---
+print(f"[CONFIG SANITY] RUN_LOCAL={RUN_LOCAL}, "
+      f"FORCE_CACHE_ONLY={FORCE_CACHE_ONLY}, "
+      f"ALLOW_API_FETCH={ALLOW_API_FETCH}")
+
 DISCOG_MAX_TITLES = 50          # Batch limiter for Step 01
 TMDB_MAX_RESULTS = 5
 MAX_THREADS = int(os.getenv("MAX_THREADS", min(8, CPU_CORES * 2)))

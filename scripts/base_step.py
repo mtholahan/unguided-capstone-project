@@ -36,24 +36,35 @@ except ImportError:
 # ============================================================
 # 🪶 Shared Logger Factory (used by BaseStep + main.py)
 # ============================================================
-def setup_logger(name="Pipeline", log_dir=LOG_DIR):
+import os
+import logging
+import sys
+from pathlib import Path
+
+def setup_logger(name="Pipeline", log_dir=None):
     """Initialize a unified logger writing to logs/pipeline.log and console."""
+    log_dir = log_dir or Path("logs")
     Path(log_dir).mkdir(parents=True, exist_ok=True)
     log_file = Path(log_dir) / "pipeline.log"
 
-    # Avoid reconfiguring multiple times
-    if not logging.getLogger().handlers:
+    # --- New: read log level from environment or default to INFO
+    log_level_str = os.getenv("LOG_LEVEL", "INFO").upper()
+    log_level = getattr(logging, log_level_str, logging.INFO)
+
+    # --- Avoid reconfiguring multiple times
+    logger = logging.getLogger(name)
+    if not logger.handlers:
         logging.basicConfig(
-            level=getattr(logging, LOG_LEVEL.upper(), logging.INFO),
+            level=log_level,
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             handlers=[
                 logging.FileHandler(log_file, mode="a", encoding="utf-8"),
                 logging.StreamHandler(sys.stdout),
             ],
         )
+        logger.info(f"Initialized logger for {name} (level={log_level_str})")
+        logger._initialized = True
 
-    logger = logging.getLogger(name)
-    logger.info(f"Initialized logger for {name}")
     return logger
 
 

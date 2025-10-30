@@ -16,6 +16,9 @@ REQUIRED_VARS = [
     "AZURE_STORAGE_ACCOUNT",
     "AZURE_STORAGE_KEY",
     "AZURE_STORAGE_CONTAINER",
+    "TMDB_API_KEY",
+    "DISCOGS_CONSUMER_KEY",
+    "DISCOGS_CONSUMER_SECRET",
 ]
 
 def ensure_local_env_defaults():
@@ -45,7 +48,7 @@ def ensure_local_env_defaults():
 
 def load_and_validate_env():
     """Load .env and verify required keys."""
-    load_dotenv()  # Reads from project root
+    load_dotenv(dotenv_path=".env", override=True)
     missing = [k for k in REQUIRED_VARS if not os.getenv(k)]
     if missing:
         raise EnvironmentError(f"Missing required environment vars: {missing}")
