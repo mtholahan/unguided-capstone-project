@@ -1,7 +1,0 @@
-| #    | Category            | Task                                  | Context                                                      | Target Date  | Status        |
-| ---- | ------------------- | ------------------------------------- | ------------------------------------------------------------ | ------------ | ------------- |
-| 1    | Documentation       | **Step 7 Architecture Narrative**     | Add 3–4 sentence summary to `docs/step07_architecture.md` tying together Azure components, design rationale, and data flow. | Oct 23 (AM)  | ⏳ Pending     |
-| 2    | Visualization       | **Step 8 Diagram Preparation**        | Create Step 8 deployment-testing architecture showing Databricks test environment, validation outputs, and temporary clusters. | Oct 24 (AM)  | ⏳ Scheduled   |
-| 3    | Repo Maintenance    | **Finalize Step 7 Submission Branch** | Push final diagram (`.drawio`, `.png`, `step07_architecture.md`) to `step7-submission`; freeze branch for mentor review. | Oct 23 (EOD) | ⏳ In Progress |
-| 4    | Azure Validation    | **Resource Consistency Check**        | Confirm deployed Azure resources (Databricks, Blob Storage, Key Vault) match diagram naming and structure. | Oct 24–25    | 🔜 Upcoming    |
-| 5    | Capstone Continuity | **Step 8 Kickoff Planning**           | Draft micro-goal set for Step 8 Testing/Deployment phase (after Step 7 submission). | Oct 25       | 🔜 Upcoming    |
