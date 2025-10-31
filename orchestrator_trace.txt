@@ -1,0 +1,19 @@
+[CONFIG SANITY] RUN_LOCAL=False, FORCE_CACHE_ONLY=False, ALLOW_API_FETCH=True
+
+🚀 Running step_01_acquire_tmdb ...
+✅ Completed step_01_acquire_tmdb
+
+🚀 Running step_02_acquire_discogs ...
+✅ Completed step_02_acquire_discogs
+
+🚀 Running step_03_prepare_tmdb_input ...
+✅ Completed step_03_prepare_tmdb_input
+
+🚀 Running step_04_validate_alignment ...
+✅ Completed step_04_validate_alignment
+
+🚀 Running step_05_match_and_enrich ...
+✅ Completed step_05_match_and_enrich
+
+🎉 Pipeline complete.
+

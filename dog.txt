@@ -1,0 +1,89 @@
+.
+├── :USERPROFILE.ssh
+├── Makefile
+├── README.md
+├── check_env.sh
+├── check_paths.py
+├── config.json
+├── data
+│   ├── cache
+│   ├── intermediate
+│   │   ├── discogs_raw
+│   │   ├── integrity_summary.csv
+│   │   ├── schema_comparison_discogs.csv
+│   │   ├── schema_comparison_tmdb.csv
+│   │   ├── titles_to_process.json
+│   │   └── tmdb_raw
+│   ├── logs
+│   │   ├── step_01_acquire_tmdb.log
+│   │   ├── step_02_query_discogs.log
+│   │   ├── step_03_prepare_tmdb_input.log
+│   │   ├── step_04_validate_schema_alignment.log
+│   │   └── step_05_match_and_enrich.log
+│   ├── metrics
+│   │   ├── step01_acquire_tmdb_metrics.json
+│   │   ├── step02_query_discogs_metrics.json
+│   │   ├── step03_tmdb_discogs_metrics.json
+│   │   └── step04_schema_validation_metrics.json
+│   ├── processed
+│   ├── raw
+│   │   ├── discogs_raw
+│   │   └── tmdb_raw
+│   └── validation
+│       └── logs
+├── deploy_to_vm.sh
+├── logs
+├── pyproject.toml
+├── pytest.ini
+├── rebuild_venv.sh
+├── requirements_locked.txt
+├── requirements_stable.txt
+├── run_pipeline_safe.sh
+├── scripts
+│   ├── QA
+│   │   ├── QA_analyze_suggestions_clusters.py
+│   │   ├── QA_config_reconciler_numbers.py
+│   │   ├── QA_config_usage_audit.py
+│   │   ├── QA_run_all.py
+│   │   ├── QA_scan_magic_literals.py
+│   │   └── audit_reports
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── config.cpython-312.pyc
+│   │   ├── config_env.cpython-312.pyc
+│   │   └── utils_schema.cpython-312.pyc
+│   ├── config.py
+│   ├── config_env.py
+│   ├── orchestrate_pipeline.py
+│   ├── tests
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── test_env_validation.py
+│   │   ├── test_match_and_enrich.py
+│   │   ├── test_pipeline_success.py
+│   │   └── test_utils_package.py
+│   ├── utils
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── base_extractor.py
+│   │   ├── base_step.py
+│   │   ├── env.py
+│   │   ├── io_utils.py
+│   │   ├── logging.py
+│   │   ├── pipeline_helpers.py
+│   │   └── schema.py
+│   ├── utils_schema.py
+│   ├── verify_env.py
+│   ├── vm_quickops.sh
+│   └── wipe_pipeline_outputs.sh
+├── scripts_spark
+│   ├── __init__.py
+│   ├── spark_extract_discogs.py
+│   ├── spark_extract_tmdb.py
+│   ├── spark_match_and_enrich.py
+│   ├── spark_prepare_tmdb_input.py
+│   └── spark_validate_schema_alignment.py
+├── slides
+│   └── Step_7_Slide_Deck.pptx
+

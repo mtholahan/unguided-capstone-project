@@ -2,6 +2,7 @@ import subprocess
 import sys
 import os
 from pathlib import Path
+import pytest
 
 def test_env_validation_runs_successfully():
     """Runs verify_env.py and asserts environment variables are valid."""

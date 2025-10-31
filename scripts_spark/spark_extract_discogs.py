@@ -2,9 +2,12 @@ import os
 import json
 import time
 from pathlib import Path
-from scripts.base_step import BaseStep
+from scripts.utils.base_step import BaseStep
 from scripts.config_env import load_and_validate_env
-from scripts.utils import cached_request, RateLimiter, save_json, safe_filename
+from scripts.utils.pipeline_helpers import cached_request, RateLimiter, save_json, safe_filename
+from scripts.utils.env import load_env
+
+env = load_env()
 
 # ===============================================================
 # 🎯 Step 02 – Query Discogs API for Soundtrack Metadata
@@ -17,19 +20,29 @@ class Step02QueryDiscogs(BaseStep):
         self.spark = spark
 
         # ✅ Environment-aware directories
-        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
-        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+        from pathlib import Path
+
+        root_path = Path(env.get("ROOT") or env.get("root", ".")).resolve()
+
+        self.output_dir = root_path / "data" / "intermediate"
+        self.metrics_dir = root_path / "data" / "metrics"
+        self.raw_dir = self.output_dir / "discogs_raw"
+
+        # Ensure directory exists
+        self.raw_dir.mkdir(parents=True, exist_ok=True)
+
         self.raw_dir = self.output_dir / "discogs_raw"
         self.raw_dir.mkdir(parents=True, exist_ok=True)
 
         # ✅ API + rate limiting
         load_and_validate_env()
-        self.api_url = os.getenv("DISCOGS_API_URL", "https://api.discogs.com/database/search")
-        self.user_agent = os.getenv("DISCOGS_USER_AGENT", "unguided-capstone-bot/1.0")
-        self.key = os.getenv("DISCOGS_CONSUMER_KEY")
-        self.secret = os.getenv("DISCOGS_CONSUMER_SECRET")
+        self.api_url = env.get("DISCOGS_API_URL", "https://api.discogs.com/database/search")
+        self.user_agent = env.get("DISCOGS_USER_AGENT", f"UnguidedCapstone/1.0 +https://github.com/{os.getenv('USER','localuser')}")
+        self.key = env.get("DISCOGS_CONSUMER_KEY")
+        self.secret = env.get("DISCOGS_CONSUMER_SECRET")
         self.rate_limiter = RateLimiter(rate_per_sec=2)
         self.keywords = ["soundtrack", "score", "ost", "motion picture"]
+
 
     # ---------------------------------------------------------------
     def clean_title_for_query(self, title: str) -> str:
@@ -40,47 +53,51 @@ class Step02QueryDiscogs(BaseStep):
 
     # ---------------------------------------------------------------
     def fetch_discogs_release(self, title: str) -> bool:
-        """Query Discogs for a movie title and save results locally."""
         safe_title = safe_filename(title)
         output_file = self.raw_dir / f"{safe_title}.json"
         checkpoint_file = self.raw_dir / "_checkpoint.json"
 
+        # Skip if cached
         if output_file.exists():
-            self.logger.debug(f"⏭️ Skipping cached file {output_file.name}")
+            self.logger.debug(f"💾 Skipping cached {output_file.name}")
             return True
 
-        query = self.clean_title_for_query(title)
+        # --- Construct query ---
         params = {
             "q": title,
             "type": "release",
             "per_page": 5,
-            "key": self.key,
-            "secret": self.secret,
         }
 
-        resp = cached_request(self.api_url, params=params,
-                              headers={"User-Agent": self.user_agent},
-                              rate_limiter=self.rate_limiter)
+        # --- Flexible authentication ---
+        headers = {"User-Agent": self.user_agent}
+        if self.key and not self.secret:
+            # Personal token mode
+            headers["Authorization"] = f"Discogs token={self.key}"
+        elif self.key and self.secret:
+            # OAuth key/secret mode → must be query params
+            params["key"] = self.key
+            params["secret"] = self.secret
 
-        if resp.status_code != 200:
-            self.logger.warning(f"⚠️ Discogs fetch failed for '{title}' ({resp.status_code})")
+        # print("DEBUG URL:", self.api_url)
+        # print("DEBUG PARAMS:", params)
+        # print("DEBUG HEADERS:", headers)
+
+        data = cached_request(
+            self.api_url,
+            output_file,
+            params=params,
+            headers=headers,
+            rate_limiter=self.rate_limiter,
+        )
+
+        if not data:
+            self.logger.warning(f"⚠️ Discogs fetch failed for '{title}'")
             return False
 
-        data = resp.json()
-        if not data.get("results"):
-            self.logger.info(f"🚫 No results for '{title}'")
-            return False
-
-        filtered = [
-            r for r in data["results"]
-            if query.lower() in r.get("title", "").lower()
-            or any(k in r.get("title", "").lower() for k in self.keywords)
-        ]
-        data["filtered_results"] = filtered
         save_json(data, output_file)
-        self.logger.info(f"✅ Saved Discogs JSON for '{title}' ({len(filtered)} filtered hits)")
+        self.logger.info(f"✅ Saved Discogs JSON for '{title}'")
 
-        # --- Update checkpoint file
         try:
             completed = []
             if checkpoint_file.exists():
@@ -88,9 +105,10 @@ class Step02QueryDiscogs(BaseStep):
             completed.append(title)
             save_json(sorted(set(completed)), checkpoint_file)
         except Exception as e:
-            self.logger.warning(f"⚠️ Could not update checkpoint for '{title}': {e}")
+            self.logger.warning(f"⚠️ Checkpoint update failed for '{title}': {e}")
 
         return True
+
 
     # ---------------------------------------------------------------
     def run(self):
@@ -128,17 +146,30 @@ class Step02QueryDiscogs(BaseStep):
             if i % 25 == 0 or i == len(remaining):
                 self.logger.info(f"Progress: {i}/{len(remaining)} titles processed")
 
+        # --- Metrics ---
         duration = round(time.time() - start_time, 2)
+        total_titles = len(titles)
+        completed = success_count + len(skip_titles)
+
+        # Handle case when there are no titles to avoid division by zero
+        if total_titles > 0:
+            success_rate = round((completed / total_titles) * 100, 2)
+        else:
+            success_rate = 0.0
+
         metrics = {
             "mode": mode,
-            "titles_total": len(titles),
-            "titles_queried": success_count + len(skip_titles),
-            "success_rate": round((success_count + len(skip_titles)) / len(titles) * 100, 2),
+            "titles_total": total_titles,
+            "titles_queried": completed,
+            "success_rate": success_rate,
             "duration_sec": duration,
             "direction": "TMDB→Discogs",
         }
+
         self.write_metrics(metrics, name="step02_query_discogs_metrics")
-        self.logger.info(f"✅ Completed Step 02 ({mode}) | {metrics['success_rate']}% success in {duration:.2f}s")
+        self.logger.info(
+            f"✅ Completed Step 02 ({mode}) | {metrics['success_rate']}% success in {duration:.2f}s"
+        )
 
 
 # ===============================================================

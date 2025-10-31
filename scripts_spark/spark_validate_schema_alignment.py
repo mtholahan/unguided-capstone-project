@@ -7,18 +7,19 @@ import os
 import time
 import pandas as pd
 from pathlib import Path
-from scripts.base_step import BaseStep
+from scripts.utils.base_step import BaseStep
 from scripts.config_env import load_and_validate_env
 from scripts.utils_schema import (
     setup_file_logger,
-    ensure_dirs,
     load_tmdb_fullscan,
     load_discogs_fullscan,
     infer_schema,
     build_integrity_summary,
 )
-from scripts.config import TMDB_RAW_DIR, DISCOGS_RAW_DIR
+from scripts.utils.env import load_env
+from scripts.utils.io_utils import ensure_dirs
 
+env = load_env()
 
 # ===============================================================
 # 🎯 Core Class
@@ -37,20 +38,30 @@ class Step04ValidateSchemaAlignment(BaseStep):
         self.spark = spark
 
         # ✅ Environment-aware directories
-        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
-        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
-        self.validation_dir = Path(os.getenv("PIPELINE_VALIDATION_DIR", "data/validation")).resolve()
+        root_path = Path(env.get("ROOT") or env.get("root", ".")).resolve()
+
+        self.output_dir = root_path / "data" / "intermediate"
+        self.metrics_dir = root_path / "data" / "metrics"
+        self.validation_dir = root_path / "data" / "validation"
         self.validation_log_dir = self.validation_dir / "logs"
-        ensure_dirs([self.output_dir, self.metrics_dir, self.validation_dir, self.validation_log_dir])
+
+        # Ensure output dirs exist
+        ensure_dirs([
+            self.output_dir,
+            self.metrics_dir,
+            self.validation_dir,
+            self.validation_log_dir,
+        ])
 
         # ✅ Input sources (env override or fallback to defaults)
-        self.tmdb_raw_dir = Path(tmdb_raw_dir) if tmdb_raw_dir else Path(os.getenv("TMDB_RAW_DIR", TMDB_RAW_DIR))
-        self.discogs_raw_dir = Path(discogs_raw_dir) if discogs_raw_dir else Path(os.getenv("DISCOGS_RAW_DIR", DISCOGS_RAW_DIR))
+        self.tmdb_raw_dir = Path(env.get("TMDB_RAW_DIR", root_path / "data" / "raw" / "tmdb")).resolve()
+        self.discogs_raw_dir = Path(env.get("DISCOGS_RAW_DIR", root_path / "data" / "raw" / "discogs")).resolve()
+
         self.candidates_file = (
-            Path(candidates_file)
-            if candidates_file
+            Path(env.get("CANDIDATES_FILE", "")) if env.get("CANDIDATES_FILE")
             else self.output_dir / "tmdb_discogs_candidates_extended.csv"
         )
+
 
         # ✅ Load .env
         load_and_validate_env()

@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import pytest
 from scripts_spark.spark_match_and_enrich import Step05MatchAndEnrichV2
 
 def test_match_and_enrich_runs_successfully(monkeypatch, tmp_path):

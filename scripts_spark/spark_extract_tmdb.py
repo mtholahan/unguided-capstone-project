@@ -7,9 +7,13 @@ import os
 import json
 import time
 from pathlib import Path
-from scripts.base_step import BaseStep
+from scripts.utils.base_step import BaseStep
 from scripts.config_env import load_and_validate_env
-from scripts.utils import cached_request, RateLimiter, save_json, safe_filename
+from scripts.utils.pipeline_helpers import RateLimiter, save_json
+from scripts.utils.env import load_env
+from scripts.utils.io_utils import safe_filename, write_json_cache, read_json_cache
+
+env = load_env()
 
 # ===============================================================
 # 🎯 Step 01 – Acquire TMDB Metadata
@@ -22,14 +26,20 @@ class Step01AcquireTMDB(BaseStep):
         self.spark = spark
 
         # ✅ Environment-aware directories
-        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
-        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+        root_path = Path(env.get("ROOT") or env.get("root", ".")).resolve()
+
+        self.output_dir = root_path / "data" / "intermediate"
+        self.metrics_dir = root_path / "data" / "metrics"
         self.raw_dir = self.output_dir / "tmdb_raw"
+
+        # Ensure the raw dir exists (idempotent)
         self.raw_dir.mkdir(parents=True, exist_ok=True)
 
-        # ✅ Environment variables
+
+        # ✅ Environment variabless
         load_and_validate_env()
-        self.tmdb_api_key = os.getenv("TMDB_API_KEY")
+        self.tmdb_api_key = env.get("TMDB_API_KEY")
+
         if not self.tmdb_api_key:
             raise EnvironmentError("❌ TMDB_API_KEY missing in environment.")
 
@@ -49,30 +59,39 @@ class Step01AcquireTMDB(BaseStep):
         return titles
 
     # ---------------------------------------------------------------
+
     def fetch_movie(self, title: str) -> bool:
-        """Fetch metadata for a single title and save results locally."""
+        """Fetch metadata for a single title and save results locally, using JSON cache."""
         safe_title = safe_filename(title)
         output_file = self.raw_dir / f"{safe_title}.json"
         checkpoint_file = self.raw_dir / "_checkpoint.json"
 
-        # Skip if cached
-        if output_file.exists():
-            self.logger.debug(f"⏭️ Skipping cached {output_file.name}")
+        # --- Check cache first
+        cached = read_json_cache(output_file)
+        if cached:
+            self.logger.debug(f"🌀 Using cached TMDB JSON for {output_file.name}")
             return True
 
         url = "https://api.themoviedb.org/3/search/movie"
         params = {"query": title, "api_key": self.tmdb_api_key}
 
-        resp = cached_request(url, params=params, rate_limiter=self.rate_limiter)
-        if resp.status_code != 200:
-            self.logger.warning(f"⚠️ TMDB fetch failed for '{title}' ({resp.status_code})")
+        # --- Apply rate limiting before API call
+        self.rate_limiter.wait_for_slot()
+
+        try:
+            import requests
+            resp = requests.get(url, params=params, timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception as e:
+            self.logger.warning(f"⚠️ TMDB fetch failed for '{title}': {e}")
             return False
 
-        data = resp.json()
-        save_json(data, output_file)
-        self.logger.info(f"✅ Saved TMDB JSON for '{title}'")
+        # --- Write fresh response to cache
+        write_json_cache(data, output_file)
+        self.logger.info(f"✅ Cached TMDB JSON for '{title}' → {output_file.name}")
 
-        # --- Update checkpoint
+        # --- Update checkpoint safely
         try:
             completed = []
             if checkpoint_file.exists():
@@ -83,6 +102,7 @@ class Step01AcquireTMDB(BaseStep):
             self.logger.warning(f"⚠️ Checkpoint update failed for '{title}': {e}")
 
         return True
+
 
     # ---------------------------------------------------------------
     def run(self):
@@ -119,10 +139,14 @@ class Step01AcquireTMDB(BaseStep):
 
         # --- Metrics ---
         duration = round(time.time() - start_time, 2)
+        total_titles = len(titles)
+        completed = success_count + len(skip_titles)
+        success_rate = round((completed / total_titles * 100), 2) if total_titles > 0 else 0.0
+
         metrics = {
-            "titles_total": len(titles),
-            "titles_downloaded": success_count + len(skip_titles),
-            "success_rate": round((success_count + len(skip_titles)) / len(titles) * 100, 2),
+            "titles_total": total_titles,
+            "titles_downloaded": completed,
+            "success_rate": success_rate,
             "duration_sec": duration,
             "direction": "TMDB→Discogs",
         }

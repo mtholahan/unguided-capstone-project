@@ -6,10 +6,14 @@ Unguided Capstone Project | Environment-aware, unified baseline
 import os, json, re, time, concurrent.futures
 from pathlib import Path
 import pandas as pd
-from scripts.base_step import BaseStep
-from scripts.utils import normalize_for_matching_extended, safe_filename
+from scripts.utils.base_step import BaseStep
+from scripts.utils.io_utils import normalize_for_matching_extended, safe_filename
 from scripts.config_env import load_and_validate_env
 from scripts.config import TMDB_RAW_DIR, DISCOGS_RAW_DIR, DEFAULT_MAX_WORKERS
+
+from scripts.utils.env import load_env
+
+env = load_env()
 
 
 # ===============================================================
@@ -47,19 +51,25 @@ class Step03PrepareTMDBInput(BaseStep):
         self.spark = spark
 
         # ✅ Environment-aware directories
-        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
-        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+        root_path = Path(env.get("ROOT") or env.get("root", ".")).resolve()
+        self.output_dir = root_path / "data" / "intermediate"
+        self.metrics_dir = root_path / "data" / "metrics"
+        self.cache_dir = root_path / "data" / "cache"
+
+        # Ensure output dirs exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.metrics_dir.mkdir(parents=True, exist_ok=True)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+
 
         # ✅ Raw input directories (allow env override)
-        self.tmdb_raw_dir = Path(os.getenv("TMDB_RAW_DIR", TMDB_RAW_DIR)).resolve()
-        self.discogs_raw_dir = Path(os.getenv("DISCOGS_RAW_DIR", DISCOGS_RAW_DIR)).resolve()
+        self.tmdb_raw_dir = (root_path / "data" / "raw" / "tmdb").resolve()
+        self.discogs_raw_dir = (root_path / "data" / "raw" / "discogs").resolve()
+
 
         # ✅ Output targets
         self.output_csv = self.output_dir / "tmdb_discogs_candidates_extended.csv"
         self.output_parquet = self.output_dir / "tmdb_discogs_candidates_extended.parquet"
-        self.max_workers = int(os.getenv("MAX_WORKERS", DEFAULT_MAX_WORKERS))
+        self.max_workers = int(env.get("MAX_WORKERS", DEFAULT_MAX_WORKERS))
 
         self.logger.info("Initialized Step 03 (TMDB → Discogs Input)")
 

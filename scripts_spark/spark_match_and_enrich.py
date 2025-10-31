@@ -10,10 +10,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 from rapidfuzz import fuzz
-from scripts.base_step import BaseStep
+from scripts.utils.base_step import BaseStep
 from scripts.config_env import load_and_validate_env
-from scripts.utils import normalize_for_matching_extended as normalize_title
+from scripts.utils.io_utils import normalize_for_matching_extended as normalize_title
+from scripts.utils.env import load_env
 
+env = load_env()
 
 # ===============================================================
 # 🎯 Core Class
@@ -26,8 +28,10 @@ class Step05MatchAndEnrichV2(BaseStep):
         self.spark = spark
 
         # ✅ Environment-aware directories
-        self.output_dir = Path(os.getenv("PIPELINE_OUTPUT_DIR", "data/intermediate")).resolve()
-        self.metrics_dir = Path(os.getenv("PIPELINE_METRICS_DIR", "data/metrics")).resolve()
+        root_path = Path(env.get("ROOT") or env.get("root", ".")).resolve()
+        self.output_dir = root_path / "data" / "intermediate"
+        self.metrics_dir = root_path / "data" / "metrics"
+
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
 
@@ -84,7 +88,10 @@ class Step05MatchAndEnrichV2(BaseStep):
         df["tmdb_title_norm"] = df["tmdb_title_norm"].fillna("").map(normalize_title)
         df["discogs_title_norm"] = df["discogs_title_norm"].fillna("").map(normalize_title)
         for col in ["tmdb_year", "discogs_year"]:
-            df[col] = pd.to_numeric(df.get(col), errors="coerce")
+            for col in ["tmdb_year", "discogs_year"]:
+                if col in df.columns:
+                    df[col] = pd.to_numeric(df[col], errors='coerce')
+
 
         # --- Compute matches ---
         matches = []

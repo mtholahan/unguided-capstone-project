@@ -12,7 +12,7 @@
 
    ```
    bash rebuild_venv.sh --export
-   ssh azureuser@<VM_IP> "bash ~/rebuild_venv.sh --force"
+   ssh azureuser@172.190.228.102 "bash ~/rebuild_venv.sh --force"
    ```
 
 3. **Validate**
@@ -99,14 +99,18 @@ Now renames never break execution again.
 
 On ASUS:
 
+```bash
 tar czf deploy_payload.tgz .env requirements_stable.txt run_pipeline_safe.sh
 scp -i ~/.ssh/ungcapvm01-key.pem deploy_payload.tgz azureuser@172.190.228.102:/home/azureuser
+```
 
 
 On VM:
 
+```bash
 tar xzf deploy_payload.tgz -C ~/unguided-capstone-project
 bash ~/unguided-capstone-project/run_pipeline_safe.sh
+```
 
 
 That’s your atomic sync — no guessing, no partial transfers.
@@ -115,7 +119,9 @@ That’s your atomic sync — no guessing, no partial transfers.
 
 At the top of every pipeline run, echo environment info into the log:
 
+```bash
 echo "RUN_CONTEXT=$(hostname) | USER=$USER | PWD=$(pwd)" | tee -a "$LOGFILE"
+```
 
 
 You’ll always know where and under which env a run executed.
@@ -124,7 +130,9 @@ You’ll always know where and under which env a run executed.
 
 Every structural change (path, env var, dependency) must come with:
 
+```bash
 git commit -am "Update: sync pipeline_main→scripts/main.py, freeze env"
+```
 
 
 That ensures the next deploy pulls all the fixes you already made.
@@ -146,20 +154,22 @@ Debugging drops from hours to minutes.
 Maintain a .env.template file in Git that defines every required variable (with placeholders and comments).
 Example:
 
+```bash
 # === Core Paths ===
 PIPELINE_ROOT=/home/azureuser/unguided-capstone-project
 PIPELINE_ENTRYPOINT=scripts/main.py
 PIPELINE_OUTPUT_DIR=${PIPELINE_ROOT}/data/intermediate
 PIPELINE_LOG_DIR=${PIPELINE_ROOT}/logs
-
 # === Spark ===
 SPARK_HOME=/opt/spark
 PYSPARK_PYTHON=${PIPELINE_ROOT}/pyspark_venv311/bin/python
-
+```
 
 Before each deploy, validate it with:
 
+```bash
 dotenv-linter run .env
+```
 
 
 (or a small Python validator that checks for missing keys)
@@ -168,6 +178,7 @@ dotenv-linter run .env
 
 Create a lightweight diagnostic tool, e.g. check_env.sh:
 
+```bash
 #!/bin/bash
 echo "Verifying Capstone environment..."
 python3 --version
@@ -175,6 +186,7 @@ echo "SPARK_HOME=$SPARK_HOME"
 command -v spark-submit || echo "spark-submit not found"
 ls -ld data logs || echo "data or logs missing"
 pip list | grep -E "pyspark|rapidfuzz"
+```
 
 
 Run it automatically at the start of run_pipeline_safe.sh to catch misconfigurations before Spark even starts.
@@ -183,7 +195,9 @@ Run it automatically at the start of run_pipeline_safe.sh to catch misconfigurat
 
 Include version headers in each log:
 
+```bash
 git describe --always --tags >> "$LOGFILE" 2>&1
+```
 
 
 This lets you trace which commit produced any result.
@@ -193,9 +207,11 @@ This lets you trace which commit produced any result.
 
 In requirements_stable.txt, freeze exact versions:
 
+```bash
 pyspark==3.5.3
 rapidfuzz==3.9.2
 python-dotenv==1.0.1
+```
 
 
 That makes deployments reproducible, eliminating “works-on-my-machine.”
@@ -219,9 +235,11 @@ Keep scripts/, scripts_spark/, and data/ well-scoped (no cross-imports).
 
 Add a Makefile or simple CLI:
 
+```makefile
 make deploy
 make run
 make clean
+```
 
 
 so anyone can reproduce your workflow with two commands.
@@ -230,28 +248,31 @@ so anyone can reproduce your workflow with two commands.
 
 Automatically compress and timestamp logs older than 7 days to avoid clutter:
 
+```bash
 find logs -type f -mtime +7 -exec gzip {} \;
+```
 
 13️⃣ Documentation snapshot
 
 Add a README_VM_SETUP.md with:
 
-environment variables
+- environment variables
 
-install commands
+- install commands
 
-deployment sequence
-so future you (or teammates) never re-learn this by debugging.
+- deployment sequence
+  so future you (or teammates) never re-learn this by debugging.
 
 ✅ Net result
 
 Implementing these 13 as standard practice means:
 
-Every deploy is predictable
+- Every deploy is predictable
 
-Debugging is deterministic
+- Debugging is deterministic
 
-The system remains self-documenting
+- The system remains self-documenting
+
 
 ## 🧩 **Conventional Commit Prefixes (Cheat Sheet)**
 
