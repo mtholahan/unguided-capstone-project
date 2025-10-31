@@ -1,6 +1,7 @@
 # =========================================================
-# 🧩  UNGUIDED CAPSTONE PIPELINE — CLEAN .GITIGNORE (v4.1)
-# Updated: 2025-10-17
+# 🧩  UNGUIDED CAPSTONE PROJECT — CLEAN .GITIGNORE (v5.0)
+# Platform: Ubuntu / WSL2 / Databricks
+# Updated: 2025-10-24
 # =========================================================
 
 # --- OS / Editor ---
@@ -30,6 +31,7 @@ Scripts/
 bin/
 Lib/
 Include/
+pyspark_venv*/
 
 # --- Jupyter & temp docs ---
 .ipynb_checkpoints/
@@ -50,24 +52,30 @@ tmp*/
 cache*/
 __temp__/
 __workspace__/
+**/.cache/
 
-# --- Data (keep intentional sample data only) ---
-data/
+# --- Data (exclude raw/intermediate; keep critical seed files) ---
+data/*
 !data/README.md
 !data/sample/
 !data/sample/**
+!data/movie_titles_200.txt
+
+
+# --- Logs & metrics (retain structured logs) ---
+!logs/
+!logs/**
+!metrics/
+!metrics/**
+data/metrics/*
+!data/metrics/.gitkeep
+
 
 # --- Evidence & mentor deliverables ---
 !evidence/
 !evidence/**
 evidence/.ipynb_checkpoints/
 evidence/~$*
-
-# --- Logs & metrics (retain these) ---
-!logs/
-!logs/**
-!metrics/
-!metrics/**
 
 # --- Slides & notebooks ---
 slides/~$*
@@ -85,7 +93,7 @@ notebooks/*_output.ipynb
 *Secrets*.json
 credentials.json
 secrets/
-# keep explicit safe config
+# keep explicit safe configs
 !config.json
 
 # --- Azure / Databricks service dumps ---
@@ -105,25 +113,35 @@ pytest_cache/
 archive/
 !archive/README.md
 
-# --- Always include code & build configs ---
+# --- Always include code & configs ---
 !scripts/
 !scripts/**/*.py
 !scripts/**/*.ps1
+!scripts_spark/
+!scripts_spark/**/*.py
 !pyproject.toml
 !requirements*.txt
 
-# --- Project documentation ---
+# --- Documentation ---
 !README.md
 !docs/
 !docs/**/*.md
 !docs/**/*.pdf
 
-# --- Never track local environments ---
-.venv/
-scripts/.venv/
-scripts/.venv/**
+# --- Local environment / tool artifacts ---
+*.log
+*.bak
+*.tmp
+.envrc
+.replit
+.editorconfig.bak
+.gitattributes.bak
+logs/
+*.log
+*.Zone.Identifier
 
-
-# --- local cache ---
-# Ignore any cache folders
-**/.cache/
+# Ignore metrics and local outputs
+data/metrics/*.json
+data/metrics/*.csv
+data/intermediate/
+logs/
