@@ -1,50 +1,56 @@
-"""
-config_env.py
--------------------------------------------------------
-Loads and validates environment variables from `.env`,
-and injects Azure credentials into Spark configuration.
--------------------------------------------------------
-"""
-
 import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from pyspark.sql import SparkSession
 
-
-REQUIRED_VARS = [
-    "AZURE_STORAGE_ACCOUNT",
-    "AZURE_STORAGE_KEY",
-    "AZURE_STORAGE_CONTAINER",
-]
-
-
 def load_and_validate_env():
-    """Load .env and verify required keys."""
-    load_dotenv()  # Reads from project root
-    missing = [k for k in REQUIRED_VARS if not os.getenv(k)]
-    if missing:
-        raise EnvironmentError(f"Missing required environment vars: {missing}")
-    return {k: os.getenv(k) for k in REQUIRED_VARS}
+    env = dotenv_values("/home/mark/Projects/unguided-capstone-project/.env")
+    return env
 
-
-def configure_spark_from_env(spark: SparkSession):
-    """Inject Azure Storage credentials into Spark session."""
+def build_spark_session():
     env = load_and_validate_env()
-    account = env["AZURE_STORAGE_ACCOUNT"]
-    key = env["AZURE_STORAGE_KEY"]
-    spark.conf.set(f"fs.azure.account.key.{account}.dfs.core.windows.net", key)
-    print(f"✅ Spark configured for Azure account: {account}")
+    account = env.get("AZURE_STORAGE_ACCOUNT_NAME")
+    PYSPARK_PYTHON = "/home/mark/pyspark_venv311/bin/python"
+
+    spark_builder = (
+        SparkSession.builder
+        .appName("UnguidedCapstone_Pipeline")
+        .config("spark.sql.shuffle.partitions", "4")
+        .config("spark.pyspark.python", PYSPARK_PYTHON)
+        .config("spark.pyspark.driver.python", PYSPARK_PYTHON)
+        .config("spark.executorEnv.PYSPARK_PYTHON", PYSPARK_PYTHON)
+        .config("spark.executorEnv.PYSPARK_DRIVER_PYTHON", PYSPARK_PYTHON)
+        .config("fs.azure.account.auth.type", "OAuth")
+        .config("fs.azure.account.oauth.provider.type",
+                "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
+        .config("fs.azure.account.oauth2.client.id", env["AZURE_APP_ID"])
+        .config("fs.azure.account.oauth2.client.secret", env["AZURE_APP_SECRET"])
+        .config("fs.azure.account.oauth2.client.endpoint",
+                f"https://login.microsoftonline.com/{env['AZURE_TENANT_ID']}/oauth2/token")
+    )
 
 
-def show_env_summary():
-    """Simple summary (safe for console logs)."""
-    print("🔧 Active environment configuration:")
-    for k, v in load_and_validate_env().items():
-        masked = v[:4] + "..." if v else "None"
-        print(f"  {k} = {masked}")
+    # --- Primary: OAuth (Service Principal) ---
+    try:
+        spark_builder = (
+            spark_builder
+            .config(f"spark.hadoop.fs.azure.account.auth.type.{account}.dfs.core.windows.net", "OAuth")
+            .config(f"spark.hadoop.fs.azure.account.oauth.provider.type.{account}.dfs.core.windows.net",
+                    "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
+            .config(f"spark.hadoop.fs.azure.account.oauth2.client.id.{account}.dfs.core.windows.net",
+                    env["AZURE_APP_ID"])
+            .config(f"spark.hadoop.fs.azure.account.oauth2.client.secret.{account}.dfs.core.windows.net",
+                    env["AZURE_APP_SECRET"])
+            .config(f"spark.hadoop.fs.azure.account.oauth2.client.endpoint.{account}.dfs.core.windows.net",
+                    f"https://login.microsoftonline.com/{env['AZURE_TENANT_ID']}/oauth2/token")
+        )
+    except KeyError:
+        # --- Fallback: Shared Key (if OAuth unavailable) ---
+        spark_builder = (
+            spark_builder
+            .config(f"spark.hadoop.fs.azure.account.auth.type.{account}.dfs.core.windows.net", "SharedKey")
+            .config(f"spark.hadoop.fs.azure.account.key.{account}.dfs.core.windows.net",
+                    env["AZURE_STORAGE_ACCOUNT_KEY"])
+        )
 
-
-if __name__ == "__main__":
-    # Manual smoke test
-    load_and_validate_env()
-    show_env_summary()
+    spark = spark_builder.getOrCreate()
+    return spark
