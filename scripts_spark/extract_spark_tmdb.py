@@ -35,7 +35,7 @@ class ExtractSparkTMDB(BaseStep):
             try:
                 configure_spark_from_env(spark)
                 env = load_and_validate_env()
-                account = env["AZURE_STORAGE_ACCOUNT"]
+                account = env["AZURE_STORAGE_ACCOUNT_NAME"]
                 self.container_uri = (
                     f"abfss://raw@{account}.dfs.core.windows.net/raw/tmdb/"
                 )
@@ -148,7 +148,21 @@ class ExtractSparkTMDB(BaseStep):
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
+    from pyspark import SparkConf
     local_mode = os.getenv("LOCAL_MODE", "false").lower() == "true"
-    spark = SparkSession.builder.appName("ExtractSparkTMDB").getOrCreate()
+
+    # Pull from env if available, else default for local testing
+    pyspark_python = os.getenv("PYSPARK_PYTHON", "/home/mark/pyspark_venv311/bin/python")
+    pyspark_driver = os.getenv("PYSPARK_DRIVER_PYTHON", pyspark_python)
+
+    conf = (
+        SparkConf()
+        .set("spark.pyspark.python", pyspark_python)
+        .set("spark.pyspark.driver.python", pyspark_driver)
+    )
+
+    spark = SparkSession.builder.config(conf=conf).appName("ExtractSparkTMDB").getOrCreate()
+    print(f"✅ Spark using interpreter: {pyspark_python}")
+
     ExtractSparkTMDB(spark, local_mode=local_mode).run()
     spark.stop()

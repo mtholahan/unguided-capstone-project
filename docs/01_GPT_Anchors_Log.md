@@ -18,6 +18,98 @@ Dependencies: [keys/env/tools/people]
 
 
 
+
+
+14:22 10/31/2025
+
+**Resume from anchor:** `Capstone_Step8_Why_Am_I_Doing_This`
+
+**Context:** We’re deep in Spark–Azure integration on the unguided capstone project. The pipeline runs, virtual env is stable, and Spark 3.5.6 executes. However, Spark fails to authenticate/write to ADLS via OAuth because the Hadoop runtime isn’t being detected (Spark built without embedded Hadoop). We’ve confirmed all correct JARs and configs are in place.
+
+**Current milestone:**
+
+- Spark builder refactored and simplified (`build_spark_session()` now clean and validated).
+- Environment variables verified and `.env` loader working.
+- OAuth credentials confirmed valid.
+- ADLS write still failing due to missing Hadoop runtime recognition.
+
+**Next action:**
+ → Add and export the Hadoop classpath so Spark detects ABFS OAuth support:
+
+```
+export SPARK_DIST_CLASSPATH="/home/mark/spark/jars/*"
+```
+
+Then re-run the test script (`main.py`) to confirm Spark prints “Using Hadoop 3.3.4” and successfully writes to `abfss://raw@ungcaptor01.dfs.core.windows.net/test_write_check`.
+
+**Dependencies:**
+
+- Env vars (`AZURE_APP_ID`, `AZURE_APP_SECRET`, `AZURE_TENANT_ID`, `AZURE_STORAGE_ACCOUNT_NAME`, `AZURE_STORAGE_ACCOUNT_KEY`)
+- Python venv: `/home/mark/pyspark_venv311`
+- JARs in `/home/mark/spark/jars` (hadoop-azure, azure-storage, azure-data-lake-sdk)
+- `$SPARK_HOME` correctly pointing to `/home/mark/spark`
+
+
+
+11:48 10/31/2025
+
+**Resume from anchor:** [Spark_Life_Sucking_Horror]
+
+**Context:**
+ Spark on WSL Ubuntu authenticates successfully with Azure ADLS and writes test data to the `raw/` container.
+ However, executor JVMs continue to fail with `Cannot run program "./pyspark_venv311/bin/python"`, indicating Spark is spawning workers with a relative Python path despite absolute paths configured.
+ We are one step away from resolving this via environment isolation and Spark configuration validation.
+
+**Current milestone:**
+
+- ✅ Azure storage connectivity verified (`test_write_check` written successfully)
+- ✅ Spark driver authenticates with ADLS and runs
+- ❌ Executors misconfigured with relative Python path
+- ❌ `$SPARK_HOME` and Spark binary alignment pending verification
+
+**Next action:**
+ Run the diagnostic and isolation sequence (Steps 1–3):
+
+1. Verify Spark binary alignment:
+
+   ```
+   echo $SPARK_HOME
+   which spark-submit
+   ls -l $SPARK_HOME/conf
+   ```
+
+2. Create `/home/mark/my_spark_conf/spark-env.sh` with absolute interpreter paths.
+
+3. Execute the diagnostic test block (the “conf_probe” command) to confirm Spark picks up the correct Python executable for executors.
+
+**Dependencies:**
+
+- 🧠 You (mark) for local execution in WSL
+- 🧰 Tools: Spark 3.5.6, Ubuntu WSL2, Python venv at `/home/mark/pyspark_venv311`
+- 🔑 Environment variables: `$SPARK_HOME`, `$SPARK_CONF_DIR`
+- 🪣 Azure ADLS container: `ungcaptor01/raw` (for write verification)
+
+
+
+**03:05 10/31/2025**
+
+Resume from anchor: Spark_ADLS_Auth_Fix
+Context: Spark 3.5.6 environment now stable; gateway and Hadoop classpath fully resolved. 
+TMDB extract script executes end-to-end via spark-submit but fails on ADLS write due to missing authentication. 
+Next step is to enable secure ADLS access using environment-based credentials (Option B). 
+
+Current milestone: ✅ Spark runtime verified (PySpark + Java + Hadoop-Azure jars); write path confirmed valid. 
+
+Next action: Inject `AZURE_STORAGE_ACCOUNT_NAME` and `AZURE_STORAGE_ACCOUNT_KEY` into environment and modify `SparkSession.builder` config to use these for ADLS access. 
+
+Dependencies: Active venv (`pyspark_venv311`), valid ADLS account/key pair, Spark 3.5.6 binary in `~/spark`, write_path target in `config_env`.
+
+
+
+
+
+
+
 **19:50 10/30/2025**
 
 **Resume from anchor:** Unguided_Capstone_Step_08_Knee_Deep
