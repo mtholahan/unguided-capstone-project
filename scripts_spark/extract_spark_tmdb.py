@@ -3,11 +3,11 @@ extract_spark_tmdb.py
 Step 01 (PySpark Refactor): Acquire TMDB Metadata
 Unguided Capstone Project – Step 8 (Deploy for Testing)
 
-Refactored to:
-  • Support LOCAL_MODE toggle for offline testing
-  • Use .env-based Azure configuration (via config_env.py)
-  • Structured logging & metrics
-  • Write Parquet outputs for consistency
+Databricks refactor:
+  • Uses Databricks Secrets Scope (`markscope`) for credentials
+  • Handles LOCAL_MODE for offline testing
+  • Writes results to ABFSS (Azure) or DBFS (Databricks)
+  • Structured logging, metrics, and Spark-safe error handling
 """
 
 import os, re, json, time, requests
@@ -19,7 +19,6 @@ from pyspark.sql.functions import lit
 from scripts.base_step import BaseStep
 from scripts.config import USE_GOLDEN_LIST, GOLDEN_TITLES_TEST
 from scripts.utils import safe_filename
-from scripts.config_env import configure_spark_from_env, load_and_validate_env
 
 
 class ExtractSparkTMDB(BaseStep):
@@ -29,33 +28,27 @@ class ExtractSparkTMDB(BaseStep):
         super().__init__(name="step_01_extract_spark_tmdb")
         self.spark = spark
         self.local_mode = local_mode
-
-        # Load env and configure Spark (only if not local mock)
-        if not self.local_mode:
-            try:
-                configure_spark_from_env(spark)
-                env = load_and_validate_env()
-                account = env["AZURE_STORAGE_ACCOUNT_NAME"]
-                self.container_uri = (
-                    f"abfss://raw@{account}.dfs.core.windows.net/raw/tmdb/"
-                )
-                self.logger.info(f"✅ Configured Spark for Azure: {account}")
-            except Exception as e:
-                self.logger.warning(f"⚠️ Azure config failed, falling back to local: {e}")
-                self.local_mode = True
-
-        if self.local_mode:
-            self.container_uri = "data/mock/tmdb/"
-            os.makedirs(self.container_uri, exist_ok=True)
-            self.logger.info(f"🧩 Running in LOCAL_MODE → writing to {self.container_uri}")
-
-        self.tmdb_api_key = None
         self.rate_limit = 3  # ~3 requests/sec
-        self.logger.info("🎬 Initialized ExtractSparkTMDB")
+        self.tmdb_api_key = None
+
+        # Try to configure Azure ABFS output
+        try:
+            if not self.local_mode:
+                self.container_uri = "abfss://raw@ungcaptor01.dfs.core.windows.net/raw/tmdb/"
+                self.logger.info("✅ Configured Spark for Azure ABFS output.")
+            else:
+                raise ValueError("Forced local mode.")
+        except Exception as e:
+            self.logger.warning(f"⚠️ Falling back to LOCAL_MODE → {e}")
+            self.local_mode = True
+            self.container_uri = "dbfs:/tmp/tmdb_output/"
+            os.makedirs("/dbfs/tmp/tmdb_output/", exist_ok=True)
+
+        self.logger.info(f"🧩 Running mode: {'LOCAL' if self.local_mode else 'AZURE'}")
 
     # ------------------------------------------------------------------
     def _get_api_key(self):
-        """Retrieve TMDB API key from Databricks secret scope or .env."""
+        """Retrieve TMDB API key from Databricks Secrets Scope."""
         if self.tmdb_api_key:
             return self.tmdb_api_key
 
@@ -63,12 +56,12 @@ class ExtractSparkTMDB(BaseStep):
             from pyspark.dbutils import DBUtils
             dbutils = DBUtils(self.spark)
             self.tmdb_api_key = dbutils.secrets.get("markscope", "tmdb-api-key")
-            self.logger.info("🔐 Retrieved TMDB API key from Databricks secret scope.")
-        except Exception:
-            self.tmdb_api_key = os.getenv("TMDB_API_KEY")
-            if not self.tmdb_api_key:
-                self.logger.warning("⚠️ Missing TMDB_API_KEY — using dummy for testing.")
-                self.tmdb_api_key = "DUMMY_KEY_FOR_LOCAL_TESTS"
+            assert self.tmdb_api_key, "TMDB API key is empty or missing"
+            self.logger.info("🔐 Retrieved TMDB API key from Databricks secrets.")
+        except Exception as e:
+            self.logger.warning(f"⚠️ Could not read from Databricks secrets → {e}")
+            self.tmdb_api_key = os.getenv("TMDB_API_KEY", "DUMMY_KEY_FOR_LOCAL_TESTS")
+            self.logger.info("Using fallback TMDB_API_KEY from environment.")
         return self.tmdb_api_key
 
     # ------------------------------------------------------------------
@@ -76,19 +69,18 @@ class ExtractSparkTMDB(BaseStep):
         """Perform TMDB API request for one title."""
         url = "https://api.themoviedb.org/3/search/movie"
         params = {"query": title, "api_key": self._get_api_key()}
+
         try:
             resp = requests.get(url, params=params, timeout=10)
             if resp.status_code == 200:
                 data = resp.json()
                 if data.get("results"):
-                    self.logger.debug(f"✅ TMDB data for '{title}'")
+                    self.logger.debug(f"✅ TMDB data fetched for '{title}'")
                     return data
-                else:
-                    self.logger.info(f"⚠️ No results for '{title}'")
-                    return None
-            else:
-                self.logger.warning(f"⚠️ TMDB fetch failed for '{title}' ({resp.status_code})")
+                self.logger.info(f"⚠️ No results for '{title}'")
                 return None
+            self.logger.warning(f"⚠️ TMDB fetch failed for '{title}' ({resp.status_code})")
+            return None
         except Exception as e:
             self.logger.error(f"❌ Exception fetching '{title}': {e}")
             return {"results": [{"title": title, "note": "dummy data"}]}
@@ -138,7 +130,7 @@ class ExtractSparkTMDB(BaseStep):
                 "duration_sec": round(time.time() - start_time, 2),
                 "mode": mode,
                 "local_mode": self.local_mode,
-                "branch": "step8-dev",
+                "branch": "step8-dbx",
             },
             name="extract_spark_tmdb_metrics",
         )
@@ -147,22 +139,8 @@ class ExtractSparkTMDB(BaseStep):
 
 
 # ----------------------------------------------------------------------
+# Databricks entrypoint
 if __name__ == "__main__":
-    from pyspark import SparkConf
-    local_mode = os.getenv("LOCAL_MODE", "false").lower() == "true"
-
-    # Pull from env if available, else default for local testing
-    pyspark_python = os.getenv("PYSPARK_PYTHON", "/home/mark/pyspark_venv311/bin/python")
-    pyspark_driver = os.getenv("PYSPARK_DRIVER_PYTHON", pyspark_python)
-
-    conf = (
-        SparkConf()
-        .set("spark.pyspark.python", pyspark_python)
-        .set("spark.pyspark.driver.python", pyspark_driver)
-    )
-
-    spark = SparkSession.builder.config(conf=conf).appName("ExtractSparkTMDB").getOrCreate()
-    print(f"✅ Spark using interpreter: {pyspark_python}")
-
-    ExtractSparkTMDB(spark, local_mode=local_mode).run()
-    spark.stop()
+    spark = SparkSession.builder.appName("ExtractSparkTMDB").getOrCreate()
+    job = ExtractSparkTMDB(spark, local_mode=False)
+    job.run()
