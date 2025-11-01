@@ -12,7 +12,14 @@ Provides:
 
 import os, re, time, json, hashlib, unicodedata, logging, threading, concurrent.futures
 from pathlib import Path
-from tqdm import tqdm
+# Optional dependency: tqdm (progress bar)
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:
+    # Fallback silent iterator if tqdm is not available (e.g., Databricks job mode)
+    def tqdm(iterable=None, *args, **kwargs):
+        return iterable if iterable is not None else []
+
 from types import SimpleNamespace
 from typing import List, Dict, Any, Iterable, Optional
 import requests

@@ -14,16 +14,25 @@ Purpose:
 """
 
 import os
+import logging
 import multiprocessing
 from pathlib import Path
 import pandas as pd
-from dotenv import load_dotenv, find_dotenv
-import logging
+try:
+    from dotenv import load_dotenv, find_dotenv
 
-# --- Load .env with override to ensure it wins over global/system env ---
-dotenv_path = find_dotenv(usecwd=True)
-load_dotenv(dotenv_path, override=True)
+    # Try to locate and load .env if it exists locally
+    dotenv_path = find_dotenv(usecwd=True)
+    if dotenv_path:
+        load_dotenv(dotenv_path, override=True)
+        print(f"Loaded local .env from: {dotenv_path}")
+    else:
+        print("No .env file found — continuing without it.")
 
+except ModuleNotFoundError:
+    print("dotenv not available — skipping (Databricks mode)")
+    dotenv_path = None  # ensure variable is always defined
+    
 # ===============================================================
 # 🌎 ENVIRONMENT SETTINGS
 # ===============================================================
