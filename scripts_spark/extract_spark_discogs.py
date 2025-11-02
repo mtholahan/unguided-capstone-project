@@ -1,118 +1,176 @@
-"""
-extract_spark_discogs.py
-Step 02 (PySpark Refactor): Acquire Discogs Metadata
-Unguided Capstone Project – TMDB→Discogs Directional Refactor (Step 6.3)
+# ================================================================
+#  extract_spark_discogs.py — Refactored for Databricks + ADLS Gen2
+# ================================================================
 
-Refactored for Databricks:
-  - Reads TMDB titles from /raw/tmdb parquet
-  - Queries Discogs API (secure key via Databricks secret or env var)
-  - Persists JSON results to abfss://raw/discogs/
-"""
-
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import lit
-import requests, json, os, time
-from datetime import datetime
+from pyspark.sql import SparkSession, functions as F, types as T
+from pyspark.dbutils import DBUtils
+import time
+import json
+import requests
 from scripts.base_step import BaseStep
 
 
-class ExtractSparkDiscogs(BaseStep):
-    """Fetch Discogs metadata via Spark and persist JSON to ADLS."""
+# ================================================================
+#  Initialize Spark + Secrets
+# ================================================================
+spark = SparkSession.builder.appName("Step02_ExtractSparkDiscogs").getOrCreate()
+dbutils = DBUtils(spark)
 
-    def __init__(self, spark: SparkSession, local_mode: bool = False):
-        super().__init__(name="extract_spark_discogs")
+STORAGE_ACCOUNT = dbutils.secrets.get("markscope", "azure-storage-account-name").strip()
+STORAGE_KEY = dbutils.secrets.get("markscope", "azure-storage-account-key").strip()
+
+spark.conf.set(
+    f"fs.azure.account.key.{STORAGE_ACCOUNT}.dfs.core.windows.net",
+    STORAGE_KEY,
+)
+
+# ================================================================
+#  Constants
+# ================================================================
+BASE_URI = f"abfss://raw@{STORAGE_ACCOUNT}.dfs.core.windows.net"
+OUTPUT_PATH = f"{BASE_URI}/raw/discogs/"
+DISCOGS_API_URL = "https://api.discogs.com/database/search"
+
+PAGE_LIMIT = 5      # adjust as needed (50 per page × N pages)
+QUERY = "soundtrack"  # can change or parametrize
+
+
+# ================================================================
+#  Step Definition
+# ================================================================
+class Step02ExtractSparkDiscogs(BaseStep):
+    """Step 02 – Extract Discogs data and store to ADLS (Parquet)."""
+
+    def __init__(self, spark: SparkSession):
+        super().__init__("step_02_extract_spark_discogs")
         self.spark = spark
-        self.local_mode = local_mode
-        self.rate_limit = 2  # requests/sec
-        self.api_url = "https://api.discogs.com/database/search"
-        self.consumer_key, self.consumer_secret = self._get_api_creds()
+        self.spark.sparkContext.setLogLevel("WARN")
+        self.logger.info("✅ Initialized Step 02: Extract Spark Discogs")
 
-        self.account = "ungcapstor01"
-        self.container_uri = (
-            f"abfss://raw@{self.account}.dfs.core.windows.net/raw/discogs/"
-            if not local_mode else "dbfs:/tmp/discogs_output/"
-        )
+    # ------------------------------------------------------------
+    def run(self, config: dict | None = None):
+        t0 = time.time()
+        self.logger.info("🚀 Starting Discogs Spark extraction")
 
-        self.logger.info(f"💡 Running mode: {'AZURE' if not local_mode else 'LOCAL'}")
-
-    # ------------------------------------------------------------------
-    def _get_api_creds(self):
-        """Retrieve Discogs consumer key/secret from secret scope or environment."""
+        # --------------------------------------------------------
+        # 1️⃣ Retrieve API credentials
+        # --------------------------------------------------------
         try:
-            from pyspark.dbutils import DBUtils
-            dbutils = DBUtils(self.spark)
-            key = dbutils.secrets.get("markscope", "discogs-consumer-key")
-            secret = dbutils.secrets.get("markscope", "discogs-consumer-secret")
-            self.logger.info("🔐 Retrieved Discogs consumer key/secret from Databricks secrets.")
-        except Exception as e:
-            self.logger.warning(f"⚠️ Could not load Discogs credentials from scope: {e}")
-            key = os.getenv("DISCOGS_CONSUMER_KEY", "dummy_key")
-            secret = os.getenv("DISCOGS_CONSUMER_SECRET", "dummy_secret")
-        return key, secret
+            consumer_key = dbutils.secrets.get("markscope", "discogs-consumer-key").strip()
+            consumer_secret = dbutils.secrets.get("markscope", "discogs-consumer-secret").strip()
+        except Exception:
+            import os
+            consumer_key = os.getenv("DISCOGS_CONSUMER_KEY")
+            consumer_secret = os.getenv("DISCOGS_CONSUMER_SECRET")
 
-    # ------------------------------------------------------------------
-    def _fetch_discogs(self, title: str):
-        """Fetch metadata for one title via Discogs API using key/secret pair."""
+        if not (consumer_key and consumer_secret):
+            raise ValueError("❌ Discogs API credentials not found in secrets or environment.")
+
+        # --------------------------------------------------------
+        # 2️⃣ Make authenticated API requests (token-based)
+        # --------------------------------------------------------
+        all_pages = []
         params = {
-            "q": f"{title} soundtrack",
+            "q": QUERY,
             "type": "release",
-            "per_page": 5,
-            "page": 1,
-            "key": self.consumer_key,
-            "secret": self.consumer_secret,
+            "per_page": 50,
+            "key": consumer_key,
+            "secret": consumer_secret,
         }
-        headers = {"User-Agent": "DataEngineeringCapstone/1.0"}
 
-        try:
-            resp = requests.get(self.api_url, params=params, headers=headers, timeout=10)
-            if resp.status_code == 200:
-                data = resp.json()
-                results = [
-                    r for r in data.get("results", [])
-                    if any(k in r.get("title", "").lower() for k in ["soundtrack", "ost", "score"])
-                ]
-                self.logger.info(f"✅ Discogs results for '{title}': {len(results)} hits")
-                return {"title": title, "results": results}
-            else:
-                self.logger.warning(f"⚠️ Discogs fetch failed for '{title}' ({resp.status_code})")
-                return {"title": title, "results": []}
-        except Exception as e:
-            self.logger.error(f"❌ Exception fetching '{title}': {e}")
-            return {"title": title, "results": []}
+        for page in range(1, PAGE_LIMIT + 1):
+            params["page"] = page
+            print(f"🔍 Requesting page {page} → {DISCOGS_API_URL}")
+            resp = requests.get(DISCOGS_API_URL, params=params, timeout=30)
 
+            if resp.status_code != 200:
+                self.logger.warning(f"⚠️ Discogs page {page} failed: {resp.text[:200]}")
+                continue
 
-    # ------------------------------------------------------------------
-    def run(self):
-        start = time.time()
-        base_uri = f"abfss://raw@{self.account}.dfs.core.windows.net/raw/tmdb/"
-        try:
-            tmdb_df = self.spark.read.parquet(base_uri)
-            titles = [r.title for r in tmdb_df.select("title").distinct().collect()]
-            self.logger.info(f"📦 Loaded {len(titles)} TMDB titles.")
-        except Exception as e:
-            self.logger.warning(f"⚠️ Failed to load TMDB titles: {e}")
-            titles = ["Inception", "Interstellar", "The Matrix"]
+            payload = resp.json()
+            all_pages.append({
+                "page": payload.get("pagination", {}).get("page", page),
+                "results": payload.get("results", []),
+            })
+            self.logger.info(f"📥 Page {page} retrieved: {len(payload.get('results', []))} results")
 
-        results = [self._fetch_discogs(t) for t in titles]
-        time.sleep(len(titles) / self.rate_limit)
+        if not all_pages:
+            raise RuntimeError("❌ No Discogs pages retrieved — check API keys or rate limit.")
 
-        df = self.spark.createDataFrame(
-            [{"title": r["title"], "json_data": json.dumps(r["results"])} for r in results]
-        ).withColumn("timestamp", lit(datetime.utcnow().isoformat()))
+        # --------------------------------------------------------
+        # 3️⃣ Convert JSON pages into Spark DataFrame
+        # --------------------------------------------------------
+        json_rows = [(json.dumps(page),) for page in all_pages]
+        json_schema = T.StructType([T.StructField("json_data", T.StringType())])
+        df_raw = self.spark.createDataFrame(json_rows, json_schema)
+        df_raw = df_raw.withColumn("timestamp", F.current_timestamp())
 
-        df.write.mode("overwrite").parquet(self.container_uri)
-        count = df.count()
-        self.logger.info(f"💾 Wrote {count} Discogs records → {self.container_uri}")
+        # --------------------------------------------------------
+        # 4️⃣ Parse json_data and explode "results" array
+        # --------------------------------------------------------
+        schema_results = T.StructType([
+            T.StructField("page", T.IntegerType()),
+            T.StructField("results", T.ArrayType(
+                T.StructType([
+                    T.StructField("title", T.StringType()),
+                    T.StructField("year", T.StringType()),
+                    T.StructField("genre", T.ArrayType(T.StringType())),
+                    T.StructField("style", T.ArrayType(T.StringType())),
+                    T.StructField("country", T.StringType()),
+                    T.StructField("format", T.ArrayType(T.StringType())),
+                ])
+            ))
+        ])
 
-        self.write_metrics(
-            {"titles_total": len(titles), "records_written": count, "duration_sec": round(time.time() - start, 2)},
-            name="extract_spark_discogs_metrics",
+        df_exploded = (
+            df_raw
+            .withColumn("json", F.from_json("json_data", schema_results))
+            .withColumn("release", F.explode("json.results"))
         )
 
-        self.logger.info(f"✅ Completed Discogs extraction in {time.time() - start:.1f}s")
+        df_discogs = (
+            df_exploded
+            .select(
+                F.col("release.title").alias("discogs_title"),
+                F.col("release.year").alias("discogs_year"),
+                F.col("release.genre").alias("discogs_genre"),
+                F.col("release.style").alias("discogs_style"),
+                F.col("release.country").alias("discogs_country"),
+                F.col("release.format").alias("discogs_format"),
+            )
+            .dropna(subset=["discogs_title"])
+        )
+
+        # --------------------------------------------------------
+        # 5️⃣ Persist to ADLS
+        # --------------------------------------------------------
+        df_discogs.write.mode("overwrite").parquet(OUTPUT_PATH)
+        count = df_discogs.count()
+        self.logger.info(f"💾 Wrote {count} Discogs records → {OUTPUT_PATH}")
+
+        # --------------------------------------------------------
+        # 6️⃣ Record metrics
+        # --------------------------------------------------------
+        metrics = {
+            "titles_total": count,
+            "records_written": count,
+            "duration_sec": round(time.time() - t0, 2),
+            "output_path": OUTPUT_PATH,
+        }
+        self.write_metrics(metrics, name="extract_spark_discogs_metrics")
+        self.logger.info(f"✅ Completed Discogs Spark extraction in {metrics['duration_sec']} s")
+
+        return df_discogs
+
+    # ------------------------------------------------------------
+    @staticmethod
+    def run_step(spark: SparkSession, config: dict | None = None):
+        return Step02ExtractSparkDiscogs(spark).run(config)
 
 
-# ----------------------------------------------------------------------
+# ================================================================
+#  Entrypoint for Databricks / Local
+# ================================================================
 if __name__ == "__main__":
-    spark = SparkSession.builder.appName("CapstoneExtractDiscogs").getOrCreate()
-    ExtractSparkDiscogs(spark).run()
+    Step02ExtractSparkDiscogs.run_step(spark)
+    spark.stop()

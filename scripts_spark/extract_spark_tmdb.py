@@ -1,146 +1,156 @@
-"""
-extract_spark_tmdb.py
-Step 01 (PySpark Refactor): Acquire TMDB Metadata
-Unguided Capstone Project – Step 8 (Deploy for Testing)
+# ================================================================
+#  extract_spark_tmdb.py  — Refactored for Databricks + ADLS Gen2
+# ================================================================
 
-Databricks refactor:
-  • Uses Databricks Secrets Scope (`markscope`) for credentials
-  • Handles LOCAL_MODE for offline testing
-  • Writes results to ABFSS (Azure) or DBFS (Databricks)
-  • Structured logging, metrics, and Spark-safe error handling
-"""
-
-import os, re, json, time, requests
-from datetime import datetime, timezone
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import lit
-
-# --- Local imports ---
+from pyspark.sql import SparkSession, functions as F, types as T
+from pyspark.dbutils import DBUtils
+import time
+import json
+import requests
 from scripts.base_step import BaseStep
-from scripts.config import USE_GOLDEN_LIST, GOLDEN_TITLES_TEST
-from scripts.utils import safe_filename
 
 
-class ExtractSparkTMDB(BaseStep):
-    """Fetch TMDB metadata using Spark context."""
+# ================================================================
+#  Initialize Spark and Secrets
+# ================================================================
+spark = SparkSession.builder.appName("Step01_ExtractSparkTMDB").getOrCreate()
+dbutils = DBUtils(spark)
 
-    def __init__(self, spark: SparkSession, local_mode: bool = False):
-        super().__init__(name="step_01_extract_spark_tmdb")
+# Retrieve storage account info dynamically from Databricks secret scope
+STORAGE_ACCOUNT = dbutils.secrets.get("markscope", "azure-storage-account-name").strip()
+STORAGE_KEY = dbutils.secrets.get("markscope", "azure-storage-account-key").strip()
+
+spark.conf.set(
+    f"fs.azure.account.key.{STORAGE_ACCOUNT}.dfs.core.windows.net",
+    STORAGE_KEY,
+)
+
+# ================================================================
+#  Constants
+# ================================================================
+BASE_URI = f"abfss://raw@{STORAGE_ACCOUNT}.dfs.core.windows.net"
+OUTPUT_PATH = f"{BASE_URI}/raw/tmdb/"
+TMDB_API_URL = "https://api.themoviedb.org/3/movie/popular"
+PAGE_LIMIT = 5   # adjust as needed (5 pages × 20 results = 100 movies)
+
+
+# ================================================================
+#  Step Definition
+# ================================================================
+class Step01ExtractSparkTMDB(BaseStep):
+    """Step 01 – Extract TMDB data and store to ADLS (Parquet)."""
+
+    def __init__(self, spark: SparkSession):
+        super().__init__("step_01_extract_spark_tmdb")
         self.spark = spark
-        self.local_mode = local_mode
-        self.rate_limit = 3  # ~3 requests/sec
-        self.tmdb_api_key = None
+        self.spark.sparkContext.setLogLevel("WARN")
+        self.logger.info("✅ Initialized Step 01: Extract Spark TMDB")
 
-        # Try to configure Azure ABFS output
+    # ------------------------------------------------------------
+    def run(self, config: dict | None = None):
+        t0 = time.time()
+        self.logger.info("🚀 Starting TMDB extraction job")
+
+        # --------------------------------------------------------
+        # 1️⃣ Retrieve TMDB API key from Databricks secrets
+        # --------------------------------------------------------
         try:
-            if not self.local_mode:
-                self.container_uri = "abfss://raw@ungcaptor01.dfs.core.windows.net/raw/tmdb/"
-                self.logger.info("✅ Configured Spark for Azure ABFS output.")
-            else:
-                raise ValueError("Forced local mode.")
-        except Exception as e:
-            self.logger.warning(f"⚠️ Falling back to LOCAL_MODE → {e}")
-            self.local_mode = True
-            self.container_uri = "dbfs:/tmp/tmdb_output/"
-            os.makedirs("/dbfs/tmp/tmdb_output/", exist_ok=True)
+            api_key = dbutils.secrets.get("markscope", "tmdb-api-key").strip()
+        except Exception:
+            import os
+            api_key = os.getenv("TMDB_API_KEY")
+        if not api_key:
+            raise ValueError("❌ TMDB API key not found in secrets or environment variables.")
 
-        self.logger.info(f"🧩 Running mode: {'LOCAL' if self.local_mode else 'AZURE'}")
+        # --------------------------------------------------------
+        # 2️⃣ Download TMDB pages (JSON)
+        # --------------------------------------------------------
+        all_pages = []
+        for page in range(1, PAGE_LIMIT + 1):
+            url = f"{TMDB_API_URL}?api_key={api_key}&language=en-US&page={page}"
+            resp = requests.get(url, timeout=30)
+            if resp.status_code != 200:
+                self.logger.warning(f"⚠️ TMDB request failed for page {page}: {resp.text[:200]}")
+                continue
+            payload = resp.json()
+            all_pages.append({
+                "page": payload.get("page"),
+                "results": payload.get("results", []),
+            })
+            self.logger.info(f"📥 Page {page} retrieved: {len(payload.get('results', []))} results")
 
-    # ------------------------------------------------------------------
-    def _get_api_key(self):
-        """Retrieve TMDB API key from Databricks Secrets Scope."""
-        if self.tmdb_api_key:
-            return self.tmdb_api_key
+        if not all_pages:
+            raise RuntimeError("❌ No TMDB data retrieved — check API key or network connectivity.")
 
-        try:
-            from pyspark.dbutils import DBUtils
-            dbutils = DBUtils(self.spark)
-            self.tmdb_api_key = dbutils.secrets.get("markscope", "tmdb-api-key")
-            assert self.tmdb_api_key, "TMDB API key is empty or missing"
-            self.logger.info("🔐 Retrieved TMDB API key from Databricks secrets.")
-        except Exception as e:
-            self.logger.warning(f"⚠️ Could not read from Databricks secrets → {e}")
-            self.tmdb_api_key = os.getenv("TMDB_API_KEY", "DUMMY_KEY_FOR_LOCAL_TESTS")
-            self.logger.info("Using fallback TMDB_API_KEY from environment.")
-        return self.tmdb_api_key
+        # --------------------------------------------------------
+        # 3️⃣ Convert JSON pages into Spark DataFrame
+        # --------------------------------------------------------
+        json_rows = [(json.dumps(page),) for page in all_pages]
+        json_schema = T.StructType([T.StructField("json_data", T.StringType())])
+        df_raw = self.spark.createDataFrame(json_rows, json_schema)
+        df_raw = df_raw.withColumn("timestamp", F.current_timestamp())
 
-    # ------------------------------------------------------------------
-    def _fetch_tmdb(self, title: str):
-        """Perform TMDB API request for one title."""
-        url = "https://api.themoviedb.org/3/search/movie"
-        params = {"query": title, "api_key": self._get_api_key()}
+        # --------------------------------------------------------
+        # 4️⃣ Parse json_data and explode "results" array
+        # --------------------------------------------------------
+        schema_results = T.StructType([
+            T.StructField("page", T.IntegerType()),
+            T.StructField("results", T.ArrayType(
+                T.StructType([
+                    T.StructField("title", T.StringType()),
+                    T.StructField("release_date", T.StringType()),
+                    T.StructField("genre_ids", T.ArrayType(T.IntegerType()))
+                ])
+            ))
+        ])
 
-        try:
-            resp = requests.get(url, params=params, timeout=10)
-            if resp.status_code == 200:
-                data = resp.json()
-                if data.get("results"):
-                    self.logger.debug(f"✅ TMDB data fetched for '{title}'")
-                    return data
-                self.logger.info(f"⚠️ No results for '{title}'")
-                return None
-            self.logger.warning(f"⚠️ TMDB fetch failed for '{title}' ({resp.status_code})")
-            return None
-        except Exception as e:
-            self.logger.error(f"❌ Exception fetching '{title}': {e}")
-            return {"results": [{"title": title, "note": "dummy data"}]}
-
-    # ------------------------------------------------------------------
-    def run(self):
-        """Main Spark entrypoint."""
-        start_time = time.time()
-        mode = "GOLDEN" if USE_GOLDEN_LIST else "TEST"
-
-        if USE_GOLDEN_LIST:
-            if isinstance(GOLDEN_TITLES_TEST, str):
-                raw_titles = re.split(r"[,;]+|\s{2,}", GOLDEN_TITLES_TEST)
-                titles = [t.strip() for t in raw_titles if t.strip()]
-            else:
-                titles = list(GOLDEN_TITLES_TEST)
-        else:
-            titles = ["Inception", "Interstellar", "The Matrix"]
-
-        self.logger.info(f"🎞️ Starting TMDB extraction ({mode}, {len(titles)} titles)")
-
-        results = []
-        for title in titles:
-            data = self._fetch_tmdb(title)
-            if data:
-                results.append({"title": title, "json_data": json.dumps(data)})
-            time.sleep(1 / self.rate_limit)
-
-        if not results:
-            self.logger.warning("⚠️ No TMDB data fetched — inserting dummy record.")
-            results = [{"title": "DummyTitle", "json_data": "{}"}]
-
-        df = (
-            self.spark.createDataFrame(results)
-            .withColumn("timestamp", lit(datetime.now(timezone.utc).isoformat()))
+        df_exploded = (
+            df_raw
+            .withColumn("json", F.from_json("json_data", schema_results))
+            .withColumn("movie", F.explode("json.results"))
         )
 
-        write_path = self.container_uri
-        df.write.mode("overwrite").parquet(write_path)
-        count = df.count()
-        self.logger.info(f"💾 Wrote {count} TMDB records → {write_path}")
-
-        self.write_metrics(
-            {
-                "titles_total": len(titles),
-                "records_written": count,
-                "duration_sec": round(time.time() - start_time, 2),
-                "mode": mode,
-                "local_mode": self.local_mode,
-                "branch": "step8-dbx",
-            },
-            name="extract_spark_tmdb_metrics",
+        df_tmdb = (
+            df_exploded
+            .select(
+                F.col("movie.title").alias("tmdb_title"),
+                F.col("movie.release_date").alias("tmdb_release_date"),
+                F.col("movie.genre_ids").alias("tmdb_genre_ids"),
+            )
+            .withColumn("tmdb_year", F.substring(F.col("tmdb_release_date"), 1, 4).cast("int"))
+            .dropna(subset=["tmdb_title"])
         )
 
-        self.logger.info("✅ Completed TMDB Spark extraction")
+        # --------------------------------------------------------
+        # 5️⃣ Persist to ADLS
+        # --------------------------------------------------------
+        df_tmdb.write.mode("overwrite").parquet(OUTPUT_PATH)
+        count = df_tmdb.count()
+        self.logger.info(f"💾 Wrote {count} TMDB records → {OUTPUT_PATH}")
+
+        # --------------------------------------------------------
+        # 6️⃣ Record metrics
+        # --------------------------------------------------------
+        metrics = {
+            "titles_total": count,
+            "records_written": count,
+            "duration_sec": round(time.time() - t0, 2),
+            "output_path": OUTPUT_PATH,
+        }
+        self.write_metrics(metrics, name="extract_spark_tmdb_metrics")
+        self.logger.info(f"✅ Completed TMDB Spark extraction in {metrics['duration_sec']} s")
+
+        return df_tmdb
+
+    # ------------------------------------------------------------
+    @staticmethod
+    def run_step(spark: SparkSession, config: dict | None = None):
+        return Step01ExtractSparkTMDB(spark).run(config)
 
 
-# ----------------------------------------------------------------------
-# Databricks entrypoint
+# ================================================================
+#  Entrypoint for Databricks / Local
+# ================================================================
 if __name__ == "__main__":
-    spark = SparkSession.builder.appName("ExtractSparkTMDB").getOrCreate()
-    job = ExtractSparkTMDB(spark, local_mode=False)
-    job.run()
+    Step01ExtractSparkTMDB.run_step(spark)
+    spark.stop()

@@ -20,6 +20,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
+from pyspark.sql import functions as F
 from scripts.config import (
     DATA_DIR,
     LOG_DIR,
@@ -213,6 +214,27 @@ class BaseStep:
         os.replace(tmp, path)
         self.logger.info(f"💾 Wrote {len(df):,} rows → {path.name}")
 
+    # ============================================================
+    # Common schema normalization helper
+    # ============================================================
+    def normalize_schema(self, df, required_cols):
+        """
+        Ensure all required columns exist in the DataFrame.
+        Adds missing columns as nulls and reorders schema for consistency.
+        """
+        existing = df.columns
+        missing = [c for c in required_cols if c not in existing]
+
+        if missing:
+            self.logger.warning(f"⚠️ Adding missing columns to schema: {missing}")
+
+        for c in missing:
+            df = df.withColumn(c, F.lit(None))
+
+        # Maintain order: required first, then any extras
+        final_cols = required_cols + [c for c in existing if c not in required_cols]
+        return df.select(*final_cols)
+    
     # ============================================================
     # 🚀 Abstract run() method
     # ============================================================
