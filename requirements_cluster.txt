@@ -1,0 +1,10 @@
+pyspark==3.5.3
+pandas==2.2.2
+requests==2.32.3
+tqdm==4.66.5
+python-dotenv==1.0.1
+azure-identity==1.17.1
+azure-storage-blob==12.20.0
+rapidfuzz==3.10.0
+pyarrow==17.0.0
+fastparquet==2024.5.0
