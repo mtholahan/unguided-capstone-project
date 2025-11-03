@@ -1,5 +1,9 @@
 # ================================================================
 #  extract_spark_tmdb.py  — Refactored for Databricks + ADLS Gen2
+#  ---------------------------------------------------------------
+#  Purpose: 
+#  Runtime: Databricks 16.4 LTS (driver-only, no Spark session)
+#  Author : M. Holahan
 # ================================================================
 
 from pyspark.sql import SparkSession, functions as F, types as T

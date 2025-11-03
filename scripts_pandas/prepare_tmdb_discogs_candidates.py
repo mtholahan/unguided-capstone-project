@@ -15,7 +15,7 @@ from scripts.utils import normalize_for_matching_extended
 from scripts.base_step import BaseStep
 
 # ================================================================
-#  Step 03 – Prepare TMDB→Discogs Candidate Pairs (Pandas)
+#  Step Definition
 # ================================================================
 class Step03PrepareTMDBDiscogsCandidates(BaseStep):
     """Step 03: Generate TMDB→Discogs candidate pairs using Pandas."""

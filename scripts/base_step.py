@@ -94,25 +94,19 @@ class BaseStep:
     def write_metrics(self, metrics: dict, name: str | None = None):
         """
         Persist step metrics in two forms:
-        1️⃣ Append to consolidated pipeline_metrics.csv
-        2️⃣ Write individual JSON snapshot for the step
+        1️⃣ Append to consolidated pipeline_metrics.csv (local)
+        2️⃣ Write individual JSON snapshot for the step (local + ADLS)
 
-        Adds:
-            • step_runtime_sec  → duration of this step (if provided)
-            • pipeline_runtime_sec → cumulative runtime across steps in session
-
-        Args:
-            metrics (dict): Dictionary of metrics to log
-            name (str | None): Optional override for the step name
+        Safe for Databricks + Pandas workflows.
         """
-        import csv, json, time
+        import csv, json, time, os
         from datetime import datetime
         from pathlib import Path
         from scripts.config import DATA_DIR
 
-        # --- Ensure metrics directory exists ---
+        # --- Ensure metrics directory exists (local or ADLS-mounted) ---
         metrics_dir = getattr(self, "metrics_dir", None) or (Path(DATA_DIR) / "metrics")
-        metrics_dir.mkdir(parents=True, exist_ok=True)
+        os.makedirs(metrics_dir, exist_ok=True)
 
         # --- Track timing info ---
         now = time.time()
@@ -139,8 +133,8 @@ class BaseStep:
         metrics["pipeline_runtime_sec"] = pipeline_runtime
 
         # --- 1️⃣ Append to pipeline_metrics.csv ---
-        metrics_file = metrics_dir / "pipeline_metrics.csv"
-        write_header = not metrics_file.exists()
+        metrics_file = Path(metrics_dir) / "pipeline_metrics.csv"
+        write_header = not (hasattr(metrics_file, "exists"))
         with open(metrics_file, "a", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=metrics.keys())
             if write_header:
@@ -148,8 +142,17 @@ class BaseStep:
             writer.writerow(metrics)
 
         # --- 2️⃣ Write individual JSON snapshot ---
-        json_file = metrics_dir / f"{metrics['step_name']}.json"
+        json_file = Path(metrics_dir) / f"{metrics['step_name']}.json"
         json_file.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        # --- 3️⃣ Optionally copy metrics to ADLS if dbutils available ---
+        if hasattr(self, "dbutils") and hasattr(self, "metrics_dir"):
+            try:
+                adls_target = os.path.join(self.metrics_dir, f"{metrics['step_name']}.json")
+                self.dbutils.fs.cp(f"file:{json_file}", adls_target, recurse=True)
+                self.logger.info(f"📤 Metrics copied to ADLS: {adls_target}")
+            except Exception as e:
+                self.logger.warning(f"⚠️ Could not copy metrics to ADLS: {e}")
 
         # --- Log summary ---
         self.logger.info(f"📊 Logged metrics for {metrics['step_name']}: {metrics}")

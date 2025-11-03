@@ -170,29 +170,32 @@ def key_health(df: pd.DataFrame, key: str) -> Dict[str, Any]:
 
 
 def build_integrity_summary(
-    tmdb_df: pd.DataFrame, discogs_df: pd.DataFrame, candidates_file: Path, logger: logging.Logger
+    tmdb_df: pd.DataFrame,
+    discogs_df: pd.DataFrame,
+    candidates_df: pd.DataFrame,
+    logger: logging.Logger
 ) -> pd.DataFrame:
+    """Compute schema integrity summaries for TMDB, Discogs, and candidates datasets."""
     rows: List[Dict[str, Any]] = []
-    for dataset, df, keys in (
+
+    # --- TMDB + Discogs datasets ---
+    for dataset, df, keys in [
         ("tmdb", tmdb_df, ["tmdb_id", "title"]),
         ("discogs", discogs_df, ["discogs_id", "title"]),
-    ):
+    ]:
         for k in keys:
             h = key_health(df, k)
             h.update({"dataset": dataset})
             rows.append(h)
 
-    if candidates_file.exists():
-        try:
-            cand = pd.read_csv(candidates_file)
-            logger.info(f"Loaded candidates: {len(cand):,}")
-            for k in ["movie_ref", "tmdb_title_norm", "discogs_title_norm"]:
-                h = key_health(cand, k)
-                h.update({"dataset": "candidates"})
-                rows.append(h)
-        except Exception as e:
-            logger.warning(f"Could not read candidates file: {e}")
+    # --- Candidates (already loaded as DataFrame) ---
+    if candidates_df is not None and not candidates_df.empty:
+        logger.info(f"🧩 Processing candidates dataframe: {len(candidates_df):,} rows")
+        for k in ["movie_ref", "tmdb_title_norm", "discogs_title_norm"]:
+            h = key_health(candidates_df, k)
+            h.update({"dataset": "candidates"})
+            rows.append(h)
     else:
-        logger.warning("Candidates file missing; skipping.")
+        logger.warning("⚠️ No candidates data available; skipping.")
 
     return pd.DataFrame(rows)
