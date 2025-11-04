@@ -6,7 +6,6 @@
 ---
 
 ## 🎯 Project Overview
-## 🎯 Project Overview
 This capstone integrates data from **The Movie Database (TMDB)** and **Discogs** into a
 scalable Spark-based pipeline built on **PySpark 3.5** within **Azure Databricks**.  
 The project implements the core data-engineering lifecycle—data ingestion,
