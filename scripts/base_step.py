@@ -91,27 +91,33 @@ class BaseStep:
     # ============================================================
     # 💾 Metrics Handling — CSV + JSON with Runtime Rollup
     # ============================================================
-    def write_metrics(self, metrics: dict, name: str | None = None):
+    def write_metrics(
+        self,
+        metrics: dict,
+        name: str | None = None,
+        metrics_dir: str | Path | None = None,
+    ):
         """
         Persist step metrics in two forms:
         1️⃣ Append to consolidated pipeline_metrics.csv (local)
-        2️⃣ Write individual JSON snapshot for the step (local + ADLS)
+        2️⃣ Write individual JSON snapshot for the step (local + optional ADLS)
 
-        Safe for Databricks + Pandas workflows.
+        Backward compatible with older calls that only passed (metrics, name).
         """
         import csv, json, time, os
         from datetime import datetime
         from pathlib import Path
         from scripts.config import DATA_DIR
 
-        # --- Ensure metrics directory exists (local or ADLS-mounted) ---
-        metrics_dir = getattr(self, "metrics_dir", None) or (Path(DATA_DIR) / "metrics")
-        os.makedirs(metrics_dir, exist_ok=True)
+        # --- pick metrics dir (arg > instance > default) ---
+        if metrics_dir is None:
+            metrics_dir = getattr(self, "metrics_dir", None) or (Path(DATA_DIR) / "metrics")
+        metrics_dir = Path(metrics_dir)
+        metrics_dir.mkdir(parents=True, exist_ok=True)
 
         # --- Track timing info ---
         now = time.time()
         if not hasattr(self, "_pipeline_start"):
-            # First call in this session
             self._pipeline_start = now
             self._last_step_time = now
             pipeline_runtime = 0.0
@@ -133,8 +139,8 @@ class BaseStep:
         metrics["pipeline_runtime_sec"] = pipeline_runtime
 
         # --- 1️⃣ Append to pipeline_metrics.csv ---
-        metrics_file = Path(metrics_dir) / "pipeline_metrics.csv"
-        write_header = not (hasattr(metrics_file, "exists"))
+        metrics_file = metrics_dir / "pipeline_metrics.csv"
+        write_header = not metrics_file.exists()
         with open(metrics_file, "a", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=metrics.keys())
             if write_header:
@@ -142,13 +148,14 @@ class BaseStep:
             writer.writerow(metrics)
 
         # --- 2️⃣ Write individual JSON snapshot ---
-        json_file = Path(metrics_dir) / f"{metrics['step_name']}.json"
+        json_file = metrics_dir / f"{metrics['step_name']}.json"
         json_file.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
 
         # --- 3️⃣ Optionally copy metrics to ADLS if dbutils available ---
-        if hasattr(self, "dbutils") and hasattr(self, "metrics_dir"):
+        #     (keep your original behavior)
+        if hasattr(self, "dbutils"):
             try:
-                adls_target = os.path.join(self.metrics_dir, f"{metrics['step_name']}.json")
+                adls_target = os.path.join(str(metrics_dir), f"{metrics['step_name']}.json")
                 self.dbutils.fs.cp(f"file:{json_file}", adls_target, recurse=True)
                 self.logger.info(f"📤 Metrics copied to ADLS: {adls_target}")
             except Exception as e:
@@ -160,6 +167,7 @@ class BaseStep:
             f"🪶 Metrics written to: {metrics_file.name}, {json_file.name} | "
             f"Step runtime={step_runtime:.2f}s | Pipeline runtime={pipeline_runtime:.2f}s"
         )
+ 
 
 
     # ============================================================
