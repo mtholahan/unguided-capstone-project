@@ -1,0 +1,7 @@
+# databricks.yml
+commands:
+  run-tests:
+    description: Run pytest suite with coverage
+    command: |
+      pip install -r requirements.txt pytest pytest-cov
+      pytest
