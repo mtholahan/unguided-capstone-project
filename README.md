@@ -114,7 +114,7 @@ The Step 7 architecture defines a modular, cloud-scalable layout:
 - **Storage:** Azure Blob Storage (raw/silver/gold zones).
 - **Processing:** Azure Databricks workspace executing ETL notebooks.
 - **Security:** Azure Key Vault for API keys and credentials (via Managed Identity).
-- **Orchestration:** Azure Data Factory (future trigger and control plane).
+- **Orchestration:** Databricks orchestration.
 - **Monitoring:** Azure Monitor + Log Analytics.
 - **Serving:** Power BI for analytics and visualization.
 
