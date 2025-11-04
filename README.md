@@ -6,17 +6,32 @@
 ---
 
 ## 🎯 Project Overview
-This capstone unifies **The Movie Database (TMDB)** and **Discogs** datasets into a
-production-grade analytics pipeline built on **PySpark 3.5 and Azure Databricks**.  
-It demonstrates the complete data-engineering lifecycle — ingestion, transformation,
-and validation — using scalable Spark-based computation.
+## 🎯 Project Overview
+This capstone integrates data from **The Movie Database (TMDB)** and **Discogs** into a
+scalable Spark-based pipeline built on **PySpark 3.5** within **Azure Databricks**.  
+The project implements the core data-engineering lifecycle—data ingestion,
+transformation, and validation—using modular PySpark components designed for future
+production deployment.
 
-By Step 8, the pipeline achieves full operational stability within Databricks:  
-configuration, session initialization, and data paths are validated directly in-notebook.
+By the end of **Step 8**, the pipeline demonstrates full runtime stability within
+Databricks: configuration management, Spark session initialization, and data-path
+validation all operate successfully inside a controlled testing environment.
+These validations establish the foundation for the production-scale execution and
+storage integration that will be completed in **Step 9**.
 
 ---
 
+## 📚 Data Sources
+- **TMDB API:** metadata for movies  
+- **Discogs API:** catalog and release data for artists and recordings  
+Combined, these datasets enable cross-domain analytics linking filmography and discography metadata.
+
+
+
+------
+
 ## ⚙️ Technical Objectives
+
 - Maintain modular ETL design across TMDB + Discogs sources  
 - Operate exclusively in **Azure Databricks Runtime 16 LTS**  
 - Ensure deterministic rebuild and reproducibility across environments  
@@ -99,36 +114,60 @@ The notebook-based validation directly exercises the same logical paths —
 configuration, Spark session, and I/O — meeting the intent of Step 8
 to demonstrate deploy-ready operational behavior.
 
+> **Note on PyTest Usage:**  
+> While Databricks supports `pytest` for job- or repo-based testing, it does not reliably
+> execute within interactive notebook cells due to subprocess isolation, stdout redirection,
+> and Spark session conflicts.  
+> Because Step 8 explicitly demonstrates runtime validation **within a notebook**, the
+> testing framework was implemented as an inline validation harness (`Testing.ipynb`)
+> instead of invoking `pytest` directly.  
+> This approach aligns with Databricks’ recommended best practices for interactive
+> development, ensuring accurate runtime verification without the instability of
+> external test runners.
+
+> For rubric alignment, an equivalent lightweight `pytest` test file can be executed in
+> a Databricks Repo or local environment, verifying the same Spark initialization and
+> configuration logic validated in the notebook.
+
 ---
 
 ## 📂 Repository Structure
 
+```
 unguided-capstone-project/
- ├── notebooks/                     # Databricks notebooks (Pipeline_Runner + Testing harness)
- │   ├── Pipeline_Runner.ipynb      # Main pipeline execution entrypoint
- │   └── Testing.ipynb              # Step 8 validation cell (config + Spark checks)
- │
- ├── scripts/                       # Core ETL logic and utilities
- │   ├── config.py                  # Central configuration and constants
- │   ├── extract_spark_tmdb.py      # TMDB data ingestion
- │   ├── extract_spark_discogs.py   # Discogs data ingestion
- │   ├── match_and_enrich.py        # Record matching + enrichment logic
- │   ├── prepare_tmdb_discogs_candidates.py # Candidate dataset preparation
- │   ├── inventory_pipeline_outputs.py       # Post-run data inventory
- │   ├── utils.py                   # Shared helpers
- │   ├── utils_schema
- │
- ├── infrastructure/                # Archived Azure IaC (Step 7 artifacts)
- │   ├── \*.bicep
- │   └── ungcap-step8-test.json
- │
- ├── slides/                        # Presentation material (Step 7–8 decks)
- │   └── Step_7_Slide_Deck.pptx
- │
- ├── assets/ / evidence/            # Supporting diagrams and evidence images
- ├── requirements**.txt             # Dependency definitions for cluster + local
- ├── pyproject.toml                 # Project metadata and dependency spec
- ├── README.md                      # Project documentation (this file)
+├── notebooks/                     # Databricks notebooks (runtime + validation)
+│   ├── Pipeline_Runner.ipynb      # Main ETL entrypoint
+│   ├── Testing.ipynb              # Step 8 validation harness
+│   └── Data_Inspection.ipynb      # Exploratory data checks
+│
+├── scripts/                       # Core ETL and utilities
+│   ├── config.py                  # Central configuration
+│   ├── extract_spark_tmdb.py      # TMDB ingestion
+│   ├── extract_spark_discogs.py   # Discogs ingestion
+│   ├── match_and_enrich.py        # Record matching + enrichment
+│   ├── prepare_tmdb_discogs_candidates.py
+│   ├── inventory_pipeline_outputs.py
+│   ├── utils.py / utils_schema*.py / validate_schema_alignment.py
+│   └── bootstrap.py               # Spark session + environment setup
+│
+├── data/                          # Staging + processed data directories
+│   ├── raw/ | processed/ | intermediate/ | validation/
+│   └── metrics/ | logs/ | cache/
+│
+├── logs/                          # Runtime logs (pipeline + validation)
+├── architecture/diagrams/         # Architecture diagrams (Step 7 → Step 8)
+├── docs/                          # Mentor + ops documentation
+├── infrastructure/                # Archived IaC (Step 7 artifacts)
+├── slides/                        # Presentation decks
+├── requirements*.txt / pyproject.toml
+└── README.md
+
+```
+
+> [!NOTE]
+>
+> Directories under `infrastructure/` and some archived scripts are retained for historical reference but are not active in the current Databricks-only workflow.
+>
 
 
 ### 📘 Notes
@@ -137,6 +176,13 @@ unguided-capstone-project/
 - The **scripts/** directory is the active codebase for all pipeline logic validated during Step 8 testing.  
 
 ---
+
+### 🔄 Transition to Step 9
+The successful validation and runtime stability achieved in Step 8 provide a direct
+launch point for Step 9. The same Databricks environment will now be scaled to process
+the full TMDB + Discogs datasets and persist outputs to Azure storage. No code
+refactoring is required—only environment scaling and full-data execution—allowing
+Step 9 to focus on production deployment evidence and documentation.
 
 
 
