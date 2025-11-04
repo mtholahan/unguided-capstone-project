@@ -24,6 +24,20 @@ configuration, session initialization, and data paths are validated directly in-
 
 ---
 
+## 🏗️ Architecture Overview
+The current architecture runs entirely on **Azure Databricks**, following the Step 7 design with the
+**Azure Data Factory component removed** at the mentor’s request.  
+Data ingestion, transformation, and validation all occur within Databricks notebooks using
+Azure Data Lake for storage.
+
+<p align="center">
+  <img src="architecture/diagrams/ungcap_architecture_step8.png" width="720" alt="Step 8 Architecture Diagram – Databricks-Only Pipeline">
+</p>
+
+------
+
+
+
 ## 🧰 Project Setup (Databricks)
 
 1. **Import the project**  
