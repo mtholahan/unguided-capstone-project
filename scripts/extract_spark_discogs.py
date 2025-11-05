@@ -13,20 +13,26 @@ from pyspark.sql import functions as F, types as T
 import os, time, json, requests
 
 # ----------------------------------------------------------------
+# Let 'er Rip Knobs
+# ----------------------------------------------------------------
+PAGE_LIMIT = config.DISCOG_MAX_TITLES or 1000   # number of pages to pull or however many pages full-scale
+DISCOGS_PER_PAGE = config.DISCOGS_PER_PAGE
+DISCOGS_SLEEP_SEC = config.DISCOGS_SLEEP_SEC
+DISCOGS_USER_AGENT = config.DISCOGS_USER_AGENT
+MAX_PAGINATION_WARN = config.MAX_PAGINATION_WARN
+
+# ----------------------------------------------------------------
 # Shared runtime resources
 # ----------------------------------------------------------------
 spark = config.spark
 DISCOGS_API_URL = "https://api.discogs.com/database/search"
-PAGE_LIMIT = 5           # number of pages to pull (50 per page)
 QUERY = "soundtrack"     # can be parameterized later
 
 OUTPUT_PATH = f"{config.INTERMEDIATE_DIR}/discogs"
 
 API_TIMEOUT = config.API_TIMEOUT
-MAX_RETRIES = config.API_MAX_RETRIES
+API_MAX_RETRIES = config.API_MAX_RETRIES
 RETRY_BACKOFF = config.RETRY_BACKOFF
-REQUEST_DELAY = config.DISCOGS_SLEEP_SEC
-
 
 # ================================================================
 #  Step Definition
@@ -54,29 +60,91 @@ class Step02ExtractSparkDiscogs(BaseStep):
             raise ValueError("❌ Discogs API credentials not found in secrets or environment.")
         return key, secret
 
+
     # ------------------------------------------------------------
-    def _fetch_page(self, key, secret, page):
-        """Fetch one Discogs page with retry/back-off."""
+    def _fetch_page(self, query, key, secret, page):
+        """
+        Fetch one Discogs page with intelligent retry/back-off and
+        pagination safety limits.
+        """
         params = {
-            "q": QUERY,
+            "q": query,
             "type": "release",
-            "per_page": 50,
+            "per_page": DISCOGS_PER_PAGE,
             "page": page,
             "key": key,
             "secret": secret,
         }
-        attempts = 0
-        while attempts <= MAX_RETRIES:
-            resp = requests.get(DISCOGS_API_URL, params=params, timeout=API_TIMEOUT)
-            if resp.status_code == 200:
-                return resp.json()
-            self.logger.warning(
-                f"Discogs page {page} failed ({resp.status_code}); retry {attempts+1}/{MAX_RETRIES}"
-            )
-            attempts += 1
-            time.sleep(RETRY_BACKOFF)
-        self.logger.error(f"❌ Discogs page {page} failed after {MAX_RETRIES} retries.")
+
+        for attempt in range(1, API_MAX_RETRIES + 1):
+            try:
+                resp = requests.get(
+                    DISCOGS_API_URL,
+                    params=params,
+                    timeout=API_TIMEOUT,
+                    headers={"User-Agent": DISCOGS_USER_AGENT},
+                )
+
+                # ✅ Success
+                if resp.status_code == 200:
+                    data = resp.json()
+                    pagination = data.get("pagination", {})
+                    total_pages = pagination.get("pages", 1)
+
+                    # ⚙️ Bound total pages defensively
+                    if total_pages > MAX_PAGINATION_WARN:
+                        self.logger.warning(
+                            f"⚠️ Pagination reported {total_pages} pages — "
+                            f"truncating to {MAX_PAGINATION_WARN} to prevent runaway fetch."
+                        )
+                        total_pages = MAX_PAGINATION_WARN
+
+                    # 🧭 End-of-range check
+                    if page > total_pages:
+                        self.logger.info(
+                            f"🧭 Page {page} > valid range [1..{total_pages}] "
+                            f"for query '{query}'. Halting."
+                        )
+                        return None
+
+                    return data
+
+                # 🚦 Rate limited
+                if resp.status_code == 429:
+                    retry_after = resp.headers.get("Retry-After")
+                    sleep_time = float(retry_after) if retry_after else (60 * attempt)
+                    self.logger.warning(
+                        f"🚦 Rate limited on page {page}. "
+                        f"Sleeping {sleep_time:.1f}s before retry {attempt}/{API_MAX_RETRIES}."
+                    )
+                    time.sleep(sleep_time)
+                    continue
+
+                # 🔁 Transient 5xx
+                if 500 <= resp.status_code < 600:
+                    self.logger.warning(
+                        f"Server {resp.status_code} on page {page}. "
+                        f"Retrying in {RETRY_BACKOFF:.1f}s ({attempt}/{API_MAX_RETRIES})"
+                    )
+                    time.sleep(RETRY_BACKOFF * attempt)
+                    continue
+
+                # 🛑 Other HTTP codes
+                self.logger.error(
+                    f"❌ HTTP {resp.status_code} on page {page}: {resp.text[:200]}"
+                )
+                break
+
+            except requests.RequestException as e:
+                self.logger.warning(
+                    f"⚠️ Network error on page {page} ({type(e).__name__}): {e}. "
+                    f"Retrying in {RETRY_BACKOFF:.1f}s ({attempt}/{API_MAX_RETRIES})"
+                )
+                time.sleep(RETRY_BACKOFF * attempt)
+
+        self.logger.error(f"❌ Page {page} failed after {API_MAX_RETRIES} retries.")
         return None
+
 
     # ------------------------------------------------------------
     def run(self, _: dict | None = None):
@@ -87,15 +155,31 @@ class Step02ExtractSparkDiscogs(BaseStep):
 
         # 1️⃣ Download pages
         all_pages = []
-        for page in range(1, PAGE_LIMIT + 1):
-            payload = self._fetch_page(key, secret, page)
-            if payload:
-                results = payload.get("results", [])
-                all_pages.append(
-                    {"page": payload.get("pagination", {}).get("page", page), "results": results}
-                )
-                self.logger.info(f"📥 Page {page} retrieved → {len(results)} results")
-            time.sleep(REQUEST_DELAY)
+
+        # prefer the API’s own defensive cap if you have it in config, else fall back
+        max_pages = getattr(self, "MAX_PAGINATION_WARN", PAGE_LIMIT)
+
+        for page in range(1, max_pages + 1):
+            # _fetch_page(query, key, secret, page) → dict | None
+            payload = self._fetch_page(query, key, secret, page)
+            if not payload:
+                self.logger.info(f"🧭 No payload for page {page} — stopping pagination.")
+                break
+
+            results = payload.get("results", [])
+            if not results:
+                self.logger.info(f"🧭 Page {page} returned 0 results — stopping pagination.")
+                break
+
+            all_pages.append(
+                {
+                    "page": payload.get("pagination", {}).get("page", page),
+                    "results": results,
+                }
+            )
+            self.logger.info(f"📥 Page {page} retrieved → {len(results)} results")
+
+            time.sleep(DISCOGS_SLEEP_SEC)
 
         if not all_pages:
             raise RuntimeError("❌ No Discogs data retrieved — check keys or rate limit.")

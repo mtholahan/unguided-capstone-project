@@ -21,7 +21,7 @@ spark = config.spark
 OUTPUT_PATH = f"{config.INTERMEDIATE_DIR}/tmdb"
 
 TMDB_API_URL = "https://api.themoviedb.org/3/movie/popular"
-PAGE_LIMIT   = 5  # 5 pages × 20 results = ~100 movies
+PAGE_LIMIT   = config.TMDB_MAX_RESULTS or 1000
 API_TIMEOUT  = config.API_TIMEOUT
 MAX_RETRIES  = config.API_MAX_RETRIES
 RETRY_BACKOFF = config.RETRY_BACKOFF

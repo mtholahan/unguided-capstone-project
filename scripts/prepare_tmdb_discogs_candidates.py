@@ -49,7 +49,7 @@ class Step03PrepareTMDBDiscogsCandidates(BaseStep):
             raise RuntimeError(f"❌ Failed to read Parquet from {path}: {e}")
 
     # ------------------------------------------------------------
-    def run(self, limit: int | None = None) -> pd.DataFrame:
+    def run(self, limit: int | None = config.DISCOG_MAX_TITLES) -> pd.DataFrame:
         """Run Step03 pipeline."""
         t0 = time.time()
         self.logger.info("🚀 Running Step03")
@@ -65,8 +65,8 @@ class Step03PrepareTMDBDiscogsCandidates(BaseStep):
         df_tmdb = self.read_parquet_abfss(tmdb_path, fs)
         df_discogs = self.read_parquet_abfss(discogs_path, fs)
 
-        if limit:
-            df_tmdb = df_tmdb.head(limit)
+        #if limit:
+        #    df_tmdb = df_tmdb.head(limit)
 
         # 2️⃣ Normalize + filter
         df_tmdb["tmdb_year"] = pd.to_datetime(
