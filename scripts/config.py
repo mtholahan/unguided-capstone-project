@@ -19,50 +19,63 @@ import logging
 import multiprocessing
 from pathlib import Path
 from pyspark.sql import SparkSession
+import os
 
-# ===============================================================
-# 🚀 FULL-SCALE SWITCHES (Step 9 – Single Control Zone)
-# ===============================================================
-# Toggle these for pipeline intensity and runtime mode
-ENV = os.getenv("ENV", "prod")             # dev | test | prod
-USE_GOLDEN_LIST = os.getenv("USE_GOLDEN_LIST", "False").lower() in ("true", "1", "y")
-RUN_LOCAL = os.getenv("RUN_LOCAL", "False").lower() in ("true", "1", "y")
+# ================================================================
+# 🧭 Environment-Aware Configuration Switcher
+# ---------------------------------------------------------------
+# Allows toggling between 'test' (light) and 'prod' (full-scale)
+# via ENV= environment variable.
+# ================================================================
 
-# ------------------------------------------------------------
-# ⚙️ Scale & API Control Parameters (Unified for TMDB + Discogs)
-# ------------------------------------------------------------
+ENV = os.getenv("ENV", "test").lower()  # defaults to 'test' if unset
+IS_PROD = ENV in ["prod", "production"]
+IS_TEST = not IS_PROD
 
-# ===============================
+print(f"🔧 Config initialized for environment: {ENV.upper()}")
+
+# ================================================================
 # 🎬 TMDB Extraction Parameters
-# ===============================
-TMDB_PAGE_LIMIT = 100                # Pulls 20 × 100 = 2,000 movies (global cap)
-TMDB_REQUEST_DELAY_SEC = 0.8         # Delay between successive TMDB requests
-TMDB_MAX_RESULTS = 20                # TMDB API returns 20 results per page (fixed)
+# ================================================================
+if IS_PROD:
+    TMDB_PAGE_LIMIT = 100                # 20 × 100 = 2,000 movies
+    TMDB_MAX_RESULTS = 20
+    TMDB_REQUEST_DELAY_SEC = 0.8
+else:
+    TMDB_PAGE_LIMIT = 2                  # 20 × 2 = 40 movies
+    TMDB_MAX_RESULTS = 20
+    TMDB_REQUEST_DELAY_SEC = 0.5
 
-# ===============================
+# ================================================================
 # 💿 Discogs Extraction Parameters
-# ===============================
-DISCOGS_PAGE_CAP = 5                 # Max pages per genre query (local throttle)
-DISCOGS_SLEEP_SEC = 1.0              # Delay between successive Discogs API calls
-DISCOGS_PER_PAGE = 50                # Discogs API records returned per page
-DISCOGS_MAX_TITLES = 500             # Upper bound on Discogs titles per run (None = full dataset)
-DISCOGS_USER_AGENT = "DataPipelineBot/1.0"  # API User-Agent header
+# ================================================================
+if IS_PROD:
+    DISCOGS_PAGE_CAP = 5                 # Pages per genre (local throttle)
+    DISCOGS_PER_PAGE = 50
+    DISCOGS_SLEEP_SEC = 1.0
+    DISCOGS_MAX_TITLES = 500
+    DISCOGS_USER_AGENT = "DataPipelineBot/1.0"
+else:
+    DISCOGS_PAGE_CAP = 1
+    DISCOGS_PER_PAGE = 25
+    DISCOGS_SLEEP_SEC = 0.5
+    DISCOGS_MAX_TITLES = 100
+    DISCOGS_USER_AGENT = "DataPipelineBot-Test/1.0"
 
-# ===============================
+# ================================================================
 # 🌐 Shared Network Reliability
-# ===============================
-API_TIMEOUT = 30                     # Timeout (seconds) for API request completion
-API_MAX_RETRIES = 8                  # Maximum retry attempts per failed request
-RETRY_BACKOFF = 2.0                  # Exponential backoff multiplier between retries
-MAX_PAGINATION_WARN = 500            # Global safety bound to prevent runaway pagination
+# ================================================================
+if IS_PROD:
+    API_TIMEOUT = 30
+    API_MAX_RETRIES = 8
+    RETRY_BACKOFF = 2.0
+    MAX_PAGINATION_WARN = 500
+else:
+    API_TIMEOUT = 15
+    API_MAX_RETRIES = 3
+    RETRY_BACKOFF = 1.0
+    MAX_PAGINATION_WARN = 100
 
-
-# -------------------------------------------------
-# ⏱️ Rate Limit Handling (per-service boundaries)
-# -------------------------------------------------
-
-RATE_LIMIT_SLEEP_SEC = 60               # Cooldown period when rate limit is hit (in seconds)
-# TMDB_RATE_LIMIT = 40                    # TMDB API call ceiling per 10-second rolling window
 
 
 # Thread & log config
@@ -245,16 +258,16 @@ def get_safe_workers(step_name="generic") -> int:
 # 🧩  MODE SUMMARY
 # ===============================================================
 def print_mode_summary():
-    print("\n========== PIPELINE MODE SUMMARY ==========")
-    print(f"ENVIRONMENT        : {ENV}")
-    print(f"USE_GOLDEN_LIST    : {USE_GOLDEN_LIST}")
-    print(f"RUN_LOCAL (offline): {RUN_LOCAL}")
-    print(f"ALLOW_API_FETCH    : {ALLOW_API_FETCH}")
-    print(f"SAVE_RAW_JSON      : {SAVE_RAW_JSON}")
-    print(f"DISCOG_MAX_TITLES  : {DISCOG_MAX_TITLES}")
-    print(f"TMDB_MAX_RESULTS   : {TMDB_MAX_RESULTS}")
-    print(f"TITLE_LIST_PATH    : {TITLE_LIST_PATH}")
-    print(f"API_TIMEOUT        : {API_TIMEOUT}s  RETRIES={API_MAX_RETRIES}")
+    print("\n⚙️ Active Configuration Summary:")
+    print(f"  ENV Mode          : {ENV.upper()}")
+    print(f"  TMDB_PAGE_LIMIT   : {TMDB_PAGE_LIMIT}")
+    print(f"  TMDB_MAX_RESULTS  : {TMDB_MAX_RESULTS}")
+    print(f"  TMDB_DELAY_SEC    : {TMDB_REQUEST_DELAY_SEC}")
+    print(f"  DISCOGS_PAGE_CAP  : {DISCOGS_PAGE_CAP}")
+    print(f"  DISCOGS_SLEEP_SEC : {DISCOGS_SLEEP_SEC}")
+    print(f"  API_TIMEOUT       : {API_TIMEOUT}s")
+    print(f"  MAX_RETRIES       : {API_MAX_RETRIES}")
+    print(f"  RETRY_BACKOFF     : {RETRY_BACKOFF}\n")
     print("===========================================\n")
 
 # ===============================================================

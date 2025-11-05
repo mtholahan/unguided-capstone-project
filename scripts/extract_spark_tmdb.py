@@ -35,10 +35,10 @@ REQUEST_DELAY    = config.TMDB_REQUEST_DELAY_SEC   # delay between TMDB requests
 # ----------------------------------------------------------------
 # 🌐 Network Reliability Controls
 # ----------------------------------------------------------------
-API_TIMEOUT        = config.API_TIMEOUT
-MAX_RETRIES        = config.API_MAX_RETRIES
-RETRY_BACKOFF      = config.RETRY_BACKOFF
-MAX_PAGINATION_WARN = config.MAX_PAGINATION_WARN
+API_TIMEOUT        = config.API_TIMEOUT             # Timeout (seconds) for API request completion
+MAX_RETRIES        = config.API_MAX_RETRIES         # Maximum retry attempts per failed request
+RETRY_BACKOFF      = config.RETRY_BACKOFF           # Exponential backoff multiplier between retries
+MAX_PAGINATION_WARN = config.MAX_PAGINATION_WARN    # Global safety bound to prevent runaway pagination
 
 
 # ================================================================

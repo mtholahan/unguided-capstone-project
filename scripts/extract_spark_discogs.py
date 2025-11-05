@@ -28,18 +28,18 @@ DISCOGS_USER_AGENT = config.DISCOGS_USER_AGENT
 # ----------------------------------------------------------------
 # ⚙️ Pagination & Throttling Controls
 # ----------------------------------------------------------------
-PAGE_LIMIT        = config.DISCOGS_MAX_TITLES or 1000  # total titles per run
-DISCOGS_PER_PAGE  = config.DISCOGS_PER_PAGE            # records per Discogs API page
-DISCOGS_SLEEP_SEC = config.DISCOGS_SLEEP_SEC           # delay between Discogs requests (seconds)
+PAGE_LIMIT        = config.DISCOGS_MAX_TITLES or 1000  # total titles to extract per run
+DISCOGS_PER_PAGE  = config.DISCOGS_PER_PAGE            # records returned per Discogs API page
+DISCOGS_SLEEP_SEC = config.DISCOGS_SLEEP_SEC           # delay between successive Discogs API calls
+DISCOGS_PAGE_CAP  = config.DISCOGS_PAGE_CAP            # per-query page throttle (local)
 MAX_PAGINATION_WARN = config.MAX_PAGINATION_WARN       # global pagination guardrail
-SAFETY_PAGE_CAP   = config.DISCOGS_PAGE_CAP            # per-query throttle depth
 
 # ----------------------------------------------------------------
 # 🌐 Network Reliability Controls
 # ----------------------------------------------------------------
-API_TIMEOUT   = config.API_TIMEOUT
-API_MAX_RETRIES = config.API_MAX_RETRIES
-RETRY_BACKOFF = config.RETRY_BACKOFF
+API_TIMEOUT        = config.API_TIMEOUT             # Timeout (seconds) for API request completion
+MAX_RETRIES        = config.API_MAX_RETRIES         # Maximum retry attempts per failed request
+RETRY_BACKOFF      = config.RETRY_BACKOFF           # Exponential backoff multiplier between retries
 
 
 # ================================================================
@@ -47,22 +47,12 @@ RETRY_BACKOFF = config.RETRY_BACKOFF
 # ================================================================
 class Step02ExtractSparkDiscogs(BaseStep):
     """Step 02 – Extract Discogs data and store to ADLS (Parquet)."""
-
+    
     def __init__(self):
         super().__init__("step_02_extract_spark_discogs")
-        self.spark = config.spark
+        self.spark = spark
         self.spark.sparkContext.setLogLevel("WARN")
-
-        # Bind config-driven constants as instance attributes
-        self.api_url = DISCOGS_API_URL
-        self.queries = DISCOGS_QUERY
-        self.page_limit = PAGE_LIMIT
-        self.sleep_sec = DISCOGS_SLEEP_SEC
-        self.max_pagination_warn = MAX_PAGINATION_WARN
-        self.safe_page_cap = SAFETY_PAGE_CAP
-        self.output_path = OUTPUT_PATH
         self.metrics_dir = config.METRICS_DIR
-
         self.logger.info("✅ Initialized Step 02 (config-driven, mount-less)")
 
     # ------------------------------------------------------------
@@ -77,7 +67,6 @@ class Step02ExtractSparkDiscogs(BaseStep):
         if not (key and secret):
             raise ValueError("❌ Discogs API credentials not found in secrets or environment.")
         return key, secret
-
 
     # ------------------------------------------------------------
     def _fetch_page(self, query, key, secret, page):
@@ -179,7 +168,7 @@ class Step02ExtractSparkDiscogs(BaseStep):
         self.logger.info(f"🔍 Using Discogs queries: {queries}")
 
         # global_cap → upper safety bound (API or config-defined maximum pagination limit)
-        global_cap = getattr(self, "max_pagination_warn", self.page_limit)
+        global_cap = getattr(self, "max_pagination_warn", PAGE_LIMIT)
 
         # local_cap → internal safety throttle; constrains how aggressively each query paginates
         local_cap = getattr(self, "safe_page_cap", config.DISCOGS_PAGE_CAP)
@@ -208,7 +197,7 @@ class Step02ExtractSparkDiscogs(BaseStep):
                 })
                 self.logger.info(f"📥 '{term}' → Page {page} retrieved → {len(results)} results")
 
-                time.sleep(self.sleep_sec)
+                time.sleep(DISCOGS_SLEEP_SEC)
 
             self.logger.info(f"✅ Completed extraction for term: '{term}' after {page} pages")
 
