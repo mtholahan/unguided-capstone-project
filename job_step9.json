@@ -1,0 +1,31 @@
+{
+  "name": "Capstone_Step9_FullScale_Deploy",
+  "new_cluster": {
+    "spark_version": "16.4.x-scala2.12",
+    "node_type_id": "Standard_D8ds_v5",
+    "num_workers": 2,
+    "autotermination_minutes": 15,
+    "spark_conf": {
+      "spark.sql.shuffle.partitions": "800",
+      "spark.sql.adaptive.enabled": "true",
+      "spark.dynamicAllocation.enabled": "true"
+    },
+    "custom_tags": {
+      "Project": "UnguidedCapstone",
+      "Step": "9"
+    }
+  },
+  "notebook_task": {
+    "notebook_path": "/Repos/markholahan@pm.me/Unguided_Capstone/Step9_FullIngest",
+    "base_parameters": {
+      "env": "prod",
+      "scale": "full",
+      "adls_container": "processed"
+    }
+  },
+  "email_notifications": {
+    "on_success": ["markholahan@pm.me"],
+    "on_failure": ["markholahan@pm.me"]
+  },
+  "max_concurrent_runs": 1
+}
