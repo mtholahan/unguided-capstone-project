@@ -13,19 +13,32 @@ from pyspark.sql import functions as F, types as T
 import os, time, json, requests
 
 
-# ----------------------------------------------------------------
-# Shared runtime resources
-# ----------------------------------------------------------------
-spark = config.spark
+# ================================================================
+#  🔧 Runtime Configuration and Shared Constants
+# ================================================================
 
+spark = config.spark   # Active Spark session or context
+
+# ----------------------------------------------------------------
+# 🗂️ Output and API Configuration
+# ----------------------------------------------------------------
 OUTPUT_PATH = f"{config.INTERMEDIATE_DIR}/tmdb"
-
 TMDB_API_URL = "https://api.themoviedb.org/3/movie/popular"
-PAGE_LIMIT   = config.TMDB_MAX_RESULTS or 1000
-API_TIMEOUT  = config.API_TIMEOUT
-MAX_RETRIES  = config.API_MAX_RETRIES
-RETRY_BACKOFF = config.RETRY_BACKOFF
-REQUEST_DELAY = config.TMDB_SLEEP_SEC
+
+# ----------------------------------------------------------------
+# ⚙️ Pagination & Throttling Controls
+# ----------------------------------------------------------------
+PAGE_LIMIT       = config.TMDB_PAGE_LIMIT          # total pages to pull (TMDB global cap)
+RESULTS_PER_PAGE = config.TMDB_MAX_RESULTS         # results returned per TMDB page
+REQUEST_DELAY    = config.TMDB_REQUEST_DELAY_SEC   # delay between TMDB requests (seconds)
+
+# ----------------------------------------------------------------
+# 🌐 Network Reliability Controls
+# ----------------------------------------------------------------
+API_TIMEOUT        = config.API_TIMEOUT
+MAX_RETRIES        = config.API_MAX_RETRIES
+RETRY_BACKOFF      = config.RETRY_BACKOFF
+MAX_PAGINATION_WARN = config.MAX_PAGINATION_WARN
 
 
 # ================================================================
@@ -76,6 +89,7 @@ class Step01ExtractSparkTMDB(BaseStep):
 
         # 1) Download TMDB pages (JSON)
         all_pages = []
+
         for page in range(1, PAGE_LIMIT + 1):
             payload = self._fetch_page(api_key, page)
             if payload:

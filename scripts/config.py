@@ -28,16 +28,42 @@ ENV = os.getenv("ENV", "prod")             # dev | test | prod
 USE_GOLDEN_LIST = os.getenv("USE_GOLDEN_LIST", "False").lower() in ("true", "1", "y")
 RUN_LOCAL = os.getenv("RUN_LOCAL", "False").lower() in ("true", "1", "y")
 
-# Scale knobs
-TMDB_MAX_RESULTS = 50                   # max TMDB results per title
-DISCOG_MAX_TITLES = 500                 # None = full dataset
-DISCOGS_PER_PAGE = 50
-DISCOGS_SLEEP_SEC = 1.0
-API_TIMEOUT = 30
-API_MAX_RETRIES = 8
-RETRY_BACKOFF = 2.0
-TMDB_REQUEST_DELAY_SEC = 0.8
-MAX_PAGINATION_WARN = 500               # Safety cap to prevent runaway pagination loops if API response is malformed
+# ------------------------------------------------------------
+# ⚙️ Scale & API Control Parameters (Unified for TMDB + Discogs)
+# ------------------------------------------------------------
+
+# ===============================
+# 🎬 TMDB Extraction Parameters
+# ===============================
+TMDB_PAGE_LIMIT = 100                # Pulls 20 × 100 = 2,000 movies (global cap)
+TMDB_REQUEST_DELAY_SEC = 0.8         # Delay between successive TMDB requests
+TMDB_MAX_RESULTS = 20                # TMDB API returns 20 results per page (fixed)
+
+# ===============================
+# 💿 Discogs Extraction Parameters
+# ===============================
+DISCOGS_PAGE_CAP = 5                 # Max pages per genre query (local throttle)
+DISCOGS_SLEEP_SEC = 1.0              # Delay between successive Discogs API calls
+DISCOGS_PER_PAGE = 50                # Discogs API records returned per page
+DISCOGS_MAX_TITLES = 500             # Upper bound on Discogs titles per run (None = full dataset)
+DISCOGS_USER_AGENT = "DataPipelineBot/1.0"  # API User-Agent header
+
+# ===============================
+# 🌐 Shared Network Reliability
+# ===============================
+API_TIMEOUT = 30                     # Timeout (seconds) for API request completion
+API_MAX_RETRIES = 8                  # Maximum retry attempts per failed request
+RETRY_BACKOFF = 2.0                  # Exponential backoff multiplier between retries
+MAX_PAGINATION_WARN = 500            # Global safety bound to prevent runaway pagination
+
+
+# -------------------------------------------------
+# ⏱️ Rate Limit Handling (per-service boundaries)
+# -------------------------------------------------
+
+RATE_LIMIT_SLEEP_SEC = 60               # Cooldown period when rate limit is hit (in seconds)
+# TMDB_RATE_LIMIT = 40                    # TMDB API call ceiling per 10-second rolling window
+
 
 # Thread & log config
 CPU_CORES = multiprocessing.cpu_count()
@@ -151,9 +177,6 @@ DISCOGS_API_URL = "https://api.discogs.com/database/search"
 DISCOGS_TOKEN = os.getenv("DISCOGS_TOKEN", "")
 DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 
-RATE_LIMIT_SLEEP_SEC = 60
-DISCOGS_MAX_RETRIES = 3
-TMDB_RATE_LIMIT = 40
 
 # ===============================================================
 # 📂  DATA OUTPUT DIRS
