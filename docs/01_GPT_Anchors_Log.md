@@ -18,6 +18,41 @@ Dependencies: [keys/env/tools/people]
 
 
 
+**21:14 11/04/2025**
+
+
+
+✅ **Anchor created:** [Capstone_Step9_Begin]
+
+------
+
+**Resume from anchor:** [Capstone_Step9_Begin]
+ **Context:**
+ Step 8 is complete with a fully validated, rubric-compliant PyTest suite confirming Spark, configuration, and I/O stability across both local and Databricks environments. The project is stable at version `v2.8`, with six passing tests and ~90% coverage. Step 9 now focuses on **scaling the pipeline** to process full TMDB + Discogs datasets and persisting outputs to Azure Storage.
+
+**Current milestone:**
+
+- PyTest suite implemented and documented in README + slide deck
+- Step 8 branch (`step8-redux-dev`) merged and validated
+- Databricks environment confirmed stable for full-data execution
+
+**Next action:**
+ ➡️ Scale the Databricks job to run the **complete TMDB + Discogs data ingestion and transformation** workflow, persisting outputs to the Azure Data Lake `processed/` container, and capture performance metrics (runtime duration, row counts, storage size).
+
+**Dependencies:**
+
+- Active Databricks cluster (Runtime 16 LTS, Python 3.11, Spark 3.5.x)
+- Azure Storage credentials / Managed Identity access to `markcapstoneadls`
+- Branch: `step9-scale-deploy` (new branch from `step8-redux-dev`)
+- Monitoring notebook: `Performance_Metrics.ipynb` (to be created in Step 9)
+- Mentor feedback (Akhil) on scaling performance and storage evidence
+
+
+
+
+
+
+
 
 
 **18:56 11/04/2025**
