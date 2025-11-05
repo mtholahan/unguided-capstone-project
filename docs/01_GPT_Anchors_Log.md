@@ -18,6 +18,42 @@ Dependencies: [keys/env/tools/people]
 
 
 
+
+
+**18:56 11/04/2025**
+
+✅ **Anchor created:** [Capstone_Step8_Redux]
+
+------
+
+**Resume from anchor:** [Capstone_Step8_Redux]
+ **Context:**
+ Step 8 has been submitted, but the deliverable lacks a formal PyTest test suite as defined in the rubric (“unit test report with passed/failed metrics and code coverage”).
+ The current notebook-based harness verified runtime functionality inside Databricks but doesn’t constitute a PyTest suite.
+ Akhil is likely to request that requirement explicitly, and you’ll need a compliant, minimal PyTest implementation to close the gap fast.
+
+**Current milestone:**
+
+- Databricks validation harness (`Testing.ipynb`) is functional and demonstrates runtime stability.
+- Architecture and README accurately describe testing intent and Step 9 readiness.
+- Step 8 submission (`step8-submission` branch, tag `v2.8`) has been reviewed and pushed.
+
+**Next action:**
+ ➡️ Design and implement a **minimal PyTest-compatible test suite** (`tests/test_pipeline_config.py`, `tests/test_spark_session.py`) that runs locally or in Databricks Repos context to satisfy rubric metrics — and prepare a concise coverage summary.
+
+**Dependencies:**
+
+- Working local/Databricks environment with `pytest`, `pyspark`, and repo access.
+- `config.py` and `bootstrap.py` scripts for import validation.
+- Git branches: `step8-redux-dev` (new branch from `step8-submission`).
+- Mentor feedback from Akhil upon Step 8 review (expected soon).
+
+------
+
+Pls outline the **minimum viable PyTest suite** I can create (2–3 short test files) that mirrors your existing notebook validations and produces a coverage summary within 30 minutes of setup.
+
+
+
 **23:36 11/03/2025**
 
 ✅ **Anchor created:** [Capstone_Step8_Testing_Wrapup]
