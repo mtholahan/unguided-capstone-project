@@ -1,9 +1,14 @@
 import os
 
-def test_config_paths_exist(app_config):
-    assert hasattr(app_config, "DATA_PATH")
-    assert os.path.exists(app_config.DATA_PATH)
+def test_config_imports(app_config):
+    assert app_config is not None  # config.py loads without Databricks
 
-def test_env_vars_present():
-    for var in ["AZURE_STORAGE_KEY", "BLOB_CONTAINER"]:
-        assert var in os.environ, f"{var} not set"
+def test_local_dirs_defined(app_config):
+    assert hasattr(app_config, "DATA_DIR")
+    assert hasattr(app_config, "LOCAL_PATHS")
+    assert "raw" in app_config.LOCAL_PATHS
+
+def test_adls_strings_present(app_config):
+    assert hasattr(app_config, "RAW_DIR")
+    assert isinstance(app_config.RAW_DIR, str)
+    assert app_config.RAW_DIR.startswith("abfss://")

@@ -1,6 +1,11 @@
 import pytest
+import os, sys
 from pyspark.sql import SparkSession
-from config import Config
+
+# Ensure project root is on path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+import scripts.config as config
 
 @pytest.fixture(scope="session")
 def spark():
@@ -15,4 +20,4 @@ def spark():
 
 @pytest.fixture(scope="session")
 def app_config():
-    return Config()
+    return config

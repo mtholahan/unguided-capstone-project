@@ -1,0 +1,25 @@
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.3-final-0 ________________
+
+Name                                         Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------------
+check_paths.py                                  27     27     0%   7-46
+diagnose_paths.py                               34     34     0%   7-71
+scripts/__init__.py                              0      0   100%
+scripts/base_step.py                           118    118     0%   14-254
+scripts/bootstrap.py                             6      6     0%   1-6
+scripts/config.py                              161    161     0%   20-302
+scripts/extract_spark_discogs.py                72     72     0%   9-177
+scripts/extract_spark_tmdb.py                   69     69     0%   9-154
+scripts/inventory_pipeline_outputs.py           33     33     0%   8-67
+scripts/main.py                                 36     36     0%   9-68
+scripts/match_and_enrich.py                     36     36     0%   8-72
+scripts/prepare_tmdb_discogs_candidates.py      54     54     0%   8-132
+scripts/utils.py                               148    148     0%   13-296
+scripts/utils_schema.py                         97     97     0%   8-201
+scripts/utils_schema_diagnostic.py               0      0   100%
+scripts/validate_schema_alignment.py            33     33     0%   5-61
+--------------------------------------------------------------------------
+TOTAL                                          924    924     0%
+no tests ran in 0.15s

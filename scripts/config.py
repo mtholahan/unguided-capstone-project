@@ -13,6 +13,7 @@ Purpose:
     - Maintain backward compatibility for Steps 01–05
 ---------------------------------------------------------------
 """
+import os
 
 # ===============================================================
 # ⚙️  SPARK INITIALIZATION (Mount-less Safe)
@@ -29,8 +30,14 @@ except NameError:
     )
     print("⚙️ Created new SparkSession for config.py")
 
-from pyspark.dbutils import DBUtils
-dbutils = DBUtils(spark)
+
+if os.getenv("DATABRICKS_RUNTIME_VERSION"):
+    from pyspark.dbutils import DBUtils
+    dbutils = DBUtils(spark)
+else:
+    dbutils = None
+    print("⚠️  Running outside Databricks – skipping DBUtils import.")
+
 
 # ===============================================================
 # 📦  IMPORTS & ENV LOADING
@@ -164,9 +171,7 @@ DISCOGS_API_URL = "https://api.discogs.com/database/search"
 DISCOGS_TOKEN = os.getenv("DISCOGS_TOKEN", "")
 DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 
-#DISCOGS_RAW_DIR = RAW_DIR / "discogs_raw"
 DISCOGS_RAW_DIR = f"{RAW_DIR}/discogs_raw"
-#DISCOGS_RAW_DIR.mkdir(parents=True, exist_ok=True)
 os.makedirs(DISCOGS_RAW_DIR, exist_ok=True)
 
 DISCOGS_MAX_RETRIES = 3
