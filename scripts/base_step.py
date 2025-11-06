@@ -21,11 +21,12 @@ from pathlib import Path
 from datetime import datetime
 import pandas as pd
 from pyspark.sql import functions as F
-from scripts.config import (
-    DATA_DIR,
-    LOG_DIR,
-    LOG_LEVEL,
-)
+from scripts import config
+# Fallbacks for robustness (in case config changes again)
+DATA_DIR = getattr(config, "DATA_DIR", "./data")
+ENV = getattr(config, "ENV", "test").lower()
+LOG_DIR = getattr(config, "LOG_DIR", f"{DATA_DIR}/logs/{ENV}")
+LOG_LEVEL = getattr(config, "LOG_LEVEL", "INFO")
 
 # Optional Azure dependency
 try:
