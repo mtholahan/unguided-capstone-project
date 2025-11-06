@@ -154,4 +154,4 @@ notebooks/abfss/metrics/*
 notebooks/abfss/**/metrics/*
 *.metrics.json
 *.metrics.csv
-
+**/abfss*/metrics/*
