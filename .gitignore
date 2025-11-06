@@ -148,3 +148,10 @@ logs/
 
 # "Mark of the Web" (MotW)
 *:Zone.Identifier
+
+# --- Databricks metrics / transient outputs ---
+notebooks/abfss/metrics/*
+notebooks/abfss/**/metrics/*
+*.metrics.json
+*.metrics.csv
+
