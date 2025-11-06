@@ -26,13 +26,14 @@ DISCOGS_API_URL = "https://api.discogs.com/database/search"
 DISCOGS_USER_AGENT = config.DISCOGS_USER_AGENT
 
 # ----------------------------------------------------------------
-# ⚙️ Pagination & Throttling Controls
+# 🎚️ Pagination & Throttling Controls
 # ----------------------------------------------------------------
-PAGE_LIMIT        = config.DISCOGS_MAX_TITLES
-DISCOGS_PER_PAGE  = config.DISCOGS_PER_PAGE
-DISCOGS_SLEEP_SEC = config.DISCOGS_SLEEP_SEC
-DISCOGS_PAGE_CAP  = config.DISCOGS_PAGE_CAP
-MAX_PAGINATION_WARN = config.MAX_PAGINATION_WARN
+DISCOGS_PAGE_CAP      = config.DISCOGS_PAGE_CAP      # Max number of pages to request per query (prevents runaway loops)
+DISCOGS_PER_PAGE      = config.DISCOGS_PER_PAGE      # Number of releases returned per API page (Discogs default = 100)
+DISCOGS_SLEEP_SEC     = config.DISCOGS_SLEEP_SEC     # Delay between page requests (seconds) for rate-limit compliance
+DISCOGS_MAX_TITLES    = config.DISCOGS_MAX_TITLES    # Global safety cap on total titles fetched across all queries
+MAX_PAGINATION_WARN   = config.MAX_PAGINATION_WARN   # Failsafe to warn if pagination exceeds safe bounds
+
 
 # ----------------------------------------------------------------
 # 🌐 Network Reliability Controls
@@ -149,7 +150,7 @@ class Step02ExtractSparkDiscogs(BaseStep):
         queries = config.DISCOGS_QUERY if isinstance(config.DISCOGS_QUERY, (list, tuple)) else [config.DISCOGS_QUERY]
         self.logger.info(f"🔍 Using Discogs queries: {queries}")
 
-        page_cap = min(PAGE_LIMIT, MAX_PAGINATION_WARN)
+        page_cap = min(DISCOGS_PAGE_CAP, MAX_PAGINATION_WARN)
 		
         for term in queries:
             self.logger.info(f"🎧 Extracting releases for '{term}' (max {page_cap} pages)")
@@ -262,7 +263,7 @@ class Step02ExtractSparkDiscogs(BaseStep):
             "records_written": count,
             "duration_sec": round(time.time() - t0, 2),
             "output_path": OUTPUT_PATH,
-            "page_limit": PAGE_LIMIT,
+            "page_limit": DISCOGS_PAGE_CAP,
             "env": config.ENV,
             "run_id": config.RUN_ID,
             "step_name": "extract_spark_discogs_metrics",
