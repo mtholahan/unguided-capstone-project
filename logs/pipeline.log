@@ -567,3 +567,99 @@ SHARED (190 titles)         190.0                NaN           NaN          2.74
 2025-10-20 22:29:17,606 - extract_spark_tmdb - INFO - 📊 Logged metrics for extract_spark_tmdb_metrics: {'titles_total': 10, 'records_written': 1, 'duration_sec': 7.16, 'mode': 'GOLDEN', 'branch': 'step6-dev', 'step_name': 'extract_spark_tmdb_metrics', 'timestamp': '2025-10-20T22:29:16', 'step_runtime_sec': 7.16, 'pipeline_runtime_sec': 0.0}
 2025-10-20 22:29:17,609 - extract_spark_tmdb - INFO - ✅ Completed Spark TMDB extraction in 7.2s
 2025-10-20 22:29:17,612 - extract_spark_discogs - INFO - Initialized logger for extract_spark_discogs
+2025-10-24 00:28:45,162 - step_03_prepare_spark_tmdb_input - INFO - Initialized logger for step_03_prepare_spark_tmdb_input
+2025-10-24 00:28:45,285 - step_03_prepare_spark_tmdb_input - INFO - Initialized step_03_prepare_spark_tmdb_input [branch=step8-dev, commit=e9ca63f]
+2025-10-24 00:28:45,286 - step_03_prepare_spark_tmdb_input - INFO - ✅ Initialized Step 03 (Spark) [branch=step8-dev]
+2025-10-24 00:28:45,286 - step_03_prepare_spark_tmdb_input - INFO - 🎬 Starting Step 03 – Prepare TMDB→Discogs Input (Spark)
+2025-10-24 00:28:47,740 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-24 00:45:32,294 - step_03_prepare_spark_tmdb_input - INFO - Initialized logger for step_03_prepare_spark_tmdb_input
+2025-10-24 00:45:32,431 - step_03_prepare_spark_tmdb_input - INFO - Initialized step_03_prepare_spark_tmdb_input [branch=step8-dev, commit=e9ca63f]
+2025-10-24 00:45:32,431 - step_03_prepare_spark_tmdb_input - INFO - ✅ Initialized Step 03 (Spark) [branch=step8-dev]
+2025-10-24 00:45:32,432 - step_03_prepare_spark_tmdb_input - INFO - 🎬 Starting Step 03 – Prepare TMDB→Discogs Input (Spark)
+2025-10-24 00:45:35,075 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-24 00:57:38,067 - step_03_prepare_spark_tmdb_input - INFO - Initialized logger for step_03_prepare_spark_tmdb_input
+2025-10-24 00:57:38,202 - step_03_prepare_spark_tmdb_input - INFO - Initialized step_03_prepare_spark_tmdb_input [branch=step8-dev, commit=e9ca63f]
+2025-10-24 00:57:38,202 - step_03_prepare_spark_tmdb_input - INFO - ✅ Initialized Step 03 (Spark) [branch=step8-dev]
+2025-10-24 00:57:38,203 - step_03_prepare_spark_tmdb_input - INFO - 🎬 Starting Step 03 – Prepare TMDB→Discogs Input (Spark)
+2025-10-24 00:57:40,656 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-24 01:03:20,937 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-24 01:03:21,065 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=step8-dev, commit=e9ca63f]
+2025-10-24 01:03:21,729 - step_01_extract_spark_tmdb - INFO - ✅ Configured Spark for Azure: markcapstoneadls
+2025-10-24 01:03:21,729 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-24 01:03:21,730 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-24 01:03:29,131 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-24 01:05:03,911 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-24 01:05:04,037 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=step8-dev, commit=e9ca63f]
+2025-10-24 01:05:04,695 - step_01_extract_spark_tmdb - INFO - ✅ Configured Spark for Azure: markcapstoneadls
+2025-10-24 01:05:04,695 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-24 01:05:04,695 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-24 01:05:10,125 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-24 01:11:14,587 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-24 01:11:14,718 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=step8-dev, commit=e9ca63f]
+2025-10-24 01:11:15,417 - step_01_extract_spark_tmdb - INFO - ✅ Configured Spark for Azure: markcapstoneadls
+2025-10-24 01:11:15,418 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-24 01:11:15,418 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-24 01:11:20,817 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-24 13:25:33,443 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-24 13:25:33,680 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=step8-dev, commit=e9ca63f]
+2025-10-24 13:25:33,689 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-24 13:25:33,690 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-24 13:25:33,690 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-24 13:25:50,093 - step_01_extract_spark_tmdb - INFO - 💾 Wrote 10 TMDB records → data/mock/tmdb/
+2025-10-24 13:25:50,104 - step_01_extract_spark_tmdb - INFO - 📊 Logged metrics for extract_spark_tmdb_metrics: {'titles_total': 10, 'records_written': 10, 'duration_sec': 16.4, 'mode': 'GOLDEN', 'local_mode': True, 'branch': 'step8-dev', 'step_name': 'extract_spark_tmdb_metrics', 'timestamp': '2025-10-24T13:25:50', 'step_runtime_sec': 16.4, 'pipeline_runtime_sec': 0.0}
+2025-10-24 13:25:50,104 - step_01_extract_spark_tmdb - INFO - ✅ Completed TMDB Spark extraction
+2025-10-24 13:25:50,759 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 02:55:42,531 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 02:55:42,532 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 02:55:43,585 - step_01_extract_spark_tmdb - INFO - ✅ Configured Spark for Azure: ungcapstor01
+2025-10-31 02:55:43,585 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 02:55:43,586 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 02:55:49,830 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 03:00:48,363 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 03:00:48,364 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 03:00:49,285 - step_01_extract_spark_tmdb - INFO - ✅ Configured Spark for Azure: ungcapstor01
+2025-10-31 03:00:49,285 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 03:00:49,285 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 03:00:55,263 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 03:41:00,644 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 03:41:00,673 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 03:41:00,674 - step_01_extract_spark_tmdb - WARNING - ⚠️ Azure config failed, falling back to local: configure_spark_from_env() missing 1 required positional argument: 'env'
+2025-10-31 03:41:00,719 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-31 03:41:00,720 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 03:41:00,720 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 03:41:14,878 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 03:56:29,037 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 03:56:29,068 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 03:56:29,068 - step_01_extract_spark_tmdb - WARNING - ⚠️ Azure config failed, falling back to local: configure_spark_from_env() missing 1 required positional argument: 'env'
+2025-10-31 03:56:29,068 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-31 03:56:29,068 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 03:56:29,069 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 03:56:42,538 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 04:00:06,469 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 04:00:06,470 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 04:00:06,470 - step_01_extract_spark_tmdb - WARNING - ⚠️ Azure config failed, falling back to local: configure_spark_from_env() missing 1 required positional argument: 'env'
+2025-10-31 04:00:06,470 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-31 04:00:06,471 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 04:00:06,471 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 04:00:15,650 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 04:02:56,577 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 04:02:56,579 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 04:02:56,579 - step_01_extract_spark_tmdb - WARNING - ⚠️ Azure config failed, falling back to local: configure_spark_from_env() missing 1 required positional argument: 'env'
+2025-10-31 04:02:56,579 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-31 04:02:56,579 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 04:02:56,579 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 04:03:06,266 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 04:07:09,454 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 04:07:09,456 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 04:07:09,456 - step_01_extract_spark_tmdb - WARNING - ⚠️ Azure config failed, falling back to local: configure_spark_from_env() missing 1 required positional argument: 'env'
+2025-10-31 04:07:09,456 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-31 04:07:09,456 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 04:07:09,456 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 04:07:18,590 - py4j.clientserver - INFO - Closing down clientserver connection
+2025-10-31 04:16:48,465 - step_01_extract_spark_tmdb - INFO - Initialized logger for step_01_extract_spark_tmdb
+2025-10-31 04:16:48,467 - step_01_extract_spark_tmdb - INFO - Initialized step_01_extract_spark_tmdb [branch=unknown, commit=unknown]
+2025-10-31 04:16:48,467 - step_01_extract_spark_tmdb - WARNING - ⚠️ Azure config failed, falling back to local: configure_spark_from_env() missing 1 required positional argument: 'env'
+2025-10-31 04:16:48,467 - step_01_extract_spark_tmdb - INFO - 🧩 Running in LOCAL_MODE → writing to data/mock/tmdb/
+2025-10-31 04:16:48,467 - step_01_extract_spark_tmdb - INFO - 🎬 Initialized ExtractSparkTMDB
+2025-10-31 04:16:48,467 - step_01_extract_spark_tmdb - INFO - 🎞️ Starting TMDB extraction (GOLDEN, 10 titles)
+2025-10-31 04:16:57,754 - py4j.clientserver - INFO - Closing down clientserver connection

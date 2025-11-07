@@ -1,0 +1,20 @@
+{
+  "cluster_name": "ungcap-step8-test",
+  "spark_version": "16.4.x-scala2.12",
+  "spark_conf": {
+    "spark.databricks.unityCatalog.enabled": "true",
+    "spark.sql.legacy.timeParserPolicy": "LEGACY"
+  },
+  "num_workers": 1,
+  "node_type_id": "Standard_DS3_v2",
+  "autotermination_minutes": 30,
+  "data_security_mode": "USER_ISOLATION",
+  "runtime_engine": "STANDARD",
+  "enable_elastic_disk": true,
+  "custom_tags": {
+    "Project": "UnguidedCapstone",
+    "Stage": "Step8_Test"
+  },
+  "driver_node_type_id": "Standard_DS3_v2",
+  "autotermination_minutes": 30
+}

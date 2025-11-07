@@ -20,6 +20,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
+from pyspark.sql import functions as F
 from scripts.config import (
     DATA_DIR,
     LOG_DIR,
@@ -90,33 +91,33 @@ class BaseStep:
     # ============================================================
     # 💾 Metrics Handling — CSV + JSON with Runtime Rollup
     # ============================================================
-    def write_metrics(self, metrics: dict, name: str | None = None):
+    def write_metrics(
+        self,
+        metrics: dict,
+        name: str | None = None,
+        metrics_dir: str | Path | None = None,
+    ):
         """
         Persist step metrics in two forms:
-        1️⃣ Append to consolidated pipeline_metrics.csv
-        2️⃣ Write individual JSON snapshot for the step
+        1️⃣ Append to consolidated pipeline_metrics.csv (local)
+        2️⃣ Write individual JSON snapshot for the step (local + optional ADLS)
 
-        Adds:
-            • step_runtime_sec  → duration of this step (if provided)
-            • pipeline_runtime_sec → cumulative runtime across steps in session
-
-        Args:
-            metrics (dict): Dictionary of metrics to log
-            name (str | None): Optional override for the step name
+        Backward compatible with older calls that only passed (metrics, name).
         """
-        import csv, json, time
+        import csv, json, time, os
         from datetime import datetime
         from pathlib import Path
         from scripts.config import DATA_DIR
 
-        # --- Ensure metrics directory exists ---
-        metrics_dir = getattr(self, "metrics_dir", None) or (Path(DATA_DIR) / "metrics")
+        # --- pick metrics dir (arg > instance > default) ---
+        if metrics_dir is None:
+            metrics_dir = getattr(self, "metrics_dir", None) or (Path(DATA_DIR) / "metrics")
+        metrics_dir = Path(metrics_dir)
         metrics_dir.mkdir(parents=True, exist_ok=True)
 
         # --- Track timing info ---
         now = time.time()
         if not hasattr(self, "_pipeline_start"):
-            # First call in this session
             self._pipeline_start = now
             self._last_step_time = now
             pipeline_runtime = 0.0
@@ -150,12 +151,23 @@ class BaseStep:
         json_file = metrics_dir / f"{metrics['step_name']}.json"
         json_file.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
 
+        # --- 3️⃣ Optionally copy metrics to ADLS if dbutils available ---
+        #     (keep your original behavior)
+        if hasattr(self, "dbutils"):
+            try:
+                adls_target = os.path.join(str(metrics_dir), f"{metrics['step_name']}.json")
+                self.dbutils.fs.cp(f"file:{json_file}", adls_target, recurse=True)
+                self.logger.info(f"📤 Metrics copied to ADLS: {adls_target}")
+            except Exception as e:
+                self.logger.warning(f"⚠️ Could not copy metrics to ADLS: {e}")
+
         # --- Log summary ---
         self.logger.info(f"📊 Logged metrics for {metrics['step_name']}: {metrics}")
         self.logger.debug(
             f"🪶 Metrics written to: {metrics_file.name}, {json_file.name} | "
             f"Step runtime={step_runtime:.2f}s | Pipeline runtime={pipeline_runtime:.2f}s"
         )
+ 
 
 
     # ============================================================
@@ -213,6 +225,27 @@ class BaseStep:
         os.replace(tmp, path)
         self.logger.info(f"💾 Wrote {len(df):,} rows → {path.name}")
 
+    # ============================================================
+    # Common schema normalization helper
+    # ============================================================
+    def normalize_schema(self, df, required_cols):
+        """
+        Ensure all required columns exist in the DataFrame.
+        Adds missing columns as nulls and reorders schema for consistency.
+        """
+        existing = df.columns
+        missing = [c for c in required_cols if c not in existing]
+
+        if missing:
+            self.logger.warning(f"⚠️ Adding missing columns to schema: {missing}")
+
+        for c in missing:
+            df = df.withColumn(c, F.lit(None))
+
+        # Maintain order: required first, then any extras
+        final_cols = required_cols + [c for c in existing if c not in required_cols]
+        return df.select(*final_cols)
+    
     # ============================================================
     # 🚀 Abstract run() method
     # ============================================================

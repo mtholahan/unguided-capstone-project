@@ -12,11 +12,19 @@ Provides:
 
 import os, re, time, json, hashlib, unicodedata, logging, threading, concurrent.futures
 from pathlib import Path
-from tqdm import tqdm
+# Optional dependency: tqdm (progress bar)
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:
+    # Fallback silent iterator if tqdm is not available (e.g., Databricks job mode)
+    def tqdm(iterable=None, *args, **kwargs):
+        return iterable if iterable is not None else []
+
 from types import SimpleNamespace
 from typing import List, Dict, Any, Iterable, Optional
 import requests
 
+from scripts import config
 from scripts.config import (
     TMDB_API_KEY,
     API_TIMEOUT,
@@ -175,10 +183,10 @@ def read_json(path: Path) -> Optional[dict]:
         return None
 
 
-def get_cache_path(url: str, params: dict, cache_dir: Path = DATA_DIR / "cache") -> Path:
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    key = f"{url}?{json.dumps(params, sort_keys=True)}".encode("utf-8")
-    return cache_dir / f"{hashlib.md5(key).hexdigest()}.json"
+def get_cache_path(url: str, params: dict, cache_dir: str = f"{config.DATA_DIR}/cache") -> str:
+    os.makedirs(cache_dir, exist_ok=True)
+    key = f"{url}{json.dumps(params, sort_keys=True)}".encode("utf-8")
+    return f"{cache_dir}/{hashlib.md5(key).hexdigest()}.json"
 
 
 def safe_filename(name: str, max_len: int = 120) -> str:

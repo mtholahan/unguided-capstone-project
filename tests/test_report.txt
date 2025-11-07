@@ -1,0 +1,12 @@
+......                                                                   [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.3-final-0 ________________
+
+Name                      Stmts   Miss  Cover   Missing
+-------------------------------------------------------
+conftest.py                  13      0   100%
+test_pipeline_config.py      11      0   100%
+test_spark_session.py        17      4    76%   2-5
+-------------------------------------------------------
+TOTAL                        41      4    90%
+6 passed in 7.29s
