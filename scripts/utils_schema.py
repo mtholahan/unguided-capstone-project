@@ -173,29 +173,52 @@ def build_integrity_summary(
     tmdb_df: pd.DataFrame,
     discogs_df: pd.DataFrame,
     candidates_df: pd.DataFrame,
-    logger: logging.Logger
+    logger: "logging.Logger",
 ) -> pd.DataFrame:
-    """Compute schema integrity summaries for TMDB, Discogs, and candidates datasets."""
-    rows: List[Dict[str, Any]] = []
+    """
+    Compute schema integrity summaries for TMDB, Discogs, and Candidates datasets.
 
-    # --- TMDB + Discogs datasets ---
+    Notes:
+        - Aligns to refactored schema using namespaced fields:
+          tmdb_title, discogs_title, and *_title_norm.
+        - Each record in the output reports % of null and duplicate values.
+        - Skips any key that does not exist in the DataFrame to prevent KeyErrors.
+    """
+    rows: list[dict[str, any]] = []
+
+    # --- TMDB & DISCOGS BRONZE DATASETS ---
     for dataset, df, keys in [
-        ("tmdb", tmdb_df, ["tmdb_id", "title"]),
-        ("discogs", discogs_df, ["discogs_id", "title"]),
+        ("tmdb", tmdb_df, ["tmdb_id", "tmdb_title"]),
+        ("discogs", discogs_df, ["discogs_id", "discogs_title"]),
     ]:
         for k in keys:
-            h = key_health(df, k)
-            h.update({"dataset": dataset})
-            rows.append(h)
+            if k in df.columns:
+                h = key_health(df, k)
+                h.update({"dataset": dataset})
+                rows.append(h)
+            else:
+                logger.warning(f"⚠️ Column '{k}' not found in {dataset} dataset; skipped.")
 
-    # --- Candidates (already loaded as DataFrame) ---
+    # --- SILVER CANDIDATES DATASET ---
     if candidates_df is not None and not candidates_df.empty:
         logger.info(f"🧩 Processing candidates dataframe: {len(candidates_df):,} rows")
-        for k in ["movie_ref", "tmdb_title_norm", "discogs_title_norm"]:
-            h = key_health(candidates_df, k)
-            h.update({"dataset": "candidates"})
-            rows.append(h)
+        candidate_keys = [
+            "movie_ref",
+            "tmdb_title_norm",
+            "discogs_title_norm",
+            "tmdb_title",
+            "discogs_title",
+        ]
+        for k in candidate_keys:
+            if k in candidates_df.columns:
+                h = key_health(candidates_df, k)
+                h.update({"dataset": "candidates"})
+                rows.append(h)
+            else:
+                logger.debug(f"Skipping missing key '{k}' in candidates dataframe.")
     else:
-        logger.warning("⚠️ No candidates data available; skipping.")
+        logger.warning("⚠️ No candidates data available; skipping integrity summary for that layer.")
 
-    return pd.DataFrame(rows)
+    summary_df = pd.DataFrame(rows)
+    summary_df = summary_df[["dataset", "key", "null_pct", "dupe_pct"]] if not summary_df.empty else summary_df
+    return summary_df

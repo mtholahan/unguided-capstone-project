@@ -42,9 +42,9 @@ print(f"🔧 Config initialized for environment: {ENV.upper()}")
 # 🎬 TMDB Extraction Parameters
 # ================================================================
 if IS_PROD:
-    TMDB_PAGE_LIMIT = 100                # int — Number of TMDB pages to request
+    TMDB_PAGE_LIMIT = 500                # int — Number of TMDB pages to request
     TMDB_MAX_RESULTS = 20                # int — Number of movie results returned per TMDB page.
-    TMDB_REQUEST_DELAY_SEC = 0.75        # float — Delay (in seconds) between sequential TMDB API calls.
+    TMDB_REQUEST_DELAY_SEC = 0.5         # float — Delay (in seconds) between sequential TMDB API calls.
 else:
     TMDB_PAGE_LIMIT = 2
     TMDB_MAX_RESULTS = 20
@@ -54,17 +54,17 @@ else:
 # 💿 Discogs Extraction Parameters
 # ================================================================
 if IS_PROD:
-    DISCOGS_PAGE_CAP = 15                 # int — Maximum number of pages to fetch per Discogs query term.
+    DISCOGS_PAGE_CAP = 75                 # int — Maximum number of pages to fetch per Discogs query term.
     DISCOGS_PER_PAGE = 100                # int — Number of results requested per page from the Discogs API.
-    DISCOGS_SLEEP_SEC = 1.0               # float — Delay (in seconds) between Discogs page requests.
-    DISCOGS_MAX_TITLES = 2000             # int — Hard cap on total Discogs records to retain post-extraction.
-    DISCOGS_USER_AGENT = "DataPipelineBot/1.0"
+    DISCOGS_SLEEP_SEC = 0.6               # float — Delay (in seconds) between Discogs page requests.
+    DISCOGS_MAX_TITLES = 15_000            # int — Hard cap on total Discogs records to retain post-extraction.
+    DISCOGS_USER_AGENT = "DataPipelineProd/1.0"
 else:
-    DISCOGS_PAGE_CAP = 15
+    DISCOGS_PAGE_CAP = 5
     DISCOGS_PER_PAGE = 100
     DISCOGS_SLEEP_SEC = 1.0
-    DISCOGS_MAX_TITLES = 2000
-    DISCOGS_USER_AGENT = "DataPipelineBot-Test/1.0"
+    DISCOGS_MAX_TITLES = 2_000
+    DISCOGS_USER_AGENT = "DataPipelineTest/1.0"
 
 # A list of search queries (genres, artists, or keywords)
 DISCOGS_QUERY = ["soundtrack", "film soundtrack", "motion picture", "score"]
@@ -320,12 +320,12 @@ DISCOGS_USER_AGENT = os.getenv("DISCOGS_USER_AGENT", "UnguidedCapstoneBot/1.0")
 
 
 # ===============================================================
-# 🧩  STEP-SPECIFIC PARAMETERS THESE ARE PROBABLY NOT USED
+# 🧩  STEP-SPECIFIC PARAMETERS
 # ===============================================================
 DEFAULT_MAX_WORKERS = MAX_THREADS
 FUZZ_THRESHOLD = 85
-YEAR_VARIANCE = 2
-TOP_N = 5
+YEAR_VARIANCE = 3
+TOP_N = 5   # probably unused
 
 # ===============================================================
 # 🎬  GOLDEN TITLES / ACTIVE LISTS

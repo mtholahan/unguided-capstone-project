@@ -10,7 +10,15 @@ Provides:
   • File + logging utilities shared by all pipeline steps
 """
 
-import os, re, time, json, hashlib, unicodedata, logging, threading, concurrent.futures
+import os
+import re
+import time
+import json
+import hashlib
+import unicodedata
+import logging
+import threading
+import concurrent.futures
 from pathlib import Path
 # Optional dependency: tqdm (progress bar)
 try:
@@ -23,6 +31,7 @@ except ModuleNotFoundError:
 from types import SimpleNamespace
 from typing import List, Dict, Any, Iterable, Optional
 import requests
+import functools
 
 from scripts import config
 from scripts.config import (
@@ -287,3 +296,34 @@ def batch_fetch(
             if r and getattr(r, "status_code", 500) == 200:
                 results.append(r.json())
     return results
+
+
+
+def dynamic_throttle(base_delay=0.5, max_delay=5.0):
+    """Decorator for dynamic backoff on 429 or near-rate-limit responses."""
+    def decorator(func):
+        delay = base_delay
+
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            nonlocal delay
+            while True:
+                response = func(*args, **kwargs)
+                # Discogs/TMDB rate-limit headers
+                rl_remaining = response.headers.get("X-RateLimit-Remaining")
+                rl_reset = response.headers.get("X-RateLimit-Reset")
+
+                # if rate-limit near exhaustion or 429 returned
+                if response.status_code == 429 or (rl_remaining and int(rl_remaining) < 5):
+                    sleep_for = min(delay * 2, max_delay)
+                    print(f"⚠️ Throttling: sleeping {sleep_for:.1f}s (remaining={rl_remaining})")
+                    time.sleep(sleep_for)
+                    delay = sleep_for  # exponential backoff
+                    continue
+
+                # successful — reset delay to base
+                delay = base_delay
+                return response
+        return wrapper
+    return decorator
+
