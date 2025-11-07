@@ -202,7 +202,7 @@ unguided-capstone-project/
 
 ## 🖼️ Slide Deck Integration
 
-View Slide Deck → Step9_Presentation.pptx (figure out how to link)
+[View Slide Deck → Step9_Presentation.pptx](slides/Step9_Presentation.pptx)
 
 This presentation summarizes:
 
