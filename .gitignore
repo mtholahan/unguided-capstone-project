@@ -155,3 +155,7 @@ notebooks/abfss/**/metrics/*
 *.metrics.json
 *.metrics.csv
 **/abfss*/metrics/*
+
+# Ignore Springboard anchor log
+docs/01_GPT_Anchors_Log.md
+
