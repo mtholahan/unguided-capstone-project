@@ -148,3 +148,14 @@ logs/
 
 # "Mark of the Web" (MotW)
 *:Zone.Identifier
+
+# --- Databricks metrics / transient outputs ---
+notebooks/abfss/metrics/*
+notebooks/abfss/**/metrics/*
+*.metrics.json
+*.metrics.csv
+**/abfss*/metrics/*
+
+# Ignore Springboard anchor log
+docs/01_GPT_Anchors_Log.md
+

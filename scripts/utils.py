@@ -10,7 +10,15 @@ Provides:
   • File + logging utilities shared by all pipeline steps
 """
 
-import os, re, time, json, hashlib, unicodedata, logging, threading, concurrent.futures
+import os
+import re
+import time
+import json
+import hashlib
+import unicodedata
+import logging
+import threading
+import concurrent.futures
 from pathlib import Path
 # Optional dependency: tqdm (progress bar)
 try:
@@ -23,6 +31,7 @@ except ModuleNotFoundError:
 from types import SimpleNamespace
 from typing import List, Dict, Any, Iterable, Optional
 import requests
+import functools
 
 from scripts import config
 from scripts.config import (
@@ -112,41 +121,34 @@ def normalize_title_for_matching(text: str) -> str:
     return " ".join(t for t in text.split() if len(t) > 1)
 
 
-def normalize_for_matching_extended(text: str) -> str:
-    """Extended normalization with numeral, article, and structural cleanup."""
-    if not isinstance(text, str):
-        return ""
 
-    ROMAN_MAP = {
-        " i ": " 1 ", " ii ": " 2 ", " iii ": " 3 ", " iv ": " 4 ",
-        " v ": " 5 ", " vi ": " 6 ", " vii ": " 7 ", " viii ": " 8 ",
-        " ix ": " 9 ", " x ": " 10 ",
-    }
-    ARTICLES = {"the", "a", "an"}
+def normalize_for_matching_ost_safe(text: str) -> str:
+    """Safer normalization tuned for OST matching — keeps short valid titles."""
+    if not text or not isinstance(text, str):
+        return None
 
-    # Base normalization
-    s = normalize_title_for_matching(text)
-    if not s:
-        return ""
+    s = text.lower().strip()
 
-    # Convert roman numerals
-    for k, v in ROMAN_MAP.items():
-        s = s.replace(k, v)
+    # Normalize punctuation but keep roman numerals and numbers intact
+    s = re.sub(r"[^a-z0-9\s&'\-:]", "", s)
+    s = re.sub(r"\s+", " ", s).strip()
 
-    # Drop leading articles
-    toks = s.strip().split()
-    while toks and toks[0] in ARTICLES:
+    # Drop leading articles only if multiword
+    toks = s.split()
+    if len(toks) > 1 and toks[0] in {"the", "a", "an"}:
         toks = toks[1:]
     s = " ".join(toks)
 
-    # Remove part/episode/volume patterns
-    s = re.sub(r"\b(part|episode|chapter|vol|volume)\s*\d+\b", " ", s)
+    # Keep roman numerals literal, don't replace globally
+    # Remove 'original motion picture soundtrack/score' but keep film title context
+    s = re.sub(r"\boriginal motion picture( soundtrack| score)?\b", "", s).strip()
 
-    # Safety: scale down extreme short titles (e.g. "Up", "Her")
-    if len(s) < 3:
-        s = f"{s} title"
+    # Avoid collapsing one-word or symbol titles
+    if len(s) < 2:
+        return text.lower()
 
-    return re.sub(r"\s+", " ", s).strip()
+    return s
+
 
 
 def clean_title(text: str) -> str:
@@ -294,3 +296,34 @@ def batch_fetch(
             if r and getattr(r, "status_code", 500) == 200:
                 results.append(r.json())
     return results
+
+
+
+def dynamic_throttle(base_delay=0.5, max_delay=5.0):
+    """Decorator for dynamic backoff on 429 or near-rate-limit responses."""
+    def decorator(func):
+        delay = base_delay
+
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            nonlocal delay
+            while True:
+                response = func(*args, **kwargs)
+                # Discogs/TMDB rate-limit headers
+                rl_remaining = response.headers.get("X-RateLimit-Remaining")
+                rl_reset = response.headers.get("X-RateLimit-Reset")
+
+                # if rate-limit near exhaustion or 429 returned
+                if response.status_code == 429 or (rl_remaining and int(rl_remaining) < 5):
+                    sleep_for = min(delay * 2, max_delay)
+                    print(f"⚠️ Throttling: sleeping {sleep_for:.1f}s (remaining={rl_remaining})")
+                    time.sleep(sleep_for)
+                    delay = sleep_for  # exponential backoff
+                    continue
+
+                # successful — reset delay to base
+                delay = base_delay
+                return response
+        return wrapper
+    return decorator
+

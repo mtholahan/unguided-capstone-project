@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="step7-architecture" name="Step7 Architecture Draft">
-        <mxGraphModel dx="1623" dy="675" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+        <mxGraphModel dx="1442" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -58,7 +58,7 @@
                 <mxCell id="zone_gold" value="&lt;i&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Gold&lt;/font&gt;&lt;/i&gt;&lt;br&gt;Curated analytics-ready tables consumed by BI tools or dashboards." style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" parent="1" vertex="1">
                     <mxGeometry x="890" y="390" width="120" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="databricks" value="Azure Databricks (Spark 3.5 / 14.3 LTS)&lt;br&gt;Executes ETL notebooks and jobs linked from GitHub; reads raw data, writes silver and gold outputs." style="shape=process;rounded=1;whiteSpace=wrap;html=1;strokeColor=#d93025;fillColor=#fdecea" parent="1" vertex="1">
+                <mxCell id="databricks" value="Azure Databricks (Spark 3.5.2 / 16.4 LTS)&lt;br&gt;Executes ETL notebooks and jobs linked from GitHub; reads raw data, writes silver and gold outputs." style="shape=process;rounded=1;whiteSpace=wrap;html=1;strokeColor=#d93025;fillColor=#fdecea" parent="1" vertex="1">
                     <mxGeometry x="1094" y="150" width="300" height="97" as="geometry"/>
                 </mxCell>
                 <mxCell id="keyvault" value="Azure Key Vault&lt;br&gt;Stores API keys and sensitive credentials; accessed securely through Managed Identity by Databricks and ADF — eliminating the need for SAS tokens." style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1e88e5;fillColor=#e3f2fd" parent="1" vertex="1">
@@ -121,7 +121,7 @@
                 <mxCell id="edge15" style="endArrow=block;dashed=1;" parent="1" source="blob_account" target="monitor" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="2" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;Unguided Capstone – Step 7 · Deployment Architecture (TMDB + Discogs ETL)&lt;/font&gt;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                <mxCell id="2" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;Unguided Capstone – Step 9· Deployment Architecture (TMDB + Discogs ETL)&lt;/font&gt;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="30" y="10" width="1720" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="10" value="&lt;strong data-start=&quot;2165&quot; data-end=&quot;2176&quot;&gt;Figure:&lt;/strong&gt; End-to-end Azure deployment architecture for TMDB + Discogs ETL.&lt;br data-start=&quot;2241&quot; data-end=&quot;2244&quot;&gt;&lt;br&gt;Data flows from APIs through Databricks processing to analytics-ready gold tables,&lt;br data-start=&quot;2328&quot; data-end=&quot;2331&quot;&gt;&lt;br&gt;with Power BI for visualization and Azure Monitor providing observability." style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
