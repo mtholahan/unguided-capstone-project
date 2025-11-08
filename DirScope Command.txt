@@ -1,1 +1,0 @@
-python dirscope.py --root "C:\Projects\unguided-capstone-project" --depth 2 --types .py --exclude ".git,.venv,.cache,.pytest_cache,.ruff_cache,data\cache,scripts\__pycache__,scripts\.ipynb_checkpoints,scripts\unguided_capstone_project.egg-info,scripts\QA,archive" --export txt --output "dirscope_output_desired_result.txt"
