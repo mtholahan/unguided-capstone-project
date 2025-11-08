@@ -13,8 +13,9 @@ from scripts.utils_schema import infer_schema, build_integrity_summary
 class Step04ValidateSchemaAlignment(BaseStep):
     def __init__(self):
         super().__init__("step_04_validate_schema_alignment")
+        self.logger.info("✅ Step 04 initialized (Medallion-aware)")
         self.metrics_dir = config.METRICS_DIR
-        self.use_spark = getattr(config, "USE_SPARK_VALIDATION", False)
+        self.use_spark = getattr(config, "USE_SPARK_VALIDATION", False)   # NEVER IMPLEMENTED THIS
         self.spark = SparkSession.builder.getOrCreate() if self.use_spark else None
         self.fs = fsspec.filesystem("abfss", account_name=config.STORAGE_ACCOUNT, anon=False)
 
@@ -26,6 +27,7 @@ class Step04ValidateSchemaAlignment(BaseStep):
 
     def run(self):
         t0 = time.time()
+        self.logger.info("🚀 Running Step 04")
         tmdb_df = self._read_layer("bronze", "tmdb")
         discogs_df = self._read_layer("bronze", "discogs")
         candidates_df = self._read_layer("silver", "candidates")
