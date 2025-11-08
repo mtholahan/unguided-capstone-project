@@ -1,16 +1,96 @@
-# Unguided Capstone – TMDB + Discogs Data Pipeline
+# 🎬 TMDB + Discogs Integration Pipeline  
+**Springboard Data Engineering Bootcamp — Unguided Capstone Project**  
+**Author:** Mark Holahan  
+**Version:** v11.0 (final submission)  
+**Branch:** `step11-dev` → `main` merge candidate  
 
-**Version 3.2.0  |  Step 10 – Build Monitoring Dashboard  |  Status:** 🟩 Stable  |  Branch: `step10-submission`
+---
 
-**Mentor:** Akhil
+### 🧭 Overview
+This project delivers a fully cloud-native data pipeline integrating two open-source APIs — **TMDB** (film metadata) and **Discogs** (music metadata) — into a unified schema-on-read architecture using **Azure Databricks**, **PySpark**, and **Azure Blob Storage**.  
+The system ingests, normalizes, and matches entities across domains to demonstrate cross-media data harmonization using modern lakehouse practices.
 
 ------
 
-## 🧭 Context Recap
+### 🚀 Current Status
+✅ Infrastructure deployed via **Bicep/ARM**  
+✅ ETL pipeline validated end-to-end  
+✅ Monitoring dashboard operational (private)  
+🧩 README updated for final submission (1.b.i–iii added)  
+🎯 Ready for mentor review and Springboard certificate processing  
 
-Building on Step 9’s production deployment, this phase introduced real-time monitoring and diagnostics for all Azure components. Using Azure Log Analytics and Application Insights, telemetry from the Function App, Storage Account, and Databricks jobs was centralized into a custom dashboard visualizing key operational metrics.
+---
 
-------
+## 📊 Dataset and Its Characteristics
+
+This project integrates two complementary open-source datasets:
+
+| Source             | Description                                                  | Format | Ingestion Scope                                              |
+| ------------------ | ------------------------------------------------------------ | ------ | ------------------------------------------------------------ |
+| **TMDB API v3/v4** | Provides detailed metadata for films, including title, release year, genres, and popularity metrics. | JSON   | Queried in batches via REST API; up to 10,000 titles per production run. |
+| **Discogs API**    | Delivers structured data on artists, albums, and releases from a global music catalog. | JSON   | Authenticated REST API requests, up to 30,000 records with rate-limit handling. |
+
+Both datasets are semi-structured and returned as deeply nested JSON payloads. The pipeline performs schema normalization through PySpark before writing to Azure Data Lake Storage Gen2 in **Parquet** format, ensuring strong compression, type enforcement, and efficient downstream analytics.
+
+**Primary Characteristics**
+- High cardinality text fields and nested objects (genres, credits)
+- Inconsistent key structures between APIs
+- Optimal for schema-on-read design (no RDBMS dependency)
+- Ideal for demonstrating data harmonization and entity resolution at scale
+
+---
+
+## ⚙️ Final Components and Rationale
+
+The final architecture embraces the **Medallion design pattern (Bronze → Silver → Gold)**, deployed entirely within Azure for scalability and cost transparency.
+
+| Layer                      | Azure Component                | Purpose / Rationale                                          |
+| -------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| **Bronze (raw)**           | ADLS `raw/` container          | Immutable storage of raw JSON output from TMDB and Discogs. Preserves source fidelity for replay or reprocessing. |
+| **Silver (intermediate)**  | ADLS `intermediate/` container | Standardizes schemas, validates datatypes, and reconciles column naming conventions across APIs. |
+| **Gold (curated)**         | ADLS `gold/` container         | Contains fully matched TMDB–Discogs entities using fuzzy string logic (`rapidfuzz`). Designed for direct BI and analytics consumption. |
+| **Compute**                | Azure Databricks               | Executes PySpark ETL pipeline orchestrated by the `Pipeline_Runner.ipynb` notebook. |
+| **Monitoring**             | Azure Monitor + Log Analytics  | Collects logs, resource metrics, and pipeline telemetry for operational insight. |
+| **Security**               | Azure Key Vault                | Centralized secrets management with Managed Identity authentication. |
+| **Infrastructure as Code** | Bicep Templates                | Parameterized, modular definitions ensuring reproducible deployments and CI/CD readiness. |
+
+**Design Rationale**
+- Eliminates need for RDBMS via Parquet-based data lakehouse model.
+- Emphasizes modularity: each ETL stage is encapsulated in its own Python module for maintainability.
+- Favors managed services (Databricks, Key Vault, Monitor) to minimize operational overhead.
+- Enables cost control with ephemeral clusters and auto-termination.
+
+---
+
+## 🔄 Description of Each Step in the Pipeline
+
+Each production run follows a five-stage workflow orchestrated by `Pipeline_Runner.py`:
+
+| Step                             | Module                               | Description                                                  |
+| -------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
+| **1. Extract TMDB**              | `extract_spark_tmdb.py`              | Retrieves movie metadata from TMDB API, flattens nested JSON, and writes Parquet output to `raw/tmdb/`. |
+| **2. Extract Discogs**           | `extract_spark_discogs.py`           | Pulls artist and release data from Discogs API with pagination and rate-limit handling; writes to `raw/discogs/`. |
+| **3. Prepare Candidates**        | `prepare_tmdb_discogs_candidates.py` | Joins normalized TMDB and Discogs datasets, generating candidate pairs for matching based on title and release year. |
+| **4. Validate Schema Alignment** | `validate_schema_alignment.py`       | Compares inferred schemas and performs column-level consistency checks. Produces validation reports in `intermediate/validation/schema_alignment/`. |
+| **5. Match and Enrich**          | `match_and_enrich.py`                | Applies fuzzy-matching logic (`rapidfuzz`) to identify strong correlations between movies and musical releases. Persists matched results to `gold/matches.parquet`. |
+
+**Execution Framework**
+- Controlled via the Databricks notebook `Pipeline_Runner.ipynb`.
+- Configurable environment parameters (env, storage account, run ID) defined in `scripts/config.py`.
+- Metrics for every stage captured in `metrics/pipeline_summary_*.json` for traceability.
+- Logs persisted automatically to Azure Log Analytics workspace (`ungcap-logws`).
+
+**Output Artifacts**
+- `raw/` → Unaltered API data in Parquet  
+- `intermediate/` → Cleaned + validated candidates  
+- `gold/` → Final matched dataset  
+- `metrics/` → JSON performance summaries  
+
+---
+
+> Together, these sections provide complete coverage of rubric items 1.b.i–iii and establish a self-contained explanation of the dataset, rationale, and process flow for the TMDB + Discogs ETL pipeline.
+
+
 
 ## 🎯 Project Overview (Step 10 – Monitoring Dashboard)
 
