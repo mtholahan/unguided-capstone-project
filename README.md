@@ -1,6 +1,6 @@
 # Unguided Capstone – TMDB + Discogs Data Pipeline
 
-**Version 3.1.0  |  Step 9 – Deploy Production Code & Process Dataset  |  Status:** 🟩 Stable  |  Branch: `step9-submission`
+**Version 3.2.0  |  Step 10 – Build Monitoring Dashboard  |  Status:** 🟩 Stable  |  Branch: `step10-submission`
 
 **Mentor:** Akhil
 
@@ -8,16 +8,17 @@
 
 ## 🧭 Context Recap
 
-Building upon Step 8’s successful test deployment, this phase represents the **production promotion** of the Medallion architecture. All test-validated components were reconfigured under new production-grade compute and storage environments. The pipeline now processes the complete dataset at scale, leveraging Azure-managed orchestration, logging, and lineage tracking.
+Building on Step 9’s production deployment, this phase introduced real-time monitoring and diagnostics for all Azure components. Using Azure Log Analytics and Application Insights, telemetry from the Function App, Storage Account, and Databricks jobs was centralized into a custom dashboard visualizing key operational metrics.
 
 ------
 
-## 🎯 Project Overview
+## 🎯 Project Overview (Step 10 – Monitoring Dashboard)
 
-This release delivers the **production deployment** of the TMDB + Discogs Medallion data pipeline.
- The pipeline executes the **Bronze → Silver → Gold** data flow under **Azure Databricks Runtime 16 LTS**, utilizing **Azure Data Lake Storage Gen2** for persistence and **PySpark 3.5** for distributed compute.
+This release extends the **production-ready TMDB + Discogs Medallion data pipeline** with an end-to-end **monitoring and observability layer**.
+ The new **Azure Log Analytics–based dashboard** consolidates telemetry from Azure Databricks, Data Lake Storage Gen2, and Function Apps to provide real-time visibility into pipeline health, resource utilization, and cost efficiency.
 
-Code validated in Step 8 was promoted to production without modification to business logic, ensuring reproducibility. Execution metrics confirm **1,709 strong matches**, schema alignment across all layers, and verified lineage through JSON logs.
+Operational data is aggregated across the **Bronze → Silver → Gold** layers and visualized through custom Kusto queries, enabling rapid detection of performance degradation and anomalous blob or compute activity.
+ The dashboard delivers proactive insights that ensure the pipeline continues to meet reliability and scalability expectations in production.
 
 ------
 
@@ -41,13 +42,17 @@ Combined, these sources enable multi-domain analytics linking film and music met
 
 ## 🏗️ Production Architecture (Updated)
 
-The architecture remains consistent with Step 7, incorporating optimized cluster sizing and Azure cost controls.)
+The final architecture remains consistent with Step 7's theoretical model, incorporating optimized cluster sizing and Azure cost controls.)
 
-![ungcap_architecture_step9](assets/ungcap_architecture_step9-1762499398410-9.png)
+
+
+![ungcap_architecture_step9](assets/ungcap_architecture_step9-1762572407799-5.png)
 
 > [!NOTE]
 >
 > The production configuration preserves the logical topology defined in Step 7 but introduces modular Bicep definitions, Databricks Runtime 16 LTS, and integration with **Azure Monitor + Log Analytics**. These updates improve observability, maintainability, and cost governance.
+
+
 
 ### **Key Components**
 
@@ -59,13 +64,19 @@ The architecture remains consistent with Step 7, incorporating optimized cluster
 | **Compute**    | Databricks Cluster             | PySpark execution at scale       |
 | **Monitoring** | Azure Log Analytics            | Step 10 dashboard foundation     |
 
+
+
 ### Azure Databricks Workspace
 
-![databricks_workspace_overview](assets/databricks_workspace_overview-1762499474363-11.png)
+![databricks_workspace_overview](assets/databricks_workspace_overview-1762572073529-1.png)
+
+
 
 ### Azure Resources
 
-![azure_resource_groups](assets/azure_resource_groups-1762499491900-13.png)
+![azure_resource_groups](assets/azure_resource_groups-1762572147247-1.png)
+
+
 
 ### 📘 **Azure Resource Organization**
 
@@ -82,6 +93,39 @@ The architecture remains consistent with Step 7, incorporating optimized cluster
 
 ------
 
+
+
+## 📊 Monitoring Dashboard Overview
+
+The Step 10 monitoring system integrates **Azure Monitor**, **Log Analytics**, and **Application Insights** to provide unified visibility.
+
+**Dashboard Name:** `UnguidedCap-Monitor`
+**Workspace:** `ungcap-logws`
+**Location:** East US 2
+
+### Tracked Metrics
+| Category              | Metric                                       | Description                               |
+| --------------------- | -------------------------------------------- | ----------------------------------------- |
+| Storage Performance   | `BlobCapacity`, `E2ELatency`, `Transactions` | Throughput & latency per container        |
+| Resource Usage        | `CPU %`, `Memory %`, `IOPS`                  | VM and Databricks node utilization        |
+| Blob Access           | `Read Ops`, `Write Ops`, `Delete Ops`        | Operation frequency over time             |
+| Function App Activity | `Requests`, `Failures`, `Duration (ms)`      | Health & SLA compliance                   |
+| Cost Insights         | `Daily Cost Estimate`                        | Derived from Azure Cost Management export |
+
+Snapshots of the dashboard tiles are stored under `assets/`.
+
+
+
+> [!NOTE]
+>
+> Mentor Access: Azure Log Analytics Dashboard – *Shared via Azure RBAC (Reader role)*
+> Workspace: `ungcap-logws`
+> Dashboard: `UnguidedCapstone Monitor`
+> Location: East US 2
+> Access granted to: Akhil (Springboard mentor)
+
+
+
 ## 🚀 Execution Procedure
 
 1. Attach to production cluster (`capstone-prod-cluster`).
@@ -92,7 +136,9 @@ The architecture remains consistent with Step 7, incorporating optimized cluster
 
 ### Production Run Highlight Log
 
-![data_pipeline_curated_production_log](assets/data_pipeline_curated_production_log-1762499636981-15.png)
+![data_pipeline_curated_production_log](assets/data_pipeline_curated_production_log-1762572316500-3.png)
+
+
 
 ------
 
@@ -189,7 +235,7 @@ unguided-capstone-project/
 │ ├── utils_schema.py
 │ └── validate_schema_alignment.py
 ├── slides/
-│ └── Step_8_Slide_Deck.pptx
+│ └── Step10_Presentation.pptx
 └── tests/
 ├── abfss:/
 ├── conftest.py
@@ -202,12 +248,14 @@ unguided-capstone-project/
 
 ## 🖼️ Slide Deck Integration
 
-[View Slide Deck → Step9_Presentation.pptx](slides/Step9_Presentation.pptx)
+[View Slide Deck → Step10_Presentation.pptx](slides/Step10_Presentation.pptx)
 
 This presentation summarizes:
 
-- Migration from Step 8 test cluster to production
-- Finalized architecture and environment configuration
-- Runtime performance highlights and lineage proofs
-- Gold-layer schema validation and sample outputs
+- Design and implementation of the **Azure Log Analytics monitoring dashboard**
+- Rationale for **metric selection** (Storage Performance, Resource Usage, Blob Access Operations, Function App Activity)
+- Examples of **custom Kusto queries** and visualization layouts used in the dashboard
 
+------
+
+> “Pipelines end, but data flows on.”
