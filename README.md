@@ -1,8 +1,15 @@
 # 🎬 TMDB + Discogs Integration Pipeline  
-**Springboard Data Engineering Bootcamp — Unguided Capstone Project**  
-**Author:** Mark Holahan  
-**Version:** v11.0 (final submission)  
-**Branch:** `step11-dev` → `main` merge candidate  
+
+**Springboard Data Engineering Bootcamp — Unguided Capstone Project** 
+**Author:** Mark Holahan 
+**Version:** v11.0 (final submission) 
+**Branch:** `step11-dev` → `main` merge candidate
+
+![Python](assets/Python-3.svg)
+![Azure](assets/Azure-Databricks-lightblue.svg)
+![Status](assets/Status-Production--Ready-success.svg)
+
+> A cloud-native data pipeline built on Azure Databricks that harmonizes TMDB and Discogs metadata into a unified analytical model.
 
 ---
 
@@ -11,15 +18,6 @@ This project delivers a fully cloud-native data pipeline integrating two open-so
 The system ingests, normalizes, and matches entities across domains to demonstrate cross-media data harmonization using modern lakehouse practices.
 
 ------
-
-### 🚀 Current Status
-✅ Infrastructure deployed via **Bicep/ARM**  
-✅ ETL pipeline validated end-to-end  
-✅ Monitoring dashboard operational (private)  
-🧩 README updated for final submission (1.b.i–iii added)  
-🎯 Ready for mentor review and Springboard certificate processing  
-
----
 
 ## 📊 Dataset and Its Characteristics
 
@@ -69,7 +67,7 @@ Each production run follows a five-stage workflow orchestrated by `Pipeline_Runn
 | Step                             | Module                               | Description                                                  |
 | -------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
 | **1. Extract TMDB**              | `extract_spark_tmdb.py`              | Retrieves movie metadata from TMDB API, flattens nested JSON, and writes Parquet output to `raw/tmdb/`. |
-| **2. Extract Discogs**           | `extract_spark_discogs.py`           | Pulls artist and release data from Discogs API with pagination and rate-limit handling; writes to `raw/discogs/`. |
+| **2. Extract Discogs**           | `extract_spark_discogs.py`           | Pulls artist and release data from Discogs API with pagination and rate-limit handling; writes Parquet to `raw/discogs/`. |
 | **3. Prepare Candidates**        | `prepare_tmdb_discogs_candidates.py` | Joins normalized TMDB and Discogs datasets, generating candidate pairs for matching based on title and release year. |
 | **4. Validate Schema Alignment** | `validate_schema_alignment.py`       | Compares inferred schemas and performs column-level consistency checks. Produces validation reports in `intermediate/validation/schema_alignment/`. |
 | **5. Match and Enrich**          | `match_and_enrich.py`                | Applies fuzzy-matching logic (`rapidfuzz`) to identify strong correlations between movies and musical releases. Persists matched results to `gold/matches.parquet`. |
@@ -88,39 +86,20 @@ Each production run follows a five-stage workflow orchestrated by `Pipeline_Runn
 
 ---
 
-> Together, these sections provide complete coverage of rubric items 1.b.i–iii and establish a self-contained explanation of the dataset, rationale, and process flow for the TMDB + Discogs ETL pipeline.
+## Entity Relationship Diagram
+
+The logical model below replaces a traditional relational ERD with a **schema-on-read lineage view** that reflects the modern, cloud-native structure of this project.  
+Instead of physical tables and keys, the diagram represents how data evolves through the **Medallion architecture** — from raw JSON ingestion, through schema validation and candidate preparation, to gold-layer entity matches.  
+
+Each component shown corresponds directly to a Databricks module or Azure Blob container, making this ERD both a conceptual and operational map of the pipeline.  
 
 
 
-## 🎯 Project Overview (Step 10 – Monitoring Dashboard)
+![ungcap_erd](assets/ungcap_erd.png)
 
-This release extends the **production-ready TMDB + Discogs Medallion data pipeline** with an end-to-end **monitoring and observability layer**.
- The new **Azure Log Analytics–based dashboard** consolidates telemetry from Azure Databricks, Data Lake Storage Gen2, and Function Apps to provide real-time visibility into pipeline health, resource utilization, and cost efficiency.
 
-Operational data is aggregated across the **Bronze → Silver → Gold** layers and visualized through custom Kusto queries, enabling rapid detection of performance degradation and anomalous blob or compute activity.
- The dashboard delivers proactive insights that ensure the pipeline continues to meet reliability and scalability expectations in production.
 
-------
-
-## 📚 Data Sources
-
-- **TMDB API v3:** Movie metadata
-- **Discogs API:** Artist and record release catalog
-
-Combined, these sources enable multi-domain analytics linking film and music metadata. During production runs, data ingestion handled full API pagination and adaptive rate limiting to prevent throttling.
-
-------
-
-## ⚙️ Production Objectives
-
-- Deploy finalized PySpark ETL to Azure Databricks cluster at scale
-- Persist outputs to **Azure Data Lake Gold** container in `.parquet` format
-- Validate lineage, schema, and runtime metrics through automated JSON audit logs
-- Document architecture, runtime, and deployment topology per rubric requirements
-
-------
-
-## 🏗️ Production Architecture (Updated)
+## 🏗️ Production Architecture
 
 The final architecture remains consistent with Step 7's theoretical model, incorporating optimized cluster sizing and Azure cost controls.)
 
@@ -253,88 +232,26 @@ Azure cost analysis shows 78% cost reduction through use of **Standard_DS3_v2** 
 
 ------
 
-## 📂 Repository Structure (Step 9 – Production Deployment)
+## 📂 Repository Structure
 
 ```
-unguided-capstone-project/
-├── README.md
-├── _databricks.yml
-├── architecture/
-│ └── diagrams/
-├── assets/
-│ └── Azure main.bicep Orchestrator What-If Output.png
-├── config.json
-├── data/
-│ ├── cache/
-│ ├── intermediate/
-│ ├── logs/
-│ ├── metrics/
-│ ├── mock/
-│ ├── processed/
-│ ├── raw/
-│ └── validation/
-├── evidence/
-│ └── Azure main.bicep Orchestrator What-If Output.png
-├── infrastructure/
-│ ├── databricks.bicep
-│ ├── functionapp.bicep
-│ ├── keyvault.bicep
-│ ├── main.bicep
-│ ├── monitoring.bicep
-│ ├── naming_conventions.md
-│ ├── storage_account.bicep
-│ ├── ungcap-step8-test.json
-│ └── vnet.bicep
-├── logs/
-│ ├── cleanup.log
-│ ├── pipeline.log
-│ └── validation/
-├── notebooks/
-│ ├── Data_Inspection_Notebook.ipynb
-│ ├── Pipeline_Runner_Notebook.ipynb
-│ └── Testing_Notebook.ipynb
-├── pyproject.toml
-├── rebuild_venv.sh
-├── requirements_cluster.txt
-├── requirements_locked.txt
-├── requirements_stable.txt
-├── scripts/
-│ ├── init.py
-│ ├── pycache/
-│ ├── base_step.py
-│ ├── bootstrap.py
-│ ├── config.py
-│ ├── extract_spark_discogs.py
-│ ├── extract_spark_tmdb.py
-│ ├── inventory_pipeline_outputs.py
-│ ├── main.py
-│ ├── match_and_enrich.py
-│ ├── prepare_tmdb_discogs_candidates.py
-│ ├── tests/
-│ ├── utils.py
-│ ├── utils_schema.py
-│ └── validate_schema_alignment.py
-├── slides/
-│ └── Step10_Presentation.pptx
-└── tests/
-├── abfss:/
-├── conftest.py
-├── test_pipeline_config.py
-├── test_report.txt
-└── test_spark_session.py
+/infrastructure/ → Bicep templates (Azure Resource Manager)
+/scripts/ → Python modules for ETL steps 1–5
+/notebooks/ → Databricks orchestration runner notebook
+/raw/ → Ingested JSON (API sources)
+/intermediate/ → Validation + candidate datasets
+/gold/ → Final matched Parquet files
+/metrics/ → Run summaries and pipeline logs
+/docs/ → Architecture diagrams (ERD + Deployment)
 ```
+
+> [!NOTE]
+>
+> The `/infrastructure`, `/scripts`, `/notebooks`, and `/docs` directories exist in this repository, while the `/raw`, `/intermediate`, `/gold`, and `/metrics` directories represent their corresponding Azure Blob Storage containers created by the pipeline.
 
 ------
 
-## 🖼️ Slide Deck Integration
-
-[View Slide Deck → Step10_Presentation.pptx](slides/Step10_Presentation.pptx)
-
-This presentation summarizes:
-
-- Design and implementation of the **Azure Log Analytics monitoring dashboard**
-- Rationale for **metric selection** (Storage Performance, Resource Usage, Blob Access Operations, Function App Activity)
-- Examples of **custom Kusto queries** and visualization layouts used in the dashboard
+© 2025 Mark Holahan — Springboard Data Engineering Bootcamp
 
 ------
 
